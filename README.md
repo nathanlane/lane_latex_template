@@ -572,19 +572,38 @@ Core packages:
 
 ## Version History
 
-### Latest Updates
+Current Release: v0.1.0-beta
 
-**Version 1.6 (July 2025)**
+**Version v0.1.0-beta (July 2025)**
+- Public repository
+- All preamble files and documentation
+- Migration guides and README files
+- API reference and appendices
+- Module documentation
+- Version history sections
+
+**Version v1.4-alpha:v1.6-alpha (July 2025)**
 - Added `llt` package naming convention
 - Implemented modular architecture
 - Enhanced grid system with visual overlay
 - Improved cross-platform compatibility
 
-**Version 1.5 (June 2025)**
+**Version v1.0-alpha:v1.3-alpha (June 2025)**
 - Professional appendix management system
 - Enhanced optical margin alignment
 - Sophisticated list typography
 - QJE-style table notes
+
+### Versioning 
+
+Historical Versions: All old development versions are now labeled as alpha:
+•  v1.6-alpha (was v1.6)
+•  v1.5-alpha (was v1.5) 
+•  v1.4-alpha (was v1.4)
+•  v1.3-alpha (was v1.3)
+•  v1.2-alpha (was v1.2)
+•  v1.1-alpha (was v1.1)
+•  v1.0-alpha (was v1.0)
 
 ### Migration Notes
 
