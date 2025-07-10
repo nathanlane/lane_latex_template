@@ -8,16 +8,16 @@ A production-grade LaTeX template for academic papers with professional typograp
 
 ## ✨ Features
 
-- **Professional Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
-- **Baseline Grid System** – 13.2pt rhythm with systematic proportional relationships  
+- **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
+- **Baseline Grid System** – 13.2pt rhythm with systematic proportional relationships
+- **Optically Refined Typo** - Using typographic principles
+- **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
 - **Smart Citations** – biblatex with Chicago style, DOI/URL linking, natbib fallback
-- **Professional Floats** – Comprehensive figure/table system with booktabs, tabularx, and smart placement
-- **Chicago Appendices** – Automatic single/multiple appendix detection and formatting
-- **Sophisticated Lists** – Multiple environments with refined bullets and optimal spacing
-- **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
+- **Floats** – Comprehensive figure/table system with booktabs, tabularx, and smart placement
+- **Lists** – Multiple environments with refined bullets and optimal spacing
 - **Accessibility** – WCAG 2.1 AA compliant colors with semantic emphasis commands
-- **Cross-Platform** – Works seamlessly with local LaTeX and Overleaf
+- **Cross-Platform** – Works with local LaTeX and Overleaf
 
 ---
 
