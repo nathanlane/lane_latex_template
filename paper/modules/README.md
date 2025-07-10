@@ -5,7 +5,7 @@ This directory contains the modular components of the lltpaperstyle LaTeX packag
 > **Note**: As of July 2025, all modules have been renamed following the Lane LaTeX Template (LLT) naming convention. Module files now use the `llt` prefix (e.g., `lltcolors.sty` instead of `colors.sty`).
 
 ## Module Overview
-(The Lists module is now fully active as of v1.6.)
+(The Lists module is now fully active as of v0.1.0-alpha.)
 
 | Module | Purpose | Dependencies |
 |--------|---------|--------------|
@@ -56,4 +56,4 @@ All modules follow these core principles:
 
 ## Version History
 
-- v1.0 (2025-07-03): Initial modular release
+- v0.1.0-alpha (2025-07-10): Initial alpha release

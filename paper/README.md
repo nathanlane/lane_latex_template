@@ -1,6 +1,6 @@
 # paperstyle.sty Documentation
 
-**Version 1.6** | **Modular LaTeX Style Package for Academic Typography**
+**Version 0.1.0-alpha** | **Modular LaTeX Style Package for Academic Typography**
 
 A comprehensive LaTeX style package implementing professional typography principles from Matthew Butterick's *Practical Typography*, Tim Brown's *Modular Scale*, and Jost Hochuli's *Detail in Typography*.
 
@@ -62,7 +62,7 @@ Main content...
 
 ## Modular Architecture
 
-**Since v1.6**: The package is structured as independent modules for better maintainability and customization.
+**Since v0.1.0-alpha**: The package is structured as independent modules for better maintainability and customization.
 
 ### Module Structure
 
@@ -1088,21 +1088,21 @@ Paragraph skip: 6.325pt + 2pt - 1pt
 
 ## Version History
 
-- **v1.6** (2025-07): Full modularization with enhanced features:
+- **v0.0.&-dev** (2025-07): Full modularization with enhanced features:
   - Separated microtype-config module with 1400-unit protrusion
   - Added paragraphs module for advanced formatting
   - Implemented grid-locked variants for strict alignment
   - Added landscape/rotation support for social science papers
   - Enhanced color system with semantic hierarchy
   - Improved footnote system with title page variants
-- **v1.5** (2025-07): Modularization and optical margin alignment:
+- **v0.0.&-dev** (2025-07): Modularization and optical margin alignment:
   - Split into independent modules (fonts, colors, dimensions, headings, lists)
   - Enhanced character protrusion with size/weight-specific settings
   - Added compilation-fixes-simple module
-- **v1.4** (2025-07): Cross-reference typography with cleveref
-- **v1.3** (2025-07): Mathematical typography optimization for Pagella
-- **v1.2** (2025-06): Added Chicago-compliant appendix system
-- **v1.1** (2025-06): Enhanced bold small caps system
-- **v1.0** (2025-06): Initial release with Butterick/Brown/Hochuli synthesis
+- **v0.0.&-dev** (2025-07): Cross-reference typography with cleveref
+- **v0.0.&-dev** (2025-07): Mathematical typography optimization for Pagella
+- **v0.0.&-dev** (2025-06): Added Chicago-compliant appendix system
+- **v0.0.&-dev** (2025-06): Enhanced bold small caps system
+- **v0.0.&-dev** (2025-06): Initial release with Butterick/Brown/Hochuli synthesis
 
 For support and updates, see the main repository documentation.

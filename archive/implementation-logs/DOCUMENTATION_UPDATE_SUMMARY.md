@@ -51,7 +51,7 @@ This document summarizes the comprehensive documentation updates performed on Ju
 
 ### 5. paper/README.md (Style Package Documentation)
 **Major Additions:**
-- Updated version to 1.6
+- Updated version to 0.1.0-alpha
 - Added complete module structure with core and optional modules
 - Added Professional Figures and Tables section
 - Added Citation and Bibliography System section
@@ -62,7 +62,7 @@ This document summarizes the comprehensive documentation updates performed on Ju
 - Added quotation environments
 - Added list typography commands
 - Added grid development tools
-- Updated version history with all v1.5 and v1.6 features
+- Updated version history with all alpha features
 
 ## Key Features Now Documented
 

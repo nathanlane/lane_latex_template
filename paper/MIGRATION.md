@@ -1,6 +1,6 @@
-# Migration Guide: v1.2 to v1.5
+# Migration Guide: Development Versions to v0.1.0-alpha
 
-This guide helps you migrate from paperstyle v1.2 to the new modular v1.5.
+This guide helps you migrate from development versions to the standardized v0.1.0-alpha.
 
 ## Overview of Changes
 
