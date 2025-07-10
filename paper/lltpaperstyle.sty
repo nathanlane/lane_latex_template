@@ -1,0 +1,3277 @@
+% ==============================================================================
+% PAPERSTYLE.STY - Academic Typography Package
+% ==============================================================================
+%
+% A comprehensive LaTeX style package for academic typography excellence,
+% implementing principles from three foundational typographic works:
+%
+% PRIMARY REFERENCES:
+%   [1] Butterick, M. (2019). Practical Typography, 2nd ed.
+%       https://practicaltypography.com
+%   [2] Brown, T. (2018). Flexible Typographic Systems. A Book Apart.
+%   [3] Hochuli, J. (1987/2008). Detail in Typography. Hyphen Press.
+%
+% DESIGN PHILOSOPHY:
+%   - Reader-focused optimization (Butterick)
+%   - Mathematical harmony via modular scale (Brown) 
+%   - Micro-typographic excellence (Hochuli)
+%   - Chicago Manual of Style compliance
+%   - Accessibility standards (WCAG 2.1 AA)
+%
+% VERSION HISTORY:
+%   v1.6 (2025-07-09): Added package options (grid, minimal, natbib, nocolor, draft)
+%   v1.5 (2025-07-02): Modularization - extracted colors, dimensions, fonts modules
+%   v1.4.1 (2025-07-02): Code cleanup - removed unused commands, fixed duplicate loads
+%   v1.4 (2025-07-02): Cross-reference typography optimization with cleveref
+%   v1.3 (2025-07-02): Mathematical typography optimization for Pagella
+%   v1.2 (2025-06-27): Added Chicago-compliant appendix system
+%   v1.1 (2025-06-26): Enhanced bold small caps with weight compensation
+%   v1.0 (2025-06-25): Initial release with typography synthesis
+%
+% TECHNICAL REQUIREMENTS:
+%   - LaTeX 2e (2020+)
+%   - pdfTeX or LuaTeX
+%   - Modern TeX distribution (TeX Live 2023+, MiKTeX current)
+%
+% DEPENDENCIES:
+%   Core: fontenc, fbb, zi4, newtxmath, mathalfa, microtype
+%   Layout: titlesec, enumitem, caption, geometry  
+%   Advanced: appendix, cleveref, hyperref
+%
+% USAGE:
+%   \usepackage{lltpaperstyle}                   % Full features
+%   \usepackage[grid]{lltpaperstyle}             % Show baseline grid
+%   \usepackage[minimal]{lltpaperstyle}          % Minimal features only
+%   \usepackage[natbib]{lltpaperstyle}           % Use natbib compatibility
+%   \usepackage[nocolor]{lltpaperstyle}          % Disable custom colors
+%   \usepackage[draft]{lltpaperstyle}            % Draft mode with visible boxes
+%   or
+%   \input{paper/preamble.tex}  % Recommended with bibliography
+%
+% PACKAGE OPTIONS:
+%   grid/nogrid - Enable/disable baseline grid overlay (default: nogrid)
+%   minimal     - Load only essential features (dimensions, compilation fixes)
+%   natbib      - Use natbib instead of biblatex (compatibility mode)
+%   nocolor     - Disable all custom colors (use black text throughout)
+%   draft       - Draft mode with visible overfull boxes and link borders
+%   nobiblatex  - Disable automatic biblatex loading (if you load it manually)
+%
+% DOCUMENTATION:
+%   - paper/README.md (complete API reference)
+%   - paper/STYLE_GUIDE.md (typography standards)
+%   - Inline comments throughout this file
+%
+% ==============================================================================
+
+\ProvidesPackage{lltpaperstyle}[2025/07/09 v1.6 Academic Typography - Package Options]
+
+% ==============================================================================
+% PACKAGE OPTIONS
+% ==============================================================================
+%
+% The lltpaperstyle package supports the following options:
+%
+% grid/nogrid (default: nogrid)
+%   - grid: Display the 13.2pt baseline grid overlay for typography debugging
+%   - nogrid: Hide the baseline grid (normal production mode)
+%   - Usage: \usepackage[grid]{lltpaperstyle}
+%   - Effect: Loads gridoverlay module and automatically calls \showgrid
+%
+% minimal (default: off)  
+%   - Load only essential features: dimensions and compilation fixes
+%   - Skips: fonts, colors, headings, lists, and all typography enhancements
+%   - Usage: \usepackage[minimal]{lltpaperstyle}
+%   - Use case: Compatibility mode or when custom typography is needed
+%
+% natbib (default: off)
+%   - Enable natbib compatibility mode (placeholder for future implementation)
+%   - Usage: \usepackage[natbib]{lltpaperstyle}
+%   - Note: Currently has no effect; use preamble-natbib.tex for natbib
+%
+% nocolor (default: off)
+%   - Disable all custom colors; use black text throughout
+%   - Affects: headings, links, bullets, and all colored elements
+%   - Usage: \usepackage[nocolor]{lltpaperstyle}
+%   - Use case: Accessibility, printing, or journal requirements
+%
+% draft (default: off)
+%   - Enable draft mode with visible overfull boxes
+%   - Shows colored borders around hyperlinks instead of colored text
+%   - Passes draft option to microtype package
+%   - Usage: \usepackage[draft]{lltpaperstyle}
+%   - Use case: Debugging layout issues and overfull boxes
+%
+% nobiblatex (default: off)
+%   - Disable automatic biblatex loading
+%   - Use when you need to load biblatex manually with custom options
+%   - Usage: \usepackage[nobiblatex]{lltpaperstyle}
+%   - Use case: Custom bibliography configuration or using natbib
+%
+% Multiple options can be combined:
+%   \usepackage[draft,grid]{lltpaperstyle}
+%   \usepackage[minimal,nocolor]{lltpaperstyle}
+%
+% ------------------------------------------------------------------------------
+
+% Define boolean flags for package options
+\newif\ifllt@grid
+\newif\ifllt@minimal
+\newif\ifllt@natbib
+\newif\ifllt@nocolor
+\newif\ifllt@draft
+\newif\ifllt@nobiblatex
+
+% Declare package options
+\DeclareOption{grid}{\llt@gridtrue}
+\DeclareOption{nogrid}{\llt@gridfalse}
+\DeclareOption{minimal}{\llt@minimaltrue}
+\DeclareOption{natbib}{\llt@natbibtrue}
+\DeclareOption{nocolor}{\llt@nocolortrue}
+\DeclareOption{draft}{\llt@drafttrue\PassOptionsToPackage{draft}{microtype}}
+\DeclareOption{nobiblatex}{\llt@nobiblatextrue}
+
+% Process options
+\ProcessOptions\relax
+
+% Biblatex compatibility - detect if biblatex is already loaded
+\makeatletter
+\@ifpackageloaded{biblatex}{%
+  % biblatex already loaded - good, user loaded it before paperstyle
+  \PackageInfo{lltpaperstyle}{biblatex detected - using existing configuration}%
+}{%
+  % biblatex not loaded - check if we should load it
+  \ifllt@nobiblatex
+    % User explicitly disabled biblatex
+    \PackageInfo{lltpaperstyle}{biblatex loading disabled by nobiblatex option}%
+  \else
+    \ifllt@natbib
+      % User wants natbib compatibility
+      \PackageInfo{lltpaperstyle}{natbib compatibility mode - not loading biblatex}%
+    \else
+      % Load biblatex with sensible defaults
+      \PackageInfo{lltpaperstyle}{Loading biblatex with default settings}%
+      \RequirePackage[
+        backend=biber,
+        style=authoryear,
+        natbib=true,
+        sorting=nyt,
+        maxcitenames=2,
+        maxbibnames=99,
+        giveninits=true,
+        uniquename=init,
+        doi=true,
+        url=true,
+        isbn=false
+      ]{biblatex}
+    \fi
+  \fi
+}
+\makeatother
+
+% ==============================================================================
+% I. FONT SYSTEM CONFIGURATION
+% ==============================================================================
+% 
+% This section configures the three-font typography system:
+% 1. Text: TeX Gyre Pagella (Palatino-based) with full OpenType features
+% 2. Mathematics: newpxmath perfectly harmonized with Pagella  
+% 3. Monospace: Inconsolata (zi4) scaled for Pagella integration
+%
+% PAGELLA CHARACTERISTICS:
+%   - Larger x-height than Bembo (requires adjusted leading)
+%   - Wider character width (affects line length calculations)
+%   - Stronger stroke contrast (benefits from different microtype settings)
+%   - Superior small caps design (less tracking needed)
+%
+% REFERENCES:
+%   - GUST e-foundry (2009). TeX Gyre Pagella. GUST.
+%   - Sharpe, M. (2021). newpx: Palatino-based math fonts. CTAN.
+%   - Zapf, H. (1950). Original Palatino design principles.
+% 
+% ------------------------------------------------------------------------------
+
+% Font configuration has been moved to lltfonts.sty
+% This includes: tgpagella, zi4 (Inconsolata), newpxmath, mathalfa
+\RequirePackage{etoolbox} % For \AtBeginEnvironment and hooks
+
+% ==============================================================================
+% MODULAR COMPONENT LOADING
+% ==============================================================================
+% Load modular components if not already loaded
+% This allows users to override modules before loading paperstyle
+\makeatletter
+
+% Always load core modules
+\@ifpackageloaded{lltcompilationfixes}{}{\RequirePackage{paper/modules/lltcompilationfixes}}
+\@ifpackageloaded{lltdimensions}{}{\RequirePackage{paper/modules/lltdimensions}}
+
+% Load essential packages for minimal mode
+\ifllt@minimal
+  % Minimal mode still needs these essential packages
+  \RequirePackage[utf8]{inputenc}
+  \RequirePackage{amsmath}
+  \RequirePackage{textcomp}
+  \RequirePackage{xcolor}
+\else
+  % Full mode loads all modules
+  \@ifpackageloaded{lltfonts}{}{\RequirePackage{paper/modules/lltfonts}}
+  \ifllt@nocolor\else
+    \@ifpackageloaded{lltcolors}{}{\RequirePackage{paper/modules/lltcolors}}
+  \fi
+  \@ifpackageloaded{lltheadings}{}{\RequirePackage{paper/modules/lltheadings}}
+  \@ifpackageloaded{lltlists}{}{\RequirePackage{paper/modules/lltlists}}
+\fi
+
+% Load grid overlay if requested
+\ifllt@grid
+  \@ifpackageloaded{gridoverlay}{}{\RequirePackage{paper/gridoverlay}}
+  \showgrid
+\fi
+
+\makeatother
+
+% ==============================================================================
+% II. PROFESSIONAL COLOR SYSTEM
+% ==============================================================================
+%
+% Implements Hochuli's principle: "Color should enhance, never compete with, 
+% typography" with accessibility-compliant colors meeting WCAG 2.1 AA standards.
+%
+% DESIGN APPROACH:
+%   - Hierarchical grays for document structure
+%   - Professional blues for external references
+%   - Semantic color commands for consistent usage
+%   - Enhanced contrast for accessibility compliance
+%
+% REFERENCES:
+%   - Hochuli, J. (1987). Detail in Typography. Hyphen Press.
+%   - W3C (2018). Web Content Accessibility Guidelines 2.1. W3C.
+%   - Stone, M. (2006). A Field Guide to Digital Color. A K Peters.
+%
+% ------------------------------------------------------------------------------
+
+% Color definitions have been moved to lltcolors.sty
+% This allows easy customization without editing the main package
+% Users can override colors before loading paperstyle:
+%   \definecolor{linknavy}{RGB}{0,0,255}  % Custom blue
+%   \usepackage{paper/paperstyle}
+
+% ELEGANT SMALL CAPS COMMAND
+% Enhanced small caps with superior visibility and elegance
+\newcommand{\refinedsc}[1]{%
+  {\scshape\SetTracking{encoding={T1,OT1}}{80}\lsstyle #1}%  % Increased tracking for better visibility
+}
+\newcommand{\refinedscbold}[1]{%
+  {\bfseries\scshape\SetTracking{encoding={T1,OT1}}{100}\lsstyle #1}%  % Bold small caps with generous tracking
+}
+% Title page small caps with refined tracking
+\newcommand{\titlesc}[1]{%
+  {\fontsize{11pt}{13pt}\selectfont\scshape\SetTracking{encoding={T1,OT1}}{50}\lsstyle #1}%  % Reduced to 5% for readability
+}
+
+% Compatibility aliases for backward compatibility
+\let\elegantsc\refinedsc
+\let\elegantscbold\refinedscbold
+\let\elegantbullet\refinedbullet
+\let\elegantdot\refineddot
+\let\elegantdash\refineddash
+\let\elegantcircle\refinedcircle
+
+% ==============================================================================
+% SPECIAL CHARACTERS AND SYMBOL OPTIMIZATION
+% ==============================================================================
+% Perfectionist-level symbol handling for Pagella
+
+% Unicode support for proper typography
+\RequirePackage[utf8]{inputenc}  % UTF-8 input encoding
+
+% Legacy symbol definitions (kept for compatibility)
+% \newcommand{\numero}{n\textsuperscript{o}}  % Numero sign
+% \newcommand{\textcdot}{\kern0.08em\ensuremath{\cdot}\kern0.08em} % Centered dot
+
+% ==============================================================================
+% SECTION III: SPECIAL CHARACTERS & SYMBOLS (Comprehensive System)
+% ==============================================================================
+% Professional special character typography following:
+% - Bringhurst: Contextual dash spacing and symbol harmony
+% - Butterick: Modern dash usage and smart quotes
+% - Hochuli: Micro-details and optical adjustments
+% - Chicago Manual: Standard punctuation rules
+%
+% This comprehensive system provides context-aware spacing for all special
+% characters, preventing collisions and ensuring consistent rhythm.
+%
+% ------------------------------------------------------------------------------
+
+% SOPHISTICATED DASH TYPOGRAPHY
+% Context-aware dash spacing for different uses
+
+% Simplified dash system (backward compatible, zero visual impact)
+\newcommand{\emdash}{\kern0.08em---\kern0.08em}       % Standard em dash
+% \newcommand{\emdashclassic}{---}                      % Traditional (no spaces)
+% \newcommand{\emdashopen}{\emdash}                     % Alias: visually identical
+% \newcommand{\dashcompound}[2]{#1-#2}                  % Alias: standard hyphen
+% \newcommand{\dashparen}{\emdash}                      % Alias: standard em dash
+
+% Simplified ellipsis system (backward compatible, minimal visual change)
+\renewcommand{\ldots}{\textellipsis\kern0.16em}      % Standard with space
+% \newcommand{\tdots}{\ldots}                           % Alias: adequate for dialogue
+\renewcommand{\cdots}{$\cdots$}                       % Standard math dots
+% \newcommand{\fdots}{\ldots}                           % Alias: standard is fine
+% \newcommand{\edots}{\ldots}                           % Alias: standard is fine
+
+% DEGREE, PRIME, AND TECHNICAL SYMBOLS
+% Properly aligned and spaced for Pagella
+
+\newcommand{\degrees}{\kern0.05em\textdegree\kern0.05em} % Temperature/angles
+\newcommand{\primetext}{\kern0.02em\raisebox{0.1ex}{\(\prime\)}\kern0.02em} % Prime mark
+\newcommand{\dblprimetext}{\kern0.02em\raisebox{0.1ex}{\(\prime\prime\)}\kern0.02em} % Double prime
+
+% Ordinal indicators with proper kerning
+\newcommand{\ordth}{\textsuperscript{\kern0.02em th\kern0.02em}}
+\newcommand{\ordst}{\textsuperscript{\kern0.02em st\kern0.02em}}
+\newcommand{\ordnd}{\textsuperscript{\kern0.02em nd\kern0.02em}}
+\newcommand{\ordrd}{\textsuperscript{\kern0.02em rd\kern0.02em}}
+
+% Section and paragraph symbols
+\renewcommand{\S}{\textsection\kern0.08em}            % § with space
+\renewcommand{\P}{\textparagraph\kern0.08em}          % ¶ with space
+
+% CURRENCY SYMBOLS
+% Properly sized and spaced for text
+
+\newcommand{\euro}{\kern0.05em\texteuro\kern0.05em}
+\newcommand{\pound}{\kern0.05em\textsterling\kern0.05em}
+\makeatletter
+\ifllt@minimal
+  \providecommand{\yen}{\kern0.05em\textyen\kern0.05em}
+\else
+  \renewcommand{\yen}{\kern0.05em\textyen\kern0.05em}  % Use renewcommand as newpxmath defines \yen
+\fi
+\makeatother
+\newcommand{\cent}{\kern0.03em\textcent\kern0.03em}
+\newcommand{\currency}{\kern0.05em\textcurrency\kern0.05em}
+
+% TRADEMARK AND COPYRIGHT SYMBOLS
+% Properly sized superscripts
+
+\newcommand{\trademark}{\kern0.05em\textsuperscript{\kern0.02em TM\kern0.02em}}
+\newcommand{\registered}{\kern0.05em\textsuperscript{\textregistered}}
+\renewcommand{\copyright}{\kern0.05em\textcopyright\kern0.05em}
+\newcommand{\servicemark}{\kern0.05em\textsuperscript{\kern0.02em SM\kern0.02em}}
+
+% MATHEMATICAL OPERATORS IN TEXT
+\renewcommand{\textpm}{\kern0.08em\ensuremath{\pm}\kern0.08em}
+\providecommand{\texttimes}{\kern0.08em\ensuremath{\times}\kern0.08em}
+\providecommand{\textdiv}{\kern0.08em\ensuremath{\div}\kern0.08em}
+\newcommand{\textapprox}{\kern0.08em\ensuremath{\approx}\kern0.08em}
+\newcommand{\textinfty}{\kern0.08em\ensuremath{\infty}\kern0.08em}
+
+% ARROWS WITH SPACING
+\newcommand{\larrow}{\kern0.08em\ensuremath{\leftarrow}\kern0.08em}
+\newcommand{\rarrow}{\kern0.08em\ensuremath{\rightarrow}\kern0.08em}
+\newcommand{\uarrow}{\kern0.05em\ensuremath{\uparrow}\kern0.05em}
+\newcommand{\darrow}{\kern0.05em\ensuremath{\downarrow}\kern0.05em}
+
+% SMART QUOTES WITH KERNING
+\newcommand{\sq}[1]{\kern0.02em`#1'\kern0.02em}      % Single quotes
+\newcommand{\dq}[1]{\kern0.02em``#1''\kern0.02em}    % Double quotes
+\newcommand{\nq}[2]{\kern0.02em``#1 \sq{#2} #1''\kern0.02em} % Nested quotes
+
+% FRACTIONS AND SUPERIOR/INFERIOR FIGURES
+\newcommand{\half}{\kern0.03em\textonehalf\kern0.03em}
+\newcommand{\quarter}{\kern0.03em\textonequarter\kern0.03em}
+\newcommand{\threequarters}{\kern0.03em\textthreequarters\kern0.03em}
+\newcommand{\super}[1]{\textsuperscript{\kern0.02em#1\kern0.02em}}
+\newcommand{\sub}[1]{\textsubscript{\kern0.02em#1\kern0.02em}}
+
+% NON-BREAKING SPACES AND TIES
+\newcommand{\abbrspace}{\,}                           % Simplified: 0.167em vs 0.12em
+\newcommand{\initialspace}{\,}                        % Simplified: 0.167em vs 0.08em
+
+% Smart spacing commands
+\newcommand{\fig}[1]{Figure~#1}                       % Prevents break
+\newcommand{\tab}[1]{Table~#1}                        % Prevents break
+\newcommand{\unit}[2]{#1\kern0.16em#2}                % 5 km, 10 GB
+
+% REFINED SPACING COMMANDS
+\renewcommand{\thinspace}{\kern0.0625em}              % 1/16 em (hair space)
+\renewcommand{\medspace}{\kern0.125em}                % 1/8 em
+\renewcommand{\thickspace}{\kern0.25em}               % 1/4 em
+\newcommand{\wordspace}{\kern0.33em}                  % 1/3 em
+\newcommand{\emspace}{\kern1em}                       % Full em
+\newcommand{\twoemspace}{\kern2em}                    % Two em
+
+% SPECIAL CASES
+\newcommand{\apos}{'}                                  % Smart apostrophe
+\renewcommand{\dag}{\kern0.05em\dag\kern0.05em}       % Dagger
+\renewcommand{\ddag}{\kern0.05em\ddag\kern0.05em}     % Double dagger
+
+% ------------------------------------------------------------------------------
+
+% ==============================================================================
+% SEMANTIC EMPHASIS HIERARCHY (Optimized for TeX Gyre Pagella)
+% ==============================================================================
+%
+% Implements a sophisticated emphasis system following typographic masters:
+% - Butterick: Restraint and hierarchy
+% - Hochuli: Micro-refinements for each style
+% - Bringhurst: Harmony between roman, italic, and small caps
+%
+% HIERARCHY LEVELS:
+%   1. Roman (default) - no emphasis
+%   2. Italic - primary emphasis (most common)
+%   3. Bold - strong emphasis (use sparingly, <5% of text)
+%   4. Small caps - metadata emphasis (names, acronyms)
+%   5. Bold small caps - critical emphasis (very rare)
+%
+% ------------------------------------------------------------------------------
+
+% --- Level 1: Smart Emphasis with Nesting Support ---
+% Create internal command to check italic state
+\makeatletter
+\newcommand{\paperstyle@ifitalic}{%
+  \ifx\f@shape\itdefault
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+}
+% Keep makeatletter active for commands that need @ symbols
+
+% Redefines \emph to handle nested emphasis correctly
+\renewcommand{\emph}[1]{%
+  \paperstyle@ifitalic{\textnormal{#1}}{\textit{#1}}%
+}
+\makeatother  % Close the emphasis section properly
+
+% --- Level 2: Strong Emphasis ---
+% For critical terms requiring immediate attention
+\newcommand{\strongemph}[1]{%
+  \textbf{#1}%  % Bold only, no compounding
+}
+
+% --- Level 3: Metadata Emphasis ---
+% For structured information: names, acronyms, technical terms
+\newcommand{\meta}[1]{%
+  {\scshape\SetTracking{encoding={T1,OT1}}{30}\lsstyle #1}%  % 3% tracking
+}
+
+% --- Level 4: Critical Emphasis ---
+% Reserved for warnings, critical instructions (use very rarely)
+\newcommand{\critical}[1]{%
+  {\bfseries\scshape\SetTracking{encoding={T1,OT1}}{45}\lsstyle #1}%  % 4.5% tracking
+}
+
+% --- UNIFIED EMPHASIS SYSTEM ---
+
+% Single semantic emphasis command with style parameter
+% Usage: \semantic{style}{text} where style = term, person, acro, work
+\newcommand{\semantic}[2]{%
+  \ifstrequal{#1}{term}{\textit{#2}}{%
+  \ifstrequal{#1}{person}{{\scshape\SetTracking{encoding={T1,OT1}}{25}\lsstyle #2}}{%
+  \ifstrequal{#1}{acro}{{\small\scshape\SetTracking{encoding={T1,OT1}}{40}\lsstyle #2}}{%
+  \ifstrequal{#1}{work}{\textit{#2}}{%
+  \textit{#2}% Default to italic
+  }}}}%
+}
+
+% Legacy commands for backward compatibility
+\newcommand{\person}[1]{\semantic{person}{#1}}
+\newcommand{\term}[1]{\semantic{term}{#1}}
+\newcommand{\acro}[1]{\semantic{acro}{#1}}
+\newcommand{\work}[1]{\semantic{work}{#1}}
+
+% --- NESTED EMPHASIS HANDLERS ---
+
+% Smart italic that reverses in italic context
+\newcommand{\smartitalic}[1]{%
+  \ifx\f@shape\itdefault
+    \textnormal{#1}%  % Italic -> Roman
+  \else
+    \textit{#1}%      % Roman -> Italic
+  \fi
+}
+
+% Smart bold that adds italic in bold context
+\newcommand{\smartbold}[1]{%
+  \ifx\f@series\bfdefault
+    \textbf{\textit{#1}}%  % Bold -> Bold italic
+  \else
+    \textbf{#1}%           % Regular -> Bold
+  \fi
+}
+
+% --- LEGACY COMMANDS (kept for compatibility) ---
+\newcommand{\bsc}[1]{{\critical{#1}}}  % Redirect to semantic command
+\newcommand{\subtleemph}[1]{\emph{#1}}  % Color emphasis removed (accessibility)
+\newcommand{\externalref}[1]{\emph{#1}}  % Deprecated - use \emph
+\newcommand{\importantnote}[1]{\strongemph{#1}}  % Deprecated - use \strongemph
+\newcommand{\codecomment}[1]{\textit{#1}}  % Deprecated - use \code or \textit
+
+% --- Front Matter Optimization (Hochuli's principles) ---
+
+% Author formatting with tracked small caps (using microtype)
+\newcommand{\authorname}[1]{%
+  {\large\scshape\SetTracking{encoding={T1,OT1}}{60}\lsstyle #1}%
+}
+
+% Affiliation with italics (oldstyle handled by fbb package)
+\newcommand{\affiliation}[1]{%
+  {\normalsize\itshape #1}%
+}
+
+% Keywords with controlled spacing (using microtype)
+\newcommand{\keywords}[1]{%
+  \noindent{\bfseries\SetTracking{encoding={T1,OT1}}{10}\lsstyle Keywords:} 
+  {\itshape\SetTracking{encoding={T1,OT1}}{5}\lsstyle #1}%
+}
+
+% --- Monospace Font Optimization (Hochuli's harmonious integration) ---
+% Weight-harmonized inline code with proper spacing
+\newcommand{\code}[1]{%
+  {\scalefont{0.98}\textcolor{codecolor}{\texttt{#1}}}%
+}
+
+% Inline code with micro-spacing to prevent text disruption
+\newcommand{\inlinecode}[1]{%
+  \mbox{\kern0.05em\code{#1}\kern0.05em}%
+}
+
+% Balanced monospace for general use
+\newcommand{\balancedcode}[1]{%
+  \textcolor{codecolor}{\texttt{#1}}%
+}
+
+% File paths with proper hyphenation
+\newcommand{\filepath}[1]{%
+  \texttt{\hyphenchar\font=`\-\relax #1}%
+}
+
+% Variable names with subtle emphasis (Inconsolata has no italic/slanted)
+\newcommand{\var}[1]{%
+  \texttt{\textcolor{codecolor}{#1}}%
+}
+
+% Mixed serif/mono for documentation
+\newcommand{\doccode}[2]{%
+  #1: \balancedcode{#2}% Description in Pagella, code in balanced mono
+}
+
+% ==============================================================================
+% III. MICRO-TYPOGRAPHY OPTIMIZATION
+% ==============================================================================
+%
+% Implements Hochuli's micro-typographic principles for exceptional text quality.
+% Uses the microtype package with Pagella-specific optimizations for character
+% protrusion, font expansion, and intelligent tracking.
+%
+% CORE PRINCIPLES:
+%   - Enhanced character protrusion for optical edge alignment
+%   - Conservative word spacing flexibility for natural reading
+%   - Typeface-specific tracking adjustments
+%   - Contextual kerning for problematic letter pairs
+%
+% REFERENCES:
+%   - Thành, H. T. (2000). Micro-typographic extensions to TeX. TUGboat 21(4).
+%   - Hochuli, J. (1987). Detail in Typography. Chapter on letter spacing.
+%
+% ------------------------------------------------------------------------------
+
+% MICROTYPE PACKAGE CONFIGURATION (moved earlier; block kept for reference)
+% Hochuli's optimal settings adapted for TeX Gyre Pagella
+% Load without protrusion first to allow custom settings
+\RequirePackage[
+  activate={true,nocompatibility},
+  final,
+  tracking=true,
+  kerning=true,
+  spacing=true,
+  factor=1050,                        % Pagella: slightly less protrusion needed
+  stretch=15,                         % Pagella: wider chars allow more flexibility
+  shrink=15,
+  protrusion=false,                   % Disable initially to load custom settings
+  verbose=silent                      % Suppress tracking override warnings
+]{microtype}
+
+% ==============================================================================
+% SMALL CAPS TRACKING OPTIMIZATION (Size & Context Responsive)
+% ==============================================================================
+%
+% Implements Hochuli's principle that tracking must respond to:
+% 1. Weight (bold needs more space)
+% 2. Size (larger sizes need more tracking)
+% 3. Context (body text vs. display)
+%
+% ------------------------------------------------------------------------------
+
+% Regular small caps in body text (most common usage)
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  series = {m,l},
+  size = {footnotesize,small,normalsize}
+}{30}  % 3% - optimal for Pagella at text sizes
+
+% Bold small caps in body text (prevent density)
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  series = {b,bx},
+  size = {footnotesize,small,normalsize}
+}{45}  % 4.5% - compensate for bold weight
+
+% Display small caps (larger sizes)
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  size = {large,Large,LARGE}
+}{80}  % 8% - architectural presence
+
+% Title small caps (largest sizes)
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  size = {huge,Huge}
+}{120}  % 12% - maximum elegance
+
+% Hochuli: Optimal dash spacing for Pagella
+\SetExtraKerning[unit=space]
+   {encoding={T1}, family={qpl}, series={*}, size={footnotesize,small,normalsize}}
+   {\textendash={350,350}, % em-dash spacing (tighter for Pagella)
+    \textemdash={250,250}} % en-dash spacing
+
+% Hochuli: Fine-tune problematic letter pairs in bold Pagella
+\SetExtraKerning[unit=space]
+  {encoding={T1}, family={qpl}, series={b}}
+  {
+    T={100,0}, % Loosen before T
+    V={80,0},  % Loosen before V  
+    W={60,0},  % Loosen before W
+    Y={90,0},  % Loosen before Y
+    "={0,-100} % Tighten quotes
+  }
+
+% Hochuli: Monospace microtype optimization for code readability
+\SetTracking{encoding={T1}, family={zi4}}{-20} % Slight negative tracking for density
+\SetExtraKerning[unit=space]
+  {encoding={T1}, family={zi4}}
+  {
+    (={100,0},  % Loosen before opening parens
+    )={0,100},  % Loosen after closing parens
+    \textunderscore={50,50} % Space around underscores
+  }
+
+% Hochuli's "Detail in Typography": Size-responsive bold tracking
+% Larger bold sizes need more generous tracking for optical balance
+\SetTracking{
+  encoding = {T1},
+  family = {fbb},
+  series = {b},
+  size = {Large,LARGE,huge,Huge}
+}{20}
+
+% Standard bold text tracking (body text sizes)
+\SetTracking{
+  encoding = {T1},
+  series = b
+}{-10}
+
+% Hochuli: Bold small caps optimization for Pagella
+% 2% tracking (20/1000em) - excellent weight distribution
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  series = bx  % Bold extended weight
+}{20}
+
+% KERNING NOTE: SetExtraKerning removed due to compilation issues
+% The microtype package's character protrusion and expansion features
+% provide sufficient typography enhancement without manual kerning adjustments
+
+% Bold italic small caps (if needed)
+\SetTracking{
+  encoding = {T1},
+  shape = scit,
+  series = bx
+}{18}
+
+% Hochuli: Optimize word spacing for Pagella's wider characters
+\spaceskip=0.35em plus 0.25em minus 0.15em
+\xspaceskip=0.5em plus 0.3em minus 0.2em
+% titlesec now loaded by headings module
+\RequirePackage{enumitem}         % List spacing control
+\RequirePackage{caption}          % Figure/table caption control
+% Mathematical packages are loaded in lltfonts.sty
+% Math fonts are loaded in lltfonts.sty
+
+% ==============================================================================
+% IV. PAGE LAYOUT AND GEOMETRY
+% ==============================================================================
+%
+% Implements Butterick's reading optimization principles:
+% - Optimal line length: 45-90 characters (2-3 alphabets)
+% - Generous margins for focus and annotation space
+% - Current textwidth with 1.25" margins ≈ 65 chars (optimal)
+%
+% REFERENCES:
+%   - Butterick, M. (2019). Practical Typography. Chapter on line length.
+%   - Bringhurst, R. (2012). Elements of Typographic Style. 4th ed.
+%
+% ------------------------------------------------------------------------------
+
+% Geometry configuration has been moved to lltdimensions.sty
+% This allows easy customization of page layout
+
+% ==============================================================================
+% V. BASELINE GRID AND SPACING SYSTEM
+% ==============================================================================
+%
+% Implements systematic spacing based on a 13.2pt baseline grid derived from
+% Hochuli's principle that "consistent vertical rhythm improves readability."
+% All spacing relationships derive from this fundamental unit.
+%
+% MATHEMATICAL BASIS:
+%   Base text: 11pt
+%   Line spacing: 11pt × 1.20 = 13.2pt (optimized for Pagella's x-height)
+%   Half baseline: 6.6pt (paragraph spacing, footnote separation)
+%
+% REFERENCES:
+%   - Hochuli, J. (1987). Detail in Typography. Chapter on vertical rhythm.
+%   - Butterick, M. (2019). Practical Typography. Chapter on line spacing.
+%
+% ------------------------------------------------------------------------------
+
+% Baseline grid configuration has been moved to lltdimensions.sty
+% The gridunit (13.2pt) and derived spacing values are defined there
+
+% Butterick's optimal line length: 45-90 characters (2-3 alphabets)
+% Current textwidth with 1.25" margins ≈ 65 chars - optimal
+
+% Hochuli's detail: prevent widows/orphans more aggressively
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+% Additional perfectionist controls for Pagella
+\brokenpenalty=5000          % Penalty for page break after hyphenated line
+\predisplaypenalty=10000     % Keep at least 2 lines before display math
+\postdisplaypenalty=10000    % Keep at least 2 lines after display math
+\interlinepenalty=2500       % Discourage page breaks within paragraphs
+
+% Prevent isolated section headings
+\makeatletter
+\@secpenalty=-1000           % Encourage breaks before sections
+\makeatother
+\interfootnotelinepenalty=10000  % Prevent footnote splitting
+
+% CLASSICAL PARAGRAPH INDENTATION SYSTEM
+% Implements Bringhurst and Hochuli's principles for first paragraph handling
+% First paragraphs after headings, lists, and breaks remain flush left
+
+% Classical typography: first paragraphs after headings are flush left
+\makeatletter
+\let\@afterindentfalse\@afterindenttrue
+\@afterindentfalse  % Changed: flush left first paragraphs after headings
+\makeatother
+
+% Custom commands for controlling indentation in special contexts
+\newcommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left paragraph
+\newcommand{\forceindent}{\hspace{\parindent}}        % Force indentation when needed
+
+% Flexible paragraph style commands for different document needs
+% Paragraph style commands are now in lltdimensions.sty
+
+% Deprecated spacing commands - use \vspace directly
+\newcommand{\compactpar}{\vspace{-\quartergridunit}}  % Legacy support
+\newcommand{\loosepars}{\vspace{\quartergridunit}}    % Legacy support
+\newcommand{\centeredpar}[1]{%             % Centered paragraph
+  {\centering\noindent#1\par}%
+}
+
+% Dialogue support for narrative text
+\newcommand{\dialogue}[1]{\par\indent #1\par}              % Standard dialogue with full indent
+
+% Epigraph environment for quotations at chapter/section beginnings
+\makeatletter
+\newenvironment{epigraph}{%
+  \vspace{\gridunit}%                  % 1 grid unit before
+  \begin{flushright}%
+  \begin{minipage}{0.618\textwidth}% Golden ratio width
+  \raggedleft\itshape%
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{0.5\gridunit}%      % 0.5 grid units between paragraphs
+}{%
+  \end{minipage}%
+  \end{flushright}%
+  \vspace{\gridunit}%                  % 1 grid unit after
+  \@afterindentfalse%               % No indent after epigraph
+}
+\makeatother
+
+% ==============================================================================
+% PROFESSIONAL BLOCK QUOTATION SYSTEM
+% ==============================================================================
+%
+% Implements sophisticated block quotation typography following master principles:
+% - Butterick: Visual distinction without jarring contrast
+% - Hochuli: Subtle differentiation through spacing and margins
+% - Brown: Systematic relationships with modular scale
+%
+% DESIGN DECISIONS:
+%   - Size: 10.5pt (95% of body) for subtle subordination
+%   - Leading: 13.2pt maintained for perfect grid alignment
+%   - Margins: 26.4pt (2 grid units) optimized for Pagella's width
+%   - Color: 15% gray matching paragraph heading hierarchy
+%   - Spacing: 1 grid unit before/after with asymmetric flexibility
+%
+% ------------------------------------------------------------------------------
+
+% Define quote gray color for subtle differentiation
+\definecolor{quotegray}{gray}{0.15}  % 15% gray matches paragraph headings
+
+% STANDARD BLOCK QUOTE
+% For quotations without paragraph breaks
+\makeatletter
+\renewenvironment{quote}{%
+  \vspace{\gridunit}%     % 1 grid unit before
+  \begin{list}{}{%
+    \setlength{\leftmargin}{2\gridunit}%       % 2 grid units (Pagella proportion)
+    \setlength{\rightmargin}{2\gridunit}%      % Symmetric margins
+    \setlength{\topsep}{0pt}%              % Spacing handled explicitly
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0.5\gridunit}%            % 0.5 units between paragraphs
+    \setlength{\itemsep}{0pt}%
+    \setlength{\listparindent}{\parindent}%
+    \fontsize{10.5}{13.2}\selectfont%      % 95% size, same leading
+    \color{quotegray}%                     % 15% gray for subtle distinction
+  }%
+  \item\relax
+}{%
+  \endlist
+  \vspace{\gridunit}%     % 1 grid unit after
+  \@afterindentfalse%                       % No indent after quote
+}
+\makeatother
+
+% EXTENDED QUOTATION
+% For quotations with multiple paragraphs
+\makeatletter
+\renewenvironment{quotation}{%
+  \vspace{\gridunit}%
+  \begin{list}{}{%
+    \setlength{\leftmargin}{2\gridunit}%
+    \setlength{\rightmargin}{2\gridunit}%
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0.5\gridunit}%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\listparindent}{\gridunit}%    % Maintain paragraph indent
+    \fontsize{10.5}{13.2}\selectfont%
+    \color{quotegray}%
+  }%
+  \item\relax
+}{%
+  \endlist
+  \vspace{\gridunit}%
+  \@afterindentfalse%
+}
+\makeatother
+
+% PROFESSIONAL ATTRIBUTION SYSTEM
+% For quote attributions with em-dash and right alignment
+\newcommand{\quoteattribution}[1]{%
+  \par\vspace{0.5\gridunit}%                       % 0.5 grid units
+  \hfill{\fontsize{10}{13.2}\selectfont\color{subsubcolor}--- #1}%
+  \par
+}
+
+% EMPHASIS QUOTE (renamed to avoid csquotes conflict)
+% Dramatic presentation for important quotations
+\makeatletter
+\newenvironment{emphasisquote}{%
+  \vspace{1.5\gridunit}%     % 1.5 units before
+  \begin{list}{}{%
+    \setlength{\leftmargin}{3\gridunit}%       % 3 grid units
+    \setlength{\rightmargin}{3\gridunit}%      % Dramatic inset
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0.5\gridunit}%
+    \setlength{\itemsep}{0pt}%
+    \fontsize{12}{15.84}\selectfont%       % Larger for emphasis (1.2× leading)
+    \itshape\color{quotegray}%             % Italic for distinction
+  }%
+  \item\relax
+}{%
+  \endlist
+  \vspace{1.5\gridunit}%     % 1.5 units after
+  \@afterindentfalse%
+}
+\makeatother
+
+% Special handling for environments that should not indent their first paragraph
+\AtBeginEnvironment{itemize}{\parindent=0pt}
+\AtBeginEnvironment{enumerate}{\parindent=0pt}
+\AtBeginEnvironment{description}{\parindent=0pt}
+\AtBeginEnvironment{quote}{\parindent=0pt}
+\AtBeginEnvironment{quotation}{\parindent=\parindent}  % Quotation keeps normal indentation
+\AtBeginEnvironment{emphasisquote}{\parindent=0pt}     % Emphasis quote no indent
+\AtBeginEnvironment{verbatim}{\parindent=0pt}
+\AtBeginEnvironment{figure}{\parindent=0pt}
+\AtBeginEnvironment{table}{\parindent=0pt}
+
+% Ensure first paragraph after environments is flush left
+% Create a command for no indent that works at document level
+\makeatletter
+\newcommand{\paperstylenoindent}{\@afterindentfalse}
+\makeatother
+
+% Display environments: flush left paragraph follows
+\AtEndEnvironment{itemize}{\paperstylenoindent}
+\AtEndEnvironment{enumerate}{\paperstylenoindent}
+\AtEndEnvironment{quote}{\paperstylenoindent}
+\AtEndEnvironment{emphasisquote}{\paperstylenoindent}
+\AtEndEnvironment{verbatim}{\paperstylenoindent}
+\AtEndEnvironment{figure}{\paperstylenoindent}
+\AtEndEnvironment{table}{\paperstylenoindent}
+% All display and list environments: flush left paragraph follows
+\AtEndEnvironment{description}{\paperstylenoindent}
+\AtEndEnvironment{quotation}{\paperstylenoindent}
+\AtEndEnvironment{epigraph}{\paperstylenoindent}
+
+% ==============================================================================
+% OPTICAL PARAGRAPH REFINEMENTS (Hochuli's Detail in Typography)
+% ==============================================================================
+% Advanced paragraph typography for special cases requiring optical adjustments
+
+% Hanging punctuation for paragraphs starting with quotes
+% Hochuli: "Quotation marks should hang into the margin for optical alignment"
+
+% Lettrine/drop cap support moved to headings module
+
+% ==============================================================================
+% CONSERVATIVE SECTION OPENING ENHANCEMENTS
+% ==============================================================================
+% Professional treatments for major section breaks in academic articles
+% following conservative typographic principles suitable for scholarly work.
+%
+% DESIGN PHILOSOPHY:
+%   - Understated elegance over decoration
+%   - Professional credibility maintained
+%   - Subtle hierarchy without distraction
+%   - Grid-perfect implementation
+%
+% REFERENCES:
+%   - Bringhurst: "Typography exists to honor content"
+%   - Chicago Manual of Style guidelines for academic publishing
+
+% MINIMAL DROP CAP FOR ACADEMIC USE (USE SPARINGLY)
+% Ultra-conservative 2-line drop cap - same color as body text
+\newcommand{\academicdropcap}[2]{%
+  \lettrine[%
+    lines=2,%               % Modest 2-line height
+    lhang=0,%              % No hang into margin
+    loversize=0,%          % No size increase
+    findent=0pt,%          % No negative indent
+    nindent=0.5em%         % Standard following line indent
+  ]{\color{textblack}#1}{#2}% Body text color only
+}
+
+% FIRST LINE SMALL CAPS
+% Elegant first line treatment for section openings
+\newcommand{\firstlinesc}[1]{%
+  {\fontsize{11}{13.2}\selectfont% Maintain body size
+   \SetTracking{encoding={T1,OT1}}{30}\lsstyle% Subtle tracking
+   \textsc{#1}}%
+}
+
+% SECTION OPENING WITH SMALL CAPS FIRST LINE
+% Professional opening for major sections
+\providecommand{\sectionopening}{}% Check if already defined
+\renewcommand{\sectionopening}[1]{%
+  \noindent%
+  \firstlinesc{#1}%
+  \par\noindent%
+}
+
+% MINIMAL SECTION BREAK MARKERS
+% Ultra-conservative options for academic articles
+
+% Simple space break (recommended for academic use)
+\providecommand{\sectionbreak}{}% Check if already defined
+\renewcommand{\sectionbreak}{%
+  \vspace{2\gridunit}% 2 grid units of clean space
+}
+
+
+% Alias for consistency
+\providecommand{\spacebreak}{}% Check if already defined
+\renewcommand{\spacebreak}{\sectionbreak}
+
+% ENHANCED SECTION SPACING
+% Additional space after major sections for visual hierarchy
+
+% Deprecated - use \vspace{\gridunit} directly
+\newcommand{\majorsectionspace}{\vspace{\gridunit}}
+
+% FIRST PARAGRAPH ENHANCEMENT
+% Special treatment for opening paragraph of sections
+\newenvironment{openingparagraph}{%
+  \noindent%
+  \setlength{\parindent}{0pt}% No indent for opening
+  \setlength{\baselineskip}{\gridunit}% Maintain grid
+  \fontsize{11}{13.2}\selectfont% Standard size
+}{%
+  \par%
+  \setlength{\parindent}{\gridunit}% Restore standard indent
+}
+
+% ACADEMIC ABSTRACT OPENING
+% Professional treatment for abstract sections
+\newcommand{\abstractopening}{%
+  \begin{center}
+    {\fontsize{12}{13.2}\selectfont%
+     \SetTracking{encoding={T1,OT1}}{80}\lsstyle%
+     \textsc{abstract}}%
+  \end{center}
+  \vspace{0.5\gridunit}% 0.5 grid units
+}
+
+
+
+% Grid-perfect additional paragraph spacing options
+% Quarter-grid spacing for dense technical text
+\newcommand{\quartergridparagraphs}{%
+  \setlength{\parindent}{\gridunit}%
+  \setlength{\parskip}{0.25\gridunit plus 0.5pt minus 0.5pt}% 0.25 units flexible
+}
+
+% Third-grid spacing for enhanced readability sections
+\newcommand{\thirdgridparagraphs}{%
+  \setlength{\parindent}{\gridunit}%
+  \setlength{\parskip}{4.4pt plus 0.5pt minus 0.5pt}% 0.33 units flexible
+}
+
+% Typography-aware ornamental paragraph break
+% Provides visual separation without ornaments
+\newcommand{\paragraphbreak}{%
+  \par\vspace{13.2pt}% % 1 grid unit of vertical space
+  \noindent%
+}
+
+% Inline sidenote command for margin annotations
+% Aligns to outer margin with proper baseline positioning
+\newcommand{\sidenote}[1]{%
+  \marginpar{%
+    \footnotesize\raggedright%
+    \setlength{\parindent}{0pt}%
+    \setlength{\parskip}{0.25\gridunit}%
+    #1%
+  }%
+}
+
+\makeatother
+
+% ==============================================================================
+% VI. MATHEMATICAL TYPOGRAPHY SYSTEM
+% ==============================================================================
+%
+% Comprehensive mathematical typography using newpxmath harmonized with Pagella,
+% enhanced with professional symbol sets from mathalfa package.
+% All spacing aligned to the 13.2pt baseline grid.
+%
+% FONT INTEGRATION:
+%   - newtxmath with libertine option for serif math harmony
+%   - mathalfa: Boondoxo calligraphic, Boondox blackboard/fraktur
+%   - Optimized mu-spacing for inline mathematics
+%   - Baseline-aligned display mathematics
+%
+% REFERENCES:
+%   - Knuth, D. (1986). The TeXbook. Addison-Wesley.
+%   - Downes, M. et al. (2002). The amsmath package. AMS.
+%   - Sharpe, M. (2024). newtx package documentation. CTAN.
+%
+% ------------------------------------------------------------------------------
+
+% DISPLAY MATHEMATICS SPACING
+% All spacing based on optimized baseline grid (13.2pt = 11pt × 1.20 leading)
+% Hochuli: "Consistent vertical rhythm improves readability"
+
+% --- Semantic Math Commands (Brown's systematic approach with enhanced fonts) ---
+% Number sets with improved blackboard bold
+\newcommand{\real}{\mathbb{R}}
+\renewcommand{\natural}{\mathbb{N}}
+\newcommand{\integer}{\mathbb{Z}}
+\newcommand{\rational}{\mathbb{Q}}
+\newcommand{\complex}{\mathbb{C}}
+\newcommand{\field}{\mathbb{F}}        % Fields
+\newcommand{\prob}{\mathbb{P}}         % Probability measure
+
+% Operators and functions
+\newcommand{\norm}[1]{\|#1\|}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\inner}[2]{\langle #1, #2 \rangle}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\given}{\mid}              % Conditional probability/sets
+
+% Calligraphic letters for spaces, algebras, etc.
+\newcommand{\hilbert}{\mathcal{H}}     % Hilbert space
+\newcommand{\banach}{\mathcal{B}}      % Banach space  
+\newcommand{\algebra}{\mathcal{A}}     % Algebra
+\newcommand{\topology}{\mathcal{T}}    % Topology
+\newcommand{\measure}{\mathcal{M}}     % Measure space
+
+% Common mathematical constructions
+\DeclareMathOperator{\tr}{tr}          % Trace
+\DeclareMathOperator{\rank}{rank}      % Rank
+\DeclareMathOperator{\Span}{span}      % Span
+\DeclareMathOperator{\supp}{supp}      % Support
+\DeclareMathOperator*{\argmax}{arg\,max} % Argmax
+\DeclareMathOperator*{\argmin}{arg\,min} % Argmin
+
+
+% ==============================================================================
+% PROFESSIONAL CAPTION AND FLOAT SYSTEM
+% ==============================================================================
+%
+% Implements best-practice caption positioning and formatting following
+% academic publishing standards and our typographic framework principles.
+%
+% CAPTION CONVENTIONS:
+%   - Tables: Captions ABOVE the table content
+%   - Figures: Captions BELOW the figure content  
+%   - Systematic sizing using Brown's modular scale (10pt from 11pt base)
+%   - Professional formatting with hanging indents
+%
+% FLOAT PLACEMENT:
+%   - Recommended: [tbp] (top, bottom, page) for professional layout
+%   - Use \FloatBarrier to control float placement by section
+%   - Avoid [h] (here) placement in professional documents
+%
+% REFERENCES:
+%   - Chicago Manual of Style (17th ed.): Figure and table guidelines
+%   - Brown, T. (2018): Systematic caption sizing relationships
+%   - Academic publishing best practices
+%
+% ------------------------------------------------------------------------------
+
+% ==============================================================================
+% REFINED CAPTION SYSTEM (Optimized for Pagella & Grid)
+% ==============================================================================
+%
+% Implements sophisticated caption typography following:
+% - Butterick: Captions as document metadata
+% - Bringhurst: Narrower measure for readability
+% - Hochuli: Perfect grid alignment
+% - Chicago: Distinct table/figure positioning
+%
+% ------------------------------------------------------------------------------
+
+% GLOBAL CAPTION DEFAULTS - Enhanced for QJE style
+% Larger, more prominent captions for scientific clarity
+\captionsetup{
+  font={small},               % 10pt - increased from footnotesize (9.5pt)
+  labelfont={bf},             % Bold labels without small caps for prominence
+  textfont={},                % Black text for maximum clarity
+  labelsep=period,            % Period separator (QJE style)
+  skip=0pt,                   % We'll control spacing per type
+  width=\textwidth,           % Full width for scientific tables/figures
+  margin=0pt,                 % No margins - use full width
+  justification=raggedright,  % Left-aligned (QJE style)
+  singlelinecheck=false,      % Always left-align, even single lines
+  format=plain,               % No hanging indent
+  indention=0pt,              % No indention
+  parskip=0pt,                % No extra paragraph spacing
+  aboveskip=0pt,              % Controlled per type
+  belowskip=0pt               % Controlled per type
+}
+
+% TABLE CAPTIONS (Above content - QJE style)
+\captionsetup[table]{
+  position=above,              % Always above tables
+  aboveskip=\gridunit,           % 1 grid unit before caption
+  belowskip=0.75\gridunit,            % 0.75 units after caption (more space for importance)
+  font={normalsize},          % 11pt - same as body text for prominence
+  labelfont={bf},             % Bold "Table 1." format
+  textfont={}                 % Regular text, black
+}
+
+% FIGURE CAPTIONS (Below content - QJE style)
+\captionsetup[figure]{
+  position=below,              % Always below figures
+  aboveskip=0.75\gridunit,            % 0.75 units before caption (more space)
+  belowskip=\gridunit,           % 1 grid unit after caption
+  font={normalsize},          % 11pt - same as body text for prominence
+  labelfont={bf},             % Bold "Figure 1." format
+  textfont={}                 % Regular text, black
+}
+
+% ==============================================================================
+% ADVANCED FLOAT PLACEMENT SYSTEM
+% ==============================================================================
+% Implements intelligent float distribution following Müller-Brockmann's grid
+% principles and Bringhurst's page balance philosophy. This system prevents
+% float clustering, maintains visual rhythm, and ensures optimal reading flow.
+%
+% KEY FEATURES:
+%   - Dynamic float distribution algorithm
+%   - Section-aware float barriers
+%   - Grid-perfect placement with baseline alignment
+%   - Visual weight balancing across pages
+%   - Smart "here" float alternatives
+%
+% REFERENCES:
+%   - Müller-Brockmann, J. (1981). Grid Systems in Graphic Design
+%   - Bringhurst, R. (2012). The Elements of Typographic Style
+%   - Tufte, E. (2001). The Visual Display of Quantitative Information
+
+% OPTIMIZED FLOAT PLACEMENT PARAMETERS
+% Fine-tuned for academic documents with mixed text/float content
+\renewcommand{\topfraction}{0.75}       % Reduced from 0.85 to prevent top clustering
+\renewcommand{\bottomfraction}{0.60}    % Reduced from 0.70 for better balance
+\renewcommand{\textfraction}{0.20}      % Increased from 0.15 - min 20% text required
+\renewcommand{\floatpagefraction}{0.70} % Slightly increased for cleaner float pages
+\setcounter{topnumber}{2}               % Reduced from 3 to prevent top-heavy pages
+\setcounter{bottomnumber}{2}            % Kept at 2 for balance
+\setcounter{totalnumber}{3}             % Reduced from 4 to prevent overcrowding
+\setcounter{dbltopnumber}{2}            % Reduced for two-column layouts
+
+% PENALTIES FOR FLOAT PLACEMENT
+% Discourage problematic float arrangements
+\makeatletter
+\setlength{\@fptop}{0pt plus 1fil}      % Flexible space at top of float pages
+\setlength{\@fpsep}{\gridunit}\addtolength{\@fpsep}{0pt plus 1fil}   % 1 baseline unit between floats
+\setlength{\@fpbot}{0pt plus 1fil}      % Flexible space at bottom
+\makeatother
+
+% REFINED FLOAT SPACING - Tighter for conservative scientific papers
+% All measurements in baseline grid units (13.2pt) with minimal flexibility
+\setlength{\floatsep}{\gridunit}\addtolength{\floatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit}        % 1 unit ±0.25 (reduced)
+\setlength{\textfloatsep}{\gridunit}\addtolength{\textfloatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit}    % 1 unit ±0.25 (reduced from 2)
+\setlength{\intextsep}{0.75\gridunit}\addtolength{\intextsep}{0pt plus 0.125\gridunit minus 0pt}         % 0.75 units +0.125/-0 (tighter)
+\setlength{\dblfloatsep}{\gridunit}\addtolength{\dblfloatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit}     % 1 unit ±0.25 (reduced)
+\setlength{\dbltextfloatsep}{\gridunit}\addtolength{\dbltextfloatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit} % 1 unit ±0.25 (reduced from 2)
+
+% FLOAT PLACEMENT QUALITY PARAMETERS
+\providecommand{\topfigrule}{\vspace*{0pt}}  % No rule above top figures
+\providecommand{\botfigrule}{\vspace*{0pt}}  % No rule below bottom figures
+
+% ==============================================================================
+% INTELLIGENT FLOAT BARRIER SYSTEM
+% ==============================================================================
+% Implements section-aware automatic float barriers to prevent float drift
+% across major document divisions while maintaining reading flow.
+
+% AUTOMATIC SECTION BARRIERS
+% Hook into sectioning commands to insert intelligent barriers
+\let\originalsection\section
+\renewcommand{\section}{%
+  \FloatBarrier  % Clear all pending floats before new section
+  \originalsection
+}
+
+% CONDITIONAL SUBSECTION BARRIERS
+% Only insert barriers if floats are pending (requires placeins package)
+\let\originalsubsection\subsection
+\renewcommand{\subsection}{%
+  \ifnum\value{topnumber}>0  % Check if floats are pending
+    \FloatBarrier
+  \fi
+  \originalsubsection
+}
+
+% MANUAL BARRIER COMMANDS
+% For fine-grained control when automatic barriers aren't sufficient
+
+% Soft barrier - allows some float movement
+\newcommand{\softfloatbarrier}{%
+  \vspace{0pt plus \gridunit}  % Flexible space up to 1 grid unit
+  \FloatBarrier
+  \vspace{0pt plus \gridunit}
+}
+
+% Hard barrier - strict float placement
+\newcommand{\hardfloatbarrier}{%
+  \clearpage  % Force new page if necessary
+}
+
+% Section-end barrier - use before major transitions
+\newcommand{\sectionendfloatbarrier}{%
+  \vspace{\gridunit}  % 1 grid unit space
+  \FloatBarrier
+  \vspace{\gridunit}
+}
+
+% HERE-FLOAT ALTERNATIVES
+% Smart placement commands that degrade gracefully
+
+% Try-here float - attempts [h] then falls back to [tbp]
+\newcommand{\tryherefigure}[1]{%
+  \begin{figure}[h]
+    #1
+  \end{figure}
+  % If that fails, LaTeX automatically tries [tbp]
+}
+
+% Force-here float - uses minipage for absolute placement
+\newcommand{\forceherefigure}[1]{%
+  \vspace{\gridunit}  % Grid space before
+  \noindent\begin{minipage}{\textwidth}
+    \centering
+    #1
+  \end{minipage}
+  \vspace{\gridunit}  % Grid space after
+}
+
+% Grid-aligned here float
+\newenvironment{herefloat}{%
+  \vspace*{\dimexpr\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
+  \begin{center}%
+}{%
+  \end{center}%
+  \vspace*{\dimexpr\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
+}
+
+% FLOAT QUALITY METRICS
+% Commands to help diagnose float placement issues
+
+% Show float statistics
+\newcommand{\showfloatstats}{%
+  \typeout{Float Statistics:}%
+  \typeout{  Top floats on this page: \the\value{topnumber}}%
+  \typeout{  Bottom floats on this page: \the\value{bottomnumber}}%
+  \typeout{  Total floats on this page: \the\value{totalnumber}}%
+}
+
+% Mark problematic float placement
+\newcommand{\floatwarning}[1]{%
+  \marginpar{\color{red}\tiny Float: #1}%
+}
+
+% VISUAL BALANCE HELPERS
+% Commands to maintain visual weight distribution
+
+% Add balancing space when page is float-heavy
+\newcommand{\balancefloatpage}{%
+  \vspace{0pt plus 2\gridunit}  % Up to 2 grid units of flexible space
+}
+
+% Compensate for large float at top
+\newcommand{\compensatetopfloat}{%
+  \enlargethispage{\gridunit}  % Add 1 grid unit to page
+}
+
+% ENHANCED TABLE CONFIGURATION (moved after package loading)
+% Professional table defaults - basic array settings
+\renewcommand{\arraystretch}{1.2}       % Increased row height for readability
+\setlength{\tabcolsep}{8pt}             % Column separation for professional spacing
+
+% LONGTABLE INTEGRATION (moved after package loading)
+
+% ==============================================================================
+% ADVANCED CAPTION COMMANDS
+% ==============================================================================
+
+% Caption source for data attribution
+\newcommand{\captionsource}[1]{%
+  \vspace{0.25\gridunit}% 0.25 grid units
+  {\footnotesize\color{subtlegray}\emph{Source:} #1}%
+}
+
+% Continued caption for multi-page tables/figures
+\newcommand{\captioncontinued}{%
+  \captionsetup{list=no}% Don't add to list of tables/figures
+  \caption*{\emph{(continued from previous page)}}%
+}
+
+% Sub-caption configuration for compound figures
+% NOTE: Commented out as subfigure package is not loaded
+% Uncomment and load subfig or subcaption package if needed
+% \captionsetup[subfigure]{
+%   font=scriptsize,            % 8pt for sub-captions
+%   labelfont={bf},            % Bold labels
+%   labelformat=simple,         % Just (a), (b), etc.
+%   labelsep=space,            % Space separator
+%   skip=3.3pt,                % 0.25 units spacing
+%   margin=0pt,                % No extra margins
+%   justification=centering    % Center sub-captions
+% }
+
+% ==============================================================================
+% QJE-STYLE NOTES SYSTEM FOR TABLES AND FIGURES
+% ==============================================================================
+% Professional notes following Quarterly Journal of Economics and American 
+% Economic Review standards with perfect grid alignment and optimal spacing.
+%
+% KEY PRINCIPLES:
+%   - Perfect baseline grid alignment (13.2pt system)
+%   - Left-justified text matching QJE/AER style
+%   - Optimal spacing from table/figure content
+%   - Clear visual hierarchy with consistent formatting
+%   - Support for multiple note types (notes, source, significance)
+%
+% REFERENCES:
+%   - Quarterly Journal of Economics style guide
+%   - American Economic Review formatting standards
+%   - Chicago Manual of Style, 17th ed.
+
+% TABLE NOTES ENVIRONMENT
+% Placed immediately after \end{tabular} or \end{tabularx}
+\newenvironment{tablenotes}{%
+  \par\vspace{0.25\gridunit}% 0.25 grid units from table bottom
+  \footnotesize% 9pt for notes (Chicago standard)
+  \setlength{\parindent}{0pt}% Flush left
+  \setlength{\parskip}{0.25\gridunit}% 0.25 units between note types
+  \raggedright% Left-justified (QJE standard)
+  \setlength{\leftskip}{0pt}% Ensure full left alignment
+  \setlength{\rightskip}{0pt plus 1fil}% Ragged right edge
+}{%
+  \par\vspace{0.5\gridunit}% 0.5 grid units after notes block
+}
+
+% TABLE NOTE COMMANDS
+% Each command formats its content with proper emphasis
+\newcommand{\tabnote}[1]{%
+  {\itshape Notes:} #1\par%
+}
+
+\newcommand{\tabsource}[1]{%
+  {\itshape Source:} #1\par%
+}
+
+% Significance stars with precise spacing
+\newcommand{\tabstars}{%
+  \textsuperscript{***}\,p\,$<$\,0.01, 
+  \textsuperscript{**}\,p\,$<$\,0.05, 
+  \textsuperscript{*}\,p\,$<$\,0.1\par%
+}
+
+% Alternative significance notation (for robustness checks)
+\newcommand{\tabdaggers}{%
+  \textsuperscript{\textdagger\textdagger\textdagger}\,p\,$<$\,0.01, 
+  \textsuperscript{\textdagger\textdagger}\,p\,$<$\,0.05, 
+  \textsuperscript{\textdagger}\,p\,$<$\,0.1\par%
+}
+
+% FIGURE NOTES ENVIRONMENT
+% Placed immediately after \caption{...}
+\newenvironment{fignotes}{%
+  \par\vspace{-0.25\gridunit}% Tighter spacing for figures (0.25 units less)
+  \footnotesize% 9pt for notes
+  \setlength{\parindent}{0pt}% Flush left
+  \setlength{\parskip}{0.25\gridunit}% 0.25 units between note types
+  \raggedright% Left-justified
+  \setlength{\leftskip}{0pt}%
+  \setlength{\rightskip}{0pt plus 1fil}%
+}{%
+  \par\vspace{0.5\gridunit}% 0.5 grid units after notes
+}
+
+% FIGURE NOTE COMMANDS
+\newcommand{\fignote}[1]{%
+  {\itshape Notes:} #1\par%
+}
+
+\newcommand{\figsource}[1]{%
+  {\itshape Source:} #1\par%
+}
+
+% ADDITIONAL NOTE COMMANDS FOR COMPREHENSIVE SUPPORT
+% Sample size notation
+\newcommand{\tabsample}[1]{%
+  {\itshape Sample:} #1\par%
+}
+
+% Variable definitions
+\newcommand{\tabvars}[1]{%
+  {\itshape Variables:} #1\par%
+}
+
+% Estimation method
+\newcommand{\tabmethod}[1]{%
+  {\itshape Method:} #1\par%
+}
+
+% Standard error clustering
+\newcommand{\tabcluster}[1]{%
+  {\itshape Standard errors:} #1\par%
+}
+
+% PANEL LABELS FOR MULTI-PANEL FIGURES/TABLES
+\newcommand{\panellabel}[1]{%
+  \textbf{Panel #1.}\quad%
+}
+
+% SUBFIGURE/SUBTABLE NOTES
+% For when individual panels need separate notes
+\newcommand{\panelnote}[2]{%
+  {\itshape Panel #1:} #2\par%
+}
+
+% ==============================================================================
+% VII. TITLE PAGE SYSTEM
+% ==============================================================================
+%
+% Implements a systematic title page design following Brown's modular scale,
+% Hochuli's baseline grid alignment, and Butterick's professional standards.
+% All measurements derive from the base 11pt/13.2pt system.
+%
+% MODULAR SCALE (Perfect Fourth 1.333):
+%   Title: 18pt (base section size, 11pt × 1.333²)
+%   Authors: 12pt (11pt × 1.09, subtle distinction)
+%   Date/Abstract: 11pt (base text size)
+%   Abstract content: 10pt (11pt × 0.91, small size)
+%
+% VERTICAL SPACING:
+%   All spacing in baseline units (13.2pt) or half units (6.6pt)
+%   Maintains consistent vertical rhythm throughout title page
+%
+% REFERENCES:
+%   - Brown, T. (2018). Modular scale in document hierarchy
+%   - Hochuli, J. (1987). Title page as typographic system
+%   - Economics paper conventions (AER, QJE standards)
+%
+% ------------------------------------------------------------------------------
+
+% MATHEMATICAL CONSTANTS FOR TITLE PAGE
+% Golden ratio and modular scale factors
+\def\goldenratio{1.618}
+\def\goldenratioMinor{0.618}
+\def\modularscale{1.333}
+\def\modularscaleMinor{0.75}
+
+% SYSTEMATIC SPACING COMMANDS
+% All spacing derived from baseline grid and mathematical ratios
+% Optimized for Pagella's larger x-height and character proportions
+
+% Grid unit is now defined in lltdimensions.sty
+% \gridunit = 13.2pt (baseline grid)
+
+\newlength{\titlespacemajor}
+\newlength{\titlespaceminor}
+\newlength{\titlespaceinter}
+\setlength{\titlespacemajor}{2\gridunit}     % 26.4pt (2.0 baseline units)
+\setlength{\titlespaceminor}{1.5\gridunit}   % 19.8pt (1.5 baseline units)
+\setlength{\titlespaceinter}{\gridunit}      % 13.2pt (1.0 baseline unit)
+
+% TITLE PAGE DIMENSIONS
+% Optimized for Pagella's wider characters
+\newlength{\titlepagewidth}
+\setlength{\titlepagewidth}{0.72\textwidth}  % Slightly narrower for Pagella's width
+
+% TITLE FORMATTING COMMANDS
+% Following Brown's modular scale with Hochuli's precise spacing
+
+% Main title command - elegant with refined tracking
+\newcommand{\articletitle}[1]{%
+  {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{sectioncolor}%
+   \SetTracking{encoding={T1,OT1}}{20}\lsstyle #1\par}%  % Bold with moderate tracking, softened navy
+  \vspace{\titlespacemajor}%
+}
+
+% Title with footnote for acknowledgments/thanks
+% Usage: \articletitlefootnote{Title}{Footnote text}
+\newcommand{\articletitlefootnote}[2]{%
+  {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{sectioncolor}%
+   \SetTracking{encoding={T1,OT1}}{20}\lsstyle #1\footnote{#2}\par}%  % Bold with moderate tracking
+  \vspace{\titlespacemajor}%
+}
+
+% Alternative compact title for papers with many authors
+\newcommand{\articletitlecompact}[1]{%
+  {\fontsize{16pt}{19.8pt}\selectfont\bfseries #1\par}%  % 1.5 grid units leading
+  \vspace{1.5\gridunit}% 19.8pt (1.5 baseline units)
+}
+
+% Compact title with footnote
+\newcommand{\articletitlecompactfootnote}[2]{%
+  {\fontsize{16pt}{19.8pt}\selectfont\bfseries #1\footnote{#2}\par}%  % 1.5 grid units leading
+  \vspace{1.5\gridunit}% 19.8pt (1.5 baseline units)
+}
+
+% SYSTEMATIC AUTHOR SPACING
+% Optimized for Pagella's wider characters
+\newlength{\authorspacer}
+\setlength{\authorspacer}{0.045\textwidth}% 4.5% - slightly tighter for Pagella
+\newcommand{\authorspace}{\hspace{\authorspacer}}
+
+% Elegant author name formatting without small caps
+\newcommand{\elegantauthor}[1]{%
+  {\fontsize{12pt}{14pt}\selectfont #1}%  % Regular text, no small caps
+}
+
+% Author formatting - elegant with enhanced small caps
+\newcommand{\articleauthors}[1]{%
+  {\fontsize{13pt}{16pt}\selectfont\color{textblack} #1\par}%  % Near-black for better contrast
+  \vspace{\titlespacemajor}%
+}
+
+% Date line - enhanced visibility with larger small caps
+\newcommand{\articledate}[1]{%
+  {\normalsize\color{subsubcolor}This version: \color{textblack}#1\par}%
+  \vspace{\titlespacemajor}% Golden ratio spacing before abstract
+}
+
+% ENHANCED ABSTRACT - elegant with refined typography
+% Uses enhanced small caps for superior visibility
+\newenvironment{articleabstract}{%
+  \begin{minipage}{\titlepagewidth}%
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{0.5\titlespaceinter}%
+  {\normalsize\color{subsubcolor}\titlesc{Abstract}}\par%
+  \vspace{0.8\titlespaceinter}%
+  \small\color{textblack}% 10pt for abstract text, near-black
+}{%
+  \end{minipage}%
+}
+
+% Keywords - enhanced visibility with better formatting
+\newcommand{\articlekeywords}[1]{%
+  \vspace{\titlespaceminor}%
+  \begin{minipage}{\titlepagewidth}%
+    \setlength{\baselineskip}{1.3\baselineskip}%
+    {\small\color{subsubcolor}\titlesc{Keywords:}\kern0.5em\color{textblack} #1\par}%
+  \end{minipage}\par%
+}
+
+% JEL codes - matching enhanced style
+\newcommand{\articlejel}[1]{%
+  \vspace{0.5\titlespaceminor}%
+  \begin{minipage}{\titlepagewidth}%
+    \setlength{\baselineskip}{1.3\baselineskip}%
+    {\small\color{subsubcolor}\titlesc{JEL Classification:}\kern0.5em\color{textblack} #1\par}%
+  \end{minipage}\par%
+}
+
+% Title page footnote configuration
+% Saves and restores footnote settings for main document
+% Title pages require tighter spacing due to centered content and visual balance
+\makeatletter
+\newcommand{\titlefootnotesetup}{%
+  \setcounter{footnote}{0}%
+  \renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+  % Title page needs tighter spacing before footnotes due to centered layout
+  \setlength{\skip\footins}{\gridunit}%
+  \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % 1 grid unit (vs 2 for main)
+  \setlength{\footnotesep}{0.75\gridunit}   % 0.75 grid units - balanced separation
+  \setlength{\footnotemargin}{7pt}  % Same as main document
+  % Use EXACT same formatting as main document
+  \renewcommand{\@makefntext}[1]{%
+    \setlength{\parindent}{7pt}% Same as main
+    \noindent
+    \makebox[7pt][l]{%
+      \fontsize{6}{7}\selectfont  % Same as main
+      \SetTracking{encoding={T1,OT1}}{50}\lsstyle % Same as main
+      \@thefnmark
+    }%
+    \fontsize{8.5}{10}\selectfont % Back to normal leading
+    \spaceskip=0.35em plus 0.175em minus 0.14em  % Same as main
+    ##1%
+  }
+  % Title page rule - gray and shorter, but same spacing as main
+  \renewcommand{\footnoterule}{%
+    \vspace*{-3pt}% Same as main document
+    \textcolor{gray!20}{\hrule width 2in height 0.5pt}% Gray 2in (title specific style)
+    \vspace*{\gridunit}% Same as main: 1 grid unit to first footnote
+  }%
+}
+
+\newcommand{\titlefootnotereset}{%
+  \setcounter{footnote}{0}%
+  \renewcommand{\thefootnote}{\arabic{footnote}}%
+  % Restore main document footnote spacing
+  \setlength{\skip\footins}{2\gridunit}%
+  \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % Back to 2 grid units
+  \setlength{\footnotesep}{0.25\gridunit}   % Back to 0.25 grid units
+  \setlength{\footnotemargin}{7pt}  % Back to main document setting
+  % Restore main document footnote formatting
+  \renewcommand{\@makefntext}[1]{%
+    \setlength{\parindent}{7pt}%
+    \noindent
+    \makebox[7pt][l]{%
+      \fontsize{6}{7}\selectfont
+      \SetTracking{encoding={T1,OT1}}{50}\lsstyle % Regular tracking
+      \@thefnmark
+    }%
+    \fontsize{8.5}{10}\selectfont % Back to 8.5pt/10pt
+    \spaceskip=0.35em plus 0.175em minus 0.14em
+    ##1%
+  }
+  % Restore standard footnote rule
+  \renewcommand{\footnoterule}{%
+    \vspace*{-3pt}%
+    \textcolor{textblack}{\hrule width 0.33\textwidth height 0.4pt}%
+    \vspace*{13.2pt}%
+  }%
+}
+\makeatother
+
+% ==============================================================================
+% VIII. PROFESSIONAL FOOTNOTE SYSTEM
+% ==============================================================================
+%
+% Implements the combined principles of all three masters:
+% - Butterick: Systematic sizing relationships and optimal readability
+% - Brown: Modular scale proportions (8pt superscript, 9pt text)
+% - Hochuli: Precise spacing, hanging indents, and baseline alignment
+%
+% SIZING HIERARCHY (Optimized for Pagella per foundry standards):
+%   Superscript: 6pt (70% of footnote size) with +50 units tracking
+%   Footnote text: 8.5pt (77% of body) with 10pt leading (tighter for readability)
+%   Hanging indent: 7pt (0.53 grid units) for optimal proportion
+%
+% SPACING SYSTEM (Grid-compliant):
+%   Rule position: 26.4pt below main text (2 grid units)
+%   Rule to footnote: 13.2pt (1 grid unit)
+%   Between footnotes: 3.3pt (0.25 grid units)
+%   Rule width: 33% of text measure, 0.4pt thickness
+%
+% REFERENCES:
+%   - Butterick, M. (2019). Practical Typography. Chapter on footnotes.
+%   - Brown, T. (2018). Flexible Typographic Systems. Modular relationships.
+%   - Hochuli, J. (1987). Detail in Typography. Chapter on small text.
+%
+% ------------------------------------------------------------------------------
+
+% FOOTNOTE PACKAGE CONFIGURATION
+% Professional hanging indent and punctuation handling
+\RequirePackage[hang,flushmargin]{footmisc} % Hanging indent, flush left
+% fnpct package permanently removed due to fatal compilation conflicts
+
+% Professional foundry specifications for Pagella
+% Footnote text: 8.5pt (77% of 11pt body) - maintains readability
+% Superscript: 6pt (70% of 8.5pt footnote) - clear subordination
+% Leading: 11pt (aligns with 0.833 grid lines for recovery)
+
+% Butterick's size relationships with systematic proportions
+\makeatletter
+\renewcommand\@makefntext[1]{%
+  % Professional hanging indent: 7pt (0.53 grid units)
+  \setlength{\parindent}{7pt}%
+  \noindent
+  \makebox[7pt][l]{%
+    % Foundry spec: 6pt superscript with tracking
+    \fontsize{6}{7}\selectfont
+    \SetTracking{encoding={T1,OT1}}{50}\lsstyle % +50 units tracking
+    \@thefnmark
+  }%
+  % Professional sizing: 8.5pt text with 10pt leading (tighter for footnotes)
+  \fontsize{8.5}{10}\selectfont
+  % Optimized word spacing for small text (Pagella's generous x-height)
+  \spaceskip=0.35em plus 0.175em minus 0.14em
+  #1%
+}
+\makeatother
+
+% Professional grid-aligned spacing per foundry standards
+% Space before footnote block calculated for optimal grid recovery
+\setlength{\skip\footins}{2\gridunit}%
+\addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % 2 grid units to rule
+\setlength{\footnotesep}{0.25\gridunit}   % 0.25 grid units between footnotes
+
+% Hochuli: Prevent footnote orphans (footnote split across pages)
+\interfootnotelinepenalty=10000
+
+% Professional footnote rule per foundry specifications
+% Rule at 33% text width, positioned 2 grid units below main text
+\renewcommand{\footnoterule}{%
+  \vspace*{-3pt}% Fine adjustment for rule positioning
+  \textcolor{textblack}{\hrule width 0.33\textwidth height 0.4pt}% 33% width, hairline
+  \vspace*{\gridunit}% 1 grid unit to first footnote baseline
+}
+
+% Brown's systematic approach: Consistent footnote numbering
+% Use old-style figures if available in Pagella
+\renewcommand{\thefootnote}{\oldstylenums{\arabic{footnote}}}
+
+% Hochuli detail: Prevent footnote marks from breaking
+\let\oldfootnote\footnote
+\renewcommand{\footnote}[1]{\oldfootnote{\nobreak#1}}
+
+% Additional footnote optimizations for professional typography
+% Ensure consistent measurements throughout document
+\AtBeginDocument{%
+  \setlength{\footnotemargin}{7pt}  % Match hanging indent precisely
+  % Enable hyphenation in footnotes with constraints
+  \hyphenpenalty=1000  % Tighter constraints for footnotes
+  \exhyphenpenalty=2000  % Maximum 2 consecutive hyphens
+}
+
+% Fine-tuning for multiple footnotes on same reference
+% Adds thin space between consecutive footnote marks
+\newcommand{\multiplefootnotes}[1]{%
+  \textsuperscript{\kern0.05em#1}%
+}
+
+% Professional kerning configuration for footnote marks
+% Manual footnote punctuation handling (fnpct replacement)
+% Footnote punctuation must be ordered manually (punctuation before footnote mark)
+% Ensures footnote marks appear after punctuation in correct position
+
+% ==============================================================================
+% VIII. MODULAR SCALE TYPOGRAPHY SYSTEM
+% ==============================================================================
+%
+% Implements Tim Brown's modular scale methodology using the Perfect Fourth 
+% ratio (1.333) to create mathematically harmonious typographic hierarchy.
+% All sizing relationships derive from the 11pt base text size.
+%
+% MATHEMATICAL FOUNDATION:
+%   Base: 11pt (body text)
+%   Scale: Perfect Fourth ratio = 1.333
+%   Progression: 11pt → 14.7pt → 19.6pt (theoretical)
+%   Adjusted: 11pt → 12pt → 14pt → 18pt (visually optimized for LaTeX)
+%
+% HIERARCHY MAPPING:
+%   \section:        18pt (1.333³ from base)
+%   \subsection:     14pt (1.333¹ from base)  
+%   \subsubsection:  12pt (1.333^0.5 from base)
+%   \paragraph:      11.5pt (base + small caps enhancement)
+%   Body text:       11pt (base)
+%
+% REFERENCES:
+%   - Brown, T. (2018). Flexible Typographic Systems. A Book Apart.
+%   - Brown, T. (2011). More Meaningful Typography. A List Apart.
+%   - modularscale.com - Interactive modular scale calculator
+%
+% ------------------------------------------------------------------------------
+
+% Section formatting has been moved to lltheadings.sty
+
+% ==============================================================================
+% IX. CHICAGO-COMPLIANT APPENDIX MANAGEMENT SYSTEM
+% ==============================================================================
+%
+% Professional appendix system implementing Chicago Manual of Style (17th ed.)
+% guidelines with automatic single/multiple appendix detection and formatting.
+% Uses a sophisticated two-pass auxiliary file mechanism for intelligent behavior.
+%
+% AUTOMATIC BEHAVIOR:
+%   Single Appendix:    "Appendix" (no letter designation)
+%   Multiple Appendices: "Appendix A", "Appendix B", etc. with ToC header
+%
+% TECHNICAL IMPLEMENTATION:
+%   - First pass: Counts appendices, writes to auxiliary file
+%   - Second pass: Reads count, applies appropriate formatting
+%   - Backward compatible with legacy \startappendices commands
+%   - Full cleveref integration for enhanced cross-referencing
+%
+% CHICAGO COMPLIANCE:
+%   - Proper capitalization and numbering
+%   - Table of Contents integration
+%   - Consistent cross-referencing format
+%   - Professional typographic treatment
+%
+% REFERENCES:
+%   - University of Chicago Press (2017). Chicago Manual of Style, 17th ed.
+%   - Section 1.57-1.59: Appendix formatting guidelines
+%   - Section 14.57: Appendix citations and references
+%
+% ------------------------------------------------------------------------------
+
+% APPENDIX SYSTEM INITIALIZATION
+% Core package and counter setup
+\RequirePackage{appendix}  % Professional appendix handling
+
+\makeatletter
+
+% Internal counter for tracking appendices in current document
+\newcounter{appendixcount}
+\setcounter{appendixcount}{0}
+
+% Boolean to track single vs multiple appendices
+\newif\ifmultipleappendices
+\multipleappendicesfalse
+
+% Initialize appendix count variable
+\def\paperstyletotalappendices{0}
+
+% Set up appendix count reading at begin document
+\AtBeginDocument{%
+  \makeatletter%
+  % Read appendix count from aux file if available
+  \@ifundefined{paperstyletotalappendices}{\def\paperstyletotalappendices{0}}{}%
+  \makeatother%
+}
+
+% Robust appendix system - Overleaf compatible
+% Uses simple commands that work in all TeX versions
+
+% Create internal flags without @ symbols
+\newif\ifpaperstyleappendixloaded
+\newif\ifpaperstylesectionsaved
+
+% Check for appendix package at load time
+\makeatletter
+\@ifpackageloaded{appendix}{\paperstyleappendixloadedtrue}{\paperstyleappendixloadedfalse}
+\makeatother
+
+% Store original section command at package load time
+\let\paperstyleorigsection\section
+
+% Main appendix commands
+\newcommand{\startappendices}{%
+  \clearpage%
+  % Check if appendices package is loaded
+  \ifpaperstyleappendixloaded
+    % Use appendices environment if available
+    \begin{appendices}%
+    \addappheadtotoc%
+  \else
+    % Fallback to basic appendix command
+    \appendix%
+    \phantomsection%
+    \addcontentsline{toc}{section}{Appendices}%
+  \fi
+  % Reset counter for tracking
+  \setcounter{appendixcount}{0}%
+  % Mark that we've saved the section command
+  \paperstylesectionsavedtrue
+  % Redefine section to count appendices
+  \renewcommand{\section}[1]{%
+    \stepcounter{appendixcount}%
+    \paperstyleorigsection{##1}%
+  }%
+}
+
+% Helper to write appendix count
+% Fix: Avoid @ symbols completely by using standard LaTeX commands
+\newcommand{\paperstylewritecount}{%
+  \addtocontents{aux}{\string\gdef\string\paperstyletotalappendices{\theappendixcount}}%
+}
+
+\newcommand{\finishappendices}{%
+  % Write count for next run
+  \paperstylewritecount
+  % Close appendices environment if used
+  \ifpaperstyleappendixloaded
+    \end{appendices}%
+  \fi
+  % Restore original section command
+  \ifpaperstylesectionsaved
+    \let\section\paperstyleorigsection
+  \fi
+}
+
+% Legacy environment names for backward compatibility
+\newenvironment{documentAppendices}{%
+  \startappendices%
+}{%
+  \finishappendices%
+}
+
+% Enhanced cleveref configuration for appendices
+\makeatletter
+\AtBeginDocument{%
+  % Configure cleveref names for better appendix references
+  \crefname{section}{appendix}{appendices}%
+  \Crefname{section}{Appendix}{Appendices}%
+  \@ifundefined{chapter}{}{%
+    \crefname{chapter}{appendix}{appendices}%
+    \Crefname{chapter}{Appendix}{Appendices}%
+  }%
+  % Special handling for appendix figures and tables
+  \crefname{figure}{figure}{figures}%
+  \Crefname{figure}{Figure}{Figures}%
+  \crefname{table}{table}{tables}%
+  \Crefname{table}{Table}{Tables}%
+}
+\makeatother
+
+% ==============================================================================
+% X. CORE FUNCTIONALITY AND INTEGRATION
+% ==============================================================================
+%
+% Final package loading and integration for essential functionality:
+% - Graphics and table support
+% - Hyperref with professional styling
+% - Enhanced cross-referencing with cleveref
+% - Final formatting and compatibility adjustments
+%
+% PACKAGE LOADING ORDER:
+%   Critical: hyperref MUST load before cleveref for proper functionality
+%   Graphics packages provide figure and table support
+%   Booktabs ensures professional table formatting
+%
+% HYPERREF CONFIGURATION:
+%   - Professional color scheme matching document palette
+%   - PDF metadata for academic publishing
+%   - Accessibility-compliant link formatting
+%
+% REFERENCES:
+%   - LaTeX Graphics Companion (2nd ed.)
+%   - Hyperref package documentation
+%   - Cleveref package manual
+%
+% ------------------------------------------------------------------------------
+
+% ESSENTIAL PACKAGE LOADING
+% Graphics, tables, and cross-referencing support
+\RequirePackage{graphicx}        % Graphics inclusion and manipulation
+\RequirePackage{array}           % Enhanced array and tabular environments
+\RequirePackage{booktabs}        % Professional table design (no vertical rules)
+\RequirePackage{tabularx}        % Tables that stretch to text width
+\RequirePackage{longtable}       % Multi-page tables support
+% ltcaption removed - modern longtable handles captions natively
+\RequirePackage{placeins}        % Float barriers for sectional control
+\RequirePackage{csquotes}        % Context-sensitive quotation commands
+\RequirePackage{pdflscape}       % Landscape pages with PDF rotation
+\RequirePackage{rotating}        % Rotation of content (sideways tables/figures)
+\RequirePackage{adjustbox}       % Automatic scaling for wide content
+\RequirePackage{fancyhdr}        % Custom headers and footers
+\RequirePackage{hyperref}        % PDF hyperlinks and metadata
+\RequirePackage{cleveref}        % Enhanced cross-referencing (must load after hyperref)
+
+% ==============================================================================
+% GRID-ALIGNED TABLE ROW SYSTEM
+% ==============================================================================
+%
+% Implements baseline grid alignment for tables following professional
+% typography standards. Tables maintain vertical rhythm with body text
+% through precise row height control.
+%
+% KEY PRINCIPLES:
+%   - All table rows align to 13.2pt baseline grid (11pt × 1.20)
+%   - Multiple grid alignment options for different table densities
+%   - Maintains compatibility with regression tables and academic formats
+%   - Works seamlessly with booktabs for professional appearance
+%
+% REFERENCES:
+%   - Hochuli, J. (1987). Grid systems in typography
+%   - Müller-Brockmann, J. (1981). Grid Systems in Graphic Design
+%   - Professional typography standards for academic tables
+%
+% ------------------------------------------------------------------------------
+
+% ==============================================================================
+% SECTION XII: CROSS-REFERENCE TYPOGRAPHY
+% ==============================================================================
+% Professional cross-reference formatting with cleveref
+% Implements consistent reference styles following Chicago Manual guidelines
+%
+% This section configures the cleveref package (already loaded) to provide
+% intelligent cross-referencing with proper typography, including:
+%   - Consistent abbreviations (fig., table, §)
+%   - Smart pluralization and range handling
+%   - Non-breaking spaces automatically included
+%   - Proper capitalization at sentence beginnings
+%
+% KEY PRINCIPLES:
+%   - Lowercase references in running text (fig. 1, table 2)
+%   - Capitalized references at sentence start (Figure 1, Table 2)
+%   - Section symbol (§) for compact section references
+%   - Parenthetical style for equations: (1), (2)
+%   - En-dash for ranges: figs. 1–3, tables 2–5
+%   - Oxford comma in lists: figs. 1, 2, and 3
+%
+% USAGE:
+%   \cref{label}     - lowercase reference (fig. 1)
+%   \Cref{label}     - capitalized reference (Figure 1)
+%   \cref{l1,l2,l3}  - multiple references (figs. 1, 2 and 3)
+%   \crefrange{l1}{l2} - range reference (figs. 1–3)
+%
+% ------------------------------------------------------------------------------
+
+% CLEVEREF FORMAT DEFINITIONS
+% Define reference formats for all document elements
+
+% Figures - abbreviated with non-breaking space
+\crefformat{figure}{fig.~#2#1#3}
+\Crefformat{figure}{Figure~#2#1#3}
+\crefrangeformat{figure}{figs.~#3#1#4--#5#2#6}
+\Crefrangeformat{figure}{Figures~#3#1#4--#5#2#6}
+\crefmultiformat{figure}{figs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\Crefmultiformat{figure}{Figures~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+
+% Tables - lowercase with non-breaking space
+\crefformat{table}{table~#2#1#3}
+\Crefformat{table}{Table~#2#1#3}
+\crefrangeformat{table}{tables~#3#1#4--#5#2#6}
+\Crefrangeformat{table}{Tables~#3#1#4--#5#2#6}
+\crefmultiformat{table}{tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\Crefmultiformat{table}{Tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+
+% Sections - using § symbol for compactness
+\crefformat{section}{§#2#1#3}
+\Crefformat{section}{Section~#2#1#3}
+\crefformat{subsection}{§#2#1#3}
+\Crefformat{subsection}{Section~#2#1#3}
+\crefformat{subsubsection}{§#2#1#3}
+\Crefformat{subsubsection}{Section~#2#1#3}
+
+% Equations - parentheses style (Chicago standard)
+\crefformat{equation}{(#2#1#3)}
+\Crefformat{equation}{Equation~(#2#1#3)}
+\crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
+\Crefrangeformat{equation}{Equations~(#3#1#4)--(#5#2#6)}
+\crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+\Crefmultiformat{equation}{Equations~(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+
+% Appendices - capital letter format
+\crefformat{appendix}{appendix~#2#1#3}
+\Crefformat{appendix}{Appendix~#2#1#3}
+
+% Footnotes
+\crefformat{footnote}{footnote~#2#1#3}
+\Crefformat{footnote}{Footnote~#2#1#3}
+
+% Page references
+\crefformat{page}{page~#2#1#3}
+\Crefformat{page}{Page~#2#1#3}
+\crefrangeformat{page}{pages~#3#1#4--#5#2#6}
+\Crefrangeformat{page}{Pages~#3#1#4--#5#2#6}
+
+% CLEVEREF NAME CONFIGURATION
+\crefname{figure}{fig.}{figs.}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{table}{tables}
+\Crefname{table}{Table}{Tables}
+\crefname{section}{§}{§§}
+\Crefname{section}{Section}{Sections}
+\crefname{appendix}{appendix}{appendices}
+\Crefname{appendix}{Appendix}{Appendices}
+
+% Conjunction configuration - use 'and' not '&'
+\newcommand{\crefpairconjunction}{ and }
+\newcommand{\crefmiddleconjunction}{, }
+\newcommand{\creflastconjunction}{, and }
+\newcommand{\crefrangeconjunction}{--}
+
+% Equation label format
+\creflabelformat{equation}{(#2#1#3)}
+
+% CONVENIENCE COMMANDS FOR COMMON PATTERNS
+
+% Smart page reference including "on"
+\newcommand{\refpage}[1]{\cref{#1} on \cpageref{#1}}
+\newcommand{\Refpage}[1]{\Cref{#1} on \cpageref{#1}}
+
+% Parenthetical references
+\newcommand{\pref}[1]{(\cref{#1})}
+\newcommand{\Pref}[1]{(\Cref{#1})}
+
+% See/see also references
+\newcommand{\seeref}[1]{see \cref{#1}}
+\newcommand{\Seeref}[1]{See \cref{#1}}
+\newcommand{\seealso}[1]{see also \cref{#1}}
+\newcommand{\Seealso}[1]{See also \cref{#1}}
+
+% DEPRECATED COMMAND WARNING
+% Warn users about direct \ref usage
+\let\oldref\ref
+\renewcommand{\ref}[1]{%
+  \PackageWarning{paperstyle}{%
+    Direct \string\ref\space usage detected for label '#1'. 
+    Consider using \string\cref\space or \string\Cref\space instead}%
+  \oldref{#1}%
+}
+
+% ------------------------------------------------------------------------------
+
+% BOOKTABS, ARRAY, AND LONGTABLE CONFIGURATION
+% Configure table packages after loading
+\setlength{\aboverulesep}{0pt}          % Remove space above booktabs rules
+\setlength{\belowrulesep}{0pt}          % Remove space below booktabs rules
+\setlength{\extrarowheight}{2.2pt}       % Makes standard rows exactly 13.2pt with 11pt text
+\setlength{\LTcapwidth}{\textwidth}     % Full-width captions for longtables
+
+% GRID-ALIGNED TABLE ENVIRONMENTS
+% Professional table environments with automatic grid alignment
+
+% Standard grid-aligned table (1 baseline unit = 13.2pt rows)
+\newenvironment{gridtable}[1][tbp]{%
+  \begin{table}[#1]%
+  \renewcommand{\arraystretch}{1.2}% Exactly 13.2pt rows
+}{%
+  \end{table}%
+}
+
+% Compact grid-aligned table (0.75 baseline units = 9.9pt spacing)
+\newenvironment{compactgridtable}[1][tbp]{%
+  \begin{table}[#1]%
+  \renewcommand{\arraystretch}{0.9}% Compact 9.9pt rows
+  \small% Reduce font size for density
+}{%
+  \end{table}%
+}
+
+% Spacious grid-aligned table (1.5 baseline units = 19.8pt rows)
+\newenvironment{spaciousgridtable}[1][tbp]{%
+  \begin{table}[#1]%
+  \renewcommand{\arraystretch}{1.8}% Spacious 19.8pt rows
+}{%
+  \end{table}%
+}
+
+% REGRESSION TABLE SUPPORT
+% Special environment for regression tables with optimal grid alignment
+\newenvironment{regressiontable}[1][tbp]{%
+  \begin{table}[#1]%
+  \renewcommand{\arraystretch}{1.15}% Slightly tighter for regression tables
+  \setlength{\tabcolsep}{6pt}% Tighter columns for multiple models
+}{%
+  \end{table}%
+}
+
+% GRID ALIGNMENT COMMANDS
+% For manual control within existing tables
+
+% Set table to standard grid (13.2pt rows)
+\newcommand{\standardgrid}{%
+  \renewcommand{\arraystretch}{1.2}%
+}
+
+% Set table to compact grid (9.9pt rows)
+\newcommand{\compactgrid}{%
+  \renewcommand{\arraystretch}{0.9}%
+}
+
+% Set table to spacious grid (19.8pt rows)
+\newcommand{\spaciousgrid}{%
+  \renewcommand{\arraystretch}{1.8}%
+}
+
+% Calculate custom grid alignment
+% Usage: \customgrid{1.5} for 1.5 baseline units
+\newcommand{\customgrid}[1]{%
+  \renewcommand{\arraystretch}{#1}%
+}
+
+% UNIFIED GRID SPACING SYSTEM
+% Single command for all grid-based spacing needs
+
+% Universal grid spacing command
+% Usage: \gridspace{1} for 1 grid unit, \gridspace{0.5} for half unit
+\newcommand{\gridspace}[1]{%
+  \noalign{\vspace{#1\gridunit}}%
+}
+
+% Deprecated commands - kept for backward compatibility
+\newcommand{\halfbaselinespace}{\gridspace{0.5}}
+\newcommand{\fullbaselinespace}{\gridspace{1}}
+
+% PROFESSIONAL TABLE DEFAULTS
+% Global settings for all tables (can be overridden locally)
+\renewcommand{\arraystretch}{1.2}       % Standard grid alignment by default
+\setlength{\tabcolsep}{8pt}             % Professional column spacing
+
+% ==============================================================================
+% GRID-ALIGNED IMAGE SYSTEM
+% ==============================================================================
+%
+% Commands for ensuring images maintain the baseline grid through height
+% constraints and automatic adjustment.
+%
+% KEY PRINCIPLES:
+%   - Image heights rounded to nearest grid multiple (13.2pt)
+%   - Compensating space maintains vertical rhythm
+%   - Captions align to grid automatically
+%   - Works with all standard graphics commands
+%
+% REFERENCES:
+%   - Müller-Brockmann, J. (1981). Grid Systems in Graphic Design
+%   - Professional typography standards for images in documents
+%
+% ------------------------------------------------------------------------------
+
+% Round a dimension to nearest grid multiple
+\newcommand{\roundtogrid}[2]{%
+  % #1 = dimension to round
+  % #2 = result dimension register
+  \setlength{#2}{#1}%
+  \setlength{\dimen0}{13.2pt}%
+  \divide#2 by \dimen0
+  \multiply#2 by \dimen0
+  % Check if we need to round up
+  \setlength{\dimen1}{#1}%
+  \advance\dimen1 by -#2
+  \ifdim\dimen1>0.5\gridunit% More than half a grid unit
+    \advance#2 by 13.2pt
+  \fi
+}
+
+% Include graphics with grid-aligned height
+\newcommand{\gridincludegraphics}[2][]{%
+  % #1 = optional parameters (width, etc.)
+  % #2 = filename
+  % First, include to measure
+  \sbox0{\includegraphics[#1]{#2}}%
+  % Round height to grid
+  \newdimen\gridheight
+  \roundtogrid{\ht0}{\gridheight}%
+  % Include with adjusted height
+  \includegraphics[#1,height=\gridheight]{#2}%
+}
+
+% Environment for grid-aligned figures
+\newenvironment{gridfigure}[1][tbp]{%
+  \begin{figure}[#1]%
+  \centering%
+}{%
+  \end{figure}%
+}
+
+% Command to add compensating space after image
+\newcommand{\imagegridspace}[1]{%
+  % #1 = actual image height
+  \newdimen\imageactualheight
+  \setlength{\imageactualheight}{#1}%
+  \newdimen\imagegridheight
+  \roundtogrid{\imageactualheight}{\imagegridheight}%
+  \vspace{\dimexpr\imagegridheight-\imageactualheight\relax}%
+}
+
+% Common grid-aligned heights for reference
+% 5 units: 66pt (2.33cm)
+% 10 units: 132pt (4.67cm)
+% 15 units: 198pt (6.99cm)
+% 20 units: 264pt (9.32cm)
+
+% HYPERREF CONFIGURATION
+% Professional PDF links with accessibility and print compatibility
+% All links use enhanced navy blue for consistent visual treatment
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  filecolor=black,
+  bookmarksnumbered=true,
+  pdfborder={0 0 0},
+  pdfencoding=auto
+}
+
+% Update hyperref colors after loading colors module
+\makeatletter
+\AtBeginDocument{%
+  \ifllt@draft
+    \hypersetup{colorlinks=false,pdfborder={1 1 1}}
+  \else
+    \ifllt@nocolor
+      \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
+    \else
+      \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
+    \fi
+  \fi
+}
+\makeatother
+
+% PDF STRING COMPATIBILITY
+% Provide text-only alternatives for PDF bookmarks and metadata
+\pdfstringdefDisableCommands{%
+  \def\textsc#1{#1}%           % Small caps -> plain text
+  \def\textbf#1{#1}%           % Bold -> plain text
+  \def\textit#1{#1}%           % Italic -> plain text
+  \def\emph#1{#1}%             % Emphasis -> plain text
+  \def\code#1{#1}%             % Code -> plain text
+  \def\var#1{#1}%              % Variable -> plain text
+  \def\filepath#1{#1}%         % Filepath -> plain text
+  \def\refinedsc#1{#1}%        % Refined small caps -> plain text
+  \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
+  \def\titlesc#1{#1}%          % Title small caps -> plain text
+  \def\SetTracking#1#2{#2}%    % Remove tracking commands
+  \def\lsstyle{}%              % Remove letterspacing style
+  \let\\\space%                % Line break -> space
+  \def\hspace#1{ }%            % Horizontal space -> space
+  \def\vspace#1{}%             % Vertical space -> nothing
+  \def\kern#1{}%               % Kern -> nothing
+\def~{ }%                    % Non-breaking space – space
+}
+
+% Butterick's final polish: Ensure proper page breaking
+\raggedbottom              % Prevents awkward stretched spacing
+% Note: \sloppy removed for Overleaf compatibility
+
+% ==============================================================================
+% LANDSCAPE AND ROTATION SUPPORT FOR SOCIAL SCIENCE
+% ==============================================================================
+%
+% Comprehensive support for wide tables, large figures, and rotated content
+% commonly needed in empirical research papers.
+%
+% KEY FEATURES:
+%   - Full-page landscape with proper PDF rotation
+%   - Grid-aligned spacing in landscape mode
+%   - Automatic caption placement for rotated content
+%   - Support for multi-page landscape tables
+%
+% REFERENCES:
+%   - American Economic Review submission guidelines
+%   - Journal of Political Economy formatting standards
+%   - Best practices from empirical economics papers
+%
+% ------------------------------------------------------------------------------
+
+% LANDSCAPE TABLE ENVIRONMENT
+% For wide regression tables and correlation matrices
+\newenvironment{landscapetable}[1][tbp]{%
+  \begin{landscape}%
+  \begin{table}[#1]%
+    \centering%
+    \footnotesize% Reduce font for more columns
+    \renewcommand{\arraystretch}{1.1}% Tighter spacing
+    \setlength{\tabcolsep}{5pt}% Narrower columns
+}{%
+  \end{table}%
+  \end{landscape}%
+}
+
+% LANDSCAPE FIGURE ENVIRONMENT
+% For wide coefficient plots and data visualizations
+\newenvironment{landscapefigure}[1][tbp]{%
+  \begin{landscape}%
+  \begin{figure}[#1]%
+    \centering%
+}{%
+  \end{figure}%
+  \end{landscape}%
+}
+
+% ROTATED TABLE ENVIRONMENT
+% For single-column tables that need 90-degree rotation
+\newenvironment{rotatedtable}[1][tbp]{%
+  \begin{table}[#1]%
+    \centering%
+    \begin{sideways}%
+    \renewcommand{\arraystretch}{1.2}% Maintain grid
+}{%
+    \end{sideways}%
+  \end{table}%
+}
+
+% WIDE REGRESSION TABLE
+% Optimized for econometric results with many specifications
+\newenvironment{wideregressiontable}[1][tbp]{%
+  \begin{landscapetable}[#1]%
+    \scriptsize% Even smaller for many columns
+    \renewcommand{\arraystretch}{1.0}% Very tight
+    \setlength{\tabcolsep}{3pt}% Minimal column separation
+}{%
+  \end{landscapetable}%
+}
+
+% ADJUSTABLE TABLE ENVIRONMENT
+% Automatically scales table to fit page width
+\newenvironment{fittable}[2][tbp]{%
+  % #1 = placement, #2 = max width (e.g., 1.2\textwidth)
+  \begin{table}[#1]%
+    \centering%
+    \adjustbox{max width=#2}{%
+      \begin{minipage}{\textwidth}%
+      \centering%
+}{%
+      \end{minipage}%
+    }%
+  \end{table}%
+}
+
+% LANDSCAPE LONGTABLE
+% For multi-page landscape tables
+\newenvironment{landscapelongtable}{%
+  \begin{landscape}%
+  \footnotesize%
+  \renewcommand{\arraystretch}{1.1}%
+}{%
+  \end{landscape}%
+}
+
+% ROTATION COMMANDS FOR INLINE CONTENT
+% For headers and specialized content
+
+% Rotate text 90 degrees
+\newcommand{\rotateheader}[1]{%
+  \rotatebox{90}{\small #1}%
+}
+
+% Angled column headers (45 degrees)
+\newcommand{\angledheader}[1]{%
+  \rotatebox{45}{\small #1}%
+}
+
+% HELPER COMMANDS FOR LANDSCAPE PAGES
+
+% Force landscape orientation for current page
+\newcommand{\landscapepage}{%
+  \clearpage%
+  \landscape%
+}
+
+% Return to portrait orientation
+\newcommand{\portraitpage}{%
+  \clearpage%
+  \endlandscape%
+}
+
+% Add note about landscape orientation
+\newcommand{\landscapenote}{%
+  \footnotesize\textit{Note: This page is best viewed in landscape orientation.}%
+}
+
+% GRID ALIGNMENT IN LANDSCAPE MODE
+% Maintain baseline grid even in rotated content
+
+% Landscape grid spacing helper
+\newcommand{\landscapegridspace}{%
+  \vspace{13.2pt}% One grid unit
+}
+
+% Adjust caption spacing for landscape
+\captionsetup[table]{
+  aboveskip=0.75\gridunit,  % 0.75 grid units in landscape
+  belowskip=0.5\gridunit   % 0.5 grid units
+}
+
+% ==============================================================================
+% XI. MATHEMATICAL TYPOGRAPHY OPTIMIZATION
+% ==============================================================================
+%
+% Implements sophisticated mathematical typography following Knuth's principles
+% with specific optimizations for TeX Gyre Pagella and the 13.2pt baseline grid.
+%
+% DESIGN PHILOSOPHY:
+%   - Knuth: "Mathematics must harmonize with surrounding text"
+%   - Butterick: "Mathematical notation should be readable, not just correct"
+%   - Hochuli: "Micro-adjustments create macro-improvements"
+%   - Brown: Systematic size relationships via modular scale
+%
+% PAGELLA-SPECIFIC CONSIDERATIONS:
+%   - Larger x-height (464/1000em) requires adjusted inline sizing
+%   - Wider characters (~110% of CM) need more operator spacing
+%   - Higher stroke contrast benefits from optical corrections
+%   - 10° italic angle (vs CM's 14°) affects script positioning
+%
+% REFERENCES:
+%   - Knuth, D. (1986). The TeXbook. Addison-Wesley.
+%   - Downes, M. (2002). Technical Notes on the amsmath Package. AMS.
+%   - Sharpe, M. (2024). The newpx package documentation. CTAN.
+%
+% ------------------------------------------------------------------------------
+
+% DISPLAY EQUATION SPACING (Grid-Perfect)
+% Context-aware spacing with flexibility for optimal page composition
+\abovedisplayskip=19.8pt plus 3.3pt minus 3.3pt        % 1.5 units ±0.25
+\belowdisplayskip=19.8pt plus 3.3pt minus 3.3pt        % 1.5 units ±0.25
+\abovedisplayshortskip=13.2pt plus 3.3pt minus 3.3pt   % 1 unit ±0.25
+\belowdisplayshortskip=13.2pt plus 3.3pt minus 3.3pt   % 1 unit ±0.25
+
+% Multi-line equation spacing
+\jot=6.6pt  % 0.5 grid units between aligned equations
+
+% INLINE EQUATION SIZING
+% Compensate for Pagella's larger x-height with subtle scaling
+\makeatletter
+\newcommand{\@inlinemath}[1]{%
+  \ensuremath{\scalebox{0.98}{#1}}%  % 98% scaling for inline math
+}
+% Note: Direct \everymath modification can cause issues with amsmath
+% Instead, we provide semantic commands for controlled usage
+\makeatother
+
+% Optimized script sizes for Pagella readability
+\DeclareMathSizes{11}{11}{8}{6}  % text, script, scriptscript, tiny
+
+% EQUATION NUMBERING ALIGNMENT
+% Grid-aligned with upright numbers matching Pagella's oldstyle figures
+\makeatletter
+\def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip\@@italiccorr)}}
+\renewcommand{\eqref}[1]{\textup{\tagform@{\ref{#1}}}}
+\makeatother
+
+% Ensure consistent spacing around equation numbers
+\AtBeginDocument{%
+  \addtolength{\jot}{0.25\gridunit}  % Add quarter grid unit between numbered equations
+}
+
+% MULTI-LINE EQUATION OPTIMIZATION
+% Grid-aware spacing for aligned environments
+\setlength{\arraycolsep}{5pt}  % Optimized for Pagella's width
+
+% Custom grid-aligned equation environments
+\newenvironment{grideqnarray}{%
+  \begin{align}%
+  \setlength{\jot}{0.5\gridunit}%  % 0.5 grid units between lines
+}{%
+  \end{align}%
+}
+
+% Gathered equations with proper spacing
+\newenvironment{gridgather}{%
+  \vspace{0.5\gridunit}%  % 0.5 units before
+  \begin{gather}%
+}{%
+  \end{gather}%
+  \vspace{0.5\gridunit}%  % 0.5 units after
+}
+
+% OPERATOR AND SYMBOL SPACING
+% Fine-tuned for Pagella's wider proportions
+\thinmuskip=3.6mu plus 1.2mu minus 1.2mu       % 20% increase for clarity
+\medmuskip=4.8mu plus 2.4mu minus 1.2mu        % Binary operators
+\thickmuskip=6.0mu plus 3.0mu minus 1.2mu      % Relational operators
+
+% Custom spacing commands for special cases
+\newcommand{\mathbinx}[1]{\mathbin{\mkern2mu#1\mkern2mu}}  % Extra binary space
+\newcommand{\mathrelx}[1]{\mathrel{\mkern3mu#1\mkern3mu}}  % Extra relation space
+
+% Improved differential spacing (Hochuli's detail)
+\newcommand{\dint}{\,\mathrm{d}}  % Differential with thin space
+
+% FRACTION AND SCRIPT TYPOGRAPHY
+% Optical adjustments for Pagella's weight and proportions
+\setlength{\fboxrule}{0.5pt}  % Match fraction rule to Pagella's weight
+
+% Enhanced script commands with size control
+\newcommand{\ssup}[1]{^{\scriptscriptstyle #1}}  % Smaller superscript
+\newcommand{\ssub}[1]{_{\scriptscriptstyle #1}}  % Smaller subscript
+
+% Force limits below for better readability
+\let\oldlim\lim
+\renewcommand{\lim}{\mathop{\oldlim}\limits}
+
+% THEOREM AND PROOF ENVIRONMENTS
+% Professional mathematical document structure
+% Note: Theorem styles require amsthm package which is loaded separately
+% The following would be used with amsthm:
+% \newtheoremstyle{pagellathm}%  % Name
+%   {13.2pt}%                     % Space above (1 grid unit)
+%   {13.2pt}%                     % Space below (1 grid unit)
+%   {\itshape}%                   % Body font
+%   {0pt}%                        % Indent amount
+%   {\bfseries}%                  % Theorem head font
+%   {.}%                          % Punctuation after theorem head
+%   {.5em}%                       % Space after theorem head
+%   {}%                           % Theorem head spec
+% \theoremstyle{pagellathm}
+
+% MATHEMATICAL SYMBOLS ENHANCEMENT
+% Additional symbols and corrections for professional documents
+\renewcommand{\le}{\leqslant}        % Slanted inequality (more elegant)
+\renewcommand{\ge}{\geqslant}        % Slanted inequality
+\renewcommand{\epsilon}{\varepsilon} % Lunate epsilon (preferred)
+\renewcommand{\phi}{\varphi}         % Curly phi (more readable)
+
+% Vector notation with consistent weight
+\renewcommand{\vec}[1]{\mathbf{#1}}  % Bold vectors (modern style)
+
+% Set notation with proper spacing
+\providecommand{\set}[1]{\{#1\}}         % Set notation
+\providecommand{\abs}[1]{\lvert#1\rvert} % Absolute value
+\providecommand{\norm}[1]{\lVert#1\rVert} % Norm
+
+% DISPLAY MATH CENTERING
+% Ensure equations respect the grid
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength{\abovedisplayskip}{19.8pt plus 3.3pt minus 3.3pt}%
+  \setlength{\belowdisplayskip}{19.8pt plus 3.3pt minus 3.3pt}%
+  \setlength{\abovedisplayshortskip}{13.2pt plus 3.3pt minus 3.3pt}%
+  \setlength{\belowdisplayshortskip}{13.2pt plus 3.3pt minus 3.3pt}%
+}
+\makeatother
+
+% ==============================================================================
+% XII. FINAL TYPOGRAPHY REFINEMENTS
+% ==============================================================================
+%
+% Final adjustments for optimal typography following Hochuli's attention to
+% detail and Butterick's professional polish principles.
+%
+% HYPHENATION OPTIMIZATION:
+%   - Moderate discouragement prevents excessive hyphenation
+%   - Allow breaks after explicit hyphens (compound words)
+%   - Prevent consecutive hyphenated lines (visual disruption)
+%
+% PAGE BREAKING:
+%   - Raggedbottom prevents awkward stretched spacing
+%   - Professional page composition for academic documents
+%
+% REFERENCES:
+%   - Hochuli, J. (1987). Detail in Typography. Final details chapter.
+%   - Butterick, M. (2019). Practical Typography. Professional polish.
+%
+% ------------------------------------------------------------------------------
+
+% ==============================================================================
+% HYPHENATION AND LINE BREAKING SYSTEM
+% ==============================================================================
+%
+% Sophisticated paragraph optimization following:
+% - Knuth: The TeXbook principles for optimal breaking
+% - Hochuli: Refined spacing for readability
+% - Pagella-specific: Adjustments for wider characters
+%
+% PHILOSOPHY:
+%   Quality over convenience - we prefer slightly tighter spacing
+%   over excessive hyphenation or overly loose lines
+%
+% ------------------------------------------------------------------------------
+
+% BALANCED HYPHENATION PENALTIES
+% Pagella's larger characters make hyphens more visible
+\hyphenpenalty=1000         % Increased: discourage but allow when needed
+\exhyphenpenalty=1000       % Match regular for consistency
+\brokenpenalty=2000         % Moderate: prevent page breaks after hyphens
+\doublehyphendemerits=12000 % Strong: prevent consecutive hyphenated lines
+\finalhyphendemerits=8000   % Strong: very visible in Pagella
+\adjdemerits=12000          % Strong: prevent loose/tight line alternation
+
+% SPECIAL BREAKING PENALTIES
+\binoppenalty=2000          % Discourage breaks after binary operators
+\relpenalty=1500            % Discourage breaks after relations
+\predisplaypenalty=10000    % Keep 2+ lines before display math
+\postdisplaypenalty=2000    % Some flexibility after math
+
+% OPTIMIZED LINE BREAKING FOR PAGELLA
+% Tighter tolerances due to naturally wider characters
+\pretolerance=150           % First pass without hyphenation
+\tolerance=800              % Second pass (reduced from 1000)
+\emergencystretch=1em       % Last resort (reduced from 3em)
+\hfuzz=0.2pt               % Tighter overfull tolerance
+\vfuzz=0.2pt               % Matching vertical tolerance
+
+% PARAGRAPH COMPOSITION
+\linepenalty=10            % Standard per-line penalty
+\parfillskip=0pt plus 1fil % Standard paragraph ending
+\parindent=13.2pt          % Maintain grid alignment (1 unit)
+
+% RIVER PREVENTION
+% Tighter word spacing for Pagella's wider characters
+\spaceskip=0.33em plus 0.17em minus 0.12em  % Reduced from defaults
+\xspaceskip=0.48em plus 0.25em minus 0.15em % End-of-sentence spacing
+
+% Language setup - Load babel with english language
+% Fix for TeX Live 2025 compatibility
+\RequirePackage[english]{babel}
+
+% COMPREHENSIVE HYPHENATION DICTIONARY
+% Academic and technical terms with proper break points
+\hyphenation{
+  % Economics & Business
+  macro-eco-nom-ic macro-eco-nom-ics
+  micro-eco-nom-ic micro-eco-nom-ics
+  econo-met-ric econo-met-rics econo-met-ri-cian
+  entre-pre-neur entre-pre-neur-ial entre-pre-neur-ship
+  infra-struc-ture infra-struc-tur-al
+  multi-na-tion-al trans-na-tion-al inter-na-tion-al
+  % Methodology
+  meth-od-olog-i-cal meth-od-ol-o-gy
+  quan-ti-ta-tive qual-i-ta-tive
+  lon-gi-tu-di-nal cross-sec-tion-al
+  em-pir-i-cal em-pir-i-cism
+  theo-ret-i-cal hy-poth-e-sis hy-poth-e-ses
+  % Statistics
+  hetero-ske-das-tic homo-ske-das-tic
+  hetero-ge-ne-ity homo-ge-ne-ity
+  auto-cor-re-la-tion cross-cor-re-la-tion
+  multi-col-lin-ear-i-ty
+  % Technical Terms
+  algo-rithm algo-rith-mic
+  asymp-tot-ic asymp-tot-i-cal-ly
+  sto-chas-tic de-ter-min-is-tic
+  prob-a-bil-i-ty prob-a-bil-is-tic
+  % Asian Geography/Names
+  Guang-dong Guang-zhou Shen-zhen
+  Shang-hai Bei-jing Tian-jin
+  Zhe-jiang Jiang-su Fu-jian
+  % General Academic
+  biblio-graph-ic para-digm para-dig-mat-ic
+  epis-te-mol-o-gy on-to-log-i-cal
+  frame-work bench-mark
+}
+
+% ==============================================================================
+% FINAL MICRO-ADJUSTMENTS: THE PINNACLE OF TYPOGRAPHY
+% ==============================================================================
+% This section implements the most sophisticated micro-typography adjustments
+% for optical perfection, following the ultimate principles of Bringhurst,
+% Butterick, and Hochuli. Every detail has been refined for flawless output.
+%
+% Key optimizations:
+% - Perfect optical margin alignment through character protrusion
+% - Intelligent page break control with progressive penalties
+% - Complete widow/orphan elimination
+% - Systematic river prevention
+%
+% ------------------------------------------------------------------------------
+
+% ADVANCED MICROTYPE CONFIGURATION
+% Fine-tuned for Pagella's character shapes with ultimate precision
+\microtypesetup{
+  protrusion=true,
+  expansion=true,
+  kerning=true,
+  tracking=true,
+  spacing=true,
+  babel=true,  % Enable language-specific optimizations
+  final        % Production-quality settings
+}
+
+% The protrusion settings are defined below and will be applied automatically
+% to the qpl (Pagella) font family when microtype is active
+
+% ==============================================================================
+% PDF STRING HANDLING FOR HYPERREF
+% ==============================================================================
+% 
+% Provides robust commands that automatically handle PDF bookmarks
+% preventing hyperref warnings about formatting in PDF strings
+%
+% ------------------------------------------------------------------------------
+
+% Define PDF-safe commands - these will be available after hyperref loads
+% Using \providecommand to avoid errors if hyperref is not loaded
+\makeatletter
+\newcommand{\pdfcode}[1]{%
+  \@ifundefined{texorpdfstring}{\code{#1}}{\texorpdfstring{\code{#1}}{#1}}%
+}
+\newcommand{\pdfsc}[1]{%
+  \@ifundefined{texorpdfstring}{\textsc{#1}}{\texorpdfstring{\textsc{#1}}{#1}}%
+}
+\newcommand{\pdfemph}[1]{%
+  \@ifundefined{texorpdfstring}{\emph{#1}}{\texorpdfstring{\emph{#1}}{#1}}%
+}
+\newcommand{\pdfbf}[1]{%
+  \@ifundefined{texorpdfstring}{\textbf{#1}}{\texorpdfstring{\textbf{#1}}{#1}}%
+}
+\newcommand{\pdfit}[1]{%
+  \@ifundefined{texorpdfstring}{\textit{#1}}{\texorpdfstring{\textit{#1}}{#1}}%
+}
+\newcommand{\pdffilepath}[1]{%
+  \@ifundefined{texorpdfstring}{\filepath{#1}}{\texorpdfstring{\filepath{#1}}{#1}}%
+}
+\newcommand{\pdfvar}[1]{%
+  \@ifundefined{texorpdfstring}{\var{#1}}{\texorpdfstring{\var{#1}}{#1}}%
+}
+\makeatother
+
+% ENHANCED OPTICAL MARGIN ALIGNMENT (v2.1)
+% Aggressive character protrusion for professional typography
+% Following Gutenberg's principle: perfect optical alignment at text edges
+
+% Define custom protrusion for Pagella regular text
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  % PUNCTUATION - Maximum protrusion for clean margins
+  \textquoteleft = {1400,}, \textquoteright = {,1400},     % 40% more aggressive
+  \textquotedblleft = {1400,}, \textquotedblright = {,1400},
+  ' = {1200,}, ' = {,1200},      % Apostrophes/single quotes
+  " = {1200,}, " = {,1200},      % Double quotes
+  . = {,1200}, {,} = {,1200},    % Periods/commas - full protrusion
+  : = {,1000}, ; = {,1100},      % Colon/semicolon - substantial
+  ! = {,1200}, ? = {,1200},      % Exclamation/question - match period
+  ( = {900,}, ) = {,900},        % Parentheses - increased
+  [ = {700,}, ] = {,700},        % Brackets - moderate increase
+  \{ = {600,}, \} = {,600},      % Braces - slight increase
+  / = {300,400}, \ = {400,300},  % Slashes - asymmetric
+  
+  % DASHES - Aggressive protrusion for clean right margins
+  - = {1000,1000},   % Hyphen - maximum reasonable protrusion
+  – = {600,600},     % En dash - substantial increase
+  — = {400,400},     % Em dash - moderate (due to length)
+  
+  % CAPITALS - Negative protrusion for overhanging letters
+  A = {100,100}, C = {80,}, D = {,50}, F = {,150}, G = {80,},
+  J = {150,}, K = {,80}, L = {,120}, O = {50,50}, P = {,100},
+  Q = {50,70}, R = {,50}, S = {50,50}, 
+  T = {-50,150},     % Negative left protrusion (overhangs naturally)
+  U = {50,50}, 
+  V = {-50,150},     % Negative left protrusion
+  W = {-30,120},     % Slight negative left protrusion
+  X = {80,80}, 
+  Y = {-50,150},     % Negative left protrusion
+  
+  % LOWERCASE - Refined for Pagella's proportions
+  a = {,70}, c = {70,}, d = {,50}, e = {,70}, f = {,120},
+  g = {70,70}, h = {,50}, i = {,50}, j = {150,}, k = {,70},
+  l = {,70}, m = {,50}, n = {,50}, o = {70,70}, p = {70,70},
+  q = {70,}, r = {,100}, s = {50,50}, t = {,100}, u = {,50},
+  v = {70,70}, w = {60,60}, x = {70,70}, y = {70,150}, z = {,70},
+  
+  % NUMERALS - Oldstyle figure optimization
+  1 = {250,250}, 2 = {70,120}, 3 = {120,70}, 4 = {150,150},
+  5 = {70,120}, 6 = {70,70}, 7 = {150,100}, 8 = {70,70},
+  9 = {70,70}, 0 = {70,70}
+}
+
+% ITALIC PROTRUSION - Enhanced for slanted characters
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  shape = it
+}{
+  % Adjusted for italic slant with more aggressive settings
+  A = {150,50}, F = {,200}, J = {200,}, L = {,150},
+  P = {,150}, T = {-30,150}, V = {-30,100}, W = {-20,100},
+  Y = {-30,150}, f = {,200}, j = {200,}, p = {100,100},
+  y = {100,200}
+}
+
+% SMALL CAPS PROTRUSION - Subtle adjustments for all-caps context
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  shape = sc
+}{
+  % Small caps need less protrusion due to uniform height
+  a = {80,80}, j = {150,}, t = {-20,100}, v = {-20,80}, 
+  w = {-20,80}, y = {-20,100}
+}
+
+% SMALL TEXT PROTRUSION - Optimized for footnotes and captions
+% Smaller text needs more conservative protrusion to maintain readability
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  size = {tiny,scriptsize,footnotesize}
+}{
+  % More conservative for small sizes to maintain readability
+  \textquoteleft = {1000,}, \textquoteright = {,1000},
+  \textquotedblleft = {1000,}, \textquotedblright = {,1000},
+  . = {,900}, {,} = {,900},      % Slightly less aggressive
+  : = {,700}, ; = {,800},        % Reduced for clarity
+  ! = {,900}, ? = {,900},
+  ( = {700,}, ) = {,700},
+  - = {800,800},                 % Hyphen - still strong but reduced
+  % Capitals need less adjustment at small sizes
+  T = {-30,100}, V = {-30,100}, W = {-20,80}, Y = {-30,100},
+  % Lowercase - very subtle at small sizes
+  f = {,80}, j = {100,}, r = {,70}, t = {,70}, y = {50,100}
+}
+
+% BOLD PROTRUSION - Adjusted for heavier weight
+% Bold text needs different protrusion due to increased stroke weight
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  series = {b,bx}
+}{
+  % Bold punctuation needs slightly less protrusion
+  \textquoteleft = {1200,}, \textquoteright = {,1200},
+  \textquotedblleft = {1200,}, \textquotedblright = {,1200},
+  . = {,1000}, {,} = {,1000},    % Reduced from regular
+  : = {,800}, ; = {,900},
+  ! = {,1000}, ? = {,1000},
+  ( = {800,}, ) = {,800},
+  - = {900,900},                 % Slightly less than regular
+  % Bold capitals - adjusted for weight
+  A = {80,80}, T = {-40,120}, V = {-40,120}, W = {-25,100}, Y = {-40,120},
+  % Bold lowercase - compensate for weight
+  f = {,100}, j = {120,}, r = {,80}, t = {,80}, y = {60,120}
+}
+
+% DISPLAY SIZE PROTRUSION - More aggressive for large text
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  size = {Large,LARGE,huge,Huge}
+}{
+  % Extra protrusion for display sizes
+  \textquoteleft = {1600,}, \textquoteright = {,1600},
+  . = {,1400}, {,} = {,1400},
+  - = {1200,1200},
+  T = {-80,200}, V = {-80,200}, W = {-50,150}, Y = {-80,200}
+}
+
+% MATHEMATICAL SYMBOL PROTRUSION
+% Special handling for inline math and symbols
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  % Mathematical operators and symbols
+  + = {250,250}, - = {350,350}, = = {300,300},
+  < = {400,200}, > = {200,400},
+  * = {400,400}, / = {200,300},
+  % Special characters
+  \textdagger = {200,300}, \textdaggerdbl = {200,300},
+  \textsection = {200,200}, \textparagraph = {,300},
+  \textasteriskcentered = {300,300},
+  % Currency symbols
+  \textdollar = {100,100}, \textsterling = {100,}, \texteuro = {,100},
+  % Other special punctuation
+  \textexclamdown = {300,}, \textquestiondown = {300,},
+  \guillemotleft = {400,200}, \guillemotright = {200,400}
+}
+
+% REFINED EXPANSION SETTINGS
+% Conservative but effective character expansion
+\SetExpansion{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  factor = 1000,
+  stretch = 15,    % Conservative stretch (was 20)
+  shrink = 15,     % Symmetric compression
+  step = 3         % Very fine gradation (was 5)
+}
+
+% Character-specific expansion limits
+\SetExpansion{
+  encoding = T1,
+  family = qpl
+}{
+  % More expandable characters
+  A = 500, D = 500, H = 700, M = 800, N = 700, O = 500,
+  U = 700, W = 800,
+  % Less expandable to preserve shape
+  I = 300, J = 300, i = 300, j = 300, l = 300,
+  % Standard expansion for most
+  a = 700, b = 700, c = 700, d = 700, e = 700,
+  % Numbers moderate expansion
+  0 = 500, 1 = 300, 2 = 500, 3 = 500, 4 = 500,
+  5 = 500, 6 = 500, 7 = 500, 8 = 500, 9 = 500
+}
+
+% ENHANCED SPACING ADJUSTMENTS
+% Fine-tuned punctuation spacing
+\SetExtraSpacing{
+  encoding = T1,
+  family = qpl
+}{
+  {,} = {50,150,200},   % More space after comma
+  . = {100,250,300},    % Substantial space after period
+  : = {50,150,200},     % Medium space after colon
+  ; = {50,150,200},     % Medium space after semicolon
+  ! = {100,250,300},    % Match period spacing
+  ? = {100,250,300},    % Match period spacing
+  ) = {50,150,200},     % Space after closing paren
+  ] = {50,100,150},     % Space after closing bracket
+  ' = {50,100,150},     % Space after apostrophe
+  " = {50,150,200}      % Space after closing quote
+}
+
+% ==============================================================================
+% PARAGRAPH OPTIMIZATION COMMANDS
+% ==============================================================================
+
+% Tight paragraph for difficult text
+\newcommand{\tightpar}[1]{%
+  {\tolerance=1500\emergencystretch=1.5em\hbadness=3000 #1\par}%
+}
+
+% Loose paragraph for impossible situations
+\newcommand{\loosepar}[1]{%
+  {\tolerance=3000\emergencystretch=3em\hbadness=5000 #1\par}%
+}
+
+% River-free paragraph with tighter word spacing
+\newcommand{\riverlesspar}[1]{%
+  {\spaceskip=0.28em plus 0.14em minus 0.10em
+   \xspaceskip=0.42em plus 0.21em minus 0.14em
+   #1\par}%
+}
+
+% Balanced last line (prevents orphans)
+\newcommand{\balancedpar}[1]{%
+  {\parfillskip=0pt plus 0.75\textwidth
+   \finalhyphendemerits=12000
+   #1\par}%
+}
+
+% No-hyphenation paragraph
+\newcommand{\nohyphpar}[1]{%
+  {\hyphenpenalty=10000\exhyphenpenalty=10000 #1\par}%
+}
+
+% Technical paragraph with relaxed breaking
+\newcommand{\techpar}[1]{%
+  {\hyphenpenalty=500  % More permissive for technical terms
+   \binoppenalty=700   % Allow breaks after operators if needed
+   \relpenalty=700     % Allow breaks after relations
+   #1\par}%
+}
+
+% PAGE COMPOSITION
+% Butterick's final polish: Ensure proper page breaking
+\raggedbottom              % Prevents awkward stretched spacing
+
+% ==============================================================================
+% FOOTER AND PAGE NUMBER SYSTEM (Optimized July 2, 2025)
+% ==============================================================================
+%
+% Implements minimal, elegant page numbering following classical typography
+% principles with perfect baseline grid alignment.
+%
+% PHILOSOPHY:
+%   - Minimal interference with content
+%   - Oldstyle figures for subtle elegance
+%   - Centered placement (academic standard)
+%   - Grid-aligned spacing to prevent clashes
+%
+% REFERENCES:
+%   - Bringhurst: "Page numbers should be visible when needed, invisible when reading"
+%   - Tschichold: "The page number is servant to the text"
+%   - Chicago Manual of Style: Centered page numbers for academic works
+%
+% ------------------------------------------------------------------------------
+
+% GEOMETRY FOOTER CONFIGURATION
+% Ensures adequate space for page numbers without text collision
+\geometry{
+  footskip=39.6pt,  % 3 grid units from text to baseline of page number
+  bottom=1.25in     % Maintains existing margin
+}
+
+% MINIMAL PAGE NUMBER DESIGN
+% Oldstyle figures in regular weight for subtle presence
+% Fix: Keep \thepage simple for aux files, apply formatting in footer
+\makeatletter
+% Keep the original \thepage definition for aux files
+% \renewcommand{\thepage}{\arabic{page}}  % Don't redefine - keep LaTeX default
+
+% Define formatting command for display only
+\newcommand{\paperstylepagenumber}{%
+  \fontsize{10}{13.2}\selectfont% Slightly smaller than body (10pt vs 11pt)
+  \textcolor{subtlegray}{% 45% gray for reduced visual weight
+    \oldstylenums{\thepage}% Oldstyle figures from Pagella
+  }%
+}
+\makeatother
+
+% PAGE STYLE DEFINITIONS
+% Plain style for normal pages (numbered)
+\fancypagestyle{plain}{%
+  \fancyhf{}% Clear all headers and footers
+  \fancyfoot[C]{\paperstylepagenumber}% Centered page number with formatting
+  \renewcommand{\headrulewidth}{0pt}% No header rule
+  \renewcommand{\footrulewidth}{0pt}% No footer rule
+}
+
+% Empty style for title pages and chapter openings
+\fancypagestyle{empty}{%
+  \fancyhf{}% Clear all
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
+% First page style (no number on page 1)
+\fancypagestyle{firstpage}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
+% Apply plain style as default (delayed to avoid fancyhdr conflicts)
+% \pagestyle{plain}  % Moved to AtBeginDocument
+
+% FOOTER SPACING HELPERS
+% Commands to adjust space when needed
+
+% Add extra space before footer on specific pages
+\newcommand{\protectfooter}{%
+  \vspace{13.2pt}% Add 1 grid unit if content is too close
+}
+
+% Force consistent footer position
+\newcommand{\fixfooter}{%
+  \vfill% Push content up
+}
+
+% Alternative page number styles for special sections
+% Roman numerals for front matter
+\newcommand{\frontmatterpages}{%
+  \pagenumbering{roman}%
+  \pagestyle{plain}%
+}
+
+% Arabic numerals for main matter
+\newcommand{\mainmatterpages}{%
+  \pagenumbering{arabic}%
+  \pagestyle{plain}%
+}
+
+% No page numbers for specific pages
+\newcommand{\unnumberedpage}{%
+  \thispagestyle{empty}%
+}
+
+% OPTIMAL FOOTER METRICS
+% All measurements in baseline grid units (13.2pt)
+%
+% Text baseline to page number baseline: 39.6pt (3 units)
+%   - Provides clear separation
+%   - Prevents clash with footnotes
+%   - Maintains readability
+%
+% Page number size: 10pt (91% of body)
+%   - Visible but not prominent
+%   - Oldstyle figures add elegance
+%   - Gray color reduces weight
+%
+% Bottom margin maintained at 1.25in
+%   - Generous white space
+%   - Professional appearance
+%   - Room for binding if needed
+
+
+% NOTE: Biblatex compatibility definitions moved to top of file
+% to ensure they're available before any package loading
+
+% ==============================================================================
+% END OF PAPERSTYLE.STY
+% ==============================================================================
+%
+% This completes the comprehensive academic typography system implementing
+% the combined principles of Butterick, Brown, and Hochuli for professional
+% academic document production.
+%
+% For usage instructions and examples, see:
+%   - paper/README.md (complete API reference)
+%   - paper/STYLE_GUIDE.md (typography standards and best practices)
+%   - main.tex (comprehensive usage demonstration)
+%
+% Version: 1.3 (2025-07-02)
+% Author: Academic Paper Template Project
+%
+% ==============================================================================
+% ==============================================================================
+% DIAGNOSTIC COMMANDS
+% ==============================================================================
+% For debugging and checking configuration
+
+% Create flags for package detection
+\newif\ifpaperstylemicrotypeloaded
+\newif\ifpaperstylebiblatexloaded
+
+% Check packages at load time
+\makeatletter
+\@ifpackageloaded{microtype}{\paperstylemicrotypeloadedtrue}{\paperstylemicrotypeloadedfalse}
+\@ifpackageloaded{biblatex}{\paperstylebiblatexloadedtrue}{\paperstylebiblatexloadedfalse}
+\makeatother
+
+\newcommand{\paperstylediagnostics}{%
+  \typeout{=== Paperstyle Diagnostics ===}%
+  \typeout{LaTeX Version: \fmtversion}%
+  \typeout{Document Class: article}%
+  \typeout{Grid Unit: \the\gridunit}%
+  \typeout{Half Grid: \the\halfgridunit}%
+  \typeout{Font System: TeX Gyre Pagella}%
+  \typeout{Math Font: newpxmath}%
+  \typeout{Mono Font: Inconsolata (zi4)}%
+  \ifpaperstylemicrotypeloaded
+    \typeout{Microtype: Loaded}%
+  \else
+    \typeout{Microtype: Not loaded}%
+  \fi
+  \ifpaperstylebiblatexloaded
+    \typeout{Biblatex: Loaded}%
+  \else
+    \typeout{Biblatex: Not loaded}%
+  \fi
+  \typeout{=============================}%
+}
+
+% Show current configuration
+\newcommand{\paperstyleinfo}{%
+  \begin{description}
+    \item[Typography System] TeX Gyre Pagella with newpxmath
+    \item[Grid Unit] \the\gridunit{} (baseline rhythm)
+    \item[Microtype] Character protrusion and font expansion active
+    \item[Small Caps] Tracking optimized for Pagella
+    \item[Lists] Refined bullets with hanging punctuation
+  \end{description}
+}
+
+\endinput

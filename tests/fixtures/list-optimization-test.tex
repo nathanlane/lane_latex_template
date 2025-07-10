@@ -1,0 +1,113 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../../paper/paperstyle}
+\usepackage{../../paper/gridoverlay}
+\usepackage{lipsum}
+
+\begin{document}
+
+% Enable grid visualization
+\showgrid
+
+\section{Refined List Typography Tests}
+
+This document demonstrates the optimized list typography with elegant bullets designed specifically for TeX Gyre Pagella.
+
+\subsection{Standard Itemize Lists}
+
+The refined bullets are now 80\% of their original size with optical adjustments:
+\begin{itemize}
+\item First item with elegant scaled bullet at 25\% gray
+\item Second item showing improved visual weight
+\item Third item maintaining perfect grid alignment
+  \begin{itemize}
+  \item Nested item with refined en-dash at 30\% gray
+  \item Another nested item showing hierarchy
+    \begin{itemize}
+    \item Third level with delicate open circle at 35\% gray
+    \item Provides clear visual progression
+    \end{itemize}
+  \item Back to second level
+  \end{itemize}
+\item Return to primary level
+\end{itemize}
+
+\subsection{Comparison: Old vs New Bullets}
+
+Old style (if using \texttt{\textbackslash bulletmark} directly):
+\begin{itemize}
+\item[\textcolor{gray}{0.20}{\textbullet}] Original bullet at 20\% gray (80\% black)
+\item[\elegantbullet] New elegant bullet - scaled to 80\%, 25\% gray (75\% black)
+\item[\elegantdot] Alternative dot style - naturally smaller and more refined
+\end{itemize}
+
+\subsection{Numbered Lists with Refinements}
+
+\begin{enumerate}
+\item First item with oldstyle figures
+\item Second item showing left alignment
+\item Items with double digits align properly:
+  \setcounter{enumi}{8}
+\item Ninth item
+\item Tenth item demonstrates reserved space
+\item Eleventh item maintains alignment
+\end{enumerate}
+
+\subsection{Readable List Variant}
+
+For content requiring more visual breathing room:
+\begin{readableitem}
+\item First item with increased spacing (0.5 baseline units between items)
+\item Second item showing enhanced readability
+\item Third item with more generous top/bottom spacing
+\item This variant is ideal for:
+  \begin{readableitem}
+  \item Important points requiring emphasis
+  \item Lists within dense academic text
+  \item Situations where scanning is important
+  \end{readableitem}
+\end{readableitem}
+
+\subsection{Academic En-dash Lists}
+
+Following university style guide conventions:
+\begin{academicitem}
+\item First point with refined en-dash marker
+\item Second point showing professional appearance
+\item Third point maintaining elegant proportions
+\end{academicitem}
+
+\subsection{Mixed Content Integration}
+
+\lipsum[1][1-3]
+
+\begin{itemize}
+\item The list integrates seamlessly with surrounding paragraphs
+\item Spacing before and after has been refined for better flow
+\item Grid alignment is maintained throughout
+\end{itemize}
+
+\lipsum[2][1-3]
+
+\subsection{Inline Lists}
+
+For brief enumerations, we can use inline lists: \begin{inlineitem}
+\item first \item second \item third
+\end{inlineitem}, which flow naturally within the text.
+
+\subsection{Special List Variants}
+
+\subsubsection{Compact Lists}
+\begin{compactitem}
+\item Minimal spacing
+\item Dense information
+\item Reference lists
+\end{compactitem}
+
+\subsubsection{Display Lists}
+\begin{displayitem}
+\item \textbf{Key Finding:} Bold items with black bullets
+\item \textbf{Major Result:} Generous spacing for emphasis
+\item \textbf{Important Note:} Full baseline units between items
+\end{displayitem}
+
+\end{document}

@@ -1,0 +1,199 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+
+% Enhanced grid visualization with line numbers
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{eso-pic}
+
+% Show grid with line numbers
+\newcommand{\showgridwithnumbers}{%
+  \AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture,overlay]
+      % Grid lines every baseline
+      \foreach \n in {0,1,2,...,60} {
+        \pgfmathsetmacro{\y}{-\n*13.2}
+        \draw[gray!20,line width=0.1pt] (current page.west |- 0,\y pt) -- (current page.east |- 0,\y pt);
+        % Line numbers
+        \node[gray!40,font=\tiny] at ($(current page.west) + (0.3cm,\y pt)$) {\n};
+      }
+      % Stronger lines every 5 baselines
+      \foreach \n in {0,5,10,...,60} {
+        \pgfmathsetmacro{\y}{-\n*13.2}
+        \draw[gray!40,line width=0.2pt] (current page.west |- 0,\y pt) -- (current page.east |- 0,\y pt);
+      }
+      % Show 2nd gridline markers
+      \foreach \n in {0,2,4,...,60} {
+        \pgfmathsetmacro{\y}{-\n*13.2}
+        \draw[red!20,line width=0.5pt] ($(current page.west) + (1cm,\y pt)$) -- ($(current page.west) + (1.2cm,\y pt)$);
+      }
+      % Show 3rd gridline markers
+      \foreach \n in {0,3,6,...,60} {
+        \pgfmathsetmacro{\y}{-\n*13.2}
+        \draw[blue!20,line width=0.5pt] ($(current page.west) + (1.3cm,\y pt)$) -- ($(current page.west) + (1.5cm,\y pt)$);
+      }
+    \end{tikzpicture}%
+  }%
+}
+
+\begin{document}
+\showgridwithnumbers
+\pagestyle{empty}
+
+% ========== HIERARCHICAL ALIGNMENT AUDIT ==========
+
+\section{Hierarchical Alignment Audit}
+
+% Body text - should align to EVERY gridline
+This is body text that should align perfectly to every gridline. The quick brown fox jumps over the lazy dog. Each line of this paragraph must sit exactly on a gray gridline without exception. Let's add more text to verify multiple lines: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+% Test with mathematical content
+Here's a paragraph with inline math: $f(x) = \sin(x) + \cos(x)$ and $\int_0^\pi \sin(x)\,dx = 2$. The baseline should remain perfectly aligned even with mathematical expressions.
+
+\subsection{Subhead Alignment Test (Should Hit 2nd Gridline)}
+
+After a subsection, the text continues. According to our settings, the subsection should land on every 2nd gridline (red markers). The spacing before is 26.4pt (2 units) and after is 13.2pt (1 unit).
+
+% Multiple paragraphs to test consistency
+This is another paragraph to verify continued alignment. The baseline grid should be maintained throughout all body text without any drift or misalignment.
+
+And yet another paragraph with accented characters: café, naïve, résumé, Zürich, Göttingen. These should not affect grid alignment.
+
+\subsubsection{Subsubsection Test}
+
+The subsubsection uses 19.8pt before (1.5 units) and 9.9pt after (0.75 units). This fractional spacing should still maintain grid alignment.
+
+\paragraph{Paragraph Heading Test} This paragraph heading has 13.2pt before (1 unit) and 6.6pt after (0.5 unit). The text following should return to the grid.
+
+% ========== SPACING STANDARDIZATION AUDIT ==========
+
+\section{Spacing Standardization Audit}
+
+All vertical measurements in our system:
+\begin{itemize}
+\item Section: 39.6pt before (3 × 13.2pt), 19.8pt after (1.5 × 13.2pt)
+\item Subsection: 26.4pt before (2 × 13.2pt), 13.2pt after (1 × 13.2pt)
+\item Subsubsection: 19.8pt before (1.5 × 13.2pt), 9.9pt after (0.75 × 13.2pt)
+\item Paragraph: 13.2pt before (1 × 13.2pt), 6.6pt after (0.5 × 13.2pt)
+\item Paragraph spacing: 0pt (confirmed)
+\item Paragraph indent: 14pt (approximately 1.06 × 13.2pt)
+\end{itemize}
+
+% ========== LIST ALIGNMENT TEST ==========
+
+\subsection{List Integration}
+
+Lists should maintain grid alignment:
+\begin{enumerate}
+\item First item with sufficient text to wrap to multiple lines and verify that each line maintains perfect baseline grid alignment
+\item Second item with math: $a^2 + b^2 = c^2$
+\item Third item continues the test
+\end{enumerate}
+
+Nested lists:
+\begin{itemize}
+\item Outer level item
+  \begin{itemize}
+  \item Inner level should maintain grid
+  \item Another inner item
+    \begin{itemize}
+    \item Third level nesting
+    \item Still on grid
+    \end{itemize}
+  \end{itemize}
+\item Back to outer level
+\end{itemize}
+
+% ========== DISPLAY MATH TEST ==========
+
+\section{Mathematical Display Alignment}
+
+Text before display math should be on grid.
+\[
+\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+\]
+Text after display math should return to grid. The display has 13.2pt spacing above and below (exactly 1 baseline unit).
+
+Another equation with more height:
+\[
+\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}
+\]
+This text should still maintain grid alignment.
+
+% ========== CAPTION ALIGNMENT TEST ==========
+
+\begin{figure}[h!]
+\centering
+\fbox{\parbox{0.6\textwidth}{\centering\vspace{39.6pt}Figure Content (3 baseline units tall)\vspace{39.6pt}}}
+\caption{This caption should align to the grid. The caption spacing is 6.6pt above and below (0.5 baseline units). Multiple lines of caption text will test whether each line maintains proper grid alignment throughout the caption block.}
+\end{figure}
+
+% ========== BLOCKQUOTE TEST ==========
+
+\section{Block Quote Alignment}
+
+Regular paragraph before blockquote maintains grid alignment perfectly.
+
+\begin{quote}
+This is a block quotation that should have equal spacing before and after. The quote environment should maintain baseline grid alignment for all lines within the quotation. Multiple sentences help verify this: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+\end{quote}
+
+Regular paragraph after blockquote returns to standard grid alignment.
+
+% ========== TABLE ALIGNMENT TEST ==========
+
+\begin{table}[h!]
+\caption{Table with Grid-Aligned Rows}
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Header 1 & Header 2 & Header 3 \\
+\midrule
+Row 1 & Data & More data \\
+Row 2 & Data & More data \\
+Row 3 & Data & More data \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ========== FOOTNOTE TEST ==========
+
+\section{Footnote Integration}
+
+This text has a footnote\footnote{The footnote should begin exactly 13.2pt (1 baseline unit) below the main text, with 6.6pt (0.5 units) between multiple footnotes.} that tests grid alignment. Another footnote\footnote{Second footnote to test spacing between notes.} follows.
+
+% ========== MULTI-PAGE TEST ==========
+
+\clearpage
+
+\section{Multi-Page Consistency Test}
+
+This page should maintain the same grid alignment as the previous page. The grid should not reset or drift. Every line of body text must continue to align with the 13.2pt baseline grid.
+
+Long passage to test for drift over extended text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+% ========== PROFESSIONAL REFINEMENTS TEST ==========
+
+\section{Professional Refinements}
+
+{\Large Large text (14pt) may need optical adjustment. It might sit slightly above the mathematical gridline for visual alignment.}
+
+Regular text returns to grid immediately after large text.
+
+{\footnotesize Small text (9pt) may need its own proportional grid. This tests whether small sizes maintain readability while respecting the overall grid system. Extended small text helps evaluate the visual rhythm.}
+
+Back to regular body text on the standard grid.
+
+% ========== GRID ANALYSIS MARKERS ==========
+
+\vspace{13.2pt}
+\noindent\textbf{Grid Check Points:}\\
+Line 10: \rule{3cm}{0.4pt}\\
+Line 20: \rule{3cm}{0.4pt}\\
+Line 30: \rule{3cm}{0.4pt}\\
+Line 40: \rule{3cm}{0.4pt}\\
+Line 50: \rule{3cm}{0.4pt}
+
+\end{document}

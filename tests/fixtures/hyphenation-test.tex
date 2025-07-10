@@ -1,0 +1,100 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../../paper/paperstyle}
+\usepackage{lipsum}
+
+% Show hyphenation points
+\newcommand{\showhyphens}[1]{%
+  \setbox0\vbox{%
+    \hsize=0pt
+    \hfuzz=\maxdimen
+    \noindent#1%
+  }%
+}
+
+\begin{document}
+
+\section{Hyphenation and Line Breaking Test}
+
+This document demonstrates the refined hyphenation and line breaking system optimized for TeX Gyre Pagella.
+
+\subsection{Standard Paragraph Test}
+
+The macroeconomic implications of entrepreneurial infrastructure development in multinational contexts require sophisticated quantitative methodologies. Heteroskedastic econometric analysis reveals asymptotic patterns in cross-sectional longitudinal datasets, particularly when examining multicollinearity in theoretical frameworks.
+
+\subsection{Technical Terms Hyphenation}
+
+% Show hyphenation points for technical terms
+\showhyphens{macroeconomic microeconomic econometric entrepreneurial infrastructure multinational methodology quantitative qualitative longitudinal heteroskedastic homoskedastic autocorrelation multicollinearity algorithm algorithmic asymptotic stochastic}
+
+The following terms now have proper hyphenation:
+\begin{itemize}
+\item macro-eco-nom-ic and micro-eco-nom-ic
+\item econo-met-ric and econo-met-rics
+\item entre-pre-neur-ial infra-struc-ture
+\item hetero-ske-das-tic and homo-ske-das-tic
+\item multi-col-lin-ear-i-ty
+\end{itemize}
+
+\subsection{River Prevention Test}
+
+\riverlesspar{
+This paragraph uses tighter word spacing to prevent rivers. The spaceskip and xspaceskip values have been optimized for Pagella's wider characters. Notice how the interword spacing is more consistent, creating a more even texture on the page. Rivers are those unsightly vertical white spaces that can appear in justified text when word spacing becomes too loose.
+}
+
+\subsection{Balanced Last Line Test}
+
+\balancedpar{
+This paragraph demonstrates the balanced last line feature which prevents orphaned words. The parfillskip parameter has been adjusted to ensure that the last line of the paragraph contains a reasonable amount of text, avoiding those awkward single words hanging at the end. This creates a more professional appearance.
+}
+
+\subsection{Technical Content with Math}
+
+\techpar{
+Consider the optimization problem $\max_{x \in \mathbb{R}^n} f(x)$ subject to $g_i(x) \leq 0$ for $i = 1, \ldots, m$ and $h_j(x) = 0$ for $j = 1, \ldots, p$. The Karush-Kuhn-Tucker conditions provide necessary conditions for optimality when the constraint qualification holds. This paragraph uses relaxed breaking penalties for technical content.
+}
+
+\subsection{No Hyphenation Test}
+
+\nohyphpar{
+This paragraph completely disables hyphenation to demonstrate the difference. Without hyphenation, the line breaking algorithm must rely entirely on stretching and shrinking the interword spaces, which can lead to very loose or very tight lines, especially with long technical terms like heteroskedasticity or multicollinearity.
+}
+
+\subsection{Difficult Paragraph Test}
+
+\tightpar{
+Heteroskedasticity multicollinearity autocorrelation econometric methodology infrastructure entrepreneurial multinational quantitative longitudinal asymptotic algorithmic stochastic deterministic probabilistic epistemological ontological paradigmatic bibliographic theoretical empirical.
+}
+
+\subsection{Geographic Names}
+
+The hyphenation system includes proper break points for geographic place names: Massachusetts, Pennsylvania, California, Connecticut, Mississippi, and International locations like Guangdong, Shanghai, Beijing all have appropriate hyphenation patterns defined.
+
+\subsection{Comparison with Default Settings}
+
+\begingroup
+% Temporarily revert to default settings
+\hyphenpenalty=50
+\tolerance=1000
+\emergencystretch=3em
+\spaceskip=0pt
+\xspaceskip=0pt
+
+\subsubsection{Default Settings}
+The macroeconomic implications of entrepreneurial infrastructure development in multinational contexts require sophisticated quantitative methodologies. Heteroskedastic econometric analysis reveals asymptotic patterns in cross-sectional longitudinal datasets, particularly when examining multicollinearity in theoretical frameworks.
+
+\endgroup
+
+\subsubsection{Optimized Settings}
+The macroeconomic implications of entrepreneurial infrastructure development in multinational contexts require sophisticated quantitative methodologies. Heteroskedastic econometric analysis reveals asymptotic patterns in cross-sectional longitudinal datasets, particularly when examining multicollinearity in theoretical frameworks.
+
+\subsection{Lorem Ipsum Test}
+
+\lipsum[1-2]
+
+\subsection{Narrow Column Test}
+
+\begin{minipage}{0.45\textwidth}
+The macroeconomic implications of entrepreneurial infrastructure development require sophisticated methodologies. Heteroskedastic econometric analysis reveals patterns in longitudinal datasets.
+\end{minipage}
+
+\end{document}

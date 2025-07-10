@@ -1,0 +1,46 @@
+% ==============================================================================
+% FONTS.STY - Font System Configuration Module
+% ==============================================================================
+% Extracted from paperstyle.sty for modular customization
+% Maintains full compatibility with existing documents
+% ==============================================================================
+
+\ProvidesPackage{lltfonts}[2025/07/02 v1.0 Font System Configuration]
+
+% FONT ENCODING AND BASE CONFIGURATION
+% UTF-8 support with T1 encoding for proper character handling
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+
+% PRIMARY TEXT FONT
+% TeX Gyre Pagella - Enhanced Palatino with superior small caps
+\RequirePackage{tgpagella}
+
+% MONOSPACE FONT
+% Inconsolata scaled for optimal weight balance with Pagella
+\RequirePackage[varqu,varl,scaled=0.96]{zi4}
+
+% MATHEMATICAL FONT SYSTEM
+% Load amsmath and amssymb before newpxmath to avoid conflicts
+\RequirePackage{amsmath,amssymb}
+% newpxmath perfectly harmonized with Pagella
+\RequirePackage{newpxmath}
+\RequirePackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
+
+% SUPPORTING PACKAGES
+\RequirePackage{scalefnt}     % For precise bold small caps scaling
+\RequirePackage{letterspace}  % For \lsstyle letterspacing
+\RequirePackage{textcase}     % For \MakeTextUppercase
+\RequirePackage{textcomp}     % For improved monospace characters
+
+% FONT CHARACTERISTICS (for reference)
+% Pagella characteristics:
+% - Larger x-height than original Palatino
+% - Wider character width
+% - Superior small caps design
+% - Excellent oldstyle figures
+
+% SCALING FACTORS
+% These can be customized before loading paperstyle
+\providecommand{\monospacescale}{0.96}   % Inconsolata scaling
+\providecommand{\mathscale}{1.0}         % Math font scaling

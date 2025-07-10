@@ -1,0 +1,86 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage{../../paper/paperstyle}
+
+\begin{document}
+
+\section{Cross-Reference Typography Test}
+\label{sec:intro}
+
+This document tests the new cross-reference typography system implemented through cleveref configuration.
+
+\subsection{Basic References}
+\label{subsec:basic}
+
+Testing various reference types:
+
+\begin{itemize}
+\item Mid-sentence figure reference: as shown in \cref{fig:test}
+\item Sentence-start figure: \Cref{fig:test} demonstrates the concept
+\item Multiple figures: see \cref{fig:test,fig:test2,fig:test3}
+\item Figure range: data from \crefrange{fig:test}{fig:test3}
+\item Table reference: results in \cref{tab:results}
+\item Section reference: discussed in \cref{sec:intro}
+\item Subsection: detailed in \cref{subsec:basic}
+\item Equation reference: using \cref{eq:main}
+\item With page: \refpage{fig:test}
+\item Parenthetical: conclusions \pref{tab:results}
+\item See also: \seealso{sec:intro}
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \fbox{\parbox{0.8\textwidth}{\centering Test Figure 1}}
+  \caption{First test figure}
+  \label{fig:test}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \fbox{\parbox{0.8\textwidth}{\centering Test Figure 2}}
+  \caption{Second test figure}
+  \label{fig:test2}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \fbox{\parbox{0.8\textwidth}{\centering Test Figure 3}}
+  \caption{Third test figure}
+  \label{fig:test3}
+\end{figure}
+
+\begin{table}[h]
+  \caption{Test Results}
+  \label{tab:results}
+  \centering
+  \begin{tabular}{lrr}
+    \toprule
+    Method & Accuracy & Speed \\
+    \midrule
+    A & 0.95 & Fast \\
+    B & 0.87 & Slow \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{equation}
+  E = mc^2
+  \label{eq:main}
+\end{equation}
+
+\subsection{Capitalization Tests}
+\label{subsec:caps}
+
+\Cref{fig:test} shows important data. \Cref{tab:results} contains the results. 
+\Cref{eq:main} is the fundamental equation. \Cref{sec:intro} introduces the topic.
+
+\subsection{Multiple and Range Tests}
+
+Multiple mixed references: \cref{fig:test,tab:results,eq:main}
+
+Range of sections: \crefrange{subsec:basic}{subsec:caps}
+
+\subsection{Deprecated Command Test}
+
+Testing old ref command (should generate warning): Figure~\ref{fig:test}
+
+\end{document}

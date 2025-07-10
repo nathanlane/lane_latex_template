@@ -1,0 +1,79 @@
+\documentclass{article}
+\input{paper/preamble.tex}
+
+\begin{document}
+
+\section{Emphasis Hierarchy Demonstration}
+
+This document demonstrates the sophisticated emphasis hierarchy optimized for TeX Gyre Pagella.
+
+\subsection{Level 1: Standard Emphasis}
+The \emph{standard emphasis} uses Pagella's true italics with 0.5\% tracking for enhanced readability. 
+Notice how \emph{nested \emph{emphasis}} automatically switches to upright small caps for the inner level.
+Triple nesting: \emph{outer \emph{middle \emph{inner}}} demonstrates the full progression.
+
+\subsection{Level 2: Strong Emphasis}  
+For important terms, use \strongemph{strong emphasis} which renders in small caps with 3\% tracking and a 2\% size boost. 
+This is perfect for \strongemph{key terminology}, \strongemph{technical concepts}, and \strongemph{definitions}.
+
+\subsection{Level 3: Critical Emphasis}
+When you need to highlight \boolemph{critical concepts}, the bold italic with subtle color provides maximum readability while maintaining sophistication. 
+Use this for \boolemph{key findings} and \boolemph{important results}.
+
+\subsection{Level 4: Maximum Emphasis}
+Use \maxemph{maximum emphasis} sparingly---it combines bold small caps with color and 4.5\% tracking for ultimate impact.
+Reserve this for \maxemph{crucial warnings} or \maxemph{primary conclusions}.
+
+\subsection{Special Emphasis Commands}
+
+\paragraph{Term Introduction}
+The \termintro{term introduction} command combines italics with small caps for first occurrences of technical terms.
+
+\paragraph{Small Caps Variants}
+\begin{itemize}
+\item Regular small caps: \regsc{example text} with 3\% tracking
+\item Italic small caps: \itsc{sophisticated variant} with 2\% tracking  
+\item Bold small caps: \bsc{strong variant} with weight compensation (96\% scaling)
+\item Display small caps: \elegantsc{elegant display} with 8\% tracking
+\end{itemize}
+
+\subsection{Weight Relationships}
+
+\paragraph{Regular vs. Bold}
+Compare regular text with \textbf{bold text} (100\% weight) and \boolemph{compensated bold italic} (97\% scaling).
+
+\paragraph{Size-Specific Compensation}
+\begin{itemize}
+\item Body text bold: \bsc{97\% scaling}
+\item Display bold: \headsc{95\% scaling} 
+\item Small text bold: \inlinebsc{97\% scaling}
+\end{itemize}
+
+\subsection{Nested Emphasis Examples}
+
+\begin{enumerate}
+\item \emph{First level is italic}
+\item \emph{First level with \emph{second level} in small caps}
+\item \emph{First with \emph{second and \emph{third level}} in bold small caps}
+\item \strongemph{Strong with \emph{nested italic} inside}
+\end{enumerate}
+
+\subsection{Best Practices}
+
+\paragraph{Do:}
+\begin{itemize}
+\item Use \emph{standard emphasis} for most cases
+\item Reserve \strongemph{strong emphasis} for key terms
+\item Apply \boolemph{critical emphasis} to important findings
+\item Save \maxemph{maximum emphasis} for rare, crucial points
+\end{itemize}
+
+\paragraph{Don't:}
+\begin{itemize}
+\item Mix too many emphasis levels in one paragraph
+\item Use maximum emphasis more than 1-2 times per document
+\item Combine color emphasis with already colored text
+\item Nest more than three levels deep
+\end{itemize}
+
+\end{document}

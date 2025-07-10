@@ -1,0 +1,189 @@
+% ==============================================================================
+% FONT-FEATURES.STY - Enhanced Font Feature Access for TeX Gyre Pagella
+% ==============================================================================
+% Systematic access to font features available in pdfLaTeX with Type 1 fonts
+% Maximizes use of TeX Gyre Pagella's professional typography features
+% ==============================================================================
+
+\ProvidesPackage{lltfontfeatures}[2025/07/06 v1.0 Font Features Module]
+
+% Dependencies
+\RequirePackage{textcomp}  % Additional symbols and features
+
+% ==============================================================================
+% FIGURE STYLE COMMANDS
+% ==============================================================================
+% Systematic access to different numeral styles for different contexts
+
+% Oldstyle figures (default for text)
+\newcommand{\oldfigs}[1]{\oldstylenums{#1}}
+\newcommand{\textfigs}[1]{\oldstylenums{#1}}  % Alias for clarity
+
+% Lining figures (for tables, all-caps contexts)
+\newcommand{\liningfigs}[1]{%
+  {\fontfamily{qpl}\fontencoding{OT1}\selectfont #1}%
+}
+\newcommand{\tablefigs}[1]{\liningfigs{#1}}  % Semantic alias
+
+% Tabular figures with fixed width (for alignment in tables)
+% Note: True tabular figures require OpenType; this ensures consistent spacing
+\newcommand{\tabularfigs}[1]{%
+  \begingroup
+  \fontfamily{qpl}\fontencoding{OT1}\selectfont
+  \renewcommand{\figurealign}{\hfil}%
+  #1%
+  \endgroup
+}
+
+% ==============================================================================
+% SUPERIOR AND INFERIOR FIGURES
+% ==============================================================================
+% For footnote marks, ordinals, and chemical formulas
+
+% Superior figures (smaller, raised)
+\newcommand{\textsup}[1]{\textsuperscript{#1}}
+\newcommand{\supfigs}[1]{%
+  {\fontsize{6pt}{6pt}\selectfont\raisebox{0.5ex}{#1}}%
+}
+
+% Inferior figures (smaller, lowered)
+\newcommand{\inffigs}[1]{%
+  {\fontsize{6pt}{6pt}\selectfont\raisebox{-0.3ex}{#1}}%
+}
+
+% Chemical formulas
+\newcommand{\chemform}[1]{%
+  \ensuremath{\mathrm{#1}}%
+}
+
+% ==============================================================================
+% ENHANCED SMALL CAPS
+% ==============================================================================
+% Building on existing tracking, provide semantic commands
+
+% Title case small caps (maximum tracking for display)
+\providecommand{\titlesc}{}% In case already defined
+\renewcommand{\titlesc}[1]{%
+  {\scshape\SetTracking{encoding={T1,OT1}}{120}\lsstyle #1}%
+}
+
+% Header small caps (moderate tracking)
+\newcommand{\headersc}[1]{%
+  {\scshape\SetTracking{encoding={T1,OT1}}{60}\lsstyle #1}%
+}
+
+% Body text small caps (standard tracking - already defined as \textsc)
+% Just document the existing behavior
+
+% Tight small caps (minimal tracking for dense contexts)
+\newcommand{\tightsc}[1]{%
+  {\scshape\SetTracking{encoding={T1,OT1}}{15}\lsstyle #1}%
+}
+
+% ==============================================================================
+% TEXTCOMP SYMBOL ACCESS
+% ==============================================================================
+% Professional symbols from textcomp optimized for Pagella
+
+% Currency symbols
+% Note: These may be defined by textcomp, so we use providecommand
+\providecommand{\texteuro}{\mbox{\texteuro}}  % Ensure proper spacing
+\providecommand{\textsterling}{\mbox{\textsterling}}
+\providecommand{\textyen}{\mbox{\textyen}}
+\providecommand{\textcent}{\mbox{\textcent}}
+
+% Professional quotation marks
+\newcommand{\openquote}{\textquotedblleft}
+\newcommand{\closequote}{\textquotedblright}
+\newcommand{\singleopenquote}{\textquoteleft}
+\newcommand{\singleclosequote}{\textquoteright}
+
+% Fractions (better than math mode for text)
+\newcommand{\onequarter}{\textonequarter}
+\newcommand{\onehalf}{\textonehalf}
+\newcommand{\threequarters}{\textthreequarters}
+
+% Professional symbols
+\newcommand{\interrobang}{\textinterrobang}
+\newcommand{\numero}{\textnumero}
+\newcommand{\estimated}{\textestimated}
+\newcommand{\referencemark}{\textreferencemark}
+
+% ==============================================================================
+% LIGATURE CONTROL
+% ==============================================================================
+% Fine control over ligatures (within pdfLaTeX constraints)
+
+% Disable specific ligatures when needed
+\providecommand{\nolig}{}% In case already defined
+\renewcommand{\nolig}[1]{%
+  {\addfontfeatures{Ligatures=NoCommon}#1}% Requires fontspec
+}
+
+% pdfLaTeX alternative - manual ligature breaking
+\newcommand{\breaklig}[2]{#1\kern0pt#2}  % Insert kern to break ligature
+
+% Common problem words
+\providecommand{\shelfful}{}% In case already defined
+\renewcommand{\shelfful}{shelf\breaklig{f}{ul}}
+\providecommand{\cufflink}{}% In case already defined
+\renewcommand{\cufflink}{cuf\breaklig{f}{link}}
+
+% ==============================================================================
+% CASE CONVERSION WITH SMALL CAPS
+% ==============================================================================
+% Proper case conversion preserving small caps
+
+\newcommand{\textuppercase}[1]{%
+  \MakeTextUppercase{#1}%
+}
+
+\newcommand{\textlowercase}[1]{%
+  \MakeTextLowercase{#1}%
+}
+
+% ==============================================================================
+% SPECIAL CHARACTER IMPROVEMENTS
+% ==============================================================================
+% Better versions of common characters
+
+% Professional apostrophe (not straight quote)
+\newcommand{\textapostrophe}{\textquoteright}
+
+% Professional dashes with proper spacing
+\newcommand{\textendash}{\kern0.1em\textendash\kern0.1em}
+\newcommand{\textemdash}{\kern0.1em\textemdash\kern0.1em}
+
+% Degree symbol with proper spacing
+\newcommand{\degree}{\ensuremath{^\circ}}
+
+% ==============================================================================
+% CONTEXTUAL FIGURE SELECTION
+% ==============================================================================
+% Automatically select appropriate figures based on context
+
+% In footnotes - use oldstyle
+\let\origfootnote\footnote
+\renewcommand{\footnote}[1]{%
+  \origfootnote{\oldstylenums{#1}}%
+}
+
+% In section numbers - use lining (already default)
+% In page numbers - use oldstyle (already implemented)
+
+% ==============================================================================
+% FONT FEATURE INFORMATION
+% ==============================================================================
+% Commands to display available features
+
+\newcommand{\showfontfeatures}{%
+  \begin{description}
+    \item[Small Caps] \textsc{Available with tracking optimization}
+    \item[Oldstyle Figures] \oldstylenums{0123456789}
+    \item[Lining Figures] \liningfigs{0123456789}
+    \item[Ligatures] fi, fl, ff, ffi, ffl
+    \item[Symbols] \texteuro\ \textsterling\ \textyen\ \textcopyright\ \textregistered
+  \end{description}
+}
+
+\endinput

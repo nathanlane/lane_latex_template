@@ -1,0 +1,226 @@
+% ==============================================================================
+% MICROTYPE-CONFIG.STY - Advanced Microtypographic Configuration
+% ==============================================================================
+% Comprehensive character protrusion and expansion settings for TeX Gyre Pagella
+% Implements optical margin alignment following Gutenberg's principles
+% ==============================================================================
+
+\ProvidesPackage{lltmicrotype}[2025/07/06 v1.0 Microtype Configuration]
+
+% Ensure microtype is loaded (should be loaded by paperstyle.sty)
+\@ifpackageloaded{microtype}{}{%
+  \PackageError{microtype-config}{microtype package must be loaded before microtype-config}{}%
+}
+
+% ==============================================================================
+% ENHANCED OPTICAL MARGIN ALIGNMENT (v2.1)
+% ==============================================================================
+% Aggressive character protrusion for professional typography
+% Following Gutenberg's principle: perfect optical alignment at text edges
+
+% Define custom protrusion for Pagella regular text
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  % PUNCTUATION - Maximum protrusion for clean margins
+  \textquoteleft = {1400,}, \textquoteright = {,1400},     % 40% more aggressive
+  \textquotedblleft = {1400,}, \textquotedblright = {,1400},
+  ' = {1200,}, ' = {,1200},      % Apostrophes/single quotes
+  " = {1200,}, " = {,1200},      % Double quotes
+  . = {,1200}, {,} = {,1200},    % Periods/commas - full protrusion
+  : = {,1000}, ; = {,1100},      % Colon/semicolon - substantial
+  ! = {,1200}, ? = {,1200},      % Exclamation/question - match period
+  ( = {900,}, ) = {,900},        % Parentheses - increased
+  [ = {700,}, ] = {,700},        % Brackets - moderate increase
+  \{ = {600,}, \} = {,600},      % Braces - slight increase
+  / = {300,400}, \ = {400,300},  % Slashes - asymmetric
+  
+  % DASHES - Aggressive protrusion for clean right margins
+  - = {1000,1000},   % Hyphen - maximum reasonable protrusion
+  – = {600,600},     % En dash - substantial increase
+  — = {400,400},     % Em dash - moderate (due to length)
+  
+  % CAPITALS - Negative protrusion for overhanging letters
+  A = {100,100}, C = {80,}, D = {,50}, F = {,150}, G = {80,},
+  J = {150,}, K = {,80}, L = {,120}, O = {50,50}, P = {,100},
+  Q = {50,70}, R = {,50}, S = {50,50}, 
+  T = {-50,150},     % Negative left protrusion (overhangs naturally)
+  U = {50,50}, 
+  V = {-50,150},     % Negative left protrusion
+  W = {-30,120},     % Slight negative left protrusion
+  X = {80,80}, 
+  Y = {-50,150},     % Negative left protrusion
+  
+  % LOWERCASE - Refined for Pagella's proportions
+  a = {,70}, c = {70,}, d = {,50}, e = {,70}, f = {,120},
+  g = {70,70}, h = {,50}, i = {,50}, j = {150,}, k = {,70},
+  l = {,70}, m = {,50}, n = {,50}, o = {70,70}, p = {70,70},
+  q = {70,}, r = {,100}, s = {50,50}, t = {,100}, u = {,50},
+  v = {70,70}, w = {60,60}, x = {70,70}, y = {70,150}, z = {,70},
+  
+  % NUMERALS - Oldstyle figure optimization
+  1 = {250,250}, 2 = {70,120}, 3 = {120,70}, 4 = {150,150},
+  5 = {70,120}, 6 = {70,70}, 7 = {150,100}, 8 = {70,70},
+  9 = {70,70}, 0 = {70,70}
+}
+
+% ITALIC PROTRUSION - Enhanced for slanted characters
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  shape = it
+}{
+  % Adjusted for italic slant with more aggressive settings
+  A = {150,50}, F = {,200}, J = {200,}, L = {,150},
+  P = {,150}, T = {-30,150}, V = {-30,100}, W = {-20,100},
+  Y = {-30,150}, f = {,200}, j = {200,}, p = {100,100},
+  y = {100,200}
+}
+
+% SMALL CAPS PROTRUSION - Subtle adjustments for all-caps context
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  shape = sc
+}{
+  % Small caps need less protrusion due to uniform height
+  a = {80,80}, j = {150,}, t = {-20,100}, v = {-20,80}, 
+  w = {-20,80}, y = {-20,100}
+}
+
+% SMALL TEXT PROTRUSION - Optimized for footnotes and captions
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  size = {tiny,scriptsize,footnotesize}
+}{
+  % More conservative for small sizes to maintain readability
+  \textquoteleft = {1000,}, \textquoteright = {,1000},
+  \textquotedblleft = {1000,}, \textquotedblright = {,1000},
+  . = {,900}, {,} = {,900},      % Slightly less aggressive
+  : = {,700}, ; = {,800},        % Reduced for clarity
+  ! = {,900}, ? = {,900},
+  ( = {700,}, ) = {,700},
+  - = {800,800},                 % Hyphen - still strong but reduced
+  % Capitals need less adjustment at small sizes
+  T = {-30,100}, V = {-30,100}, W = {-20,80}, Y = {-30,100},
+  % Lowercase - very subtle at small sizes
+  f = {,80}, j = {100,}, r = {,70}, t = {,70}, y = {50,100}
+}
+
+% BOLD PROTRUSION - Adjusted for heavier weight
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  series = {b,bx}
+}{
+  % Bold punctuation needs slightly less protrusion
+  \textquoteleft = {1200,}, \textquoteright = {,1200},
+  \textquotedblleft = {1200,}, \textquotedblright = {,1200},
+  . = {,1000}, {,} = {,1000},    % Reduced from regular
+  : = {,800}, ; = {,900},
+  ! = {,1000}, ? = {,1000},
+  ( = {800,}, ) = {,800},
+  - = {900,900},                 % Slightly less than regular
+  % Bold capitals - adjusted for weight
+  A = {80,80}, T = {-40,120}, V = {-40,120}, W = {-25,100}, Y = {-40,120},
+  % Bold lowercase - compensate for weight
+  f = {,100}, j = {120,}, r = {,80}, t = {,80}, y = {60,120}
+}
+
+% DISPLAY SIZE PROTRUSION - More aggressive for large text
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl,
+  size = {Large,LARGE,huge,Huge}
+}{
+  % Extra protrusion for display sizes
+  \textquoteleft = {1600,}, \textquoteright = {,1600},
+  . = {,1400}, {,} = {,1400},
+  - = {1200,1200},
+  T = {-80,200}, V = {-80,200}, W = {-50,150}, Y = {-80,200}
+}
+
+% MATHEMATICAL SYMBOL PROTRUSION
+\SetProtrusion{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  % Mathematical operators and symbols
+  + = {250,250}, - = {350,350}, = = {300,300},
+  < = {400,200}, > = {200,400},
+  * = {400,400}, / = {200,300},
+  % Special characters
+  \textdagger = {200,300}, \textdaggerdbl = {200,300},
+  \textsection = {200,200}, \textparagraph = {,300},
+  \textasteriskcentered = {300,300},
+  % Currency symbols
+  \textdollar = {100,100}, \textsterling = {100,}, \texteuro = {,100},
+  % Other special punctuation
+  \textexclamdown = {300,}, \textquestiondown = {300,},
+  \guillemotleft = {400,200}, \guillemotright = {200,400}
+}
+
+% ==============================================================================
+% REFINED EXPANSION SETTINGS
+% ==============================================================================
+% Conservative but effective character expansion
+
+\SetExpansion{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  factor = 1000,
+  stretch = 15,    % Conservative stretch (was 20)
+  shrink = 15,     % Symmetric compression
+  step = 3         % Very fine gradation (was 5)
+}
+
+% Character-specific expansion limits
+\SetExpansion{
+  encoding = T1,
+  family = qpl
+}{
+  % More expandable characters
+  A = 500, D = 500, H = 700, M = 800, N = 700, O = 500,
+  U = 700, W = 800,
+  % Less expandable to preserve shape
+  I = 300, J = 300, i = 300, j = 300, l = 300,
+  % Standard expansion for most
+  a = 700, b = 700, c = 700, d = 700, e = 700,
+  % Numbers moderate expansion
+  0 = 500, 1 = 300, 2 = 500, 3 = 500, 4 = 500,
+  5 = 500, 6 = 500, 7 = 500, 8 = 500, 9 = 500
+}
+
+% ==============================================================================
+% SPACING ADJUSTMENTS
+% ==============================================================================
+
+% Word spacing optimization
+\SetExtraSpacing{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  % Tighter word spacing after certain punctuation
+  . = {100,200,150},   % More space after periods
+  ! = {100,200,150},   % Same for exclamation
+  ? = {100,200,150},   % And question marks
+  : = {100,150,100},   % Moderate after colon
+  ; = {50,100,50}      % Less after semicolon
+}
+
+% Special kerning adjustments
+\SetExtraKerning{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  % Fine-tune specific character pairs
+  \textemdash = {150,150},    % Space around em-dash
+  \textendash = {100,100},    % Space around en-dash
+  ' = {50,0},                 % Tighten before apostrophe
+  " = {50,0}                  % Tighten before quote
+}
+
+\endinput

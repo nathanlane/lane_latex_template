@@ -1,0 +1,93 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../../paper/paperstyle}
+\usepackage{lipsum}
+
+\begin{document}
+
+\section{Emphasis Hierarchy Test Suite}
+
+This document demonstrates the refined emphasis hierarchy optimized for TeX Gyre Pagella, implementing principles from Butterick, Hochuli, and Bringhurst.
+
+\subsection{Basic Emphasis Levels}
+
+\subsubsection{Level 1: Standard Emphasis}
+
+Regular text with \emph{standard emphasis} demonstrates the primary emphasis level. This is the most common form and should comprise 90\% of all emphasis usage. When we have \emph{emphasis within emphasis, it returns to roman} following the contrast principle.
+
+\subsubsection{Level 2: Strong Emphasis}
+
+For critical terms requiring immediate attention, we use \strongemph{strong emphasis}. This should be used sparingly---less than 5\% of total text according to Butterick's guidelines.
+
+\subsubsection{Level 3: Metadata Emphasis}
+
+Author names like \person{Hermann Zapf} and \person{Matthew Butterick} use elegant small caps. Technical acronyms such as \acro{PDF}, \acro{HTML}, and \acro{NASA} receive specialized treatment.
+
+\subsubsection{Level 4: Critical Emphasis}
+
+The highest level, \critical{critical warning}, should be reserved for the most important notices. Use this extremely rarely.
+
+\subsection{Specialized Semantic Commands}
+
+\paragraph{Technical Terminology}
+When introducing a \term{baseline grid}, we use the term command. The \term{modular scale} provides mathematical harmony. These terms appear in italic on first use.
+
+\paragraph{Work Titles}
+References to published works like \work{The Elements of Typographic Style} or \work{Practical Typography} use standard italics.
+
+\subsection{Nested Emphasis Demonstrations}
+
+\subsubsection{Italic Within Italic}
+
+Consider this passage: \emph{The author writes about \emph{nested emphasis} with clarity}. Note how the inner emphasis returns to roman for contrast.
+
+\subsubsection{Smart Emphasis Commands}
+
+Using \texttt{\textbackslash smartitalic}: Regular text with \smartitalic{smart italic} and \emph{italic text with \smartitalic{smart italic} inside}.
+
+Using \texttt{\textbackslash smartbold}: Regular text with \smartbold{smart bold} and \textbf{bold text with \smartbold{smart bold} inside}.
+
+\subsection{Small Caps Tracking Demonstration}
+
+\paragraph{Size-Responsive Tracking}
+
+Body text small caps: \meta{metadata example}
+
+{\large Large small caps: \meta{metadata example}}
+
+{\Large Display small caps: \meta{metadata example}}
+
+{\LARGE Title small caps: \meta{metadata example}}
+
+\subsection{Weight Relationships}
+
+\begin{description}
+\item[Regular (400)] Normal text weight for body content
+\item[\strongemph{Bold (700)}] True bold at 1.75× regular weight
+\item[\emph{Italic}] True italic with distinct letterforms
+\item[\textbf{\emph{Bold Italic}}] Combined weight and style
+\item[\meta{Small Caps}] Proportional capitals at 75\% x-height
+\item[\critical{Bold Small Caps}] Maximum emphasis level
+\end{description}
+
+\subsection{Usage Guidelines Demonstration}
+
+\paragraph{Correct Usage}
+\begin{itemize}
+\item First mention of \term{kerning} as a technical term
+\item Author names: \person{Jost Hochuli} and \person{Robert Bringhurst}
+\item Critical warnings use \critical{stop} sparingly
+\item Standard \emph{emphasis} for most needs
+\end{itemize}
+
+\paragraph{Accessibility Considerations}
+All emphasis relies on weight and style, not color alone. The bold weight provides 1.75× the stroke weight of regular text, ensuring sufficient contrast. Small caps maintain legibility at 9pt equivalent or larger.
+
+\subsection{Extended Text Sample}
+
+\lipsum[1]
+
+In this paragraph, we see how \emph{emphasis integrates naturally} into running text. The \person{Zapf} typeface family, including \acro{TEX} Gyre Pagella, demonstrates \term{optical sizes} effectively. When discussing \work{Detail in Typography}, \person{Hochuli} emphasizes that \emph{restraint in the use of \emph{multiple} emphasis styles} creates professional documents.
+
+\lipsum[2]
+
+\end{document}

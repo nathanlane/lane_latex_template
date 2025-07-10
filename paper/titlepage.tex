@@ -1,0 +1,61 @@
+% ==============================================================================
+% TITLEPAGE.TEX - Elegant Academic Title Page
+% ==============================================================================
+%
+% Uses refined typography with:
+% - Softened navy title with generous tracking
+% - Small caps author names in medium charcoal
+% - Elegant labels with optimal spacing
+% - Sophisticated color hierarchy matching document headers
+%
+% ==============================================================================
+
+% Suppress page number on title page but keep footnotes
+\thispagestyle{empty}
+
+% Use title page footnote configuration
+\titlefootnotesetup
+
+% Begin centered environment for title page elements
+\begin{center}
+
+\vspace*{\titlespaceminor}
+
+% MAIN TITLE
+% Elegant 22pt bold with tracking in softened navy
+\articletitlefootnote{Paper Title:\\
+An Optional Subtitle Can Go Here}{We thank seminar participants at University Name and Conference Name for helpful comments and suggestions. Author 1 acknowledges financial support from Grant Foundation. All errors are our own.}
+
+% AUTHORS
+% Using elegant small caps for names with sophisticated spacing
+\articleauthors{%
+\elegantauthor{Author One}\footnote{Department of Economics, University Name, City, State ZIP. Email: author.one@university.edu}
+\authorspace
+\elegantauthor{Author Two}\footnote{School of Business, Institution Name, City, Country. Email: author.two@institution.edu}%
+}
+
+% DATE
+% Using systematic command with standard formatting
+\articledate{\today}
+
+% ABSTRACT
+% Using systematic environment for consistent formatting
+\begin{articleabstract}
+This paper examines [research question] using [methodology/data]. We find that [main result 1] and [main result 2]. Our results suggest that [key implication]. These findings contribute to the literature on [research area] by [contribution]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore. Fugiat nulla pariatur excepteur sint occaecat cupidatat non proident.
+\end{articleabstract}
+
+% KEYWORDS AND JEL CODES
+% Using systematic commands for consistent formatting
+\articlekeywords{keyword one, keyword two, keyword three, keyword four, keyword five}
+\articlejel{A10, B20, C30}
+
+\end{center}
+
+% Clear page for main content
+\clearpage
+
+% Reset footnote settings for main document
+\titlefootnotereset
+
+% Page numbering continues from title page
+% No need to reset - title page is already page 1

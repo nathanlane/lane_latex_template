@@ -1,0 +1,119 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+
+\hypersetup{
+  pdftitle={Full Features Test},
+  pdfauthor={Test Suite},
+}
+
+\begin{document}
+
+% Professional title page
+\thispagestyle{empty}
+\titlefootnotesetup
+\begin{center}
+  \vspace*{\titlespaceminor}
+  \articletitlefootnote{Testing All Typography Features:\\[\titlespaceinter]A Comprehensive Test Document}{We thank the testing framework for making this possible.}
+  \articleauthors{First Author\footnote{Test University} 
+    \authorspace Second Author\footnote{Testing Institute}}
+  \articledate{\today}
+  \begin{articleabstract}
+    This document tests all typography features including sophisticated list environments, mathematical typography, professional tables and figures, and the complete citation system. Every feature should compile without errors.
+  \end{articleabstract}
+  \articlekeywords{testing, typography, LaTeX, academic}
+  \articlejel{A00, B00, C00}
+\end{center}
+\clearpage
+\titlefootnotereset
+\setcounter{page}{1}
+
+\section{List Typography Tests}
+
+\subsection{Standard Lists}
+\begin{itemize}
+\item Professional bullets at 20\% gray
+\item Optimal hanging indent of 1.8em
+  \begin{itemize}
+  \item Nested with en-dash
+  \item Progressive indentation
+    \begin{itemize}
+    \item Third level with diamond
+    \item Maximum nesting depth
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{Academic Lists}
+\begin{academicitem}
+\item Primary finding with en-dash
+\item Secondary observation
+\item Tertiary conclusion
+\end{academicitem}
+
+\subsection{Compact Lists}
+\begin{compactitem}
+\item No spacing between items
+\item Efficient for references
+\item Maximum density
+\end{compactitem}
+
+\subsection{Display Lists}
+\begin{displayitem}
+\item \textbf{Key Result:} Bold items with generous spacing
+\item \textbf{Innovation:} Full baseline between items
+\item \textbf{Impact:} Maximum emphasis
+\end{displayitem}
+
+\subsection{Inline Lists}
+Brief enumeration: \begin{inlineitem}
+\item first \item second \item third
+\end{inlineitem}.
+
+\section{Mathematical Typography}
+
+Inline math uses optimal spacing: $\norm{x}_2 = \sqrt{\sum_{i=1}^n x_i^2}$ for $x \in \real^n$.
+
+Display equation with baseline alignment:
+\begin{equation}
+f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
+\end{equation}
+
+\section{Tables and Figures}
+
+\begin{table}[tbp]
+  \caption{Sample Table with Booktabs}
+  \label{tab:test}
+  \centering
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    Method & Accuracy & Time \\
+    \midrule
+    Baseline & 0.85 & 120ms \\
+    Enhanced & 0.92 & 95ms \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[tbp]
+  \centering
+  \fbox{\parbox{0.6\textwidth}{\centering\vspace{2cm}
+    Test Figure\\[0.5cm]
+    \vspace{2cm}}}
+  \caption{Test Figure with Proper Caption}
+  \label{fig:test}
+\end{figure}
+
+\section{Citations}
+
+Testing citations: \cite{butterick2019practical} emphasizes practical typography. 
+See also \cite{brown2018flexible} for modular scales.
+
+\FloatBarrier
+
+\section{Cross References}
+
+References work correctly: see Table~\ref{tab:test} and Figure~\ref{fig:test}.
+
+\printbibliography
+
+\end{document}

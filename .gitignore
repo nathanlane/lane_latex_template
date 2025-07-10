@@ -1,0 +1,136 @@
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.brf
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.loa
+*.nav
+*.snm
+*.vrb
+*.xdy
+*.cb
+*.cb2
+*.spl
+*.pytxcode
+*.lpz
+
+# LaTeX editors and compilation tools
+*.latexmain
+auto/
+*.el
+.texpadtmp
+*.synctex(busy)
+*.pdfsync
+latex.out/
+
+# LaTeX compilation output
+*.pdf
+*.dvi
+*.ps
+
+# Beamer specific
+*.backup
+
+# Biber intermediate files  
+*.xml
+
+# Overleaf/ShareLaTeX compatibility
+*.synctex
+*.synctex.gz(busy)
+*.project.vim
+
+# LaTeX-specific temporary files
+*-blx.aux
+*-blx.bib
+*.dpth
+*.md5
+*.auxlock
+*.figlist
+*.makefile
+*.bbl-SAVE-ERROR
+texput.log
+
+# Biber/BibTeX
+*.bib.bak
+*.bib.sav
+
+# Build directories
+build/
+dist/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Editor-specific files
+.vscode/
+.idea/
+*.sublime-*
+
+# Overleaf sync files
+.overleaf/
+
+# Python (for data analysis scripts)
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.coverage
+*.coverage
+
+# R (if using R scripts)
+.Rhistory
+.RData
+.Rproj.user/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Generated PDFs (keep only essential examples)
+*.pdf
+!figures/*.pdf                    # Keep figure assets  
+!tests/visual/output/*.pdf         # Keep visual test baselines
+
+# Additional LaTeX build artifacts
+*.fls
+*.fdb_latexmk
+*.figlist
+*.makefile
+*.listing
+
+# But keep test compilation logs  
+!tests/compilation/logs/*.log
+
+# Context files
+context/
+
+# AI Assistant Instructions (local only)
+CLAUDE.md
+
+# Environment variables
+.env
+.env.local
+.env.*.local

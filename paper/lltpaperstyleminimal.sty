@@ -1,0 +1,141 @@
+% ==============================================================================
+% PAPERSTYLE-MINIMAL.STY - Minimal Typography Configuration
+% ==============================================================================
+% Lightweight version with only essential features for maximum compatibility
+% Use this when the full paperstyle.sty causes issues
+% ==============================================================================
+
+\NeedsTeXFormat{LaTeX2e}[2018/01/01]
+\ProvidesPackage{lltpaperstyleminimal}[2025/07/07 v1.0 Minimal Typography]
+
+% ==============================================================================
+% ESSENTIAL PACKAGES ONLY
+% ==============================================================================
+
+% Basic font setup
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+
+% Try to load Pagella, fall back gracefully
+\IfFileExists{tgpagella.sty}{%
+  \RequirePackage{tgpagella}
+  \RequirePackage[scaled=0.95]{zi4}  % Inconsolata for monospace
+}{%
+  \PackageWarning{lltpaperstyleminimal}{TeX Gyre Pagella not available, using Computer Modern}
+}
+
+% Essential math support
+\RequirePackage{amsmath,amssymb}
+
+% Basic page geometry
+\RequirePackage[
+  letterpaper,
+  left=1.25in,
+  right=1.25in,
+  top=1in,
+  bottom=1in
+]{geometry}
+
+% ==============================================================================
+% MINIMAL COLOR SYSTEM
+% ==============================================================================
+
+\RequirePackage{xcolor}
+
+% Define only essential colors
+\definecolor{textblack}{gray}{0.10}      % Not pure black
+\definecolor{linkcolor}{RGB}{0,102,180}  % Professional blue
+
+% ==============================================================================
+% BASIC TYPOGRAPHY SETTINGS
+% ==============================================================================
+
+% Line spacing
+\linespread{1.20}  % Equivalent to 13.2pt for 11pt base
+
+% Paragraph settings
+\setlength{\parindent}{13.2pt}
+\setlength{\parskip}{0pt}
+
+% Basic spacing unit
+\newlength{\gridunit}
+\setlength{\gridunit}{13.2pt}
+
+% ==============================================================================
+% ESSENTIAL PACKAGES
+% ==============================================================================
+
+% Graphics support
+\RequirePackage{graphicx}
+
+% Table support
+\RequirePackage{booktabs}
+\RequirePackage{array}
+
+% ==============================================================================
+% HYPERREF (LOAD LAST)
+% ==============================================================================
+
+\AtEndPreamble{%
+  \@ifpackageloaded{hyperref}{}{%
+    \RequirePackage[
+      colorlinks=true,
+      linkcolor=linkcolor,
+      citecolor=linkcolor,
+      urlcolor=linkcolor,
+      bookmarks=true
+    ]{hyperref}
+  }%
+}
+
+% ==============================================================================
+% SIMPLE COMMANDS
+% ==============================================================================
+
+% Basic emphasis
+\renewcommand{\emph}[1]{\textit{#1}}
+
+% Section spacing (simplified)
+\RequirePackage{titlesec}
+\titlespacing*{\section}{0pt}{2\gridunit}{1\gridunit}
+\titlespacing*{\subsection}{0pt}{1.5\gridunit}{0.5\gridunit}
+
+% Simple caption format
+\RequirePackage[
+  labelfont=bf,
+  font=small,
+  skip=0.5\gridunit
+]{caption}
+
+% ==============================================================================
+% MINIMAL LIST CONFIGURATION
+% ==============================================================================
+
+\RequirePackage{enumitem}
+\setlist{
+  topsep=0.5\gridunit,
+  itemsep=0.25\gridunit,
+  parsep=0pt,
+  leftmargin=2em
+}
+
+% ==============================================================================
+% COMPATIBILITY MODE INDICATORS
+% ==============================================================================
+
+\newcommand{\lltpaperstyleminimal}{true}
+\newcommand{\checkminimalmode}{%
+  \PackageInfo{lltpaperstyleminimal}{Running in minimal mode}%
+}
+
+% ==============================================================================
+% FALLBACK DEFINITIONS
+% ==============================================================================
+
+% Define commands that might be used but aren't available
+\providecommand{\gridunit}{13.2pt}
+\providecommand{\halfgridunit}{6.6pt}
+\providecommand{\quartergridunit}{3.3pt}
+\providecommand{\FloatBarrier}{\clearpage}
+
+\endinput

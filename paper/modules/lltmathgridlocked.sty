@@ -1,0 +1,167 @@
+% ==============================================================================
+% MATHEMATICS-GRIDLOCKED.STY - Grid-Compliant Mathematical Typography
+% ==============================================================================
+% Alternative math spacing with strict grid adherence
+% Balances optimal math layout with baseline grid maintenance
+% ==============================================================================
+
+\ProvidesPackage{lltmathgridlocked}[2025/07/06 v1.0 Grid-Locked Mathematics]
+
+% Ensure dimensions are loaded for grid units
+\makeatletter
+\@ifpackageloaded{lltdimensions}{}{%
+  \RequirePackage{lltdimensions}%
+}
+\makeatother
+
+% ==============================================================================
+% GRID-LOCKED DISPLAY MATH SPACING
+% ==============================================================================
+% Strategy: Minimal flexibility with grid recovery mechanisms
+%
+% KEY PRINCIPLES:
+% 1. Reduced flexibility: ±0.0625 units max (was ±0.25)
+% 2. Asymmetric spacing: prefer stretching over shrinking
+% 3. Grid snaps after display environments
+% 4. Fixed spacing for multi-line equations
+% ==============================================================================
+
+% Grid-locked display spacing
+\abovedisplayskip=19.8pt plus 0.825pt minus 0.825pt    % 1.5 units ±0.0625
+\belowdisplayskip=19.8pt plus 0.825pt minus 0pt        % 1.5 units +0.0625/-0
+
+% Short display spacing (more rigid)
+\abovedisplayshortskip=13.2pt plus 0pt minus 0pt       % Exactly 1 unit
+\belowdisplayshortskip=13.2pt plus 0.825pt minus 0pt   % 1 unit +0.0625/-0
+
+% Multi-line spacing (fixed)
+\jot=6.6pt  % Exactly 0.5 grid units, no flexibility
+
+% ==============================================================================
+% GRID RECOVERY MECHANISMS
+% ==============================================================================
+
+% Soft grid recovery command
+\newcommand{\mathgridsnap}{%
+  \par\vspace{0pt plus 0.25\gridunit minus 0.25\gridunit}%
+}
+
+% Automatic grid recovery after display math
+\AtEndEnvironment{equation}{\mathgridsnap}
+\AtEndEnvironment{equation*}{\mathgridsnap}
+\AtEndEnvironment{align}{\mathgridsnap}
+\AtEndEnvironment{align*}{\mathgridsnap}
+\AtEndEnvironment{gather}{\mathgridsnap}
+\AtEndEnvironment{gather*}{\mathgridsnap}
+\AtEndEnvironment{multline}{\mathgridsnap}
+\AtEndEnvironment{multline*}{\mathgridsnap}
+
+% ==============================================================================
+% GRID-ALIGNED MATH ENVIRONMENTS
+% ==============================================================================
+
+% Strict grid-aligned equation array
+\newenvironment{stricteqnarray}{%
+  \begin{eqnarray}%
+  \jot=6.6pt% Fixed spacing
+}{%
+  \end{eqnarray}%
+  \mathgridsnap% Recovery after
+}
+
+% Strict grid-aligned gather
+\newenvironment{strictgather}{%
+  \begin{gather}%
+  \jot=6.6pt% Fixed spacing
+}{%
+  \end{gather}%
+  \mathgridsnap% Recovery after
+}
+
+% ==============================================================================
+% ALTERNATIVE SPACING MODES
+% ==============================================================================
+
+% Ultra-strict mode: no flexibility at all
+\newcommand{\strictmathdisplay}{%
+  \abovedisplayskip=19.8pt%              % Exactly 1.5 units
+  \belowdisplayskip=19.8pt%              % Exactly 1.5 units
+  \abovedisplayshortskip=13.2pt%         % Exactly 1 unit
+  \belowdisplayshortskip=13.2pt%         % Exactly 1 unit
+}
+
+% Moderate mode: very limited flexibility
+\newcommand{\moderatemathdisplay}{%
+  \abovedisplayskip=19.8pt plus 0.825pt minus 0.825pt%    % ±0.0625 units
+  \belowdisplayskip=19.8pt plus 0.825pt minus 0pt%        % +0.0625/-0
+  \abovedisplayshortskip=13.2pt plus 0pt minus 0pt%       % Fixed
+  \belowdisplayshortskip=13.2pt plus 0.825pt minus 0pt%   % +0.0625/-0
+}
+
+% Original flexible mode (for comparison)
+\newcommand{\flexiblemathdisplay}{%
+  \abovedisplayskip=19.8pt plus 3.3pt minus 3.3pt%        % ±0.25 units
+  \belowdisplayskip=19.8pt plus 3.3pt minus 3.3pt%        % ±0.25 units
+  \abovedisplayshortskip=13.2pt plus 3.3pt minus 3.3pt%   % ±0.25 units
+  \belowdisplayshortskip=13.2pt plus 3.3pt minus 3.3pt%   % ±0.25 units
+}
+
+% ==============================================================================
+% INLINE MATH ADJUSTMENTS
+% ==============================================================================
+
+% Ensure inline math doesn't disrupt line spacing
+\everydisplay{\baselineskip=13.2pt}
+
+% Prevent excessive inline math from breaking grid
+\newcommand{\inlinemath}[1]{%
+  \mbox{\normalbaselines$#1$}%
+}
+
+% ==============================================================================
+% SPECIAL HANDLING FOR TALL MATH
+% ==============================================================================
+
+% For very tall displays that would break grid anyway
+\newenvironment{tallmath}{%
+  \begingroup
+  \abovedisplayskip=26.4pt% 2 full units for tall content
+  \belowdisplayskip=26.4pt%
+}{%
+  \endgroup
+  \mathgridsnap% Strong recovery after
+}
+
+% ==============================================================================
+% GRID VERIFICATION HELPERS
+% ==============================================================================
+
+% Mark math position for debugging
+\newcommand{\mathmark}[1]{%
+  \marginpar{\tiny\color{blue}Math: #1}%
+}
+
+% Show current skip values
+\newcommand{\showmathskips}{%
+  \typeout{Above display: \the\abovedisplayskip}%
+  \typeout{Below display: \the\belowdisplayskip}%
+}
+
+% ==============================================================================
+% PENALTIES FOR BETTER BREAKING
+% ==============================================================================
+
+% Adjusted penalties for grid-aware breaking
+\predisplaypenalty=8000    % Slightly reduced from 10000
+\postdisplaypenalty=3000   % Slightly increased from 2000
+
+% Prevent widow equations
+\displaywidowpenalty=8000
+
+% ==============================================================================
+% DEFAULT MODE
+% ==============================================================================
+% Use moderate mode by default
+\moderatemathdisplay
+
+\endinput

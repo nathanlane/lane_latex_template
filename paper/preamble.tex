@@ -1,0 +1,93 @@
+% ==============================================================================
+% PREAMBLE.TEX - Academic Paper Template Configuration
+% ==============================================================================
+% 
+% This file provides the essential package loading and configuration for
+% academic papers using the paperstyle.sty typography system.
+%
+% Version: 1.2
+% Author: Academic Paper Template Project
+% Date: 2025-06-27
+%
+% USAGE:
+%   \input{paper/preamble.tex}
+%
+% DEPENDENCIES:
+%   - lltpaperstyle.sty (core typography system)
+%   - references.bib (bibliography database)
+%   - Modern LaTeX distribution with bibtex backend
+%
+% COMPILATION:
+%   pdflatex main.tex
+%   bibtex main
+%   pdflatex main.tex
+%   pdflatex main.tex
+%
+% ==============================================================================
+
+% Compatibility definitions removed - using vanilla biblatex
+
+% ------------------------------------------------------------------------------
+% CORE TYPOGRAPHY SYSTEM WITH INTEGRATED BIBLIOGRAPHY
+% ------------------------------------------------------------------------------
+% lltpaperstyle now automatically loads biblatex with sensible defaults
+% This eliminates the need for manual biblatex configuration in most cases
+\usepackage{paper/lltpaperstyle}
+
+% Load the bibliography database
+% (biblatex is already loaded by lltpaperstyle with authoryear style and biber backend)
+\addbibresource{references.bib}
+
+% ------------------------------------------------------------------------------
+% CUSTOM BIBLIOGRAPHY CONFIGURATION (Optional)
+% ------------------------------------------------------------------------------
+% If you need custom biblatex options, load biblatex BEFORE lltpaperstyle:
+%
+% \usepackage[backend=bibtex,style=numeric]{biblatex}
+% \usepackage[nobiblatex]{paper/lltpaperstyle}
+% \addbibresource{references.bib}
+%
+% Or disable automatic loading and configure manually:
+%
+% \usepackage[nobiblatex]{paper/lltpaperstyle}
+% \usepackage[your-options]{biblatex}
+% \addbibresource{references.bib}
+
+% No custom formatting - using vanilla biblatex for maximum compatibility
+
+% ------------------------------------------------------------------------------
+% DOCUMENT CONFIGURATION NOTES
+% ------------------------------------------------------------------------------
+%
+% This preamble provides a complete foundation for academic writing with:
+%
+% 1. TYPOGRAPHY EXCELLENCE
+%    - Bembo revival (fbb) with Renaissance features
+%    - Harmonized mathematical typography (newtxmath + mathalfa)
+%    - Optimized monospace integration (Inconsolata/zi4)
+%    - Systematic baseline grid (12.65pt rhythm)
+%
+% 2. PROFESSIONAL APPENDIX SYSTEM
+%    - Automatic single/multiple appendix detection
+%    - Chicago Manual of Style compliance
+%    - Enhanced cross-referencing with cleveref
+%    - Modular file organization
+%
+% 3. ACADEMIC STANDARDS
+%    - Chicago 17th edition citations
+%    - Accessibility compliance (WCAG 2.1 AA)
+%    - Production-ready PDF output
+%    - Git-friendly workflow
+%
+% 4. EXTENSIBILITY
+%    - Semantic typography commands
+%    - Configurable color system
+%    - Modular scale customization
+%    - Package compatibility checks
+%
+% For detailed usage instructions, see:
+%   - paper/README.md (complete API reference)
+%   - paper/STYLE_GUIDE.md (typography standards)
+%   - CLAUDE.md (development guidelines)
+%
+% ==============================================================================

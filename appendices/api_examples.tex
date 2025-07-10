@@ -1,0 +1,321 @@
+% ==============================================================================
+% API EXAMPLES APPENDIX
+% ==============================================================================
+% This appendix demonstrates all major commands and environments from the
+% lltpaperstyle package API reference.
+% ==============================================================================
+
+\section{Command Reference Examples}
+\label{app:api-examples}
+
+This appendix provides practical examples of the Lane LaTeX Template API commands and environments.
+
+\subsection{Title Page Commands}
+
+\subsubsection{Article Title Variants}
+
+The template provides several title commands for different contexts:
+
+\begin{verbatim}
+% Standard title (auto-adjusts size based on length)
+\articletitle{The Impact of Typography on Academic Writing}
+
+% Title with acknowledgment footnote
+\articletitlefootnote{Typography in Academic Papers}
+  {We thank the LaTeX community for helpful comments.}
+
+% Compact title for papers with many authors
+\articletitlecompact{A Concise Title}
+\end{verbatim}
+
+\subsubsection{Complete Title Page Example}
+
+\begin{verbatim}
+\thispagestyle{empty}
+\titlefootnotesetup
+\begin{center}
+  \vspace*{\titlespaceminor}
+  \articletitle{Demonstrating Professional Typography}
+  \articleauthors{Jane Smith\footnote{University, jane@example.edu}
+    \authorspace John Doe\footnote{Institute, john@example.edu}}
+  \articledate{\today}
+  \begin{articleabstract}
+    This paper demonstrates the comprehensive typography 
+    system provided by the Lane LaTeX Template...
+  \end{articleabstract}
+  \articlekeywords{typography, LaTeX, academic writing}
+  \articlejel{A10, B20, C30}
+\end{center}
+\clearpage
+\titlefootnotereset
+\end{verbatim}
+
+\subsection{Typography Commands}
+
+\subsubsection{Emphasis Hierarchy}
+
+The template provides semantic emphasis commands for different content types:
+
+\begin{itemize}
+\item \emph{Basic emphasis:} Use \verb|\emph{text}| for \emph{standard emphasis}
+\item \strongemph{Strong emphasis:} Use \verb|\strongemph{text}| for \strongemph{critical terms}
+\item \term{Technical terms:} Use \verb|\term{baseline grid}| for the \term{baseline grid}
+\item \person{Person names:} Use \verb|\person{Robert Bringhurst}| for \person{Robert Bringhurst}
+\item \acro{Acronyms:} Use \verb|\acro{PDF}| for \acro{PDF} format
+\item \work{Published works:} Use \verb|\work{The Elements of Typographic Style}| for \work{The Elements of Typographic Style}
+\item \meta{Metadata:} Use \verb|\meta{Version 1.0}| for \meta{Version 1.0}
+\item \critical{Critical notices:} Use \verb|\critical{WARNING}| for \critical{WARNING} messages
+\end{itemize}
+
+\subsubsection{Section Opening Styles}
+
+For professional section openings:
+
+\begin{verbatim}
+% First line in small caps
+\sectionopening{This opening line appears in elegant small caps,}
+continuing with normal text for the rest of the paragraph.
+
+% Opening paragraph without indent
+\begin{openingparagraph}
+The first paragraph after a heading appears flush left,
+following classical typography conventions.
+\end{openingparagraph}
+\end{verbatim}
+
+\subsection{Special Characters and Symbols}
+
+\subsubsection{Dash Usage}
+
+The template provides sophisticated dash commands:
+
+\begin{itemize}
+\item Em dash with thin spaces: Typography\emdash the art of arranging type\emdash is essential
+\item Classic em dash: Typography---without spaces---for traditional style
+\item En dash for ranges: Pages 10--20
+\item Years: 2020--2025
+\end{itemize}
+
+\subsubsection{Currency and Technical Symbols}
+
+Professional spacing for all symbols:
+
+\begin{itemize}
+\item Currency: \euro 100, \pound 50, \yen 1000, 50\cent
+\item Technical: 25\degrees C, Area = 100m\textsuperscript{2}
+\item Legal: Product\trademark, Company\registered, \copyright 2025
+\item Mathematical in text: 5\textpm 2, 3\texttimes 4, 12\textdiv 3, $\pi \approx 3.14$
+\end{itemize}
+
+\subsection{List Environments}
+
+\subsubsection{Academic List Styles}
+
+The template provides multiple list environments:
+
+\paragraph{Standard Lists} Default itemize with refined bullets:
+\begin{itemize}
+\item First point with subtle gray bullet
+\item Second point with optimal hanging indent
+\item Third point maintaining baseline grid
+\end{itemize}
+
+\paragraph{Academic Lists} Using en-dash markers:
+\begin{academicitem}
+\item Primary research finding
+\item Secondary observation
+\item Tertiary conclusion
+\end{academicitem}
+
+\paragraph{Compact Lists} No spacing between items:
+\begin{compactitem}
+\item Butterick (2019)
+\item Brown (2018)
+\item Hochuli (1987)
+\end{compactitem}
+
+\paragraph{Display Lists} Bold items with emphasis:
+\begin{displayitem}
+\item \textbf{Key Result:} Significant improvement in readability
+\item \textbf{Innovation:} Novel typography system
+\item \textbf{Impact:} Enhanced academic communication
+\end{displayitem}
+
+\paragraph{Inline Lists} For brief enumerations:
+The primary colors are (i) red, (ii) green, and (iii) blue, forming the RGB color model.
+
+\subsection{Quotation Environments}
+
+\subsubsection{Smart Quote Commands}
+
+\begin{itemize}
+\item Single quotes: \sq{quoted text}
+\item Double quotes: \dq{quoted text}
+\item Nested quotes: \nq{She said}{Hello there}
+\end{itemize}
+
+Note: For block quotes, use the standard \texttt{quote} environment or see the main document for examples.
+
+\subsection{Table Environments}
+
+\subsubsection{Grid-Aligned Tables}
+
+\begin{gridtable}[h]
+  \caption{Example of Grid-Aligned Table}
+  \centering
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    Category & Value & Percentage \\
+    \midrule
+    Type A & 150 & 45.5\% \\
+    Type B & 100 & 30.3\% \\
+    Type C & 80 & 24.2\% \\
+    \bottomrule
+  \end{tabular}
+\end{gridtable}
+
+\subsubsection{Table Notes}
+
+Professional notes following QJE style:
+
+\begin{verbatim}
+\begin{tablenotes}
+  \tabnote{All values in constant 2020 dollars}
+  \tabvars{GDP = Gross Domestic Product, CPI = Consumer Price Index}
+  \tabmethod{OLS regression with year fixed effects}
+  \tabcluster{Standard errors clustered at state level}
+  \tabsample{N = 1,234 observations from 50 states}
+  \tabsource{Federal Reserve Economic Data (FRED)}
+  \tabstars  % Adds: ***p<0.01, **p<0.05, *p<0.1
+\end{tablenotes}
+\end{verbatim}
+
+\subsection{Mathematical Commands}
+
+\subsubsection{Mathematical Operators}
+
+The template provides standard operators:
+
+\begin{itemize}
+\item Trace: $\tr(A)$
+\item Rank: $\rank(M)$
+\item Span: $\Span\{v_1, v_2\}$
+\item Support: $\supp(f)$
+\item Optimization: $\argmax_{x} f(x)$, $\argmin_{x} g(x)$
+\end{itemize}
+
+\subsubsection{Standard Equations}
+
+\begin{align}
+  y &= \alpha + \beta x + \epsilon \\
+  \epsilon &\sim N(0, \sigma^2)
+\end{align}
+
+\subsection{Cross-Reference Commands}
+
+\subsubsection{Smart References with cleveref}
+
+The template uses intelligent cross-referencing:
+
+\begin{itemize}
+\item Standard reference: See \cref{fig:professional-example}
+\item Sentence start: \Cref{tab:sample-data} shows the data
+\item Range: \crefrange{sec:introduction}{sec:quickstart} display the results
+\item Page reference: \refpage{sec:introduction}
+\item Parenthetical: The results \pref{fig:professional-example} confirm
+\item See also: \seealso{app:main}
+\end{itemize}
+
+\subsection{Spacing Commands}
+
+\subsubsection{Grid Unit Usage}
+
+All vertical spacing uses grid units:
+
+\begin{verbatim}
+\vspace{\gridunit}      % Add 13.2pt (1 grid unit)
+\vspace{2\gridunit}     % Add 26.4pt (2 grid units)
+\vspace{\halfgridunit}  % Add 6.6pt (0.5 units)
+\vspace{\quartergridunit} % Add 3.3pt (0.25 units)
+\end{verbatim}
+
+\subsection{Color System}
+
+\subsubsection{Semantic Color Commands}
+
+The template provides semantic color commands:
+
+\begin{itemize}
+\item \subtleemph{Subtle emphasis} for secondary importance
+\item \importantnote{Important note} for critical information
+\item \codecomment{Code comments} in documentation
+\item \externalref{External references} for links
+\end{itemize}
+
+\subsection{Paragraph Styles}
+
+\subsubsection{Style Switching}
+
+Switch between paragraph styles:
+
+\begin{verbatim}
+\classicalparagraphs   % 13.2pt indent, no spacing (default)
+\modernparagraphs      % No indent, 6.6pt spacing
+\hybridparagraphs      % 9.9pt indent, 3.3pt spacing
+\quartergridparagraphs % 13.2pt indent, 3.3pt flexible spacing
+\end{verbatim}
+
+\subsubsection{Special Paragraphs}
+
+\centeredpar{This paragraph appears centered on the page.}
+
+% Note: \quoteparagraph requires loading the llthochuli module
+% Example: "When we consider the evidence carefully, we find that typography significantly impacts comprehension and retention of academic material."
+
+\subsubsection{Dialogue Formatting}
+
+% Note: Dialogue commands require additional modules or custom definitions
+% Example dialogue:
+% \speaker{Alice}{I believe we should adopt the new typography system.}
+% \speaker{Bob}{I agree. The improvements in readability are substantial.}
+
+\subsection{Complete Example Document}
+
+Here's a minimal complete document using the template:
+
+\begin{verbatim}
+\documentclass[11pt]{article}
+\usepackage{lltpaperstyle}
+\addbibresource{references.bib}
+
+\begin{document}
+
+% Title page
+\thispagestyle{empty}
+\titlefootnotesetup
+\begin{center}
+  \vspace*{\titlespaceminor}
+  \articletitle{Your Paper Title}
+  \articleauthors{Your Name\footnote{Your Institution}}
+  \articledate{\today}
+  \begin{articleabstract}
+    Your abstract here...
+  \end{articleabstract}
+  \articlekeywords{keyword1, keyword2}
+\end{center}
+\clearpage
+\titlefootnotereset
+
+% Main content
+\section{Introduction}
+
+\sectionopening{This paper examines} the role of typography
+in academic communication...
+
+% Bibliography
+\printbibliography
+
+\end{document}
+\end{verbatim}
+
+This appendix demonstrates the key commands and environments provided by the Lane LaTeX Template. For complete details, consult the API Reference documentation.

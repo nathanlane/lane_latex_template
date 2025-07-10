@@ -1,0 +1,209 @@
+% ==============================================================================
+% HEADINGS-GRIDLOCKED.STY - Grid-Locked Heading Typography Module
+% ==============================================================================
+% Alternative heading module with stricter grid adherence
+% Balances orphan prevention with minimal grid drift
+% ==============================================================================
+
+\ProvidesPackage{lltheadingsgridlocked}[2025/07/06 v1.0 Grid-Locked Heading System]
+
+% Dependencies
+\RequirePackage{titlesec}         % Custom section formatting
+\RequirePackage{etoolbox}         % For \AtBeginEnvironment
+
+% Ensure colors are loaded
+\makeatletter
+\@ifpackageloaded{lltcolors}{}{%
+  \RequirePackage{lltcolors}%
+}
+\makeatother
+
+% Ensure dimensions are loaded for grid units
+\makeatletter
+\@ifpackageloaded{lltdimensions}{}{%
+  \RequirePackage{lltdimensions}%
+}
+\makeatother
+
+% ==============================================================================
+% GRID-LOCKED SECTION HIERARCHY
+% ==============================================================================
+% Implements tighter flexible spacing to minimize grid drift while preventing orphans
+%
+% KEY CHANGES FROM STANDARD HEADINGS:
+% 1. Reduced flexibility: ±0.125 units max (was ±0.25)
+% 2. Asymmetric flexibility: less negative space to maintain grid floor
+% 3. Grid recovery after major sections
+% 4. Fixed spacing for lower-level headings
+% ==============================================================================
+
+% Set section numbering depth
+\setcounter{secnumdepth}{3}
+
+% ==============================================================================
+% GRID RECOVERY MECHANISM
+% ==============================================================================
+% Forces alignment to next grid line after flexible elements
+\newcommand{\gridsnap}{%
+  \par\vspace{0pt plus 0.5\gridunit minus 0.5\gridunit}%
+  \vspace{0pt}% Force evaluation
+}
+
+% Hard grid reset at major transitions
+\newcommand{\forcegrid}{%
+  \vskip 0pt plus 1fil%
+  \penalty -9999%
+  \vskip 0pt plus -1fil%
+  \vskip 0pt plus 0pt minus \gridunit%
+}
+
+% ==============================================================================
+% GRID-LOCKED HEADING DEFINITIONS
+% ==============================================================================
+
+% SECTIONS: Minimal flexibility for critical orphan prevention only
+\titleformat{\section}
+  {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{sectioncolor}%
+   \SetTracking{encoding=*}{80}\lsstyle}  % 18pt bold, softened navy, +8% tracking
+  {\thesection}
+  {1em}
+  {}
+\titlespacing*{\section}
+  {0pt}
+  {19.8pt plus 1.65pt minus 0.825pt}  % 1.5 units +0.125/-0.0625
+  {13.2pt plus 0.825pt minus 0pt}     % 1 unit +0.0625/-0
+  
+% Add grid recovery after sections
+\let\oldsection\section
+\renewcommand{\section}{%
+  \oldsection%
+  \gridsnap% Soft grid recovery
+}
+
+% SUBSECTIONS: Minimal flexibility
+\titleformat{\subsection}
+  {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{subsectioncolor}%
+   \SetTracking{encoding=*}{60}\lsstyle}  % 14pt bold, muted midnight, +6% tracking
+  {\thesubsection}
+  {0.85em}
+  {}
+\titlespacing*{\subsection}
+  {0pt}
+  {19.8pt plus 1.65pt minus 0.825pt}  % 1.5 units +0.125/-0.0625
+  {9.9pt plus 0.825pt minus 0pt}      % 0.75 units +0.0625/-0
+
+% SUBSUBSECTIONS: Fixed spacing (no flexibility)
+\titleformat{\subsubsection}
+  {\normalfont\fontsize{12}{13.2}\selectfont\bfseries\color{subsubcolor}}
+  {\thesubsubsection}
+  {0.7em}
+  {}
+\titlespacing*{\subsubsection}
+  {0pt}
+  {19.8pt}  % Exactly 1.5 units
+  {6.6pt}   % Exactly 0.5 units
+
+% PARAGRAPHS: Fixed spacing (no flexibility)
+\titleformat{\paragraph}[block]
+  {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{paragraphcolor}}
+  {}
+  {0em}
+  {}
+\titlespacing*{\paragraph}
+  {0pt}
+  {13.2pt}  % Exactly 1 unit
+  {6.6pt}   % Exactly 0.5 units
+
+% ==============================================================================
+% ALTERNATIVE SPACING MODES
+% ==============================================================================
+
+% Strict grid mode - no flexibility at all
+\newcommand{\strictgridsections}{%
+  \titlespacing*{\section}{0pt}{19.8pt}{13.2pt}%
+  \titlespacing*{\subsection}{0pt}{19.8pt}{9.9pt}%
+  \titlespacing*{\subsubsection}{0pt}{19.8pt}{6.6pt}%
+  \titlespacing*{\paragraph}{0pt}{13.2pt}{6.6pt}%
+}
+
+% Moderate grid mode - very limited flexibility
+\newcommand{\moderategridsections}{%
+  \titlespacing*{\section}
+    {0pt}
+    {19.8pt plus 0.825pt minus 0.825pt}  % ±0.0625 units
+    {13.2pt plus 0.825pt minus 0pt}%
+  \titlespacing*{\subsection}
+    {0pt}
+    {19.8pt plus 0.825pt minus 0.825pt}%
+    {9.9pt plus 0.825pt minus 0pt}%
+  \titlespacing*{\subsubsection}{0pt}{19.8pt}{6.6pt}%
+  \titlespacing*{\paragraph}{0pt}{13.2pt}{6.6pt}%
+}
+
+% Recovery mode - adds grid snaps after all headings
+\newcommand{\recoverygridsections}{%
+  \let\oldsubsection\subsection
+  \renewcommand{\subsection}{%
+    \oldsubsection%
+    \gridsnap%
+  }%
+  \let\oldsubsubsection\subsubsection
+  \renewcommand{\subsubsection}{%
+    \oldsubsubsection%
+    \gridsnap%
+  }%
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{%
+    \oldparagraph%
+    \gridsnap%
+  }%
+}
+
+% ==============================================================================
+% WIDOW AND ORPHAN CONTROL
+% ==============================================================================
+% Less aggressive to work with tighter spacing
+\makeatletter
+\@secpenalty=-500            % Mild preference for breaks before sections
+\makeatother
+\clubpenalty=5000            % Prevent orphans (reduced from 10000)
+\widowpenalty=5000           % Prevent widows (reduced from 10000)
+
+% ==============================================================================
+% SECTION BREAK COMMANDS WITH GRID ALIGNMENT
+% ==============================================================================
+
+% Grid-aligned section break
+\renewcommand{\sectionbreak}{%
+  \par\vspace{2\gridunit}% Exactly 2 grid units
+  \noindent
+}
+
+% Section break with grid recovery
+\newcommand{\sectionbreaksnap}{%
+  \par\vspace{2\gridunit}%
+  \gridsnap%
+  \noindent
+}
+
+% ==============================================================================
+% VISUAL GRID VERIFICATION HELPERS
+% ==============================================================================
+
+% Mark current position relative to grid
+\newcommand{\markgrid}[1]{%
+  \marginpar{\tiny\color{red}#1}%
+}
+
+% Show grid offset at current position
+\newcommand{\showgridoffset}{%
+  \typeout{Current position: \the\pagetotal}%
+}
+
+% ==============================================================================
+% DEFAULT MODE
+% ==============================================================================
+% Use moderate grid mode by default
+\moderategridsections
+
+\endinput

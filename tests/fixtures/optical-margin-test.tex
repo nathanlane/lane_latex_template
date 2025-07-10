@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage{lltpaperstyle}
+\usepackage{lipsum}
+\usepackage{lltgridoverlay}
+
+\begin{document}
+
+\section{Enhanced Optical Margin Alignment Test}
+
+This document demonstrates the enhanced optical margin alignment (v2.1) with comprehensive character protrusion settings.
+
+\subsection{Regular Text Protrusion}
+
+"The quick brown fox jumps over the lazy dog." This sentence demonstrates quote protrusion at 1400 units---a 40\% increase from standard settings. Notice how the opening quote hangs into the margin, creating a cleaner text edge.
+
+Here's a paragraph with various punctuation to test protrusion:
+\begin{itemize}
+\item Periods, commas, and semicolons; all properly protruding.
+\item Hyphens---both en-dashes and em-dashes---align beautifully.
+\item Questions? Exclamations! All handled with care.
+\item (Parentheses) and [brackets] also protrude appropriately.
+\end{itemize}
+
+\subsection{Capital Letter Overhang}
+
+Typography requires careful attention to detail. Vast improvements come from subtle adjustments. When capitals like T, V, W, and Y appear at line beginnings, they use negative protrusion to compensate for their natural overhang. You can see this effect in these examples.
+
+\subsection{Bold Text Compensation}
+
+\textbf{Bold text requires different protrusion values due to increased stroke weight. "Quotes" in bold use 1200 units instead of 1400. This prevents the heavier strokes from appearing to protrude too far.}
+
+\subsection{Small Text Optimization}
+
+\footnotesize
+In footnotes and captions, "protrusion values are reduced to maintain readability." The smaller text size (8.5pt) uses more conservative settings: quotes at 1000 units, periods at 900 units. This ensures the optical alignment doesn't compromise legibility at small sizes.
+\normalsize
+
+\subsection{Mathematical Symbol Protrusion}
+
+Inline math benefits from symbol protrusion: $a + b = c$ and $x < y > z$. The operators (+, -, =) and comparison symbols (<, >) have specific protrusion values to maintain visual alignment within mathematical expressions.
+
+\subsection{Display Size Text}
+
+{\Large "Large text uses extra protrusion"---up to 1600 units for quotes.}
+
+{\huge T}ypography at display sizes benefits from aggressive protrusion settings, with capitals like T, V, W, and Y using up to -80 units of negative left protrusion.
+
+\subsection{Grid Alignment Verification}
+
+% Show grid to verify baseline alignment
+\showgrid
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. "Quoted text" demonstrates the protrusion. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+
+\end{document}

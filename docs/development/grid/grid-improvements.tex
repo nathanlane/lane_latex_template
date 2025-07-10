@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+
+% Calculate heading positions to land on specific gridlines
+\usepackage{calc}
+
+% Heading alignment helpers
+\newcommand{\alignToSecondGrid}[1]{%
+  % Ensures content lands on 2nd gridline
+  \vspace*{\dimexpr 26.4pt - \baselineskip - \ht\strutbox\relax}%
+  #1%
+}
+
+\newcommand{\alignToThirdGrid}[1]{%
+  % Ensures content lands on 3rd gridline  
+  \vspace*{\dimexpr 39.6pt - \baselineskip - \ht\strutbox\relax}%
+  #1%
+}
+
+% Grid-aligned table rows
+\newlength{\gridrowheight}
+\setlength{\gridrowheight}{13.2pt}
+
+% Image height helper
+\newcommand{\gridimage}[2]{%
+  % #1 = number of grid units tall
+  % #2 = image path or content
+  \vspace{0pt}%
+  \parbox[t][#1\gridrowheight][c]{\linewidth}{%
+    \centering #2%
+  }%
+}
+
+\begin{document}
+
+\section{Improved Grid Alignment Techniques}
+
+This document demonstrates solutions for perfect grid compliance.
+
+\subsection{Subheadings on 2nd Gridline}
+
+The subsection heading above should land exactly on every 2nd gridline. This requires calculating the exact position based on the heading's height.
+
+\subsection{Another Subsection Test}
+
+Testing consistent 2nd gridline alignment across multiple subsections.
+
+\section{Grid-Aligned Tables}
+
+\begin{table}[h!]
+\caption{Table with Grid-Aligned Row Heights}
+\centering
+\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{@{}p{3cm}p{3cm}p{3cm}@{}}
+\toprule
+\rule{0pt}{\gridrowheight}Header 1 & Header 2 & Header 3 \\
+\midrule
+\rule{0pt}{\gridrowheight}Row with exactly one grid unit height & Data aligned to grid & More grid-aligned data \\
+\rule{0pt}{\gridrowheight}Another row & Maintains alignment & Throughout table \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Grid-Aligned Images}
+
+\begin{figure}[h!]
+\centering
+\gridimage{3}{\fbox{Image content exactly 3 grid units tall (39.6pt)}}
+\caption{Figure with grid-aligned height}
+\end{figure}
+
+\section{Professional Refinements}
+
+{\Large\alignToThirdGrid{Optically Adjusted Large Text}}
+
+This large text has been optically adjusted to sit slightly above the mathematical gridline for better visual alignment.
+
+\subsection{Small Text Grid}
+
+{\footnotesize
+Small text (9pt) with its own proportional grid. Each line of small text should maintain its own consistent rhythm: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+}
+
+Regular text returns to the main 13.2pt grid.
+
+\section{Block Quote Grid Alignment}
+
+Text before block quote on the grid.
+
+\begin{quote}
+\setlength{\parskip}{0pt}
+This block quote has been adjusted to maintain perfect grid alignment. The quote environment preserves the baseline grid throughout. Multiple lines demonstrate consistent spacing.
+\end{quote}
+
+Text after block quote returns to grid.
+
+\section{Enhanced Caption System}
+
+\begin{figure}[h!]
+\centering
+\fbox{\parbox{0.6\textwidth}{\centering\vspace{26.4pt}Figure (2 units)\vspace{26.4pt}}}
+\vspace{-\parskip}
+\caption[Short caption]{\setlength{\baselineskip}{13.2pt}%
+This caption uses exact grid spacing. Each line aligns to the 13.2pt grid. Multiple lines maintain perfect registration with the document's baseline grid system.}
+\end{figure}
+
+\section{Cross-Column Alignment}
+
+For multi-column layouts, use:
+
+\begin{verbatim}
+\usepackage{multicol}
+\setlength{\columnsep}{26.4pt} % 2 grid units
+\end{verbatim}
+
+This ensures text aligns horizontally across columns.
+
+\end{document}

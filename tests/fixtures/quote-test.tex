@@ -1,0 +1,90 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../../paper/paperstyle}
+\usepackage{../../paper/gridoverlay}
+\usepackage{lipsum}
+
+\begin{document}
+
+% Enable grid visualization
+\showgrid
+
+\section{Block Quotation Tests}
+
+This section tests the new professional block quotation system with various quote types and lengths.
+
+\subsection{Standard Block Quote}
+
+As Butterick states in his foundational work:
+\begin{quote}
+Typography is the visual component of the written word. Good typography reinforces the meaning of the text. The same text set with different typography can look serious, informal, technical, or unprofessional.
+\quoteattribution{Matthew Butterick, \textit{Practical Typography}}
+\end{quote}
+
+The quote above demonstrates the standard block quote with attribution system.
+
+\subsection{Extended Quotation}
+
+For longer passages with multiple paragraphs:
+\begin{quotation}
+The baseline grid is the foundation of vertical rhythm in typography. It ensures that text on facing pages aligns properly, creating a harmonious reading experience.
+
+When implementing a baseline grid, all vertical measurements should be multiples of the base unit. This includes spacing before and after headings, paragraph spacing, and the positioning of other page elements.
+
+The grid creates an invisible structure that guides the eye and provides consistency throughout the document.
+\quoteattribution{Robert Bringhurst, \textit{The Elements of Typographic Style}}
+\end{quotation}
+
+Note how paragraph indentation is maintained in the quotation environment.
+
+\subsection{Emphasis Quote}
+
+For particularly important or memorable passages:
+\begin{emphasisquote}
+Typography exists to honor content.
+\quoteattribution{Robert Bringhurst}
+\end{emphasisquote}
+
+The emphasis quote uses larger text and dramatic margins for impact.
+
+\subsection{Integration with Lists}
+
+Sometimes quotes contain lists:
+\begin{quote}
+The principles of good typography include:
+\begin{compactitem}
+\item Readability above all else
+\item Appropriate typeface selection
+\item Consistent spacing and alignment
+\item Subtle visual hierarchy
+\end{compactitem}
+These fundamentals apply regardless of medium or technology.
+\end{quote}
+
+\subsection{Nested Elements}
+
+\begin{quotation}
+Hochuli emphasizes three key aspects of detail typography:
+
+First, the careful spacing of letters within words, which requires understanding the typeface's inherent characteristics.
+
+Second, the relationship between words, lines, and paragraphs, which creates the texture of the page.
+
+\begin{quote}
+The smallest detail can make the difference between good and excellent typography.
+\end{quote}
+
+Third, the integration of all elements into a cohesive whole that serves the content.
+\quoteattribution{Jost Hochuli, \textit{Detail in Typography}}
+\end{quotation}
+
+\subsection{Grid Alignment Verification}
+
+\lipsum[1][1-3]
+
+\begin{quote}
+This quote should maintain perfect baseline grid alignment. The 13.2pt leading ensures that text within the quote aligns with the grid, while the 1 grid unit spacing before and after maintains vertical rhythm.
+\end{quote}
+
+\lipsum[2][1-3]
+
+\end{document}

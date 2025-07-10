@@ -1,0 +1,74 @@
+% ==============================================================================
+% COMPILATION-FIXES-SIMPLE.STY - Minimal Fixes for Common Compilation Warnings
+% ==============================================================================
+% Simplified version with fewer hooks to avoid conflicts
+% ==============================================================================
+
+\ProvidesPackage{lltcompilationfixes}[2025/07/07 v1.0 Simple Compilation Fixes]
+
+% ==============================================================================
+% OVERFULL HBOX FIXES
+% ==============================================================================
+
+% Add hyphenation exceptions for problematic words
+\hyphenation{
+  % Typography terms that cause overfull boxes
+  Pro-duc-tion-Grade
+  Type-writer
+  Post-Script
+  % Add more as needed
+}
+
+% ==============================================================================
+% BIBLATEX WARNINGS FIX
+% ==============================================================================
+
+% Fix for "conflicting options" warning
+% This needs to be done BEFORE biblatex is loaded
+\makeatletter
+\@ifpackageloaded{biblatex}{%
+  % Too late to fix
+}{%
+  % Pre-configure biblatex to avoid conflicts
+  \PassOptionsToPackage{uniquename=init}{biblatex}%
+}
+\makeatother
+
+% ==============================================================================
+% OVERFULL VBOX FIXES
+% ==============================================================================
+
+% Increase flexibility for page breaking
+\widowpenalty=9999      % Almost forbid widows
+\clubpenalty=9999       % Almost forbid orphans
+\raggedbottom           % Allow variable page heights
+
+% More flexible display spacing
+\setlength{\floatsep}{12pt plus 4pt minus 4pt}
+\setlength{\textfloatsep}{15pt plus 4pt minus 4pt}
+\setlength{\intextsep}{12pt plus 4pt minus 4pt}
+
+% ==============================================================================
+% TABLE WIDTH FIXES
+% ==============================================================================
+
+% Commands for handling wide tables
+\newcommand{\fitwide}[1]{%
+  \resizebox{\linewidth}{!}{#1}%
+}
+
+% ==============================================================================
+% GENERAL COMPILATION HELPERS
+% ==============================================================================
+
+% Draft mode helper - shows overfull boxes
+\newcommand{\showoverfulls}{%
+  \overfullrule=5pt % Show black bars for overfull boxes
+}
+
+% Final mode helper - hide overfull boxes
+\newcommand{\hideoverfulls}{%
+  \overfullrule=0pt % Hide black bars
+}
+
+\endinput

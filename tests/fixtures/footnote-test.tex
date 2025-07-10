@@ -1,0 +1,24 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+
+% Load grid overlay for testing
+\usepackage{lltgridoverlay}
+\showgrid
+
+\begin{document}
+
+\section{Footnote Typography Optimization Test}
+
+This paragraph demonstrates the new optimized footnote system following professional foundry standards.\footnote{This first footnote uses 8.5pt text with 11pt leading, creating perfect grid alignment. The superscript is now 6pt with enhanced tracking for clarity.} The footnotes should integrate seamlessly with the baseline grid while maintaining clear subordination to the body text.
+
+Multiple footnotes on the same reference\footnote{Second footnote demonstrating the 3.3pt (0.25 grid units) spacing between notes.}\footnote{Third footnote showing how consecutive marks are handled with proper kerning.} show the refined spacing system. Notice how the footnote rule extends to 33\% of the text measure, positioned exactly 2 grid units below the main text baseline.
+
+\subsection{Punctuation Integration}
+
+The system handles punctuation gracefully. Here's a sentence ending with a period.\footnote{Footnote after period with optimized kerning.} And here's one with a comma,\footnote{Footnote after comma showing tighter spacing.} demonstrating professional typography.
+
+\paragraph{Grid Recovery} After the footnote block, the main text should return perfectly to the baseline grid. The 8.5pt footnote text with 11pt leading aligns to 0.833 gridlines (11pt ÷ 13.2pt), allowing smooth recovery of the main text rhythm.
+
+This final paragraph\footnote{A longer footnote to test hyphenation and justification. The hanging indent is now 7pt (0.53 grid units), creating optimal proportion with Pagella's generous x-height. Word spacing is optimized at 0.35em for readability at this smaller size.} confirms that the grid is maintained throughout the document.
+
+\end{document}

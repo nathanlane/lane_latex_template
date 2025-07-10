@@ -1,0 +1,131 @@
+% ==============================================================================
+% PREAMBLE-NATBIB.TEX - Legacy Bibliography Support
+% ==============================================================================
+% 
+% Alternative preamble providing natbib compatibility for legacy documents
+% or when biblatex is not available. This maintains the same typographic
+% excellence while using the traditional natbib citation system.
+%
+% Version: 1.2
+% Author: Academic Paper Template Project
+% Date: 2025-06-28
+%
+% USAGE:
+%   \input{paper/preamble-natbib.tex}  % Instead of preamble.tex
+%
+% DEPENDENCIES:
+%   - lltpaperstyle.sty (core typography system)
+%   - references.bib (bibliography database - may need format adjustments)
+%   - Standard LaTeX distribution with natbib and chicago.bst
+%
+% COMPILATION:
+%   pdflatex main.tex
+%   bibtex main
+%   pdflatex main.tex
+%   pdflatex main.tex
+%
+% MIGRATION NOTES:
+%   - Use \citet{} for textual citations (instead of \textcite{})
+%   - Use \citep{} for parenthetical citations (instead of \autocite{})
+%   - Limited support for advanced features (DOI linking, annotations)
+%   - Consider upgrading to full biblatex system when possible
+%
+% ==============================================================================
+
+% ------------------------------------------------------------------------------
+% CORE TYPOGRAPHY SYSTEM
+% ------------------------------------------------------------------------------
+% Load the comprehensive lltpaperstyle.sty package
+% Note: The biblatex-specific formatting in lltpaperstyle.sty will be ignored
+% when using this natbib-based preamble
+
+\usepackage{lltpaperstyle}
+
+% ------------------------------------------------------------------------------
+% NATBIB BIBLIOGRAPHY CONFIGURATION  
+% ------------------------------------------------------------------------------
+% Traditional natbib system for legacy compatibility
+% Provides Chicago Manual of Style author-date format
+
+\usepackage[
+  authoryear,           % Author-year citation style
+  round,                % Round parentheses for citations
+  semicolon,            % Semicolon separator for multiple citations
+  sort&compress         % Sort and compress citation lists
+]{natbib}
+
+% Set bibliography style to Chicago author-date format
+% Note: Requires chicago.bst file (usually included in TeX distributions)
+\bibliographystyle{chicago}
+
+% Configure citation format for professional appearance
+\renewcommand{\bibname}{References}                    % Section title
+\setlength{\bibhang}{1.5em}                           % Hanging indent
+\setlength{\bibsep}{6.325pt}                          % Entry spacing (0.5 baseline units)
+
+% Professional citation punctuation
+\renewcommand{\cite}{\citep}                          % Default to parenthetical
+\newcommand{\citestyle}[1]{\citep{#1}}               % Alias for consistency
+
+% ------------------------------------------------------------------------------
+% ENHANCED URL AND DOI SUPPORT
+% ------------------------------------------------------------------------------
+% Basic URL support for natbib (limited compared to biblatex)
+
+\usepackage{url}
+\usepackage{doi}
+
+% Configure URL appearance to match framework colors
+\urlstyle{same}
+\renewcommand{\UrlFont}{\color{linknavy}\ttfamily}
+
+% Basic DOI formatting (less sophisticated than biblatex version)
+\renewcommand{\doiprefix}{DOI:\space}
+
+% ------------------------------------------------------------------------------
+% CITATION COMMAND COMPATIBILITY
+% ------------------------------------------------------------------------------
+% Provide compatibility commands for migration between systems
+
+% Aliases for biblatex-style commands (limited functionality)
+\newcommand{\textcite}[1]{\citet{#1}}                % Textual citation
+\newcommand{\autocite}[1]{\citep{#1}}                % Parenthetical citation
+\newcommand{\citeauthor}[1]{\citeauthor{#1}}         % Author only (already exists)
+\newcommand{\citeyear}[1]{\citeyear{#1}}             % Year only (already exists)
+
+% Note: Advanced biblatex features like pre/post notes are limited in natbib
+% Use standard natbib syntax: \citep[see][p. 42]{key}
+
+% ------------------------------------------------------------------------------
+% DOCUMENT CONFIGURATION NOTES
+% ------------------------------------------------------------------------------
+%
+% This natbib-based preamble provides:
+%
+% 1. TYPOGRAPHY EXCELLENCE (same as biblatex version)
+%    - Complete lltpaperstyle.sty implementation
+%    - Bembo revival typography system
+%    - Mathematical and monospace integration
+%    - Professional color system
+%
+% 2. LEGACY BIBLIOGRAPHY COMPATIBILITY
+%    - Traditional natbib citation commands
+%    - Chicago author-date style (chicago.bst)
+%    - Basic URL and DOI support
+%    - Framework-compliant spacing
+%
+% 3. MIGRATION SUPPORT
+%    - Compatibility aliases for common biblatex commands
+%    - Clear upgrade path to full biblatex system
+%    - Maintained typographic standards
+%
+% 4. LIMITATIONS COMPARED TO BIBLATEX
+%    - No advanced field formatting (annotations, enhanced DOI linking)
+%    - Limited multicitation capabilities
+%    - Reduced customization options
+%    - Manual bibliography database formatting required
+%
+% RECOMMENDATION: Upgrade to full biblatex system (preamble.tex) when possible
+% for complete feature support and enhanced academic functionality.
+%
+% ==============================================================================

@@ -1,0 +1,391 @@
+% ==============================================================================
+% LISTS.STY - List Typography Module
+% ==============================================================================
+% Extracted from paperstyle.sty for modular customization
+% Implements sophisticated list typography with baseline grid alignment
+% ==============================================================================
+
+\ProvidesPackage{lltlists}[2025/07/03 v1.0 List Typography System]
+
+% Dependencies
+\RequirePackage{enumitem}         % List spacing control
+
+% Ensure colors are loaded
+\makeatletter
+\@ifpackageloaded{lltcolors}{}{%
+  % Silently load colors module if not already loaded
+  \RequirePackage{lltcolors}%
+}
+\makeatother
+
+% Ensure dimensions are loaded for grid units
+\makeatletter
+\@ifpackageloaded{lltdimensions}{}{%
+  % Silently load dimensions module if not already loaded
+  \RequirePackage{lltdimensions}%
+}
+\makeatother
+
+% ==============================================================================
+% LIST DESIGN SYSTEM
+% ==============================================================================
+% Implements sophisticated list typography following:
+% - Butterick: Clean professional bullets and precise spacing
+% - Hochuli: Perfect baseline grid alignment
+% - Brown: Systematic hierarchy through spacing
+%
+% HIERARCHY:
+%   1. Standard lists (itemize) - professional gray bullets
+%   2. Enumerated lists - oldstyle figures
+%   3. Description lists - small caps labels
+%   4. Specialized lists - context-specific formatting
+% ==============================================================================
+
+% LIST SPACING PARAMETERS
+% All aligned to baseline grid (13.2pt)
+% Internal lengths now prefixed with \paper@ to avoid namespace collisions
+\makeatletter
+\newlength{\paper@listhalfbaseline}
+\newlength{\paper@listquarterbaseline}
+\newlength{\paper@listbaselineskip}
+\newlength{\paper@listhangindent}
+\newlength{\paper@listnestedindent}
+\newlength{\paper@listlabelsep}
+
+% Initialise values
+\setlength{\paper@listhalfbaseline}{6.6pt}      % 0.5 grid units
+\setlength{\paper@listquarterbaseline}{3.3pt}   % 0.25 grid units  
+\setlength{\paper@listbaselineskip}{13.2pt}     % 1 full grid unit
+\setlength{\paper@listhangindent}{26.4pt}       % 2 grid units (optimized for Pagella)
+\setlength{\paper@listnestedindent}{13.2pt}     % 1 grid unit for nested lists
+\setlength{\paper@listlabelsep}{0.7em}          % Space between bullet and text
+
+% Compatibility aliases (deprecated; will be removed in v2.0)
+\let\listhalfbaseline\paper@listhalfbaseline
+\let\listquarterbaseline\paper@listquarterbaseline
+\let\listbaselineskip\paper@listbaselineskip
+\let\listhangindent\paper@listhangindent
+\let\listnestedindent\paper@listnestedindent
+\let\listlabelsep\paper@listlabelsep
+
+% ==============================================================================
+% BULLET AND MARKER DEFINITIONS
+% ==============================================================================
+% Professional bullet hierarchy with refined typography
+
+% Primary bullet - professional gray for subtlety
+\newcommand{\bulletmark}{%
+  \textcolor{subtlegray}{\raisebox{0.08ex}{\scalebox{0.9}{$\bullet$}}}%
+}
+
+% En-dash for academic lists
+\newcommand{\dashmark}{%
+  \textcolor{subtlegray}{\textendash}%
+}
+
+% Secondary bullet - smaller for nested lists
+\newcommand{\refinedbullet}{%
+  \textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.75}{$\bullet$}}}%
+}
+
+% Tertiary bullet - diamond for deep nesting
+\newcommand{\diamondmark}{%
+  \textcolor{subtlegray}{\raisebox{0.05ex}{\scalebox{0.7}{$\diamond$}}}%
+}
+
+% Additional markers for specialized lists
+\newcommand{\squaremark}{%
+  \textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.65}{$\blacksquare$}}}%
+}
+
+\newcommand{\trianglemark}{%
+  \textcolor{subtlegray}{\raisebox{0ex}{\scalebox{0.8}{$\triangleright$}}}%
+}
+
+% Subtle bullet for compact lists
+\newcommand{\subtlebullet}{%
+  \textcolor{lightgray}{\raisebox{0.12ex}{\scalebox{0.65}{$\bullet$}}}%
+}
+
+% Refined en-dash with proper spacing
+\newcommand{\refineddash}{%
+  \textcolor{subtlegray}{\kern0.05em\textendash\kern0.05em}%
+}
+
+% ==============================================================================
+% STANDARD LIST CONFIGURATIONS
+% ==============================================================================
+
+% ITEMIZE CONFIGURATION (Butterick's professional bullets)
+\setlist[itemize,1]{
+  label=\bulletmark,                            % Professional gray bullet
+  align=left,
+  leftmargin=\paper@listhangindent,
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listhalfbaseline,
+  partopsep=0pt,
+  itemindent=0pt,
+  listparindent=\parindent,
+  before={\vspace{-\parskip}},
+  after={\vspace{-\parskip}}
+}
+
+% Secondary level - refined bullet
+\setlist[itemize,2]{
+  label=\refineddash,                           % En-dash for variety
+  leftmargin=\paper@listnestedindent,
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listquarterbaseline,
+  partopsep=0pt
+}
+
+% Tertiary level - diamond
+\setlist[itemize,3]{
+  label=\diamondmark,                           % Diamond for deep nesting
+  leftmargin=\paper@listnestedindent,
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listquarterbaseline,
+  partopsep=0pt
+}
+
+% ENUMERATE CONFIGURATION (Hochuli's oldstyle numerals)
+\setlist[enumerate,1]{
+  label=\oldstylenums{\arabic*.},              % Oldstyle figures with period
+  align=left,                                   % Left-align numbers
+  widest=99,                                    % Reserve space for 2 digits
+  leftmargin=\paper@listhangindent,
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listhalfbaseline,
+  partopsep=0pt,
+  itemindent=0pt,
+  listparindent=\parindent,
+  before={\vspace{-\parskip}},
+  after={\vspace{-\parskip}}
+}
+
+% Secondary enumeration with lowercase letters
+\setlist[enumerate,2]{
+  label=\alph*),                                % Lowercase letter with paren
+  leftmargin=\paper@listnestedindent,
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listquarterbaseline,
+  partopsep=0pt
+}
+
+% Tertiary enumeration with roman numerals
+\setlist[enumerate,3]{
+  label=\roman*.,                               % Lowercase roman with period
+  leftmargin=\paper@listnestedindent,
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listquarterbaseline,
+  partopsep=0pt
+}
+
+% DESCRIPTION LIST CONFIGURATION
+% Professional hanging format for term definitions
+\setlist[description]{
+  font=\normalfont\scshape\color{paragraphcolor}, % Small caps terms
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  leftmargin=\paper@listhangindent,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listhalfbaseline,
+  partopsep=0pt,
+  before={\vspace{-\parskip}},
+  after={\vspace{-\parskip}}
+}
+
+% ==============================================================================
+% SPECIALIZED LIST ENVIRONMENTS
+% ==============================================================================
+% Following Brown's systematic approach to different contexts
+
+\makeatletter  % Resume @ usage for list configurations
+
+% Compact list for tight spacing (references, brief points)
+\newlist{compactitem}{itemize}{3}
+\setlist[compactitem,1]{
+  label=\subtlebullet,
+  leftmargin=\paper@listhangindent,
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  itemsep=0pt,                                  % No item spacing
+  parsep=0pt,
+  topsep=\paper@listquarterbaseline,                  % Minimal top/bottom
+  partopsep=0pt,
+  nosep                                         % Remove all spacing
+}
+
+% Display list for emphasis (key findings, important points)
+\newlist{displayitem}{itemize}{3}
+\setlist[displayitem,1]{
+  label=\bulletmark,                            % Full black bullet
+  leftmargin=\paper@listhangindent,
+  labelindent=0pt,
+  labelsep=\paper@listlabelsep,
+  itemsep=\paper@listhalfbaseline,                    % Generous spacing
+  parsep=0pt,
+  topsep=\paper@listbaselineskip,                     % Full baseline above/below
+  partopsep=0pt,
+  font=\normalfont\bfseries\color{textblack}    % Bold items for emphasis
+}
+
+% Academic list with en-dash (following university style guides)
+\newlist{academicitem}{itemize}{3}
+\setlist[academicitem,1]{
+  label=\llap{\refineddash\hspace{0.1em}},    % Refined en-dash
+  leftmargin=\paper@listhangindent,
+  labelindent=0pt,
+  labelsep=0.5em,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listhalfbaseline,
+  partopsep=0pt
+}
+
+% READABLE LIST (More spacing for enhanced readability)
+\newlist{readableitem}{itemize}{3}
+\setlist[readableitem,1]{
+  label=\llap{\refinedbullet\hspace{0.15em}}, % Refined bullet
+  leftmargin=\paper@listhangindent,
+  labelindent=0pt,
+  labelsep=0.55em,
+  itemsep=\paper@listhalfbaseline,                  % 0.5 units for readability
+  parsep=0pt,
+  topsep=9.9pt plus 1.65pt,                   % 0.75 units above/below
+  partopsep=0pt,
+  before={\vspace{-\parskip}\vspace{\paper@listhalfbaseline}},
+  after={\vspace{-\parskip}\vspace{\paper@listhalfbaseline}}
+}
+
+% Define the label command for academicitem
+\renewcommand{\labelacademicitemi}{\dashmark}
+
+% INLINE LISTS (Butterick's recommendation for brief items)
+\newlist{inlineitem}{enumerate*}{1}
+\setlist[inlineitem]{
+  label=(\alph*),                               % Parenthetical letters
+  itemjoin={{; }},                              % Semicolon separator
+  afterlabel={\,},                              % Thin space after label
+  itemsep=0pt,
+  before={},
+  after={}
+}
+
+% ==============================================================================
+% CUSTOM BULLET COMMANDS
+% ==============================================================================
+% For manual control when needed
+
+\newcommand{\itembullet}{\item[\bulletmark]}
+\newcommand{\itemdash}{\item[\dashmark]}
+\newcommand{\itemdiamond}{\item[\diamondmark]}
+\newcommand{\itemsquare}{\item[\squaremark]}
+\newcommand{\itemtriangle}{\item[\trianglemark]}
+
+% ==============================================================================
+% NESTED LIST SPACING REFINEMENT
+% ==============================================================================
+% Ensures consistent baseline grid alignment
+% Adjusted for more traditional spacing (0.5 grid units)
+
+% Remove the quarter baseline reduction to get full topsep spacing
+% This gives us 6.6pt (0.5 grid units) before/after lists
+% Comment out these lines to restore the original minimal spacing
+%\setlist[itemize]{
+%  before*={\vspace{-\paper@listquarterbaseline}},
+%  after*={\vspace{-\paper@listquarterbaseline}}
+%}
+%\setlist[enumerate]{
+%  before*={\vspace{-\paper@listquarterbaseline}},
+%  after*={\vspace{-\paper@listquarterbaseline}}
+%}
+
+% ==============================================================================
+% LIST SPACING STYLES
+% ==============================================================================
+% Commands to switch between different list spacing approaches
+
+\newcommand{\tightlists}{%
+  % Minimal spacing for dense information
+  \setlist[itemize,1]{itemsep=0pt, topsep=\paper@listquarterbaseline}
+  \setlist[enumerate,1]{itemsep=0pt, topsep=\paper@listquarterbaseline}
+}
+
+\newcommand{\normallists}{%
+  % Default spacing (current settings)
+  \setlist[itemize,1]{itemsep=\paper@listquarterbaseline, topsep=\paper@listhalfbaseline}
+  \setlist[enumerate,1]{itemsep=\paper@listquarterbaseline, topsep=\paper@listhalfbaseline}
+}
+
+\newcommand{\spaciouslists}{%
+  % Generous spacing for readability
+  \setlist[itemize,1]{itemsep=\paper@listhalfbaseline, topsep=\paper@listbaselineskip}
+  \setlist[enumerate,1]{itemsep=\paper@listhalfbaseline, topsep=\paper@listbaselineskip}
+}
+
+% ==============================================================================
+% LIST CUSTOMIZATION INTERFACE
+% ==============================================================================
+% User-friendly commands for common list modifications
+
+% Change all bullets to en-dashes
+\newcommand{\dashbullets}{%
+  \setlist[itemize,1]{label=\dashmark}
+}
+
+% Change all bullets to triangles
+\newcommand{\trianglebullets}{%
+  \setlist[itemize,1]{label=\trianglemark}
+}
+
+% Restore default bullets
+\newcommand{\defaultbullets}{%
+  \setlist[itemize,1]{label=\bulletmark}
+}
+
+% ==============================================================================
+% LEGACY SUPPORT
+% ==============================================================================
+% Maintain backward compatibility with simple spacing
+
+% CONSOLIDATED ENVIRONMENT HOOKS
+% ==============================================================================
+% All list environment hooks are centralized here to avoid conflicts
+% This prevents "missing \item" errors when using \paragraph commands
+
+% Ensure list environments work properly with other environments
+\AtBeginEnvironment{itemize}{\parindent=0pt\@afterindentfalse}
+\AtBeginEnvironment{enumerate}{\parindent=0pt\@afterindentfalse}
+\AtBeginEnvironment{description}{\parindent=0pt\@afterindentfalse}
+
+% First paragraph after lists is flush left
+\makeatother  % End @ usage from specialized lists
+\makeatletter
+\AtEndEnvironment{itemize}{\@afterindentfalse}
+\AtEndEnvironment{enumerate}{\@afterindentfalse}
+\AtEndEnvironment{description}{\@afterindentfalse}
+\AtEndEnvironment{compactitem}{\@afterindentfalse}
+\AtEndEnvironment{displayitem}{\@afterindentfalse}
+\AtEndEnvironment{academicitem}{\@afterindentfalse}
+\AtEndEnvironment{readableitem}{\@afterindentfalse}
+\makeatother

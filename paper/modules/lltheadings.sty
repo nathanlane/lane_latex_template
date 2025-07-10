@@ -1,0 +1,245 @@
+% ==============================================================================
+% HEADINGS.STY - Section and Heading Typography Module
+% ==============================================================================
+% Extracted from paperstyle.sty for modular customization
+% Implements sophisticated heading hierarchy with baseline grid alignment
+% ==============================================================================
+
+\ProvidesPackage{lltheadings}[2025/07/03 v1.0 Heading Typography System]
+
+% Dependencies
+\RequirePackage{titlesec}         % Custom section formatting
+\RequirePackage{etoolbox}         % For \AtBeginEnvironment
+
+% Ensure colors are loaded
+\makeatletter
+\@ifpackageloaded{lltcolors}{}{%
+  % Silently load colors module if not already loaded
+  \RequirePackage{lltcolors}%
+}
+\makeatother
+
+% Ensure dimensions are loaded for grid units
+\makeatletter
+\@ifpackageloaded{lltdimensions}{}{%
+  % Silently load dimensions module if not already loaded
+  \RequirePackage{lltdimensions}%
+}
+\makeatother
+
+% ==============================================================================
+% SECTION HIERARCHY DESIGN
+% ==============================================================================
+% Implements Tim Brown's modular scale principles with Perfect Fourth ratio
+%
+% MODULAR SCALE (Perfect Fourth = 1.333):
+%   Base: 11pt (body text)
+%   Scale: Perfect Fourth ratio = 1.333
+%   Progression: 11pt → 14.7pt → 19.6pt (theoretical)
+%   Adjusted: 11pt → 12pt → 14pt → 18pt (visually optimized for LaTeX)
+%
+% HIERARCHY MAPPING:
+%   \section:        18pt (1.333³ from base)
+%   \subsection:     14pt (1.333¹ from base)  
+%   \subsubsection:  12pt (1.333^0.5 from base)
+%   \paragraph:      11.5pt (base + small caps enhancement)
+%   Body text:       11pt (base)
+% ==============================================================================
+
+% Set section numbering depth
+\setcounter{secnumdepth}{3}
+
+% ==============================================================================
+% SECTION SPACING STYLES
+% ==============================================================================
+% Commands to switch between different section spacing approaches
+
+\newcommand{\spacioussections}{%
+  % Original generous spacing (2 units before, 1 after)
+  \titlespacing*{\section}{0pt}
+    {26.4pt plus 3.3pt minus 3.3pt}
+    {13.2pt plus 1.65pt minus 0pt}
+}
+
+\newcommand{\moderatesections}{%
+  % Moderate spacing (1.5 units before, 1 after) - DEFAULT
+  \titlespacing*{\section}{0pt}
+    {19.8pt plus 3.3pt minus 3.3pt}
+    {13.2pt plus 1.65pt minus 0pt}
+}
+
+\newcommand{\compactsections}{%
+  % Compact spacing (1 unit before, 1 after)
+  \titlespacing*{\section}{0pt}
+    {13.2pt plus 3.3pt minus 3.3pt}
+    {13.2pt plus 1.65pt minus 0pt}
+}
+
+\newcommand{\tightsections}{%
+  % Tight academic spacing (1 unit before, 0.5 after)
+  \titlespacing*{\section}{0pt}
+    {13.2pt plus 3.3pt minus 1.65pt}
+    {6.6pt plus 1.65pt minus 0pt}
+}
+
+% ==============================================================================
+% SECTION FORMATTING
+% ==============================================================================
+
+% Sections: Bold with sophisticated color and tracking
+% OPTIMIZED: Perfect grid alignment without optical adjustments
+\titleformat{\section}
+  {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{sectioncolor}%
+   \SetTracking{encoding=*}{80}\lsstyle}  % 18pt bold, softened navy, +8% tracking
+  {\thesection}
+  {1em}
+  {}  % No optical compensation - achieve alignment through leading
+\titlespacing*{\section}
+  {0pt}
+  {19.8pt plus 3.3pt minus 3.3pt}  % 1.5 units ±0.25 (reduced from 2)
+  {13.2pt plus 1.65pt minus 0pt}    % 1 unit +0.125/-0 (unchanged)
+
+% Subsections: Bold with moderate tracking and midnight blue
+% OPTIMIZED: 19.8pt leading (1.5 grid units) for perfect alignment
+\titleformat{\subsection}
+  {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{subsectioncolor}%
+   \SetTracking{encoding=*}{60}\lsstyle}  % 14pt bold, muted midnight, +6% tracking
+  {\thesubsection}
+  {0.85em}
+  {}  % No optical compensation - proper leading ensures alignment
+\titlespacing*{\subsection}
+  {0pt}
+  {19.8pt plus 3.3pt minus 1.65pt}  % 1.5 units ±0.25/0.125 (reduced from 2)
+  {9.9pt plus 1.65pt minus 0pt}      % 0.75 units +0.125/-0 (tighter)
+
+% Subsubsections: Bold with charcoal color for softer impact
+% OPTIMIZED: Single grid unit leading for tight alignment
+\titleformat{\subsubsection}
+  {\normalfont\fontsize{12}{13.2}\selectfont\bfseries\color{subsubcolor}}  % 12pt bold, charcoal
+  {\thesubsubsection}
+  {0.7em}
+  {}
+\titlespacing*{\subsubsection}
+  {0pt}
+  {19.8pt plus 3.3pt minus 1.65pt}  % 1.5 units ±0.25/0.125
+  {6.6pt plus 1.65pt minus 0pt}      % 0.5 units +0.125/-0 (reduced from 0.75)
+
+% Paragraphs: Bold italic for contrast without blockiness
+% OPTIMIZED: Exact body text size and leading for perfect integration
+% Using runin format to avoid list environment conflicts
+\titleformat{\paragraph}[runin]
+  {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{paragraphcolor}}  % 11pt bold italic, dark gray
+  {}
+  {0em}
+  {}
+  [~]  % Add space after heading
+\titlespacing*{\paragraph}
+  {0pt}
+  {13.2pt plus 3.3pt minus 1.65pt}  % 1 unit ±0.25/0.125
+  {0pt}  % No space after for runin format
+
+% ==============================================================================
+% ALTERNATIVE PARAGRAPH STYLES
+% ==============================================================================
+
+% Alternative: Bold small caps paragraph with extensive tracking
+% For users who prefer small caps but need strong contrast
+\newcommand{\paragraphsc}{
+  \titleformat{\paragraph}[runin]
+    {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\scshape\color{paragraphcolor}%
+     \SetTracking{encoding=*}{120}\lsstyle}  % 11pt bold small caps, +12% tracking
+    {}
+    {0em}
+    {}
+    [~]  % Add space after heading
+  \titlespacing*{\paragraph}
+    {0pt}
+    {13.2pt plus 3.3pt minus 1.65pt}  % 1 unit ±0.25/0.125
+    {0pt}  % No space after for runin format
+}
+
+% Alternative: Display-style paragraph for maximum distinction
+\newcommand{\displayparagraph}[1]{%
+  \vspace{18pt}% Consistent with paragraph spacing
+  {\normalfont\fontsize{11.5}{13.2}\color{paragraphgray}\scshape\bfseries #1}%
+  \vspace{6pt}% Half baseline unit
+  \par\noindent
+}
+
+% Safe paragraph command for Overleaf compatibility
+% Use this if standard \paragraph causes "missing \item" errors
+\newcommand{\safeparagraph}[1]{%
+  \par\vspace{13.2pt}% 1 grid unit before
+  {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{paragraphcolor}#1}%
+  \par\vspace{6.6pt}% 0.5 grid units after
+  \noindent
+}
+
+% ==============================================================================
+% SECTION BREAK COMMANDS
+% ==============================================================================
+
+% Professional treatments for major section breaks in academic articles
+\providecommand{\sectionopening}{}
+\renewcommand{\sectionopening}[1]{%
+  \par\vspace{2\gridunit}%
+  \begin{center}
+    {\fontsize{14pt}{19.8pt}\selectfont\itshape #1}%
+  \end{center}
+  \vspace{\gridunit}%
+  \noindent
+}
+
+% Simple section break - clean space only
+\providecommand{\sectionbreak}{}
+\renewcommand{\sectionbreak}{%
+  \par\vspace{2\gridunit}% 2 grid units of clean space
+  \noindent
+}
+
+% Alias for compatibility
+\providecommand{\spacebreak}{}
+\renewcommand{\spacebreak}{\sectionbreak}
+
+% ==============================================================================
+% WIDOW AND ORPHAN CONTROL FOR HEADINGS
+% ==============================================================================
+
+% Prevent isolated section headings
+\makeatletter
+\@secpenalty=-1000           % Encourage breaks before sections
+\makeatother
+\clubpenalty=10000           % Prevent orphans
+\widowpenalty=10000          % Prevent widows
+
+% Note: Environment hooks moved to individual modules to avoid conflicts
+% - List environment hooks are handled by lists.sty
+% - Paragraph environment hooks are handled by paragraphs.sty
+% This prevents "missing \item" errors when using \paragraph commands
+
+% ==============================================================================
+% LETTRINE SUPPORT
+% ==============================================================================
+
+% Drop cap configuration for section openings
+\makeatletter
+\@ifpackageloaded{lettrine}{%
+  \renewcommand{\LettrineFontHook}{\color{sectioncolor}}  % Match section color
+  \setcounter{DefaultLines}{3}         % Three-line drop caps
+  \renewcommand{\DefaultLoversize}{0}  % No descender adjustment
+  \renewcommand{\DefaultLraise}{0}     % No baseline adjustment
+  \setlength{\DefaultNindent}{0em}     % No additional indent
+  \setlength{\DefaultSlope}{0em}       % No slope for italics
+}{}
+\makeatother
+
+% First line treatment for section openings
+\newcommand{\firstline}[1]{%
+  {\scshape\MakeUppercase{#1}}%
+}
+
+% ==============================================================================
+% DEFAULT SECTION SPACING
+% ==============================================================================
+% Set moderate spacing as the default for professional documents
+\moderatesections

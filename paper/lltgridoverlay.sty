@@ -1,0 +1,158 @@
+% ==============================================================================
+% GRIDOVERLAY.STY - Visual Grid Overlay for Typography Testing
+% ==============================================================================
+%
+% Provides visual grid overlays for verifying baseline grid alignment
+% in professional typography. Designed for development and testing only.
+%
+% USAGE:
+%   \usepackage{lltgridoverlay}  % Load package
+%   \showgrid                       % Activate grid overlay
+%   \hidegrid                       % Deactivate grid overlay
+%   \showgrid[red]                  % Custom color grid
+%
+% FEATURES:
+%   - Multiple grid line styles for different intervals
+%   - Customizable colors and opacity
+%   - Page number display for tracking
+%   - Margin indicators
+%   - Baseline unit labels
+%
+% REFERENCES:
+%   - Müller-Brockmann, J. (1981). Grid Systems in Graphic Design
+%   - Professional typography testing standards
+%
+% ------------------------------------------------------------------------------
+
+\ProvidesPackage{lltgridoverlay}[2025/07/01 Visual Grid Overlay System]
+
+% Required packages
+\RequirePackage{tikz}
+\RequirePackage{eso-pic}
+\RequirePackage{xcolor}
+\RequirePackage{calc}
+
+% Grid measurements
+\newlength{\gridoverlayunit}
+\setlength{\gridoverlayunit}{13.2pt} % Base grid unit
+
+% Grid visibility toggle
+\newif\ifshowgrid
+\showgridfalse
+
+% Grid color settings
+\definecolor{gridbase}{gray}{0.85}      % Very light gray for base grid
+\definecolor{gridred}{rgb}{1,0.8,0.8}   % Light red for 2nd gridlines
+\definecolor{gridblue}{rgb}{0.8,0.8,1}  % Light blue for 3rd gridlines
+\definecolor{gridgreen}{rgb}{0.8,1,0.8} % Light green for 4th gridlines
+
+% Command to show grid overlay
+\newcommand{\showgrid}[1][gray]{%
+  \showgridtrue
+  \definecolor{gridcolor}{named}{#1}%
+  \AddToShipoutPictureBG{\gridoverlay}%
+}
+
+% Command to hide grid overlay
+\newcommand{\hidegrid}{%
+  \showgridfalse
+  \ClearShipoutPictureBG
+}
+
+% The actual grid overlay
+\newcommand{\gridoverlay}{%
+  \ifshowgrid
+  \AtPageLowerLeft{%
+    \tikz[overlay,remember picture]{
+      % Calculate page dimensions
+      \pgfmathsetmacro{\pageheight}{\paperheight/28.4527}  % Convert to cm
+      \pgfmathsetmacro{\pagewidth}{\paperwidth/28.4527}
+      
+      % Base grid lines (every 13.2pt)
+      \foreach \y in {0,13.2,...,850} {
+        \draw[gridbase!30,line width=0.05pt] (0,\y pt) -- (\paperwidth,\y pt);
+      }
+      
+      % 2nd gridlines (every 26.4pt) - for subheads
+      \foreach \y in {0,26.4,...,850} {
+        \draw[gridred!40,line width=0.1pt] (0,\y pt) -- (\paperwidth,\y pt);
+        % Label every 5th line
+        \pgfmathparse{int(\y/26.4)}
+        \ifnum\pgfmathresult>0
+          \pgfmathparse{int(mod(\pgfmathresult,5))}
+          \ifnum\pgfmathresult=0
+            \node[red!60,font=\tiny,anchor=west] at (2pt,\y pt) {2×\pgfmathparse{int(\y/26.4)}\pgfmathresult};
+          \fi
+        \fi
+      }
+      
+      % 3rd gridlines (every 39.6pt) - for sections
+      \foreach \y in {0,39.6,...,850} {
+        \draw[gridblue!50,line width=0.15pt] (0,\y pt) -- (\paperwidth,\y pt);
+      }
+      
+      % 4th gridlines (every 52.8pt) - alternative sections
+      \foreach \y in {0,52.8,...,850} {
+        \draw[gridgreen!30,line width=0.1pt,dashed] (0,\y pt) -- (\paperwidth,\y pt);
+      }
+      
+      % Margin indicators
+      \draw[black!20,line width=0.5pt] (1.25in,0) -- (1.25in,\paperheight);
+      \draw[black!20,line width=0.5pt] (\paperwidth-1.25in,0) -- (\paperwidth-1.25in,\paperheight);
+      
+      % Page info
+      \node[black!40,font=\tiny,anchor=north east] at (\paperwidth-5pt,\paperheight-5pt) 
+        {Grid: 13.2pt | Page \thepage};
+      
+      % Grid unit reference
+      \node[black!40,font=\tiny,anchor=south west,align=left] at (5pt,5pt) {
+        \begin{tabular}{@{}l@{}}
+        1 unit = 13.2pt\\
+        2 units = 26.4pt\\
+        3 units = 39.6pt\\
+        4 units = 52.8pt
+        \end{tabular}
+      };
+      
+      % Legend
+      \node[black!40,font=\tiny,anchor=south east,align=right] at (\paperwidth-5pt,5pt) {
+        \begin{tabular}{@{}r@{}}
+        \textcolor{gridbase!50}{Base grid}\\
+        \textcolor{gridred!60}{2nd (subheads)}\\
+        \textcolor{gridblue!70}{3rd (sections)}\\
+        \textcolor{gridgreen!50}{4th (alt sections)}
+        \end{tabular}
+      };
+    }
+  }
+  \fi
+}
+
+% Commands for debugging specific elements
+\newcommand{\markposition}[1]{%
+  % Mark current position with label
+  \ifshowgrid
+    \marginnote{\tiny\textcolor{red}{#1: \the\pagetotal}}%
+  \fi
+}
+
+\newcommand{\showbaseline}{%
+  % Show current baseline position
+  \ifshowgrid
+    \rlap{\textcolor{red!50}{\rule{\textwidth}{0.1pt}}}%
+  \fi
+}
+
+% Grid alignment check
+\newcommand{\checkgrid}{%
+  \ifshowgrid
+    \marginpar{%
+      \tiny\raggedright
+      Pos: \the\pagetotal\\
+      Units: \the\numexpr\pagetotal/\gridoverlayunit\relax\\
+      Rem: \the\dimexpr\pagetotal-(\numexpr\pagetotal/\gridoverlayunit\relax\gridoverlayunit)\relax
+    }%
+  \fi
+}
+
+\endinput

@@ -1,0 +1,270 @@
+% ==============================================================================
+% PARAGRAPHS.STY - Paragraph Typography Module
+% ==============================================================================
+% Comprehensive paragraph handling including indentation, quotations,
+% and special paragraph treatments following classical typography principles
+% ==============================================================================
+
+\ProvidesPackage{lltparagraphs}[2025/07/06 v1.0 Paragraph Typography]
+
+% Dependencies
+\RequirePackage{lettrine}  % For drop caps
+\RequirePackage{etoolbox}  % For environment hooks
+
+% Ensure dimensions are loaded for grid units
+\makeatletter
+\@ifpackageloaded{lltdimensions}{}{%
+  \RequirePackage{lltdimensions}%
+}
+\makeatother
+
+% Ensure colors are loaded
+\makeatletter
+\@ifpackageloaded{lltcolors}{}{%
+  \RequirePackage{lltcolors}%
+}
+\makeatother
+
+% ==============================================================================
+% CLASSICAL PARAGRAPH INDENTATION SYSTEM
+% ==============================================================================
+% Implements Bringhurst and Hochuli's principles for first paragraph handling
+% First paragraphs after headings, lists, and breaks remain flush left
+
+% Classical typography: first paragraphs after headings are flush left
+\makeatletter
+\let\@afterindentfalse\@afterindenttrue
+\@afterindentfalse  % Flush left first paragraphs after headings
+\makeatother
+
+% Custom commands for controlling indentation
+\newcommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left
+\newcommand{\forceindent}{\hspace{\parindent}}        % Force indentation
+
+% Centered paragraph
+\newcommand{\centeredpar}[1]{%
+  {\centering\noindent#1\par}%
+}
+
+% Dialogue support
+\newcommand{\dialogue}[1]{\par\indent #1\par}
+
+% ==============================================================================
+% EPIGRAPH ENVIRONMENT
+% ==============================================================================
+% For quotations at chapter/section beginnings
+
+\makeatletter
+\newenvironment{epigraph}{%
+  \vspace{\gridunit}%                       % 1 grid unit before
+  \begin{flushright}%
+  \begin{minipage}{0.618\textwidth}%        % Golden ratio width
+  \raggedleft\itshape%
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{0.5\gridunit}%      % 0.5 grid units between paragraphs
+}{%
+  \end{minipage}%
+  \end{flushright}%
+  \vspace{\gridunit}%                       % 1 grid unit after
+  \@afterindentfalse%                       % No indent after epigraph
+}
+\makeatother
+
+% ==============================================================================
+% PROFESSIONAL BLOCK QUOTATION SYSTEM
+% ==============================================================================
+% Implements sophisticated block quotation typography following:
+% - Butterick: Visual distinction without jarring contrast
+% - Hochuli: Subtle differentiation through spacing and margins
+% - Brown: Systematic relationships with modular scale
+
+% Define quote gray color
+\definecolor{quotegray}{gray}{0.15}  % 15% gray matches paragraph headings
+
+% STANDARD BLOCK QUOTE
+\makeatletter
+\renewenvironment{quote}{%
+  \vspace{\gridunit}%                       % 1 grid unit before
+  \begin{list}{}{%
+    \setlength{\leftmargin}{2\gridunit}%   % 2 grid units
+    \setlength{\rightmargin}{2\gridunit}%  % Symmetric margins
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0.5\gridunit}%     % 0.5 units between paragraphs
+    \setlength{\itemsep}{0pt}%
+    \setlength{\listparindent}{\parindent}%
+    \fontsize{10.5}{13.2}\selectfont%      % 95% size, same leading
+    \color{quotegray}%                     % 15% gray
+  }%
+  \item\relax
+}{%
+  \endlist
+  \vspace{\gridunit}%                      % 1 grid unit after
+  \@afterindentfalse%                      % No indent after quote
+}
+\makeatother
+
+% EXTENDED QUOTATION
+\makeatletter
+\renewenvironment{quotation}{%
+  \vspace{\gridunit}%
+  \begin{list}{}{%
+    \setlength{\leftmargin}{2\gridunit}%
+    \setlength{\rightmargin}{2\gridunit}%
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0.5\gridunit}%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\listparindent}{\gridunit}% % Maintain paragraph indent
+    \fontsize{10.5}{13.2}\selectfont%
+    \color{quotegray}%
+  }%
+  \item\relax
+}{%
+  \endlist
+  \vspace{\gridunit}%
+  \@afterindentfalse%
+}
+\makeatother
+
+% PROFESSIONAL ATTRIBUTION
+\newcommand{\quoteattribution}[1]{%
+  \par\vspace{0.5\gridunit}%               % 0.5 grid units
+  \hfill{\fontsize{10}{13.2}\selectfont\color{subsubcolor}--- #1}%
+  \par
+}
+
+% EMPHASIS QUOTE
+\makeatletter
+\newenvironment{emphasisquote}{%
+  \vspace{1.5\gridunit}%                   % 1.5 units before
+  \begin{list}{}{%
+    \setlength{\leftmargin}{3\gridunit}%  % 3 grid units
+    \setlength{\rightmargin}{3\gridunit}% % Dramatic inset
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0.5\gridunit}%
+    \setlength{\itemsep}{0pt}%
+    \fontsize{12}{15.84}\selectfont%       % Larger for emphasis
+    \itshape\color{quotegray}%             % Italic
+  }%
+  \item\relax
+}{%
+  \endlist
+  \vspace{1.5\gridunit}%                   % 1.5 units after
+  \@afterindentfalse%
+}
+\makeatother
+
+% ==============================================================================
+% ENVIRONMENT INDENTATION CONTROL
+% ==============================================================================
+
+% Note: List environment hooks (itemize, enumerate, description) are handled by lists.sty
+% to avoid conflicts that can cause "missing \item" errors with \paragraph commands
+\makeatletter
+\AtBeginEnvironment{quote}{\parindent=0pt}
+\AtBeginEnvironment{quotation}{\parindent=\parindent}  % Quotation keeps indent
+\AtBeginEnvironment{emphasisquote}{\parindent=0pt}
+\AtBeginEnvironment{verbatim}{\parindent=0pt}
+\AtBeginEnvironment{figure}{\parindent=0pt}
+\AtBeginEnvironment{table}{\parindent=0pt}
+\makeatother
+
+% First paragraph after environments is flush left
+\makeatletter
+% Note: List environment end hooks (itemize, enumerate, description) are handled by lists.sty
+\AtEndEnvironment{quote}{\@afterindentfalse}
+\AtEndEnvironment{emphasisquote}{\@afterindentfalse}
+\AtEndEnvironment{verbatim}{\@afterindentfalse}
+\AtEndEnvironment{figure}{\@afterindentfalse}
+\AtEndEnvironment{table}{\@afterindentfalse}
+\AtEndEnvironment{quotation}{\@afterindentfalse}
+\AtEndEnvironment{epigraph}{\@afterindentfalse}
+\makeatother
+
+% ==============================================================================
+% SECTION OPENING ENHANCEMENTS
+% ==============================================================================
+
+% Configure lettrine for drop caps
+\makeatletter
+\@ifpackageloaded{lettrine}{%
+  \renewcommand{\LettrineFontHook}{\color{sectioncolor}}
+  \setcounter{DefaultLines}{3}
+  \renewcommand{\DefaultLoversize}{0}
+  \renewcommand{\DefaultLraise}{0}
+  \setlength{\DefaultNindent}{0em}
+  \setlength{\DefaultSlope}{0em}
+}{}
+\makeatother
+
+% MINIMAL DROP CAP FOR ACADEMIC USE
+\newcommand{\academicdropcap}[2]{%
+  \lettrine[%
+    lines=2,%               % Modest 2-line height
+    lhang=0,%              % No hang into margin
+    loversize=0,%          % No size increase
+    findent=0pt,%          % No negative indent
+    nindent=0.5em%         % Standard following line indent
+  ]{\color{textblack}#1}{#2}%
+}
+
+% FIRST LINE SMALL CAPS
+\newcommand{\firstlinesc}[1]{%
+  {\fontsize{11}{13.2}\selectfont%
+   \SetTracking{encoding={T1,OT1}}{30}\lsstyle%
+   \textsc{#1}}%
+}
+
+% SECTION OPENING WITH SMALL CAPS
+\providecommand{\sectionopening}{}
+\renewcommand{\sectionopening}[1]{%
+  \noindent%
+  \firstlinesc{#1}%
+  \par\noindent%
+}
+
+% SECTION BREAK MARKERS
+\providecommand{\sectionbreak}{}
+\renewcommand{\sectionbreak}{%
+  \vspace{2\gridunit}% 2 grid units of clean space
+}
+
+\providecommand{\spacebreak}{}
+\renewcommand{\spacebreak}{\sectionbreak}
+
+% OPENING PARAGRAPH ENVIRONMENT
+\newenvironment{openingparagraph}{%
+  \noindent%
+  \setlength{\parindent}{0pt}%
+}{%
+  \par%
+}
+
+% ==============================================================================
+% SPECIAL PARAGRAPH COMMANDS
+% ==============================================================================
+
+% Typography-aware ornamental paragraph break
+\newcommand{\paragraphbreak}{%
+  \par\vspace{13.2pt}% 1 grid unit of vertical space
+  \noindent%
+}
+
+% Inline sidenote command for margin annotations
+\newcommand{\sidenote}[1]{%
+  \marginpar{%
+    \footnotesize\raggedright%
+    \setlength{\parindent}{0pt}%
+    \setlength{\parskip}{0.25\gridunit}%
+    #1%
+  }%
+}
+
+% Legacy support commands
+\newcommand{\compactpar}{\vspace{-\quartergridunit}}
+\newcommand{\loosepars}{\vspace{\quartergridunit}}
+\newcommand{\majorsectionspace}{\vspace{\gridunit}}
+
+\endinput

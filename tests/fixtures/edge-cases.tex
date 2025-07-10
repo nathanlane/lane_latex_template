@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+
+\begin{document}
+
+\title{Edge Cases Test Document}
+\author{Test Suite}
+\date{\today}
+\maketitle
+
+\section{Common Edge Cases}
+
+\subsection{Empty Lists}
+Lists with no items between them:
+\begin{itemize}
+\item Single item before empty list
+\end{itemize}
+
+Text between lists.
+
+\begin{itemize}
+\item Single item after text
+\end{itemize}
+
+\subsection{Deeply Nested Lists}
+\begin{itemize}
+\item Level 1
+  \begin{itemize}
+  \item Level 2
+    \begin{itemize}
+    \item Level 3 (maximum recommended)
+      \begin{itemize}
+      \item Level 4 (should still work)
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{Mixed List Types}
+\begin{enumerate}
+\item First numbered item
+  \begin{itemize}
+  \item Bullet inside numbered
+    \begin{enumerate}
+    \item Number inside bullet
+    \end{enumerate}
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Long Content}
+\begin{itemize}
+\item This is a very long item that should wrap properly across multiple lines without breaking the hanging indent or causing any formatting issues in the sophisticated list typography system that we have implemented following Butterick, Brown, and Hochuli's principles.
+\end{itemize}
+
+\section{Special Characters}
+
+Testing special characters: \& \% \$ \# \_ \{ \} \textasciitilde{} \textasciicircum{} \textbackslash{}
+
+Math symbols: $\alpha$, $\beta$, $\gamma$, $\infty$, $\pm$, $\approx$
+
+\section{Spacing Edge Cases}
+
+\paragraph{Paragraph After Heading}
+This paragraph immediately follows a heading.
+
+\paragraph{Another Paragraph}
+
+This one has a blank line after the heading.
+
+\section{Table Edge Cases}
+
+\begin{table}[h!] % Force placement here
+  \caption{Edge Case Table}
+  \centering
+  \begin{tabular}{@{}l@{}}
+    \toprule
+    Single Column \\
+    \midrule
+    Data \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Citation Edge Cases}
+
+Multiple citations \cite{butterick2019practical,brown2018flexible,hochuli1987detail}.
+
+Citation with missing reference \cite{nonexistent2023}.
+
+\section{Float Placement}
+
+Multiple floats in sequence can cause placement issues.
+
+\begin{figure}[tbp]
+  \centering
+  \fbox{\rule{0pt}{1cm}\rule{0.5\textwidth}{0pt}}
+  \caption{First figure}
+\end{figure}
+
+\begin{figure}[tbp]
+  \centering
+  \fbox{\rule{0pt}{1cm}\rule{0.5\textwidth}{0pt}}
+  \caption{Second figure}
+\end{figure}
+
+\begin{figure}[tbp]
+  \centering
+  \fbox{\rule{0pt}{1cm}\rule{0.5\textwidth}{0pt}}
+  \caption{Third figure}
+\end{figure}
+
+\FloatBarrier
+
+\section{Conclusion}
+
+If this document compiles, edge cases are handled correctly.
+
+\printbibliography
+
+\end{document}

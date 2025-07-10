@@ -1,0 +1,233 @@
+% ==============================================================================
+% FONT-FALLBACKS.STY - Robust Font Fallback System
+% ==============================================================================
+% Ensures documents compile even if fonts are missing or unavailable
+% Provides graceful degradation with appropriate warnings
+% ==============================================================================
+
+\ProvidesPackage{lltfontfallbacks}[2025/07/06 v1.0 Font Fallback System]
+
+% Track which fonts are successfully loaded
+\newif\ifpagellaloaded
+\pagellaloadedtrue  % Assume success unless proven otherwise
+
+\newif\ifinconsolataaloaded
+\inconsolataloadedtrue
+
+\newif\ifmathfontsloaded
+\mathfontsloadedtrue
+
+% ==============================================================================
+% FONT AVAILABILITY CHECKING
+% ==============================================================================
+
+% Check if a font family is available
+\makeatletter
+\newcommand{\checkfontfamily}[1]{%
+  \begingroup
+    \font\testfont="#1" at 10pt
+    \ifx\testfont\nullfont
+      \expandafter\@secondoftwo
+    \else
+      \expandafter\@firstoftwo
+    \fi
+  \endgroup
+}
+\makeatother
+
+% ==============================================================================
+% MAIN SERIF FONT FALLBACK CHAIN
+% ==============================================================================
+% Pagella → Palatino → Times → Computer Modern
+
+\makeatletter
+\@ifpackageloaded{tgpagella}{%
+  % Pagella loaded successfully
+  \typeout{Font system: TeX Gyre Pagella loaded successfully}%
+}{%
+  \pagellaloadedfalse
+  \typeout{Font system: TeX Gyre Pagella not available, trying fallbacks...}%
+  % Try Palatino
+  \IfFileExists{palatino.sty}{%
+    \RequirePackage{palatino}%
+    \typeout{Font system: Falling back to Palatino}%
+    \PackageWarning{font-fallbacks}{Using Palatino instead of TeX Gyre Pagella}%
+  }{%
+    % Try mathptmx (Times)
+    \IfFileExists{mathptmx.sty}{%
+      \RequirePackage{mathptmx}%
+      \typeout{Font system: Falling back to Times}%
+      \PackageWarning{font-fallbacks}{Using Times instead of TeX Gyre Pagella}%
+    }{%
+      % Fall back to Computer Modern
+      \typeout{Font system: Using default Computer Modern}%
+      \PackageWarning{font-fallbacks}{Using Computer Modern - no Palatino-like fonts available}%
+    }%
+  }%
+}
+\makeatother
+
+% ==============================================================================
+% MONOSPACE FONT FALLBACK CHAIN
+% ==============================================================================
+% Inconsolata → Courier → Computer Modern Typewriter
+
+\makeatletter
+\@ifpackageloaded{zi4}{%
+  % Inconsolata loaded successfully
+  \typeout{Font system: Inconsolata loaded successfully}%
+}{%
+  \inconsolataloadedfalse
+  \typeout{Font system: Inconsolata not available, trying fallbacks...}%
+  % Try courier
+  \IfFileExists{courier.sty}{%
+    \RequirePackage{courier}%
+    \typeout{Font system: Falling back to Courier}%
+    \PackageWarning{font-fallbacks}{Using Courier instead of Inconsolata}%
+  }{%
+    % Fall back to CM typewriter
+    \typeout{Font system: Using default Computer Modern Typewriter}%
+    \PackageWarning{font-fallbacks}{Using CM Typewriter - no Inconsolata available}%
+  }%
+}
+\makeatother
+
+% ==============================================================================
+% MATH FONT FALLBACK
+% ==============================================================================
+% newpxmath → mathpazo → default
+
+\makeatletter
+\@ifpackageloaded{newpxmath}{%
+  % newpxmath loaded successfully
+  \typeout{Font system: newpxmath loaded successfully}%
+}{%
+  \mathfontsloadedfalse
+  \typeout{Font system: newpxmath not available, trying fallbacks...}%
+  % Try mathpazo
+  \IfFileExists{mathpazo.sty}{%
+    \RequirePackage{mathpazo}%
+    \typeout{Font system: Falling back to mathpazo}%
+    \PackageWarning{font-fallbacks}{Using mathpazo instead of newpxmath}%
+  }{%
+    % Fall back to default math fonts
+    \typeout{Font system: Using default Computer Modern math}%
+    \PackageWarning{font-fallbacks}{Using CM math fonts - no Palatino math available}%
+  }%
+}
+\makeatother
+
+% ==============================================================================
+% SYMBOL FONT FALLBACKS
+% ==============================================================================
+
+% AMS symbols fallback
+\IfFileExists{amssymb.sty}{%
+  \RequirePackage{amssymb}%
+}{%
+  \PackageWarning{font-fallbacks}{AMS symbols not available}%
+  % Define minimal replacements
+  \providecommand{\mathbb}[1]{\mathbf{#1}}%
+  \providecommand{\mathfrak}[1]{\mathit{#1}}%
+}
+
+% ==============================================================================
+% SMALL CAPS FALLBACK
+% ==============================================================================
+% If true small caps aren't available, provide fake small caps
+
+\makeatletter
+\newcommand{\checksmallcaps}{%
+  \ifpagellaloaded
+    % Pagella has true small caps
+    \typeout{Font system: True small caps available}%
+  \else
+    % Provide fake small caps fallback
+    \typeout{Font system: Using fake small caps}%
+    \renewcommand{\textsc}[1]{%
+      {\fontsize{9pt}{11pt}\selectfont\MakeUppercase{#1}}%
+    }%
+  \fi
+}
+\makeatother
+
+% Check at begin document
+\AtBeginDocument{\checksmallcaps}
+
+% ==============================================================================
+% ENCODING FALLBACKS
+% ==============================================================================
+
+% Ensure T1 encoding is available
+\IfFileExists{t1enc.def}{%
+  % T1 encoding available
+}{%
+  \PackageWarning{font-fallbacks}{T1 encoding not available, using OT1}%
+  % Override fontenc if loaded
+  \renewcommand{\encodingdefault}{OT1}%
+}
+
+% ==============================================================================
+% FEATURE DEGRADATION
+% ==============================================================================
+% Disable features that require specific fonts
+
+\newcommand{\checkfontfeatures}{%
+  \ifpagellaloaded\else
+    % Disable oldstyle nums if not available
+    \providecommand{\oldstylenums}[1]{#1}%
+    \PackageInfo{font-fallbacks}{Oldstyle figures not available in fallback font}%
+  \fi
+  \ifinconsolataaloaded\else
+    % Adjust monospace scaling
+    \typeout{Font system: Adjusting monospace scaling for fallback font}%
+  \fi
+}
+
+\AtBeginDocument{\checkfontfeatures}
+
+% ==============================================================================
+% DIAGNOSTIC COMMANDS
+% ==============================================================================
+
+% Show current font configuration
+\newcommand{\showfontconfig}{%
+  \typeout{===== Current Font Configuration =====}%
+  \typeout{Main font: \ifpagellaloaded TeX Gyre Pagella\else Fallback\fi}%
+  \typeout{Mono font: \ifinconsolataaloaded Inconsolata\else Fallback\fi}%
+  \typeout{Math font: \ifmathfontsloaded newpxmath\else Fallback\fi}%
+  \typeout{=====================================}%
+}
+
+% Test font features
+\newcommand{\testfontfeatures}{%
+  \begin{description}
+    \item[Roman:] The quick brown fox jumps over the lazy dog
+    \item[Italic:] \textit{The quick brown fox jumps over the lazy dog}
+    \item[Bold:] \textbf{The quick brown fox jumps over the lazy dog}
+    \item[Small Caps:] \textsc{The quick brown fox jumps over the lazy dog}
+    \item[Monospace:] \texttt{The quick brown fox jumps over the lazy dog}
+    \item[Math:] $\sum_{i=1}^{n} x_i = \int_0^1 f(x)\,dx$
+  \end{description}
+}
+
+% ==============================================================================
+% COMPATIBILITY MODE
+% ==============================================================================
+% Simplified settings for maximum compatibility
+
+\newcommand{\enablecompatibilitymode}{%
+  \typeout{Font system: Enabling compatibility mode}%
+  % Use only Computer Modern
+  \renewcommand{\rmdefault}{cmr}%
+  \renewcommand{\sfdefault}{cmss}%
+  \renewcommand{\ttdefault}{cmtt}%
+  % Disable advanced features
+  \let\textsc\relax
+  \renewcommand{\textsc}[1]{\MakeUppercase{#1}}%
+  \let\oldstylenums\relax
+  \renewcommand{\oldstylenums}[1]{#1}%
+  \PackageInfo{font-fallbacks}{Compatibility mode enabled - using CM fonts only}%
+}
+
+\endinput

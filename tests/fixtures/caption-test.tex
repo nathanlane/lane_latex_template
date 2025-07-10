@@ -1,0 +1,108 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../../paper/paperstyle}
+\usepackage{lipsum}
+\usepackage{../../paper/gridoverlay}
+
+\begin{document}
+
+% Enable grid visualization
+\showgrid
+
+\section{Caption System Test Suite}
+
+This document demonstrates the refined caption system optimized for TeX Gyre Pagella with perfect baseline grid alignment.
+
+\subsection{Table Captions (Above Content)}
+
+Tables follow Chicago Manual of Style with captions placed above the content.
+
+\begin{table}[tbp]
+  \caption{Economic Growth Rates by Region, 1960–1990}
+  \label{tab:growth-rates}
+  \centering
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    Country & 1960–1970 & 1970–1980 & 1980–1990 & Average \\
+    \midrule
+    Japan & 10.5\% & 4.5\% & 4.0\% & 6.3\% \\
+    South Korea & 8.6\% & 7.0\% & 8.5\% & 8.0\% \\
+    Taiwan & 9.2\% & 9.5\% & 7.7\% & 8.8\% \\
+    Singapore & 8.8\% & 8.5\% & 6.5\% & 7.9\% \\
+    \bottomrule
+  \end{tabular}
+  \captionsource{World Bank Development Indicators (2023)}
+  \tablenote{Note: Growth rates are annual averages calculated using constant 2010 USD. All figures are seasonally adjusted.}
+\end{table}
+
+\subsection{Figure Captions (Below Content)}
+
+Figures follow Chicago style with captions below the content. Note the elegant small caps labels and en-dash separator.
+
+\begin{figure}[tbp]
+  \centering
+  \rule{0.8\textwidth}{0.4\textwidth}% Placeholder for figure
+  \caption{Export Composition by Technology Level for Selected Economies. This is a longer caption that demonstrates the hanging indent for multi-line captions, which improves readability and creates a professional appearance.}
+  \label{fig:export-comp}
+  \figurenote{The technology classification follows Lall (2000). High-tech exports include electronics, pharmaceuticals, and aerospace products.}
+\end{figure}
+
+\subsection{Multi-line Caption Test}
+
+\begin{table}[tbp]
+  \caption{This is a very long table caption that will span multiple lines to demonstrate the hanging indent feature. The caption system automatically handles long captions with proper justification and elegant formatting that maintains readability while preserving the visual hierarchy of the document.}
+  \centering
+  \begin{tabular}{@{}lcc@{}}
+    \toprule
+    Category & Value A & Value B \\
+    \midrule
+    Item 1 & 100 & 200 \\
+    Item 2 & 150 & 250 \\
+    Item 3 & 200 & 300 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Caption Width Demonstration}
+
+\lipsum[1]
+
+\begin{figure}[tbp]
+  \centering
+  \rule{0.5\textwidth}{0.3\textwidth}
+  \caption{Caption width is set to 85\% of text width following Bringhurst's principle that captions should be narrower than body text for improved readability}
+  \label{fig:width-demo}
+\end{figure}
+
+\subsection{Grid Alignment Verification}
+
+The spacing system ensures perfect grid alignment:
+\begin{itemize}
+\item Tables: 13.2pt (1 unit) before caption, 6.6pt (0.5 units) after
+\item Figures: 6.6pt (0.5 units) before caption, 13.2pt (1 unit) after
+\item Total space maintained at 19.8pt (1.5 grid units)
+\end{itemize}
+
+\begin{table}[tbp]
+  \caption{Grid Alignment Test}
+  \centering
+  \begin{tabular}{@{}lc@{}}
+    \toprule
+    Spacing Element & Grid Units \\
+    \midrule
+    Before table caption & 1.0 \\
+    After table caption & 0.5 \\
+    Before figure caption & 0.5 \\
+    After figure caption & 1.0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Color and Typography}
+
+\begin{figure}[tbp]
+  \centering
+  \rule{0.6\textwidth}{0.3\textwidth}
+  \caption{Labels use bold small caps in 25\% gray (subsubcolor) while caption text uses near-black for optimal readability}
+\end{figure}
+
+\end{document}

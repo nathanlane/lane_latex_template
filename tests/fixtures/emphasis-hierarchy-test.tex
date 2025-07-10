@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+
+% Test document for emphasis hierarchy
+% This test ensures that emphasis commands don't leak spacing globally
+
+\begin{document}
+
+\section{Emphasis Hierarchy Spacing Test}
+
+\subsection{Baseline Text}
+This paragraph establishes the baseline spacing. It should have normal line spacing
+according to the 13.2pt baseline grid. We include multiple lines to ensure that
+the spacing is consistent throughout. Lorem ipsum dolor sit amet, consectetur 
+adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna.
+
+\subsection{Level 1: Standard Emphasis Test}
+This paragraph contains \emph{standard emphasis} in the middle. The spacing after
+the emphasis should remain normal. We need to verify that \emph{multiple emphasized
+phrases} don't cause spacing issues. The rest of this paragraph should maintain
+proper line spacing. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+\subsection{Level 2: Strong Emphasis Test}
+\label{sec:strong-emphasis-critical}
+This paragraph contains \strongemph{strong emphasis} which previously caused global
+spacing issues. The text after \strongemph{this emphasized text} should maintain
+normal spacing. This is a critical test because \strongemph{the strongemph command}
+was leaking letterspacing globally. Lorem ipsum dolor sit amet, consectetur.
+
+\subsection{Level 3: Critical Emphasis Test}
+Here we test \boolemph{critical emphasis} to ensure proper spacing. The paragraph
+continues with normal text after \boolemph{this bold italic emphasis}. Multiple
+uses like \boolemph{finding one} and \boolemph{finding two} should not affect
+global spacing. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+\subsection{Level 4: Maximum Emphasis Test}
+Testing \maxemph{maximum emphasis} for spacing leaks. Text following \maxemph{this
+maximum emphasis} must maintain baseline grid alignment. Even with multiple uses
+like \maxemph{critical point one} and \maxemph{critical point two}, spacing should
+remain consistent throughout the document.
+
+\subsection{Mixed Emphasis Test}
+This paragraph combines \emph{regular emphasis}, \strongemph{strong emphasis},
+\boolemph{critical emphasis}, and \maxemph{maximum emphasis} in one place. After
+all these emphasis commands, this text should still have normal spacing. Lorem
+ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
+
+\subsection{Nested Emphasis Test}
+Testing nested emphasis: \emph{outer \emph{middle \emph{inner}}} text continues.
+The spacing after triple-nested emphasis should be normal. Also testing 
+\emph{first level with \strongemph{different emphasis} inside} to ensure no
+spacing leaks occur with mixed nesting.
+
+\subsection{Term Introduction Test}
+When introducing \termintro{technical terms} the spacing should remain stable.
+Multiple \termintro{specialized terminology} introductions should not affect the
+document's line spacing. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+\subsection{List After Emphasis Test}
+After using \strongemph{strong emphasis}, lists should maintain proper spacing:
+
+\begin{itemize}
+\item First item with normal spacing
+\item Second item should not be affected by previous emphasis
+\item Third item maintains baseline grid alignment
+\end{itemize}
+
+Regular paragraph after the list should also have normal spacing. This tests
+whether emphasis commands affect subsequent environments.
+
+\subsection{Mathematical Content After Emphasis}
+Using \strongemph{emphasis before math} should not affect equation spacing:
+
+\begin{equation}
+f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
+\end{equation}
+
+The paragraph after the equation should maintain normal spacing as well.
+
+\section{Page Count Control}
+
+This section adds more content to test page count. If emphasis commands are
+leaking spacing, the document will expand dramatically. This paragraph contains
+enough text to span multiple lines and test line spacing thoroughly. Lorem ipsum
+dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+ut labore et dolore magna aliqua.
+
+\subsection{Additional Content}
+More content to ensure we can detect page count anomalies. Normal documents of
+this length should be 2-3 pages, not 10+ pages. Lorem ipsum dolor sit amet,
+consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+laboris nisi ut aliquip ex ea commodo consequat.
+
+\section{Final Spacing Verification}
+
+The final section verifies that spacing remains consistent throughout the document.
+If any emphasis command has leaked its spacing settings, this paragraph will show
+abnormal line spacing. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+\end{document}

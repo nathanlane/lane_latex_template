@@ -1,0 +1,135 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{calc}
+
+% ==============================================================================
+% GRID-ALIGNED IMAGE SYSTEM
+% ==============================================================================
+%
+% Commands for ensuring images maintain the baseline grid through height
+% constraints and automatic adjustment.
+%
+% ------------------------------------------------------------------------------
+
+% Grid unit constant
+\newlength{\imageGridUnit}
+\setlength{\imageGridUnit}{13.2pt}
+
+% Round a dimension to nearest grid multiple
+\newcommand{\roundtogrid}[2]{%
+  % #1 = dimension to round
+  % #2 = result dimension register
+  \setlength{#2}{#1}%
+  \setlength{\dimen0}{\imageGridUnit}%
+  \divide#2 by \dimen0
+  \multiply#2 by \dimen0
+  % Check if we need to round up
+  \setlength{\dimen1}{#1}%
+  \advance\dimen1 by -#2
+  \ifdim\dimen1>0.5\imageGridUnit
+    \advance#2 by \imageGridUnit
+  \fi
+}
+
+% Include graphics with grid-aligned height
+\newcommand{\gridincludegraphics}[2][]{%
+  % #1 = optional parameters (width, etc.)
+  % #2 = filename
+  % First, include to measure
+  \sbox0{\includegraphics[#1]{#2}}%
+  % Round height to grid
+  \newlength{\gridheight}%
+  \roundtogrid{\ht0}{\gridheight}%
+  % Include with adjusted height
+  \includegraphics[#1,height=\gridheight]{#2}%
+}
+
+% Environment for grid-aligned figures
+\newenvironment{gridfigure}[1][tbp]{%
+  \begin{figure}[#1]%
+  \centering%
+}{%
+  \end{figure}%
+}
+
+% Command to add compensating space after image
+\newcommand{\imagegridspace}[1]{%
+  % #1 = actual image height
+  \newlength{\imageactualheight}%
+  \setlength{\imageactualheight}{#1}%
+  \newlength{\imagegridheight}%
+  \roundtogrid{\imageactualheight}{\imagegridheight}%
+  \vspace{\dimexpr\imagegridheight-\imageactualheight\relax}%
+}
+
+% Demonstration commands for testing
+\newcommand{\testimage}[2]{%
+  % #1 = width, #2 = height
+  \begin{tikzpicture}
+    \draw[fill=gray!20] (0,0) rectangle (#1,#2);
+    \node at (#1/2,#2/2) {Image};
+    \node[below] at (#1/2,0) {\tiny #1 × #2};
+  \end{tikzpicture}%
+}
+
+\begin{document}
+
+\section{Grid-Aligned Image System}
+
+This document demonstrates a system for constraining image heights to multiples of the baseline grid (13.2pt).
+
+\subsection{The Challenge}
+
+Images with arbitrary heights disrupt the baseline grid. Professional typography requires:
+\begin{itemize}
+\item Image heights rounded to nearest grid multiple
+\item Compensating space to maintain rhythm
+\item Captions that align to grid
+\end{itemize}
+
+\subsection{Standard Image (Not Grid-Aligned)}
+
+Here's an image with arbitrary height that disrupts the grid:
+
+\begin{figure}[h]
+  \centering
+  \testimage{6cm}{4.7cm}
+  \caption{Non-grid-aligned image (4.7cm ≈ 133.5pt)}
+\end{figure}
+
+Text after the image may not align to the grid properly. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+\subsection{Grid-Aligned Image}
+
+Here's the same image constrained to grid height:
+
+\begin{gridfigure}[h]
+  \testimage{6cm}{4.67cm} % Exactly 132pt = 10 grid units
+  \caption{Grid-aligned image (132pt = 10 × 13.2pt)}
+\end{gridfigure}
+
+Text after this image maintains grid alignment. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+\subsection{Image Height Reference}
+
+Common grid-aligned heights:
+\begin{itemize}
+\item 5 units: 66pt (2.33cm)
+\item 10 units: 132pt (4.67cm) 
+\item 15 units: 198pt (6.99cm)
+\item 20 units: 264pt (9.32cm)
+\end{itemize}
+
+\subsection{Implementation in paperstyle.sty}
+
+The system provides:
+\begin{enumerate}
+\item \texttt{\textbackslash gridincludegraphics} - Automatically rounds image height
+\item \texttt{\textbackslash imagegridspace} - Adds compensating space
+\item \texttt{gridfigure} environment - Ensures proper spacing
+\item Height calculation utilities
+\end{enumerate}
+
+\end{document}

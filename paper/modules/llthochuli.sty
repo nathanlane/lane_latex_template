@@ -1,0 +1,267 @@
+% ==============================================================================
+% HOCHULI-REFINEMENTS.STY - Advanced Optical Typography Refinements
+% ==============================================================================
+% Implements the final details from Jost Hochuli's "Detail in Typography"
+% These subtle refinements add the last 5-10% of typographic perfection
+% ==============================================================================
+
+\ProvidesPackage{llthochuli}[2025/07/06 v1.0 Hochuli Optical Refinements]
+
+% Dependencies
+\RequirePackage{ragged2e}  % Better ragged right
+\RequirePackage{microtype} % Should already be loaded
+
+% Ensure dimensions are loaded
+\makeatletter
+\@ifpackageloaded{lltdimensions}{}{%
+  \RequirePackage{lltdimensions}%
+}
+\makeatother
+
+% ==============================================================================
+% LIGATURE CONTROL
+% ==============================================================================
+% Selective ligature suppression for improved readability
+% Note: selnolig requires LuaLaTeX, so we provide pdfLaTeX alternatives
+
+% Manual ligature breaking for problem words
+\makeatletter
+\newcommand{\nolig}[1]{%
+  \def\@nolig##1##2{%
+    \ifx##1f%
+      \ifx##2f{f}\kern0.05em{f}%
+      \else\ifx##2i{f}\kern0.05em{i}%
+      \else\ifx##2l{f}\kern0.05em{l}%
+      \else##1##2%
+      \fi\fi\fi%
+    \else##1##2%
+    \fi%
+  }%
+  \@nolig#1\relax%
+}
+\makeatother
+
+% Common problem words
+\newcommand{\offering}{of\kern0.05em fering}
+\newcommand{\offline}{of\kern0.05em fline}
+\newcommand{\shelfful}{shelf\kern0.05em ful}
+
+% ==============================================================================
+% LAST LINE CONTROL
+% ==============================================================================
+% Prevents very short last lines (orphaned words)
+
+% Optimal last line length (Hochuli recommends at least 1/3 of line width)
+\parfillskip=0pt plus 0.7\textwidth
+
+% Alternative settings for different contexts
+\newcommand{\tightlastline}{%
+  \parfillskip=0pt plus 0.5\textwidth% At least half line
+}
+
+\newcommand{\normallastline}{%
+  \parfillskip=0pt plus 1fil% Standard LaTeX
+}
+
+\newcommand{\balancedlastline}{%
+  \parfillskip=0pt plus 0.7\textwidth% Hochuli recommendation
+}
+
+% ==============================================================================
+% HANGING PUNCTUATION FOR OPENING QUOTES
+% ==============================================================================
+% Optical alignment of quotation marks at paragraph start
+
+\newcommand{\quoteparagraph}[1]{%
+  \noindent\llap{``}\ignorespaces#1%
+}
+
+% Single quote variant
+\newcommand{\squoteparagraph}[1]{%
+  \noindent\llap{`}\ignorespaces#1%
+}
+
+% For nested quotes
+\newcommand{\nestedquoteparagraph}[1]{%
+  \noindent\llap{`}\llap{``}\ignorespaces#1%
+}
+
+% ==============================================================================
+% ENHANCED RAGGED RIGHT
+% ==============================================================================
+% Better unjustified text following Hochuli's principles
+
+% Configure ragged2e for optimal results
+\setlength{\RaggedRightParindent}{\parindent}
+\setlength{\RaggedRightRightskip}{0pt plus 0.1\textwidth}
+\setlength{\RaggedRightParfillskip}{0pt plus 0.4\textwidth}
+
+% Commands for different ragged styles
+\newcommand{\tightragged}{%
+  \RaggedRight%
+  \setlength{\RaggedRightRightskip}{0pt plus 0.05\textwidth}%
+}
+
+\newcommand{\normalragged}{%
+  \RaggedRight%
+  \setlength{\RaggedRightRightskip}{0pt plus 0.1\textwidth}%
+}
+
+\newcommand{\looseragged}{%
+  \RaggedRight%
+  \setlength{\RaggedRightRightskip}{0pt plus 0.15\textwidth}%
+}
+
+% ==============================================================================
+% ADVANCED KERNING PAIRS
+% ==============================================================================
+% Fine-tuning problematic character combinations
+
+\SetExtraKerning{
+  encoding = {T1,OT1},
+  family = qpl
+}{
+  % Quote to accented characters
+  "` = {-50,}, "' = {,50},
+  % f + punctuation
+  f' = {-30,}, f) = {-20,}, f] = {-20,}, f\} = {-20,},
+  % Parentheses and quotes
+  (" = {50,}, ") = {,50},
+  % W/V + lowercase
+  Wa = {-30,}, We = {-20,}, Wo = {-30,},
+  Va = {-40,}, Ve = {-30,}, Vo = {-40,},
+  % Quote before capitals
+  "T = {50,}, "V = {30,}, "W = {20,}, "Y = {40,},
+  % Apostrophe after letters
+  s' = {-50,}, t' = {-30,}, 
+  % Period/comma + quote
+  ." = {100,}, ," = {80,},
+  % Colon/semicolon + space (tighter)
+  : = {-30,-30}, ; = {-20,-20}
+}
+
+% ==============================================================================
+% PARAGRAPH SHAPE OPTIMIZATION
+% ==============================================================================
+% Special paragraph shapes for optical effects
+
+% Gradually increasing indent (fountain shape)
+\newcommand{\fountainpar}[1]{%
+  \parshape=5
+  0pt \textwidth
+  0.5\gridunit 0.95\textwidth
+  1\gridunit 0.9\textwidth
+  1.5\gridunit 0.85\textwidth
+  2\gridunit 0.8\textwidth
+  #1\par
+}
+
+% Gradually decreasing indent (inverted fountain)
+\newcommand{\invertfountainpar}[1]{%
+  \parshape=5
+  2\gridunit 0.8\textwidth
+  1.5\gridunit 0.85\textwidth
+  1\gridunit 0.9\textwidth
+  0.5\gridunit 0.95\textwidth
+  0pt \textwidth
+  #1\par
+}
+
+% Diamond-shaped paragraph
+\newcommand{\diamondpar}[1]{%
+  \parshape=7
+  2\gridunit 0.8\textwidth
+  1\gridunit 0.9\textwidth
+  0pt \textwidth
+  0pt \textwidth
+  1\gridunit 0.9\textwidth
+  2\gridunit 0.8\textwidth
+  0pt \textwidth
+  #1\par
+}
+
+% ==============================================================================
+% OPTICAL SIZE ADJUSTMENTS
+% ==============================================================================
+% Context-aware size adjustments for different text roles
+
+% Footnote optimization
+\renewcommand{\footnotesize}{%
+  \@setfontsize\footnotesize{8.5}{11}%
+  \abovedisplayskip 6\p@ \@plus2\p@ \@minus4\p@
+  \belowdisplayskip \abovedisplayskip
+  \abovedisplayshortskip \z@ \@plus\p@
+  \belowdisplayshortskip 3\p@ \@plus\p@ \@minus2\p@
+  \def\@listi{%
+    \leftmargin\leftmargini
+    \topsep 3\p@ \@plus\p@ \@minus\p@
+    \parsep 2\p@ \@plus\p@ \@minus\p@
+    \itemsep \parsep
+  }%
+}
+
+% Caption optimization
+\providecommand{\captionsize}{}
+\renewcommand{\captionsize}{%
+  \@setfontsize\captionsize{9.5}{12}%
+}
+
+% ==============================================================================
+% SPECIAL FIRST LINE TREATMENT
+% ==============================================================================
+% Optical adjustments for paragraph openings
+
+% First line with extra letter spacing
+\newcommand{\spacedfirsline}[1]{%
+  \begingroup
+  \lsstyle
+  \SetTracking{encoding={T1,OT1}}{20}%
+  #1\par
+  \endgroup
+}
+
+% First word in small caps
+\newcommand{\scfirstword}[2]{%
+  \textsc{#1} #2%
+}
+
+% ==============================================================================
+% ADVANCED HYPHENATION PATTERNS
+% ==============================================================================
+% Additional hyphenation points for better line breaks
+
+\hyphenation{
+  % Academic terms with better breaks
+  meth-od-ol-o-gy meth-od-o-log-i-cal
+  the-o-ret-i-cal em-pir-i-cal
+  eco-nom-ic eco-nom-ics
+  sta-tis-ti-cal sta-tis-tics
+  % Compound words
+  re-search-er re-search-ers
+  frame-work frame-works
+  % Technical terms
+  al-go-rithm al-go-rith-mic
+  pa-ram-e-ter pa-ram-e-ters
+}
+
+% ==============================================================================
+% MARGIN CHARACTER ADJUSTMENTS
+% ==============================================================================
+% Fine control over margin alignment
+
+% Tighter margins for narrow columns
+\newcommand{\tightmargins}{%
+  \microtypesetup{protrusion=true,factor=500}%
+}
+
+% Looser margins for wide columns
+\newcommand{\loosemargins}{%
+  \microtypesetup{protrusion=true,factor=1500}%
+}
+
+% Normal margins
+\newcommand{\normalmargins}{%
+  \microtypesetup{protrusion=true,factor=1000}%
+}
+
+\endinput

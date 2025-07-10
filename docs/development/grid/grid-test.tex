@@ -1,0 +1,69 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+
+% Grid visualization helper
+\usepackage{tikz}
+\newcommand{\showgrid}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \foreach \y in {0,13.2,...,792} {
+      \draw[gray!20,line width=0.1pt] (current page.west |- 0,-\y pt) -- (current page.east |- 0,-\y pt);
+    }
+    % Stronger lines every 5 baselines
+    \foreach \y in {0,66,...,792} {
+      \draw[gray!40,line width=0.2pt] (current page.west |- 0,-\y pt) -- (current page.east |- 0,-\y pt);
+    }
+  \end{tikzpicture}%
+}
+
+\begin{document}
+\showgrid
+
+\section{Testing Baseline Grid Alignment}
+
+This paragraph demonstrates body text sitting on the baseline grid. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. Notice how each line of text aligns perfectly with the gray grid lines.
+
+Here is another paragraph with accented characters: café, naïve, résumé, Düsseldorf. The baseline should remain consistent even with diacritical marks. Mathematical expressions like $x^2 + y^2 = z^2$ should also maintain grid alignment.
+
+\subsection{Subsection Alignment Test}
+
+After the subsection heading, text should continue to align with the grid. The spacing before this subsection was exactly 2 baseline units (26.4pt) and after it is 1 baseline unit (13.2pt).
+
+\begin{itemize}
+\item First item in a list maintains grid alignment
+\item Second item continues on the grid
+\item Third item with longer text that wraps to multiple lines should show each line sitting perfectly on the baseline grid without any drift
+\end{itemize}
+
+\subsubsection{Subsubsection Test}
+
+The subsubsection spacing uses 1.5 units before (19.8pt) and 0.75 units after (9.9pt). Even with fractional units, proper grid alignment is maintained.
+
+\paragraph{Paragraph Heading} Following the paragraph heading, we have exactly 1 baseline unit before and 0.5 units after. This creates a clear hierarchy while maintaining the grid.
+
+\section{Mathematical Content}
+
+Display mathematics should respect the grid:
+\[
+\int_{-\infty}^{\infty} f(x) e^{-x^2} \, dx = \sqrt{\pi}
+\]
+The equation sits within 1 baseline unit spacing above and below.
+
+\subsection{Lists and Grid}
+
+\begin{enumerate}
+\item Numbered lists also maintain grid alignment
+\item Each item sits on the baseline
+\item Even with oldstyle figures: 1234567890
+\end{enumerate}
+
+\begin{description}
+\item[Grid System] The fundamental organizing principle where all vertical spacing is based on multiples of the baseline unit
+\item[Baseline Unit] For this document: 13.2pt (11pt × 1.20 leading)
+\item[Alignment] Every line of body text must sit exactly on a grid line
+\end{description}
+
+\section{Conclusion}
+
+This test document verifies that all elements—headings, body text, lists, mathematics, and spacing—align perfectly to the 13.2pt baseline grid. The gray lines make any misalignment immediately visible.
+
+\end{document}

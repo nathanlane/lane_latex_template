@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+
+\begin{document}
+
+\section{Current Quote and List Typography Comparison}
+
+\subsection{Lists: Sophisticated Multi-Level System}
+
+The project includes multiple list variants with refined typography:
+
+\subsubsection{Standard Itemize (Gray Bullets)}
+\begin{itemize}
+\item First item with professional gray bullet (20\% gray for optimal visibility)
+\item Second item showing consistent 3.3pt inter-item spacing (0.25 grid units)
+\item Third item demonstrating 1.8em hanging indent optimized for Pagella
+\end{itemize}
+
+\subsubsection{Compact List (compactitem)}
+\begin{compactitem}
+\item Dense information presentation
+\item Zero inter-item spacing
+\item Minimal top/bottom spacing
+\item Perfect for bibliographies or lists
+\end{compactitem}
+
+\subsubsection{Display List (displayitem)}
+\begin{displayitem}
+\item \textbf{Key Finding:} Bold text with full black bullets
+\item \textbf{Innovation:} Generous 6.6pt spacing between items
+\item \textbf{Impact:} Full baseline unit above/below list
+\end{displayitem}
+
+\subsubsection{Academic List (academicitem)}
+\begin{academicitem}
+\item En-dash markers following university style guides
+\item Professional appearance for formal documents
+\item Consistent spacing with standard lists
+\end{academicitem}
+
+\subsubsection{Inline Lists (inlineitem)}
+Brief enumeration: \begin{inlineitem}
+\item first point \item second point \item third point
+\end{inlineitem}.
+
+\subsection{Quotations: Basic LaTeX Defaults}
+
+\subsubsection{Standard Quote Environment}
+
+Here's a paragraph before the quote to establish context and baseline.
+
+\begin{quote}
+This is the default LaTeX quote environment. Notice how it simply indents left and right margins without any typographic refinement. The text size remains 11pt, the leading remains 13.2pt, and there's no special spacing control or grid alignment. For extended quotations, this creates a heavy visual block that doesn't differentiate well from body text.
+\end{quote}
+
+Here's the paragraph after the quote, which is flush left per our settings.
+
+\subsubsection{Quotation Environment}
+
+The quotation environment differs only in paragraph indentation:
+
+\begin{quotation}
+The quotation environment maintains paragraph indentation for each paragraph within the quote. This is its only distinction from the quote environment.
+
+Here's a second paragraph showing the indentation. Otherwise, all typography remains identical to body text: same size, same leading, same color, same weight.
+\end{quotation}
+
+\subsubsection{Display Quote (csquotes)}
+
+Using the csquotes package displayquote:
+
+\begin{displayquote}
+The displayquote environment from csquotes provides the same basic formatting as quote, but with better integration for citations and punctuation. Still, no typographic refinement is applied.
+\end{displayquote}
+
+\subsection{The Contrast}
+
+Notice the sophistication gap:
+\begin{itemize}
+\item \textbf{Lists:} 5+ custom environments, grid-aligned spacing, visual hierarchy
+\item \textbf{Quotes:} Default LaTeX behavior, no customization, no grid alignment
+\end{itemize}
+
+\section{Proposed Quote Enhancement}
+
+Here's what quotes could look like with proper typography:
+
+\paragraph{Mock Enhanced Block Quote} 
+\begingroup
+\par\vspace{6.6pt}% Half grid unit
+\leftskip=2em \rightskip=2em
+\small% 10pt text
+\linespread{1.09}\selectfont% Tighter leading
+\color{subtlegray}% Subtle color
+\noindent
+This represents an enhanced block quote with 10pt text (down from 11pt), tighter 12pt leading for better density, subtle gray coloring to reduce visual weight, and explicit grid-aligned spacing. The refinement matches our sophisticated list system while maintaining readability for extended passages. Notice how the smaller size and tighter leading create a more elegant, less intrusive quotation block.
+\par\vspace{6.6pt}% Half grid unit
+\endgroup
+
+\paragraph{Mock Quote with Attribution}
+\begingroup
+\par\vspace{6.6pt}%
+\leftskip=2em \rightskip=2em
+\small \linespread{1.09}\selectfont \color{subtlegray}
+\noindent
+Beautiful typography should be invisible, allowing the reader to focus on the content rather than the presentation. Yet this invisibility requires careful attention to countless details.
+\par\vspace{3.3pt}%
+\hfill---\,\textit{Robert Bringhurst}
+\par\vspace{6.6pt}%
+\endgroup
+
+\section{Grid Alignment Comparison}
+
+The current quote system doesn't explicitly manage grid alignment:
+
+\begin{itemize}
+\item No defined spacing before/after quotes
+\item Relies on paragraph spacing (may not align)
+\item No compensation for different content heights
+\end{itemize}
+
+The list system explicitly maintains grid:
+
+\begin{itemize}
+\item All spacing in grid units (13.2pt, 6.6pt, 3.3pt)
+\item Explicit before/after adjustments
+\item Careful vspace compensation
+\end{itemize}
+
+\end{document}

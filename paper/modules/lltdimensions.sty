@@ -1,0 +1,73 @@
+% ==============================================================================
+% DIMENSIONS.STY - Page Layout and Spacing Module
+% ==============================================================================
+% Extracted from paperstyle.sty for modular customization
+% Maintains full compatibility with existing documents
+% ==============================================================================
+
+\ProvidesPackage{lltdimensions}[2025/07/02 v1.0 Page Layout and Spacing]
+
+\RequirePackage{geometry}
+
+% PAGE GEOMETRY
+% Professional academic layout with optimal reading conditions
+\geometry{
+  letterpaper,
+  margin=1.25in,               % Generous margins for focus
+  marginparwidth=1in
+}
+
+% BASELINE GRID FOUNDATION
+% All vertical measurements derive from this fundamental unit
+\newlength{\gridunit}
+\setlength{\gridunit}{13.2pt}  % 11pt × 1.20 leading
+
+% CORE SPACING VALUES
+\linespread{1.20}              % 11pt × 1.20 = 13.2pt baseline grid increment
+\setlength{\parskip}{0pt}      % Zero paragraph spacing for grid alignment
+\setlength{\parindent}{\gridunit} % Exactly 1 grid unit (~1.2em for 11pt Pagella)
+
+% DERIVED SPACING UNITS
+% These can be used throughout the document for consistent spacing
+\newlength{\halfgridunit}
+\setlength{\halfgridunit}{6.6pt}    % 0.5 × gridunit
+
+\newlength{\quartergridunit}
+\setlength{\quartergridunit}{3.3pt} % 0.25 × gridunit
+
+\newlength{\threequartergridunit}
+\setlength{\threequartergridunit}{9.9pt} % 0.75 × gridunit
+
+\newlength{\onehalfgridunit}
+\setlength{\onehalfgridunit}{19.8pt} % 1.5 × gridunit
+
+\newlength{\doublegridunit}
+\setlength{\doublegridunit}{26.4pt} % 2 × gridunit
+
+\newlength{\triplegridunit}
+\setlength{\triplegridunit}{39.6pt} % 3 × gridunit
+
+% GRID CALCULATION HELPERS
+% For arbitrary multiples and calculations
+\newcommand{\gridmult}[1]{\dimexpr#1\gridunit\relax}
+\newcommand{\gridmath}[1]{\the\dimexpr#1\gridunit\relax}
+
+% Note: Spacing commands \halfbaselinespace and \fullbaselinespace 
+% are defined in the main paperstyle.sty to avoid conflicts
+
+% PARAGRAPH STYLE COMMANDS
+% Different paragraph indentation styles
+\newcommand{\classicalparagraphs}{%
+  \setlength{\parindent}{\gridunit}%    % 1 grid unit
+  \setlength{\parskip}{0pt}%
+}
+
+\newcommand{\modernparagraphs}{%
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{\halfgridunit plus 1pt minus 1pt}%  % 0.5 grid units flexible
+}
+
+\newcommand{\hybridparagraphs}{%
+  \setlength{\parindent}{\threequartergridunit}%     % 0.75 grid units
+  \setlength{\parskip}{\quartergridunit}%       % 0.25 grid units
+}

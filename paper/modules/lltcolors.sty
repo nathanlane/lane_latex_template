@@ -1,0 +1,44 @@
+% ==============================================================================
+% COLORS.STY - Professional Color System Module
+% ==============================================================================
+% Extracted from paperstyle.sty for modular customization
+% Maintains full compatibility with existing documents
+% ==============================================================================
+
+\ProvidesPackage{lltcolors}[2025/07/02 v1.0 Professional Color System]
+
+\RequirePackage{xcolor}
+
+% PRIMARY HIERARCHY COLORS
+% Systematic grayscale progression for document structure
+
+% Bold Color System: Softened palette for bold typography
+\definecolor{textblack}{gray}{0.05}       % Near-black for optimal reading (slightly warmer than pure black)
+\definecolor{sectioncolor}{RGB}{25,50,80}  % Softened navy - reduces bold impact while maintaining distinction
+\definecolor{subsectioncolor}{RGB}{40,40,55}  % Muted midnight blue - secondary level
+\definecolor{subsubcolor}{gray}{0.25}      % Medium charcoal - softer than near-black for bold
+\definecolor{paragraphcolor}{gray}{0.15}   % Dark gray - prevents harsh black bold at small sizes
+\definecolor{subtlegray}{gray}{0.45}      % Captions, footnote rules (refined from generic gray)
+\definecolor{bulletgray}{gray}{0.25}      % Refined gray for bullets (75% black)
+\definecolor{dashgray}{gray}{0.30}       % Slightly lighter for en-dashes (70% black)
+\definecolor{circlegray}{gray}{0.35}     % Lightest for nested circles (65% black)
+
+% Professional link colors optimized for Pagella
+\definecolor{linknavy}{RGB}{0,68,136}     % Deeper, more dignified blue for Pagella
+\definecolor{linkdark}{RGB}{0,51,102}      % Darker variant for visited links
+\definecolor{internalgray}{RGB}{80,80,80}    % Medium gray for internal references (improved contrast)
+
+% Code typography color harmony
+\definecolor{codecolor}{RGB}{25,25,25}    % Balanced monospace color (was rgb 0.1,0.1,0.1)
+\definecolor{commentgray}{gray}{0.35}     % For code comments if needed
+
+% Academic emphasis colors (restrained palette following Butterick's principles)
+\definecolor{emphasisblue}{RGB}{0,34,68}  % Deeper blue matching Pagella's gravitas
+\definecolor{warningred}{RGB}{140,30,30}  % Conservative red for important notes (minimal use)
+
+% SEMANTIC COLOR COMMANDS
+% Use these in documents for consistency
+\newcommand{\maincolor}{\color{textblack}}
+\newcommand{\secondarycolor}{\color{subtlegray}}
+\newcommand{\accentcolor}{\color{linknavy}}
+\newcommand{\codeaccent}{\color{codecolor}}

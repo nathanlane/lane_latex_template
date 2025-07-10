@@ -1,0 +1,174 @@
+% ==============================================================================
+% GRID-ALIGNED HEADING SYSTEM
+% ==============================================================================
+%
+% Implements sophisticated heading alignment to ensure headings land on
+% specific gridlines according to professional typography standards.
+%
+% ALIGNMENT RULES:
+%   - Body text: aligns to every gridline (13.2pt)
+%   - Subheads: land on 2nd gridlines (26.4pt intervals)
+%   - Headlines: hit 3rd or 4th gridlines (39.6pt or 52.8pt intervals)
+%
+% TECHNICAL APPROACH:
+%   - Tracks cumulative vertical position using markers
+%   - Calculates required adjustment to reach target gridline
+%   - Adds compensating space before headings
+%   - Ensures consistent "snap-to-grid" behavior
+%
+% REFERENCES:
+%   - Müller-Brockmann, J. (1981). Grid Systems in Graphic Design
+%   - Hochuli, J. (1987). Detail in Typography
+%   - Professional typography standards for academic documents
+%
+% ------------------------------------------------------------------------------
+
+\ProvidesPackage{grid-heading-alignment}[2025/07/01 Grid-Aligned Heading System]
+
+% Required packages
+\RequirePackage{calc}
+\RequirePackage{zref-savepos}
+\RequirePackage{etoolbox}
+
+% Grid measurements
+\newlength{\gridunit}
+\setlength{\gridunit}{13.2pt} % Base grid unit
+
+% Target gridlines for different heading levels
+\def\sectiongridline{3}     % Sections land on 3rd gridline (39.6pt)
+\def\subsectiongridline{2}  % Subsections land on 2nd gridline (26.4pt)
+\def\subsubsectiongridline{2} % Subsubsections also on 2nd gridline
+\def\paragraphgridline{1}   % Paragraphs on next gridline
+
+% Counter for unique position labels
+\newcounter{gridposcount}
+
+% Calculate adjustment needed to reach target gridline
+\newcommand{\calcgridadjust}[2]{%
+  % #1 = current position (sp units)
+  % #2 = target gridline multiplier
+  \dimexpr#2\gridunit - \numexpr(#1 - \numexpr(#1/#2/\gridunit)*#2*\gridunit\relax)\relax
+}
+
+% Command to ensure heading lands on specific gridline
+\newcommand{\snaptoheadinggrid}[1]{%
+  % #1 = gridline multiplier (1, 2, 3, 4...)
+  \stepcounter{gridposcount}%
+  \zsavepos{gridpos\thegridposcount}%
+  \ifdim\zposy{gridpos\thegridposcount}sp>0sp
+    % Calculate position relative to page bottom
+    \dimen0=\paperheight
+    \advance\dimen0 by -\zposy{gridpos\thegridposcount}sp
+    % Calculate adjustment needed
+    \dimen1=\dimen0
+    \divide\dimen1 by \gridunit
+    \multiply\dimen1 by \gridunit
+    \advance\dimen0 by -\dimen1
+    % Add compensating space
+    \ifdim\dimen0>0pt
+      \vspace{\dimexpr#1\gridunit-\dimen0\relax}%
+    \fi
+  \fi
+}
+
+% Enhanced section commands with grid alignment
+\let\originalsection\section
+\renewcommand{\section}{%
+  \snaptoheadinggrid{\sectiongridline}%
+  \originalsection%
+}
+
+\let\originalsubsection\subsection
+\renewcommand{\subsection}{%
+  \snaptoheadinggrid{\subsectiongridline}%
+  \originalsubsection%
+}
+
+\let\originalsubsubsection\subsubsection
+\renewcommand{\subsubsection}{%
+  \snaptoheadinggrid{\subsubsectiongridline}%
+  \originalsubsubsection%
+}
+
+\let\originalparagraph\paragraph
+\renewcommand{\paragraph}{%
+  \snaptoheadinggrid{\paragraphgridline}%
+  \originalparagraph%
+}
+
+% Visual grid commands for testing
+\newcommand{\showgridlines}[1][]{%
+  % Optional argument for page range
+  \AddToShipoutPictureBG{%
+    \AtPageLowerLeft{%
+      \tikz[overlay,remember picture]{
+        % Base grid lines (13.2pt)
+        \foreach \y in {0,13.2,...,800} {
+          \draw[gray!15,line width=0.1pt] (0,\y pt) -- (\paperwidth,\y pt);
+        }
+        % 2nd gridlines (26.4pt) - for subheads
+        \foreach \y in {0,26.4,...,800} {
+          \draw[red!20,line width=0.2pt] (0,\y pt) -- (\paperwidth,\y pt);
+        }
+        % 3rd gridlines (39.6pt) - for sections
+        \foreach \y in {0,39.6,...,800} {
+          \draw[blue!25,line width=0.3pt] (0,\y pt) -- (\paperwidth,\y pt);
+        }
+        % 4th gridlines (52.8pt) - alternative for sections
+        \foreach \y in {0,52.8,...,800} {
+          \draw[green!20,line width=0.2pt] (0,\y pt) -- (\paperwidth,\y pt);
+        }
+      }
+    }
+  }
+}
+
+% Command to mark heading positions for debugging
+\newcommand{\markheadingposition}[1]{%
+  % #1 = heading type (section, subsection, etc.)
+  \marginnote{\tiny\textcolor{red}{#1}}%
+}
+
+% Optical adjustment for large type
+\newcommand{\opticalcompensation}[1]{%
+  % #1 = font size in pt
+  \ifdim#1pt>16pt
+    \vspace{-1pt}% Slight negative space for optical alignment
+  \fi
+}
+
+% Grid-aware spacing commands
+\newcommand{\gridspace}[1]{%
+  % #1 = number of grid units
+  \vspace{#1\gridunit}%
+}
+
+\newcommand{\halfgridspace}{%
+  \vspace{0.5\gridunit}%
+}
+
+\newcommand{\quartergridspace}{%
+  \vspace{0.25\gridunit}%
+}
+
+% Environment for grid-aligned content
+\newenvironment{gridaligned}{%
+  \par
+  \baselineskip=\gridunit
+  \parskip=0pt
+}{%
+  \par
+}
+
+% Diagnostic commands
+\newcommand{\checkgridalignment}{%
+  \marginpar{\tiny\the\pagetotal}% Show current vertical position
+}
+
+\newcommand{\gridreport}{%
+  Current position: \the\pagetotal\\
+  Grid units: \the\numexpr\pagetotal/\gridunit\relax\\
+  Remainder: \the\dimexpr\pagetotal-(\numexpr\pagetotal/\gridunit\relax\gridunit)\relax
+}
+
+\endinput

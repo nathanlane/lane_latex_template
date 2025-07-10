@@ -1,0 +1,72 @@
+\documentclass[11pt]{article}
+\input{paper/preamble.tex}
+\usepackage{lltgridoverlay}
+
+% Activate the grid overlay
+\showgrid
+
+\begin{document}
+
+\section{Grid Overlay Test}
+
+This document demonstrates the visual grid overlay system. The overlay shows:
+\begin{itemize}
+\item Base grid lines every 13.2pt (very light gray)
+\item 2nd gridlines every 26.4pt (light red) - where subheads should land
+\item 3rd gridlines every 39.6pt (light blue) - where sections should land
+\item 4th gridlines every 52.8pt (light green, dashed) - alternative for sections
+\end{itemize}
+
+\subsection{Testing Heading Alignment}
+
+This subsection should ideally land on a red (2nd) gridline. The body text that follows should align to the base grid lines.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+
+\subsubsection{Deeper Heading Level}
+
+Subsubsections also target 2nd gridlines for consistency.
+
+\paragraph{Paragraph Heading}
+Paragraph headings use standard grid alignment. Notice how all text maintains the baseline grid throughout the document.
+
+\section{Table Grid Alignment}
+
+\begin{gridtable}
+  \caption{Grid-Aligned Table}
+  \centering
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    Item & Value & Status \\
+    \midrule
+    Alpha & 100 & Active \\
+    Beta & 200 & Pending \\
+    Gamma & 300 & Complete \\
+    \bottomrule
+  \end{tabular}
+\end{gridtable}
+
+\section{Mathematical Content}
+
+Display equations also maintain grid alignment:
+\[
+f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
+\]
+
+The text continues after the equation, maintaining the baseline grid.
+
+\section{List Typography}
+
+\begin{itemize}
+\item First item in the list
+\item Second item continues the rhythm
+\item Third item maintains alignment
+\end{itemize}
+
+\section{Checking Grid Position}
+
+\checkgrid % This shows the current position in the margin
+
+The grid overlay helps verify that all elements maintain proper vertical rhythm. Use \texttt{\textbackslash hidegrid} to turn off the overlay, or \texttt{\textbackslash showgrid[blue]} to change the color.
+
+\end{document}
