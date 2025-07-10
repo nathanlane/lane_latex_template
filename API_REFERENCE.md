@@ -275,7 +275,7 @@ See \work{The Elements of Typographic Style} by Bringhurst.
 Metadata (small caps).
 
 ```latex
-\meta{Version 1.0} released June 2025.
+\meta{Version 1.0-alpha} released June 2025.
 ```
 
 #### `\critical{text}`

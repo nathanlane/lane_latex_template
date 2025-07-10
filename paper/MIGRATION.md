@@ -1,6 +1,6 @@
-# Migration Guide: v1.2 to v1.5
+# Migration Guide: v1.2-alpha to v1.5-alpha
 
-This guide helps you migrate from paperstyle v1.2 to the new modular v1.5.
+This guide helps you migrate from paperstyle v1.2-alpha to the new modular v1.5-alpha.
 
 ## Overview of Changes
 
@@ -73,7 +73,7 @@ To restore old spacing:
 \spacioussections  % Restore v1.2 spacing
 ```
 
-## New Features in v1.5
+## New Features in v1.5-alpha
 
 ### 1. Modular Loading
 
@@ -119,7 +119,7 @@ New list environments:
 ## Compatibility Notes
 
 ### Overleaf
-The v1.5 appendix system is fully Overleaf compatible. The previous `documentAppendices` environment could cause compilation errors on older TeX distributions.
+The v1.5-alpha appendix system is fully Overleaf compatible. The previous `documentAppendices` environment could cause compilation errors on older TeX distributions.
 
 ### Package Conflicts
 The modular system reduces conflicts by allowing selective loading:
@@ -153,7 +153,7 @@ The modular system reduces conflicts by allowing selective loading:
 
 ## Rollback Instructions
 
-If you need to rollback to v1.2:
+If you need to rollback to v1.2-alpha:
 1. Replace the entire `paper/` directory with v1.2
 2. Update appendix commands back to environment form
 3. Remove any module-specific code
