@@ -2,7 +2,10 @@
 
 **By Nathan Lane / Industrial Policy Group**
 
-A production-grade LaTeX template for academic papers with professional typography. This living template applies rigorous typographic principles to create beautiful, readable scholarly articles.
+A (not yet) production-grade LaTeX template for academic papers with optimized typography. 
+
+This (living) template applies classic typographic principles to create scholarly articles. For more on typography principles: [https://github.com/nathanlane/nathanstypographynotes/](https://github.com/nathanlane/nathanstypographynotes/)
+
 
 ---
 
