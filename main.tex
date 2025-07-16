@@ -355,9 +355,9 @@ The system uses aggressive penalties to prevent typographic rivers, widows, and 
 
 Academic English hyphenation patterns optimize text flow with specialized handling for terms like \enquote{meth-od-ology} and \enquote{theo-ret-ical}. The system uses a hyphenation penalty of 800\emdash{}optimized for Pagella's wider characters\emdash{}with emergency stretch capabilities for challenging justification scenarios.
 
-\paragraph{Language-Specific Optimization} Babel integration with microtype enables context-aware character protrusion and expansion. This prevents rivers in justified text while maintaining consistent color across pages.
+\safeparagraph{Language-Specific Optimization} Babel integration with microtype enables context-aware character protrusion and expansion. This prevents rivers in justified text while maintaining consistent color across pages.
 
-\paragraph{Special Characters and Symbols} The framework provides comprehensive Unicode support with properly sized symbols. Academic notation includes the degree symbol (180\textdegree), mathematical approximations ($\approx$), and proper dashes with contextual spacing. Currency symbols (\texteuro, \textsterling, \textyen) maintain consistent sizing with body text.
+\safeparagraph{Special Characters and Symbols} The framework provides comprehensive Unicode support with properly sized symbols. Academic notation includes the degree symbol (180\textdegree), mathematical approximations ($\approx$), and proper dashes with contextual spacing. Currency symbols (\texteuro, \textsterling, \textyen) maintain consistent sizing with body text.
 
 \section{Enhanced Color System}
 
@@ -393,13 +393,13 @@ This systematic approach ensures accessibility compliance (WCAG 2.1 AA) while ma
 
 Following Bringhurst and Hochuli's classical principles, this framework employs traditional paragraph indentation for optimal readability and typographic elegance. Butterick's fundamental rule that paragraphs should use \emph{either} indentation \emph{or} spacing (never both, never neither) guides our approach.
 
-\paragraph{Optimal Indentation for Pagella} The framework uses 14pt indentation (approximately 1.2em for 11pt Pagella), following Bringhurst's recommendation of 1em to 1.5em. This accounts for Pagella's wider characters while maintaining Hochuli's principle of ``visible but not excessive'' indentation.
+\safeparagraph{Optimal Indentation for Pagella} The framework uses 14pt indentation (approximately 1.2em for 11pt Pagella), following Bringhurst's recommendation of 1em to 1.5em. This accounts for Pagella's wider characters while maintaining Hochuli's principle of ``visible but not excessive'' indentation.
 
-\paragraph{Flush Left First Paragraphs} Following classical typography conventions, first paragraphs after section headings, lists, blockquotes, and other visual breaks remain flush left (no indentation). This creates proper visual hierarchy and prevents redundant indentation after natural breaks.
+\safeparagraph{Flush Left First Paragraphs} Following classical typography conventions, first paragraphs after section headings, lists, blockquotes, and other visual breaks remain flush left (no indentation). This creates proper visual hierarchy and prevents redundant indentation after natural breaks.
 
-\paragraph{Special Environment Handling} Lists, blockquotes, verbatim blocks, and floats automatically suppress indentation within their contexts, while ensuring the first paragraph following these environments returns to flush left positioning for optimal visual flow.
+\safeparagraph{Special Environment Handling} Lists, blockquotes, verbatim blocks, and floats automatically suppress indentation within their contexts, while ensuring the first paragraph following these environments returns to flush left positioning for optimal visual flow.
 
-\paragraph{Alternative Paragraph Styles} The framework provides flexibility with paragraph formatting. While the default uses bold italic for contrast, users can activate bold small caps with the \code{\textbackslash paragraphsc} command for maximum distinction with generous tracking (+12\%) to prevent blockiness.
+\safeparagraph{Alternative Paragraph Styles} The framework provides flexibility with paragraph formatting. While the default uses bold italic for contrast, users can activate bold small caps with the \code{\textbackslash paragraphsc} command for maximum distinction with generous tracking (+12\%) to prevent blockiness.
 
 \section{Professional Figures and Tables}
 
