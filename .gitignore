@@ -135,3 +135,5 @@ CLAUDE.md
 .env
 .env.local
 .env.*.local
+tests/compilation/logs/minimal-root.log
+tests/compilation/logs/minimal.log
