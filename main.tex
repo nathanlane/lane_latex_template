@@ -60,7 +60,7 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 
 \subsection{Essential Commands}
 
-\paragraph{Text Emphasis}
+\safeparagraph{Text Emphasis}
 \begin{itemize}
 \item Regular emphasis: \code{\textbackslash emph\{...\}} produces \emph{italicized text}
 \item Strong emphasis: \code{\textbackslash textbf\{...\}} produces \textbf{bold text}
@@ -68,7 +68,7 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 \item Academic style: \code{\textbackslash textsc\{...\}} produces \textsc{standard small caps}
 \end{itemize}
 
-\paragraph{Common Typography}
+\safeparagraph{Common Typography}
 \begin{itemize}
 \item Smart quotes: \code{\textbackslash{}enquote\{...\}} produces \enquote{context-aware quotes}
 \item Code inline: \code{\textbackslash{}code\{...\}} produces \code{monospace text}
@@ -76,7 +76,7 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 \item Variables: \code{\textbackslash{}var\{...\}} produces \var{variableName}
 \end{itemize}
 
-\paragraph{Citations}
+\safeparagraph{Citations}
 \begin{itemize}
 \item Textual: \code{\textbackslash{}textcite\{key\}} --- \enquote{Author (Year) states...}
 \item Parenthetical: \code{\textbackslash{}autocite\{key\}} --- \enquote{...statement (Author Year)}
@@ -86,7 +86,7 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 
 \subsection{Typography Specimens}
 
-\paragraph{Font Hierarchy} This template uses TeX Gyre Pagella for text, newpxmath for mathematics, and Inconsolata for code:
+\safeparagraph{Font Hierarchy} This template uses TeX Gyre Pagella for text, newpxmath for mathematics, and Inconsolata for code:
 
 \begin{itemize}
 \item \textbf{Bold:} For strong emphasis and headings
@@ -97,7 +97,7 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 \item Mathematics: $f(x) = \alpha x^2 + \beta x + \gamma$
 \end{itemize}
 
-\paragraph{Color Palette} Professional colors optimized for readability:
+\safeparagraph{Color Palette} Professional colors optimized for readability:
 \begin{itemize}
 \item Body text: Near-black (5\% gray)
 \item Headings: Softened navy and midnight tones
@@ -107,22 +107,22 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 
 \subsection{Document Structure}
 
-\paragraph{Basic Article Structure}
+\safeparagraph{Basic Article Structure}
 \begin{verbatim}
 \section{Introduction}
 \subsection{Background}
 \subsubsection{Historical Context}
-\paragraph{Key Point} Text follows...
+\safeparagraph{Key Point} Text follows...
 \end{verbatim}
 
-\paragraph{Customization} The template uses modular architecture. Override before loading:
+\safeparagraph{Customization} The template uses modular architecture. Override before loading:
 \begin{verbatim}
 \definecolor{linknavy}{RGB}{0,0,255}  % Custom colors
 \geometry{margin=2in}                  % Custom margins  
 \usepackage{lltpaperstyle}             % Then load paperstyle
 \end{verbatim}
 
-\paragraph{Figures and Tables}
+\safeparagraph{Figures and Tables}
 \begin{verbatim}
 \begin{figure}[tbp]
   \centering
@@ -153,7 +153,7 @@ This document demonstrates a comprehensive academic typography system synthesizi
 
 The foundation of this document is a rigorously implemented 13.2pt baseline grid system, established July 2, 2025. This grid ensures professional vertical rhythm throughout the document with ~90\% compliance.
 
-\paragraph{Master Grid Definition}
+\safeparagraph{Master Grid Definition}
 \begin{itemize}
 \item \emph{Project:} Lane LaTeX Template
 \item \emph{Baseline Unit:} 13.2pt (locked)
@@ -161,7 +161,7 @@ The foundation of this document is a rigorously implemented 13.2pt baseline grid
 \item \emph{Grid Compliance:} ~90\% (improved from 75\% baseline)
 \end{itemize}
 
-\paragraph{Grid-Aligned Components}
+\safeparagraph{Grid-Aligned Components}
 This document demonstrates several grid-aware features:
 \begin{itemize}
 \item \emph{Sections:} 39.6pt before (3 units), 19.8pt after (1.5 units) with -0.8pt optical adjustment
@@ -171,7 +171,7 @@ This document demonstrates several grid-aware features:
 \item \emph{Floats:} 19.8pt separation (1.5 units) between consecutive floats
 \end{itemize}
 
-\paragraph{Framework Components}
+\safeparagraph{Framework Components}
 \begin{itemize}
 \item \emph{Text Font:} 11pt TeX Gyre Pagella with superior small caps design  
 \item \emph{Mathematical Font:} newpxmath harmonized with Pagella
@@ -207,11 +207,11 @@ Our methodology follows established protocols for academic research, incorporati
 
 The data collection process involved multiple stages of systematic analysis and verification.
 
-\paragraph{Primary Data Sources} We collected data from three main sources: surveys, interviews, and archival materials. The survey instrument was distributed to 500 participants across five demographic categories.\footnote{The survey achieved a 78\% response rate, exceeding our target of 70\% for statistical significance.}
+\safeparagraph{Primary Data Sources} We collected data from three main sources: surveys, interviews, and archival materials. The survey instrument was distributed to 500 participants across five demographic categories.\footnote{The survey achieved a 78\% response rate, exceeding our target of 70\% for statistical significance.}
 
-\paragraph{Secondary Analysis Methods} Historical documents were analyzed using content analysis techniques, with particular attention to chronological patterns and thematic consistency.
+\safeparagraph{Secondary Analysis Methods} Historical documents were analyzed using content analysis techniques, with particular attention to chronological patterns and thematic consistency.
 
-\paragraph{Quality Assurance Protocols} All data underwent rigorous validation procedures, including cross-referencing and expert review processes.
+\safeparagraph{Quality Assurance Protocols} All data underwent rigorous validation procedures, including cross-referencing and expert review processes.
 
 The systematic approach ensured consistent results across all phases of the research. Data integrity remained paramount throughout the collection process.
 
@@ -237,13 +237,13 @@ f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
 
 For inline mathematics, we maintain consistency: $\norm{x}_2 = \sqrt{\sum_{i=1}^n x_i^2}$ and $\abs{z} = \sqrt{a^2 + b^2}$ for complex numbers $z = a + bi \in \complex$.
 
-\paragraph{Mathematical Integration} The system provides seamless text-math transitions through newpxmath with enhanced symbols and grid-aligned spacing.
+\safeparagraph{Mathematical Integration} The system provides seamless text-math transitions through newpxmath with enhanced symbols and grid-aligned spacing.
 
 \section{Code Typography}
 
 The template integrates \code{Inconsolata} (zi4 package) as the monospace font, carefully optimized for harmony with Pagella through Hochuli's systematic approach to typographic integration.
 
-\paragraph{Code Commands} The system provides specialized commands:
+\safeparagraph{Code Commands} The system provides specialized commands:
 \begin{itemize}
 \item \code{\textbackslash{}code\{\}} for inline code elements
 \item \code{\textbackslash{}filepath\{\}} for file paths  
@@ -273,11 +273,11 @@ TeX Gyre Pagella offers several advantages over the original Palatino or URW Pal
 
 The TeX Gyre fonts meet professional publishing standards:
 
-\paragraph{Quality Assurance} Each glyph undergoes rigorous testing for outline quality, metrics accuracy, and rendering consistency. The GUST e-foundry applies systematic quality control matching commercial type foundries.
+\safeparagraph{Quality Assurance} Each glyph undergoes rigorous testing for outline quality, metrics accuracy, and rendering consistency. The GUST e-foundry applies systematic quality control matching commercial type foundries.
 
-\paragraph{Language Coverage} Comprehensive support for European languages, including proper diacritics, localized forms, and language-specific kerning. This ensures professional typography for international academic publications.
+\safeparagraph{Language Coverage} Comprehensive support for European languages, including proper diacritics, localized forms, and language-specific kerning. This ensures professional typography for international academic publications.
 
-\paragraph{Version Stability} TeX Gyre fonts maintain backward compatibility while adding features, ensuring documents remain consistent across years of compilation. Version 2.501 (current) maintains full compatibility with documents created using version 1.0.
+\safeparagraph{Version Stability} TeX Gyre fonts maintain backward compatibility while adding features, ensuring documents remain consistent across years of compilation. Version 2.501 (current) maintains full compatibility with documents created using version 1.0.
 
 \subsection{Technical Implementation}
 
@@ -302,14 +302,14 @@ The TeX Gyre series represents the gold standard for academic typography, provid
 
 This section demonstrates how all three typography systems work together harmoniously in realistic academic contexts.
 
-\paragraph{Mathematical Programming Example} Consider the optimization problem: minimize $f(x) = \norm{Ax - b}_2^2$ subject to $x \in \real^n$. 
+\safeparagraph{Mathematical Programming Example} Consider the optimization problem: minimize $f(x) = \norm{Ax - b}_2^2$ subject to $x \in \real^n$. 
 The implementation uses \code{scipy.optimize.minimize} with the \filepath{L-BFGS-B} algorithm.
 The \code{gradient} function computes $\nabla f(x) = 2A^T(Ax - b)$ for efficient convergence in the Hilbert space $\hilbert = L^2(\real^n)$.
 
-\paragraph{Statistical Analysis Integration} When analyzing data with \code{pandas}, we often compute sample statistics like $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ and $s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$.
+\safeparagraph{Statistical Analysis Integration} When analyzing data with \code{pandas}, we often compute sample statistics like $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ and $s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$.
 The \inlinecode{DataFrame.describe()} method provides these automatically, while custom functions like \var{compute\_confidence\_interval} handle more complex calculations in the probability space $(\Omega, \mathcal{F}, \prob)$.
 
-\paragraph{Algorithmic Complexity} The algorithm runs in $O(n \log n)$ time complexity, implemented using the \code{heapq} module.
+\safeparagraph{Algorithmic Complexity} The algorithm runs in $O(n \log n)$ time complexity, implemented using the \code{heapq} module.
 For large datasets stored in \filepath{/data/processed/}, the \balancedcode{numpy.ndarray} structure provides efficient memory access patterns that respect the underlying mathematical structure of $\mathbb{R}^{n \times m}$ matrices.
 
 
@@ -425,7 +425,7 @@ Figures should be placed using the \code{figure} environment with appropriate pl
   \end{fignotes}
 \end{figure}
 
-\paragraph{Figure Best Practices}~ Notice how Figure~\ref{fig:professional-example} demonstrates proper caption placement \emph{below} the figure content. The caption uses our systematic 10pt sizing (derived from 11pt base ÷ 1.1) with hanging indent formatting for optimal readability.
+\safeparagraph{Figure Best Practices}~ Notice how Figure~\ref{fig:professional-example} demonstrates proper caption placement \emph{below} the figure content. The caption uses our systematic 10pt sizing (derived from 11pt base ÷ 1.1) with hanging indent formatting for optimal readability.
 
 \subsection{Graphics Inclusion}
 
@@ -440,7 +440,7 @@ Professional figure inclusion follows this pattern:
 \end{figure}
 \end{verbatim}
 
-\paragraph{Image Specifications} For optimal quality, figures should be:
+\safeparagraph{Image Specifications} For optimal quality, figures should be:
 \begin{itemize}
 \item \emph{Resolution:} Minimum 300 DPI for print quality
 \item \emph{Format:} PDF or EPS for vector graphics, PNG for photographs
@@ -474,7 +474,7 @@ Tables demonstrate the power of \code{booktabs} package with no vertical rules, 
   \end{tablenotes}
 \end{table}
 
-\paragraph{Table Conventions}~ Table~\ref{tab:sample-data} shows proper caption placement \emph{above} the table content, following Chicago Manual of Style guidelines. The booktabs design uses only horizontal rules (\code{\textbackslash{}toprule}, \code{\textbackslash{}midrule}, \code{\textbackslash{}bottomrule}) for professional appearance.
+\safeparagraph{Table Conventions}~ Table~\ref{tab:sample-data} shows proper caption placement \emph{above} the table content, following Chicago Manual of Style guidelines. The booktabs design uses only horizontal rules (\code{\textbackslash{}toprule}, \code{\textbackslash{}midrule}, \code{\textbackslash{}bottomrule}) for professional appearance.
 
 \subsection{Full-Width Tables with TabularX}
 
@@ -499,7 +499,7 @@ For tables requiring full text width, use \code{tabularx} with \code{X} column s
   \end{tablenotes}
 \end{table}
 
-\paragraph{TabularX Benefits}~ The \code{X} column type automatically adjusts width to fill available space while maintaining proper text justification, as demonstrated in the Description column of Table~\ref{tab:extended-results}.
+\safeparagraph{TabularX Benefits}~ The \code{X} column type automatically adjusts width to fill available space while maintaining proper text justification, as demonstrated in the Description column of Table~\ref{tab:extended-results}.
 
 \subsection{Grid-Aligned Tables}
 
@@ -520,7 +520,7 @@ The framework provides specialized table environments that maintain the 13.2pt b
   \end{tabular}
 \end{gridtable}
 
-\paragraph{Grid Table Environments}~ The framework provides three grid-aligned environments:
+\safeparagraph{Grid Table Environments}~ The framework provides three grid-aligned environments:
 \begin{itemize}
 \item \code{gridtable} --- Standard 13.2pt rows for normal data
 \item \code{regressiontable} --- 19.8pt rows (1.5× grid) for statistical results
@@ -570,9 +570,9 @@ Use \code{\textbackslash{}clearpage} to control float placement by section:
 % This section starts with all previous floats properly placed
 \end{verbatim}
 
-\paragraph{When to Use clearpage} Insert \code{\textbackslash{}clearpage} before major section breaks to prevent figures and tables from drifting beyond their contextual sections. This is particularly important in academic papers where figures should appear near their discussion.
+\safeparagraph{When to Use clearpage} Insert \code{\textbackslash{}clearpage} before major section breaks to prevent figures and tables from drifting beyond their contextual sections. This is particularly important in academic papers where figures should appear near their discussion.
 
-\paragraph{Professional Float Placement} Our framework configures optimal float placement defaults:
+\safeparagraph{Professional Float Placement} Our framework configures optimal float placement defaults:
 \begin{itemize}
 \item \emph{Preferred placement:} \code{[tbp]} allows top, bottom, or dedicated float pages
 \item \emph{Avoid:} \code{[h]} (here) placement, which can create poor layout
@@ -590,7 +590,7 @@ The \code{csquotes} package provides context-sensitive quotation handling:
 \item \emph{Citations:} Integrates with bibliography for \code{\textbackslash{}textcite\{key\}} formatting
 \end{itemize}
 
-\paragraph{Smart Quotation Example} The framework automatically handles nested quotations: \enquote{He said, \enquote{The results are very promising according to our analysis.}}
+\safeparagraph{Smart Quotation Example} The framework automatically handles nested quotations: \enquote{He said, \enquote{The results are very promising according to our analysis.}}
 
 % Demonstrate FloatBarrier usage
 \clearpage
@@ -725,21 +725,21 @@ Different list styles can be combined for complex hierarchical information:
 
 \subsection{Technical Implementation Details}
 
-\paragraph{Spacing Mathematics} All list spacing derives from the baseline grid:
+\safeparagraph{Spacing Mathematics} All list spacing derives from the baseline grid:
 \begin{compactitem}
 \item Full baseline: 13.2pt (11pt × 1.20 leading)
 \item Half baseline: 6.6pt (for list separation)
 \item Quarter baseline: 3.3pt (for item spacing)
 \end{compactitem}
 
-\paragraph{Measurement System} Horizontal measurements use em-based units:
+\safeparagraph{Measurement System} Horizontal measurements use em-based units:
 \begin{compactitem}
 \item Hanging indent: 1.8em (optimized for Pagella)
 \item Label separation: 0.7em (bullet to text)
 \item Nested indent: 1.2em (per level)
 \end{compactitem}
 
-\paragraph{Color Palette} Sophisticated grayscale progression:
+\safeparagraph{Color Palette} Sophisticated grayscale progression:
 \begin{compactitem}
 \item Body text: 5\% gray (near-black)
 \item Bullet symbols: 20\% gray (professional visibility)
@@ -757,7 +757,7 @@ This section demonstrates the comprehensive biblatex-based citation system using
 
 The framework provides multiple citation commands for different academic contexts:
 
-\paragraph{Basic Citation Commands}
+\safeparagraph{Basic Citation Commands}
 \begin{itemize}
 \item \emph{Textual citations:} \textcite{butterick2019practical} argues that typography should serve the reader
 \item \emph{Parenthetical citations:} Typography principles emphasize readability \parencite{brown2018flexible}
@@ -766,7 +766,7 @@ The framework provides multiple citation commands for different academic context
 \item \emph{Year-only:} The principles were established \parencite*{hochuli1987detail}
 \end{itemize}
 
-\paragraph{Advanced Citation Patterns}
+\safeparagraph{Advanced Citation Patterns}
 \begin{itemize}
 \item \emph{Multiple sources:} The typographic synthesis approach \parencite{butterick2019practical,brown2018flexible,hochuli1987detail} creates professional documents
 \item \emph{Page references:} Specific guidance appears in \textcite{butterick2019practical}
@@ -779,7 +779,7 @@ The framework provides multiple citation commands for different academic context
 
 The bibliography system integrates seamlessly with our color system and typography framework:
 
-\paragraph{Enhanced Digital Features}
+\safeparagraph{Enhanced Digital Features}
 \begin{itemize}
 \item \emph{DOI links:} Automatically formatted with dignified deep blue (RGB 0,68,136) optimized for Pagella
 \item \emph{URL formatting:} Consistent with external link styling
@@ -787,7 +787,7 @@ The bibliography system integrates seamlessly with our color system and typograp
 \item \emph{Annotation display:} Academic annotations in readable footnote sizing
 \end{itemize}
 
-\paragraph{Professional Bibliography Spacing}
+\safeparagraph{Professional Bibliography Spacing}
 The bibliography uses our baseline grid system:
 \begin{itemize}
 \item \emph{Entry spacing:} 6.325pt between entries (0.5 baseline units)
@@ -807,7 +807,7 @@ For legacy compatibility, the framework enables natbib commands:
 \citep[p.~42]{author2023}  % With page numbers
 \end{verbatim}
 
-\paragraph{Migration Guide} When converting from natbib to biblatex:
+\safeparagraph{Migration Guide} When converting from natbib to biblatex:
 \begin{itemize}
 \item Replace \code{\textbackslash{}citet} with \code{\textbackslash{}textcite}
 \item Replace \code{\textbackslash{}citep} with \code{\textbackslash{}autocite}
@@ -905,11 +905,11 @@ When implementing this typography system:
 
 The system allows principled customization:
 
-\paragraph{Alternative Modular Scales} The perfect fourth (1.333) can be replaced with other harmonious ratios like the major third (1.25) or golden ratio (1.618) while maintaining systematic relationships.
+\safeparagraph{Alternative Modular Scales} The perfect fourth (1.333) can be replaced with other harmonious ratios like the major third (1.25) or golden ratio (1.618) while maintaining systematic relationships.
 
-\paragraph{Font Selection} The framework works with various typefaces, though serif fonts like Pagella, Minion, or Butterick's Equity provide optimal results for sustained reading.
+\safeparagraph{Font Selection} The framework works with various typefaces, though serif fonts like Pagella, Minion, or Butterick's Equity provide optimal results for sustained reading.
 
-\paragraph{Spacing Adjustments} All spacing values include flexibility ranges that can be adjusted for specific requirements while preserving proportional relationships.
+\safeparagraph{Spacing Adjustments} All spacing values include flexibility ranges that can be adjusted for specific requirements while preserving proportional relationships.
 
 \section{Conclusion}
 
@@ -930,7 +930,7 @@ The appendices showcase how the typography system maintains consistency across m
   \item \textbf{Appendix~\ref{app:api-examples}:} Comprehensive API examples demonstrating all commands
 \end{itemize}
 
-\paragraph{Key Features} The appendix system provides automatic numbering, table of contents integration, and consistent cross-referencing.
+\safeparagraph{Key Features} The appendix system provides automatic numbering, table of contents integration, and consistent cross-referencing.
 All appendix elements follow the same typographic standards as the main document, ensuring visual unity throughout the publication.
 For practical examples of using the template's commands and environments, see Appendix~\ref{app:api-examples}.
 % --- Appendices ---

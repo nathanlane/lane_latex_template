@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
-\usepackage{../../paper/paperstyle}
+%% FIX: Use the renamed package file; legacy package file is no longer shipped.
+\usepackage{../../paper/lltpaperstyle}
 \usepackage{lipsum}
 
 \begin{document}
@@ -10,7 +11,7 @@ This document tests the comprehensive special character optimization system for 
 
 \subsection{Dash Typography}
 
-\paragraph{Em Dash Variants}
+\safeparagraph{Em Dash Variants}
 
 Modern style\emdash with thin spaces\emdash is the default.
 
@@ -20,7 +21,7 @@ European style\emdashopen with word spaces\emdashopen following continental prac
 
 Parenthetical usage\dashparen like this\dashparen with proper spacing.
 
-\paragraph{En Dash Usage}
+\safeparagraph{En Dash Usage}
 
 Date ranges: \dashrange{2000}{2025}
 

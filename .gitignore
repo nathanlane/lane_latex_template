@@ -126,6 +126,7 @@ __pycache__/
 
 # Context files
 context/
+BACKLOG.md
 
 # AI Assistant Instructions (local only)
 CLAUDE.md
@@ -134,3 +135,5 @@ CLAUDE.md
 .env
 .env.local
 .env.*.local
+tests/compilation/logs/minimal-root.log
+tests/compilation/logs/minimal.log

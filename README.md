@@ -67,6 +67,13 @@ That's it! You now have a professionally typeset academic paper.
 - **Bibliography Backend**: Biber (included with modern distributions)
 - **Build Tool**: Make (optional but recommended)
 
+### Tested Build Environments
+
+Verified on May 27, 2026:
+
+- **Local**: TeX Live 2025 at `/usr/local/texlive/2025`, `latexmk` 4.86a, Biber 2.20, using `latexmk -pdf -interaction=nonstopmode main.tex`.
+- **Overleaf**: TeX Live 2024, verified on May 27, 2026 with the project Recompile action.
+
 ### Quick Setup
 
 ```bash
@@ -136,6 +143,14 @@ make              # Full compilation with bibliography
 make quick        # Fast compilation (skip bibliography)
 make clean        # Remove temporary files
 make watch        # Auto-recompile on changes
+```
+
+**Repository verification gates**:
+
+```bash
+chktex -q -n8 -n46 *.tex
+latexmk -pdf -interaction=nonstopmode main.tex
+pytest -q
 ```
 
 **Manual compilation**:

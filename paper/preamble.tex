@@ -3,7 +3,7 @@
 % ==============================================================================
 % 
 % This file provides the essential package loading and configuration for
-% academic papers using the paperstyle.sty typography system.
+% academic papers using the lltpaperstyle.sty typography system.
 %
 % Version: 1.2-alpha
 % Author: Academic Paper Template Project
@@ -32,7 +32,8 @@
 % ------------------------------------------------------------------------------
 % lltpaperstyle now automatically loads biblatex with sensible defaults
 % This eliminates the need for manual biblatex configuration in most cases
-\usepackage{paper/lltpaperstyle}
+%% FIX: Load the renamed package by package name to match \ProvidesPackage.
+\usepackage{lltpaperstyle}
 
 % Load the bibliography database
 % (biblatex is already loaded by lltpaperstyle with authoryear style and biber backend)
@@ -44,12 +45,12 @@
 % If you need custom biblatex options, load biblatex BEFORE lltpaperstyle:
 %
 % \usepackage[backend=bibtex,style=numeric]{biblatex}
-% \usepackage[nobiblatex]{paper/lltpaperstyle}
+% \usepackage[nobiblatex]{lltpaperstyle}
 % \addbibresource{references.bib}
 %
 % Or disable automatic loading and configure manually:
 %
-% \usepackage[nobiblatex]{paper/lltpaperstyle}
+% \usepackage[nobiblatex]{lltpaperstyle}
 % \usepackage[your-options]{biblatex}
 % \addbibresource{references.bib}
 

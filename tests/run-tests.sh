@@ -52,8 +52,8 @@ test_latex_file() {
     # Change to project root for relative paths
     cd "$PROJECT_ROOT"
     
-    # Set TEXINPUTS to include paper directory for new package names
-    export TEXINPUTS=".:./paper:./paper/modules:$TEXINPUTS"
+    # FIX: Keep direct script runs working when TEXINPUTS is unset.
+    export TEXINPUTS=".:./paper:./paper/modules:${TEXINPUTS:-}"
     
     # Test 1: Basic compilation
     if pdflatex -interaction=nonstopmode -halt-on-error "$tex_file" > "$log_file" 2>&1; then
@@ -119,9 +119,22 @@ main() {
         exit 1
     fi
     
-    # Find all test fixtures
-    local fixtures=($(find "$FIXTURES_DIR" -name "*.tex" -type f | sort))
-    
+    # FIX: Honor explicit fixture arguments for quick regression runs.
+    local fixtures=()
+    if [ "$#" -gt 0 ]; then
+        for fixture_arg in "$@"; do
+            if [ ! -f "$fixture_arg" ]; then
+                echo -e "${RED}Error: fixture not found: $fixture_arg${NC}"
+                exit 1
+            fi
+            fixtures+=("$fixture_arg")
+        done
+    else
+        while IFS= read -r fixture; do
+            fixtures+=("$fixture")
+        done < <(find "$FIXTURES_DIR" -name "*.tex" -type f | sort)
+    fi
+
     if [ ${#fixtures[@]} -eq 0 ]; then
         echo -e "${YELLOW}No test fixtures found in $FIXTURES_DIR${NC}"
         exit 0
