@@ -1798,7 +1798,14 @@
 
 % Hochuli detail: Prevent footnote marks from breaking
 \let\oldfootnote\footnote
-\renewcommand{\footnote}[1]{\oldfootnote{\nobreak#1}}
+%% FIX: Preserve LaTeX's optional footnote mark API while preventing breakable marks.
+\renewcommand{\footnote}[2][]{%
+  \if\relax\detokenize{#1}\relax
+    \oldfootnote{\nobreak#2}%
+  \else
+    \oldfootnote[#1]{\nobreak#2}%
+  \fi
+}
 
 % Additional footnote optimizations for professional typography
 % Ensure consistent measurements throughout document
@@ -1921,6 +1928,31 @@
 % Store original section command at package load time
 \let\paperstyleorigsection\section
 
+%% FIX: Preserve starred and optional \section forms inside appendix wrappers.
+\makeatletter
+\newcommand{\paperstyleappendixsection}{%
+  \@ifstar{\paperstyleappendixsectionstar}{\paperstyleappendixsectionnostar}%
+}
+\newcommand{\paperstyleappendixsectionstar}[1]{%
+  \paperstyleorigsection*{#1}%
+}
+\newcommand{\paperstyleappendixsectionnostar}{%
+  \@ifnextchar[{%
+    \paperstyleappendixsectionwithopt
+  }{%
+    \paperstyleappendixsectionplain
+  }%
+}
+\def\paperstyleappendixsectionwithopt[#1]#2{%
+  \stepcounter{appendixcount}%
+  \paperstyleorigsection[#1]{#2}%
+}
+\newcommand{\paperstyleappendixsectionplain}[1]{%
+  \stepcounter{appendixcount}%
+  \paperstyleorigsection{#1}%
+}
+\makeatother
+
 % Main appendix commands
 \newcommand{\startappendices}{%
   \clearpage%
@@ -1940,10 +1972,7 @@
   % Mark that we've saved the section command
   \paperstylesectionsavedtrue
   % Redefine section to count appendices
-  \renewcommand{\section}[1]{%
-    \stepcounter{appendixcount}%
-    \paperstyleorigsection{##1}%
-  }%
+  \renewcommand{\section}{\paperstyleappendixsection}%
 }
 
 % Helper to write appendix count
@@ -1962,6 +1991,8 @@
   % Restore original section command
   \ifpaperstylesectionsaved
     \let\section\paperstyleorigsection
+    %% FIX: Clear saved-section state after restoring \section.
+    \paperstylesectionsavedfalse
   \fi
 }
 
