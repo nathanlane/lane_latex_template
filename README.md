@@ -66,6 +66,7 @@ That's it! You now have a professionally typeset academic paper.
 - **LaTeX Distribution**: TeX Live 2020+, MiKTeX, or MacTeX
 - **Bibliography Backend**: Biber (included with modern distributions)
 - **Build Tool**: Make (optional but recommended)
+- **Regression Test Helper**: `pdftotext` from Poppler for PDF text assertions in the pytest regression harness
 
 ### Tested Build Environments
 

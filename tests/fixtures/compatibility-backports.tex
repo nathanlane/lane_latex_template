@@ -1,0 +1,24 @@
+\documentclass{article}
+\usepackage{lltpaperstyle}
+
+\begin{document}
+
+\section{Footnote Compatibility}
+This sentence uses a normal footnote.\footnote{Normal footnote text.}
+This sentence uses an explicit mark.\footnote[7]{Optional mark footnote text.}
+
+\startappendices
+
+\section*{Unnumbered Appendix Note}
+This starred section should not require an appendix counter step.
+
+\section[Short Appendix]{Long Appendix Title}
+This appendix section should preserve its optional short title.
+
+\finishappendices
+
+\section[Short Main]{Restored Main Section}
+This section verifies that the appendix wrapper restored the original section
+command, including optional short titles.
+
+\end{document}

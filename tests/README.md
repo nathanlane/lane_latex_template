@@ -16,6 +16,9 @@ make test-quick      # Quick compilation check (no bibliography)
 make test-clean      # Test from clean state
 ```
 
+Some pytest regression checks inspect generated PDF text. Install Poppler so
+`pdftotext` is available, for example `brew install poppler` on macOS.
+
 ## Test Structure
 
 ```
