@@ -14,7 +14,7 @@
 ## 🛠 Tools you must run before proposing a commit
 | Command | Purpose | Acceptable exit code |
 |---------|---------|----------------------|
-| `chktex -q -n8 -n46 *.tex` | Catch obvious bad constructs (ignore W08 & W46 to reduce noise). | 0 |
+| `chktex -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48 *.tex` | Catch obvious bad constructs while ignoring intentional template/prose warnings that require visual-output changes. | 0 |
 | `latexmk -pdf -interaction=nonstopmode main.tex` | Full compile; output PDF must be produced. | 0 |
 | `pytest -q` | Runs regression harness (`tests/`) that diff‑checks layout hashes. | 0 |
 

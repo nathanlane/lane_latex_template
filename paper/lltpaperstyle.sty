@@ -133,6 +133,9 @@
 % Process options
 \ProcessOptions\relax
 
+%% FIX: Load input encoding before biblatex to satisfy package order on pdfTeX.
+\RequirePackage[utf8]{inputenc}
+
 % Biblatex compatibility - detect if biblatex is already loaded
 \makeatletter
 \@ifpackageloaded{biblatex}{%
@@ -198,12 +201,13 @@
 % MODULAR COMPONENT LOADING
 % ==============================================================================
 % Load modular components if not already loaded
-% This allows users to override modules before loading paperstyle
+% This allows users to override modules before loading lltpaperstyle
 \makeatletter
 
 % Always load core modules
-\@ifpackageloaded{lltcompilationfixes}{}{\RequirePackage{paper/modules/lltcompilationfixes}}
-\@ifpackageloaded{lltdimensions}{}{\RequirePackage{paper/modules/lltdimensions}}
+%% FIX: Load local modules by package name to match their \ProvidesPackage names.
+\@ifpackageloaded{lltcompilationfixes}{}{\RequirePackage{lltcompilationfixes}}
+\@ifpackageloaded{lltdimensions}{}{\RequirePackage{lltdimensions}}
 
 % Load essential packages for minimal mode
 \ifllt@minimal
@@ -214,17 +218,17 @@
   \RequirePackage{xcolor}
 \else
   % Full mode loads all modules
-  \@ifpackageloaded{lltfonts}{}{\RequirePackage{paper/modules/lltfonts}}
+  \@ifpackageloaded{lltfonts}{}{\RequirePackage{lltfonts}}
   \ifllt@nocolor\else
-    \@ifpackageloaded{lltcolors}{}{\RequirePackage{paper/modules/lltcolors}}
+    \@ifpackageloaded{lltcolors}{}{\RequirePackage{lltcolors}}
   \fi
-  \@ifpackageloaded{lltheadings}{}{\RequirePackage{paper/modules/lltheadings}}
-  \@ifpackageloaded{lltlists}{}{\RequirePackage{paper/modules/lltlists}}
+  \@ifpackageloaded{lltheadings}{}{\RequirePackage{lltheadings}}
+  \@ifpackageloaded{lltlists}{}{\RequirePackage{lltlists}}
 \fi
 
 % Load grid overlay if requested
 \ifllt@grid
-  \@ifpackageloaded{gridoverlay}{}{\RequirePackage{paper/gridoverlay}}
+  \@ifpackageloaded{lltgridoverlay}{}{\RequirePackage{lltgridoverlay}}
   \showgrid
 \fi
 
@@ -254,7 +258,8 @@
 % This allows easy customization without editing the main package
 % Users can override colors before loading paperstyle:
 %   \definecolor{linknavy}{RGB}{0,0,255}  % Custom blue
-%   \usepackage{paper/paperstyle}
+%   %% FIX: Document the renamed public package entry point.
+%   \usepackage{lltpaperstyle}
 
 % ELEGANT SMALL CAPS COMMAND
 % Enhanced small caps with superior visibility and elegance
@@ -1187,24 +1192,31 @@
 }
 
 % TABLE CAPTIONS (Above content - QJE style)
-\captionsetup[table]{
-  position=above,              % Always above tables
-  aboveskip=\gridunit,           % 1 grid unit before caption
-  belowskip=0.75\gridunit,            % 0.75 units after caption (more space for importance)
-  font={normalsize},          % 11pt - same as body text for prominence
-  labelfont={bf},             % Bold "Table 1." format
-  textfont={}                 % Regular text, black
+%% FIX: Apply type-specific caption settings when floats are used to avoid warnings in floatless fixtures.
+\newcommand{\llttablecaptionsetup}{%
+  \captionsetup{%
+    position=above,              % Always above tables
+    aboveskip=0.75\gridunit,     % Effective legacy value after landscape override
+    belowskip=0.5\gridunit,      % Effective legacy value after landscape override
+    font={normalsize},           % 11pt - same as body text for prominence
+    labelfont={bf},              % Bold "Table 1." format
+    textfont={}                  % Regular text, black
+  }%
 }
+\AtBeginEnvironment{table}{\llttablecaptionsetup}
 
 % FIGURE CAPTIONS (Below content - QJE style)
-\captionsetup[figure]{
-  position=below,              % Always below figures
-  aboveskip=0.75\gridunit,            % 0.75 units before caption (more space)
-  belowskip=\gridunit,           % 1 grid unit after caption
-  font={normalsize},          % 11pt - same as body text for prominence
-  labelfont={bf},             % Bold "Figure 1." format
-  textfont={}                 % Regular text, black
+\newcommand{\lltfigurecaptionsetup}{%
+  \captionsetup{%
+    position=below,              % Always below figures
+    aboveskip=0.75\gridunit,     % 0.75 units before caption (more space)
+    belowskip=\gridunit,         % 1 grid unit after caption
+    font={normalsize},           % 11pt - same as body text for prominence
+    labelfont={bf},              % Bold "Figure 1." format
+    textfont={}                  % Regular text, black
+  }%
 }
+\AtBeginEnvironment{figure}{\lltfigurecaptionsetup}
 
 % ==============================================================================
 % ADVANCED FLOAT PLACEMENT SYSTEM
@@ -2174,6 +2186,7 @@
 \setlength{\belowrulesep}{0pt}          % Remove space below booktabs rules
 \setlength{\extrarowheight}{2.2pt}       % Makes standard rows exactly 13.2pt with 11pt text
 \setlength{\LTcapwidth}{\textwidth}     % Full-width captions for longtables
+\AtBeginEnvironment{longtable}{\llttablecaptionsetup}
 
 % GRID-ALIGNED TABLE ENVIRONMENTS
 % Professional table environments with automatic grid alignment
@@ -2515,11 +2528,7 @@
   \vspace{13.2pt}% One grid unit
 }
 
-% Adjust caption spacing for landscape
-\captionsetup[table]{
-  aboveskip=0.75\gridunit,  % 0.75 grid units in landscape
-  belowskip=0.5\gridunit   % 0.5 grid units
-}
+% Landscape table caption spacing is included in \llttablecaptionsetup.
 
 % ==============================================================================
 % XI. MATHEMATICAL TYPOGRAPHY OPTIMIZATION
