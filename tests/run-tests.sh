@@ -57,6 +57,11 @@ test_latex_file() {
     
     # Test 1: Basic compilation
     if pdflatex -interaction=nonstopmode -halt-on-error "$tex_file" > "$log_file" 2>&1; then
+        # FIX: Run a second pass so hyperref/rerunfilecheck warnings settle.
+        if ! pdflatex -interaction=nonstopmode -halt-on-error "$tex_file" > "$log_file" 2>&1; then
+            log_fail "  Compilation failed on second pass (see $log_file)"
+            return 1
+        fi
         log_pass "  Compilation successful"
         
         # Move PDF to output directory

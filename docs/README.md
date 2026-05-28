@@ -23,6 +23,7 @@ User guides and how-to documentation:
 
 ### 📋 plans/
 Optimization and implementation plans:
+- `../superpowers/plans/2026-05-28-latex-template-maintainability.md` - Checkpointed plan for package maintainability and option-contract fixes
 - `BIBLIOGRAPHY_OPTIMIZATION_PLAN.md` - Bibliography system improvements
 - `CAPTION_OPTIMIZATION_PLAN.md` - Caption typography enhancements
 - `CODEBASE_CLEANUP_ROADMAP.md` - Repository cleanup strategy
@@ -48,6 +49,7 @@ Technical documentation and summaries:
 - `COMPILATION_ERRORS_MASTER_LIST.md` - Known compilation issues
 - `DIRECTORY_CLEANUP_SUMMARY.md` - Cleanup operation results
 - `FINAL_COMPILATION_STATUS.md` - Final build status report
+- `LATEX_CODE_REVIEW_2026-05-28.md` - Maintainability and package API code review
 - `PAPERSTYLE_CLEANUP_SUMMARY.md` - Style package cleanup results
 - `TESTING.md` - Testing procedures and results
 - `TITLE_FOOTNOTE_FIX.md` - Title footnote implementation fix

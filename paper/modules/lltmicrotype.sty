@@ -5,12 +5,160 @@
 % Implements optical margin alignment following Gutenberg's principles
 % ==============================================================================
 
-\ProvidesPackage{lltmicrotype}[2025/07/06 v1.0 Microtype Configuration]
+\ProvidesPackage{lltmicrotype}[2026/05/28 v1.1 Microtype Configuration]
 
-% Ensure microtype is loaded (should be loaded by lltpaperstyle.sty)
-\@ifpackageloaded{microtype}{}{%
-  \PackageError{microtype-config}{microtype package must be loaded before microtype-config}{}%
+\makeatletter
+%% FIX: Make lltmicrotype standalone-safe while honoring lltpaperstyle draft mode.
+\@ifundefined{ifllt@draft}{\newif\ifllt@draft}{}
+\@ifpackageloaded{microtype}{%
+  \PackageInfo{lltmicrotype}{microtype already loaded - using existing package options}%
+}{%
+  \ifllt@draft
+    \PackageInfo{lltmicrotype}{microtype draft mode active}%
+    \RequirePackage[
+      activate={true,nocompatibility},
+      draft,
+      tracking=true,
+      kerning=true,
+      spacing=true,
+      factor=1050,
+      stretch=15,
+      shrink=15,
+      protrusion=false,
+      verbose=silent
+    ]{microtype}%
+  \else
+    \PackageInfo{lltmicrotype}{microtype final mode active}%
+    \RequirePackage[
+      activate={true,nocompatibility},
+      final,
+      tracking=true,
+      kerning=true,
+      spacing=true,
+      factor=1050,
+      stretch=15,
+      shrink=15,
+      protrusion=false,
+      verbose=silent
+    ]{microtype}%
+  \fi
 }
+
+%% FIX: Keep all active microtype setup in this module as the single owner.
+\ifllt@draft
+  \microtypesetup{
+    protrusion=true,
+    expansion=true,
+    kerning=true,
+    tracking=true,
+    spacing=true,
+    babel=true,
+    draft
+  }
+\else
+  \microtypesetup{
+    protrusion=true,
+    expansion=true,
+    kerning=true,
+    tracking=true,
+    spacing=true,
+    babel=true,
+    final
+  }
+\fi
+\makeatother
+
+%% FIX: Keep active tracking and extra-kerning setup in the microtype module.
+% SMALL CAPS TRACKING OPTIMIZATION (Size & Context Responsive)
+% Regular small caps in body text (most common usage)
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  series = {m,l},
+  size = {footnotesize,small,normalsize}
+}{30}  % 3% - optimal for Pagella at text sizes
+
+% Bold small caps in body text (prevent density)
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  series = {b,bx},
+  size = {footnotesize,small,normalsize}
+}{45}  % 4.5% - compensate for bold weight
+
+% Display small caps (larger sizes)
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  size = {large,Large,LARGE}
+}{80}  % 8% - architectural presence
+
+% Title small caps (largest sizes)
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  size = {huge,Huge}
+}{120}  % 12% - maximum elegance
+
+% Hochuli: Optimal dash spacing for Pagella
+\SetExtraKerning[unit=space]
+   {encoding={T1}, family={qpl}, series={*}, size={footnotesize,small,normalsize}}
+   {\textendash={350,350}, % em-dash spacing (tighter for Pagella)
+    \textemdash={250,250}} % en-dash spacing
+
+% Hochuli: Fine-tune problematic letter pairs in bold Pagella
+\SetExtraKerning[unit=space]
+  {encoding={T1}, family={qpl}, series={b}}
+  {
+    T={100,0}, % Loosen before T
+    V={80,0},  % Loosen before V
+    W={60,0},  % Loosen before W
+    Y={90,0},  % Loosen before Y
+    "={0,-100} % Tighten quotes
+  }
+
+% Hochuli: Monospace microtype optimization for code readability
+\SetTracking{encoding={T1}, family={zi4}}{-20} % Slight negative tracking for density
+\SetExtraKerning[unit=space]
+  {encoding={T1}, family={zi4}}
+  {
+    (={100,0},  % Loosen before opening parens
+    )={0,100},  % Loosen after closing parens
+    \textunderscore={50,50} % Space around underscores
+  }
+
+% Hochuli's "Detail in Typography": Size-responsive bold tracking
+% Larger bold sizes need more generous tracking for optical balance
+\SetTracking{
+  encoding = {T1},
+  family = {fbb},
+  series = {b},
+  size = {Large,LARGE,huge,Huge}
+}{20}
+
+% Standard bold text tracking (body text sizes)
+\SetTracking{
+  encoding = {T1},
+  series = b
+}{-10}
+
+% Hochuli: Bold small caps optimization for Pagella
+% 2% tracking (20/1000em) - excellent weight distribution
+\SetTracking{
+  encoding = {T1},
+  shape = sc,
+  series = bx  % Bold extended weight
+}{20}
+
+%% FIX: Replace stale kerning note now that scoped extra-kerning lives here.
+% Extra kerning is intentionally limited to dash, bold Pagella, and code cases.
+
+% Bold italic small caps (if needed)
+\SetTracking{
+  encoding = {T1},
+  shape = scit,
+  series = bx
+}{18}
 
 % ==============================================================================
 % ENHANCED OPTICAL MARGIN ALIGNMENT (v2.1)
@@ -200,27 +348,19 @@
 
 % Word spacing optimization
 \SetExtraSpacing{
-  encoding = {T1,OT1},
+  encoding = T1,
   family = qpl
 }{
-  % Tighter word spacing after certain punctuation
-  . = {100,200,150},   % More space after periods
-  ! = {100,200,150},   % Same for exclamation
-  ? = {100,200,150},   % And question marks
-  : = {100,150,100},   % Moderate after colon
-  ; = {50,100,50}      % Less after semicolon
-}
-
-% Special kerning adjustments
-\SetExtraKerning{
-  encoding = {T1,OT1},
-  family = qpl
-}{
-  % Fine-tune specific character pairs
-  \textemdash = {150,150},    % Space around em-dash
-  \textendash = {100,100},    % Space around en-dash
-  ' = {50,0},                 % Tighten before apostrophe
-  " = {50,0}                  % Tighten before quote
+  {,} = {50,150,200},   % More space after comma
+  . = {100,250,300},    % Substantial space after period
+  : = {50,150,200},     % Medium space after colon
+  ; = {50,150,200},     % Medium space after semicolon
+  ! = {100,250,300},    % Match period spacing
+  ? = {100,250,300},    % Match period spacing
+  ) = {50,150,200},     % Space after closing paren
+  ] = {50,100,150},     % Space after closing bracket
+  ' = {50,100,150},     % Space after apostrophe
+  " = {50,150,200}      % Space after closing quote
 }
 
 \endinput

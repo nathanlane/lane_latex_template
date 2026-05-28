@@ -19,6 +19,7 @@
 %   - Accessibility standards (WCAG 2.1 AA)
 %
 % VERSION HISTORY:
+%   v1.7 (2026-05-28): Hardened option contracts and microtype module ownership
 %   v1.6 (2025-07-09): Added package options (grid, minimal, natbib, nocolor, draft)
 %   v1.5 (2025-07-02): Modularization - extracted colors, dimensions, fonts modules
 %   v1.4.1 (2025-07-02): Code cleanup - removed unused commands, fixed duplicate loads
@@ -42,8 +43,8 @@
 %   \usepackage{lltpaperstyle}                   % Full features
 %   \usepackage[grid]{lltpaperstyle}             % Show baseline grid
 %   \usepackage[minimal]{lltpaperstyle}          % Minimal features only
-%   \usepackage[natbib]{lltpaperstyle}           % Use natbib compatibility
-%   \usepackage[nocolor]{lltpaperstyle}          % Disable custom colors
+%   \usepackage[natbib]{lltpaperstyle}           % Use native natbib support
+%   \usepackage[nocolor]{lltpaperstyle}          % Use black/grayscale colors
 %   \usepackage[draft]{lltpaperstyle}            % Draft mode with visible boxes
 %   or
 %   \input{paper/preamble.tex}  % Recommended with bibliography
@@ -51,10 +52,11 @@
 % PACKAGE OPTIONS:
 %   grid/nogrid - Enable/disable baseline grid overlay (default: nogrid)
 %   minimal     - Load only essential features (dimensions, compilation fixes)
-%   natbib      - Use natbib instead of biblatex (compatibility mode)
-%   nocolor     - Disable all custom colors (use black text throughout)
+%   natbib      - Load native natbib support instead of biblatex
+%   nocolor     - Map semantic colors to black/grayscale values
 %   draft       - Draft mode with visible overfull boxes and link borders
 %   nobiblatex  - Disable automatic biblatex loading (if you load it manually)
+%   subsectionbarriers/nosubsectionbarriers - Toggle automatic subsection barriers
 %
 % DOCUMENTATION:
 %   - paper/README.md (complete API reference)
@@ -63,7 +65,7 @@
 %
 % ==============================================================================
 
-\ProvidesPackage{lltpaperstyle}[2025/07/09 v1.6 Academic Typography - Package Options]
+\ProvidesPackage{lltpaperstyle}[2026/05/28 v1.7 Academic Typography - Package Options]
 
 % ==============================================================================
 % PACKAGE OPTIONS
@@ -79,17 +81,17 @@
 %
 % minimal (default: off)  
 %   - Load only essential features: dimensions and compilation fixes
-%   - Skips: fonts, colors, headings, lists, and all typography enhancements
+%   - Skips: fonts, headings, lists, and most typography enhancements
 %   - Usage: \usepackage[minimal]{lltpaperstyle}
 %   - Use case: Compatibility mode or when custom typography is needed
 %
 % natbib (default: off)
-%   - Enable natbib compatibility mode (placeholder for future implementation)
+%   - Load native natbib author-year citation support
 %   - Usage: \usepackage[natbib]{lltpaperstyle}
-%   - Note: Currently has no effect; use preamble-natbib.tex for natbib
+%   - Note: Provides natbib commands, not biblatex command emulation
 %
 % nocolor (default: off)
-%   - Disable all custom colors; use black text throughout
+%   - Map semantic template colors to black/grayscale values
 %   - Affects: headings, links, bullets, and all colored elements
 %   - Usage: \usepackage[nocolor]{lltpaperstyle}
 %   - Use case: Accessibility, printing, or journal requirements
@@ -107,6 +109,11 @@
 %   - Usage: \usepackage[nobiblatex]{lltpaperstyle}
 %   - Use case: Custom bibliography configuration or using natbib
 %
+% subsectionbarriers/nosubsectionbarriers (default: subsectionbarriers)
+%   - Enable or disable automatic \FloatBarrier insertion before subsections
+%   - Usage: \usepackage[nosubsectionbarriers]{lltpaperstyle}
+%   - Use case: Documents that need freer float movement across subsections
+%
 % Multiple options can be combined:
 %   \usepackage[draft,grid]{lltpaperstyle}
 %   \usepackage[minimal,nocolor]{lltpaperstyle}
@@ -120,6 +127,8 @@
 \newif\ifllt@nocolor
 \newif\ifllt@draft
 \newif\ifllt@nobiblatex
+\newif\ifllt@subsectionbarriers
+\llt@subsectionbarrierstrue
 
 % Declare package options
 \DeclareOption{grid}{\llt@gridtrue}
@@ -127,8 +136,12 @@
 \DeclareOption{minimal}{\llt@minimaltrue}
 \DeclareOption{natbib}{\llt@natbibtrue}
 \DeclareOption{nocolor}{\llt@nocolortrue}
-\DeclareOption{draft}{\llt@drafttrue\PassOptionsToPackage{draft}{microtype}}
+%% FIX: Let lltmicrotype apply draft mode after package options are processed.
+\DeclareOption{draft}{\llt@drafttrue}
 \DeclareOption{nobiblatex}{\llt@nobiblatextrue}
+%% FIX: Expose subsection float-barrier behavior as a documented package option.
+\DeclareOption{subsectionbarriers}{\llt@subsectionbarrierstrue}
+\DeclareOption{nosubsectionbarriers}{\llt@subsectionbarriersfalse}
 
 % Process options
 \ProcessOptions\relax
@@ -148,8 +161,13 @@
     \PackageInfo{lltpaperstyle}{biblatex loading disabled by nobiblatex option}%
   \else
     \ifllt@natbib
-      % User wants natbib compatibility
-      \PackageInfo{lltpaperstyle}{natbib compatibility mode - not loading biblatex}%
+      %% FIX: Implement documented natbib mode instead of silently skipping bibliography support.
+      \@ifpackageloaded{natbib}{%
+        \PackageInfo{lltpaperstyle}{natbib detected - using existing configuration}%
+      }{%
+        \PackageInfo{lltpaperstyle}{Loading natbib compatibility mode}%
+        \RequirePackage[authoryear,round]{natbib}%
+      }%
     \else
       % Load biblatex with sensible defaults
       \PackageInfo{lltpaperstyle}{Loading biblatex with default settings}%
@@ -208,6 +226,8 @@
 %% FIX: Load local modules by package name to match their \ProvidesPackage names.
 \@ifpackageloaded{lltcompilationfixes}{}{\RequirePackage{lltcompilationfixes}}
 \@ifpackageloaded{lltdimensions}{}{\RequirePackage{lltdimensions}}
+%% FIX: Always load semantic colors so nocolor and minimal mode share definitions.
+\@ifpackageloaded{lltcolors}{}{\RequirePackage{lltcolors}}
 
 % Load essential packages for minimal mode
 \ifllt@minimal
@@ -219,9 +239,6 @@
 \else
   % Full mode loads all modules
   \@ifpackageloaded{lltfonts}{}{\RequirePackage{lltfonts}}
-  \ifllt@nocolor\else
-    \@ifpackageloaded{lltcolors}{}{\RequirePackage{lltcolors}}
-  \fi
   \@ifpackageloaded{lltheadings}{}{\RequirePackage{lltheadings}}
   \@ifpackageloaded{lltlists}{}{\RequirePackage{lltlists}}
 \fi
@@ -275,12 +292,19 @@
 }
 
 % Compatibility aliases for backward compatibility
-\let\elegantsc\refinedsc
-\let\elegantscbold\refinedscbold
-\let\elegantbullet\refinedbullet
-\let\elegantdot\refineddot
-\let\elegantdash\refineddash
-\let\elegantcircle\refinedcircle
+%% FIX: Define compatibility aliases lazily so modules can load in either order.
+\makeatletter
+\newcommand{\elegantsc}[1]{\refinedsc{#1}}
+\newcommand{\elegantscbold}[1]{\refinedscbold{#1}}
+\newcommand{\elegantbullet}{%
+  \@ifundefined{refinedbullet}{\textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.75}{$\bullet$}}}}{\refinedbullet}%
+}
+\newcommand{\elegantdot}{\textcolor{subtlegray}{\raisebox{0.15ex}{\scalebox{0.65}{\textbullet}}}}
+\newcommand{\elegantdash}{%
+  \@ifundefined{refineddash}{\textcolor{subtlegray}{\kern0.05em\textendash\kern0.05em}}{\refineddash}%
+}
+\newcommand{\elegantcircle}{\textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.55}{$\circ$}}}}
+\makeatother
 
 % ==============================================================================
 % SPECIAL CHARACTERS AND SYMBOL OPTIMIZATION
@@ -313,17 +337,28 @@
 
 % Simplified dash system (backward compatible, zero visual impact)
 \newcommand{\emdash}{\kern0.08em---\kern0.08em}       % Standard em dash
-% \newcommand{\emdashclassic}{---}                      % Traditional (no spaces)
-% \newcommand{\emdashopen}{\emdash}                     % Alias: visually identical
-% \newcommand{\dashcompound}[2]{#1-#2}                  % Alias: standard hyphen
-% \newcommand{\dashparen}{\emdash}                      % Alias: standard em dash
+%% FIX: Restore documented dash aliases used by existing fixtures and documents.
+\newcommand{\emdashclassic}{---}                      % Traditional (no spaces)
+\newcommand{\emdashopen}{ --- }                       % Open em dash with word spaces
+\makeatletter
+\@ifundefined{endash}{\def\endash{\kern0.06em--\kern0.06em}}{} % Standard en dash
+\makeatother
+\newcommand{\dashrange}[2]{#1--#2}                    % Range en dash
+\newcommand{\dashcompound}[2]{#1-#2}                  % Standard hyphen
+\newcommand{\dashparen}{\emdash}                      % Standard em dash
 
 % Simplified ellipsis system (backward compatible, minimal visual change)
-\renewcommand{\ldots}{\textellipsis\kern0.16em}      % Standard with space
-% \newcommand{\tdots}{\ldots}                           % Alias: adequate for dialogue
-\renewcommand{\cdots}{$\cdots$}                       % Standard math dots
-% \newcommand{\fdots}{\ldots}                           % Alias: standard is fine
-% \newcommand{\edots}{\ldots}                           % Alias: standard is fine
+\makeatletter
+%% FIX: Preserve math-mode ellipses while keeping text-mode spacing refinement.
+\let\llt@origldots\ldots
+\let\llt@origcdots\cdots
+\renewcommand{\ldots}{\ifmmode\llt@origldots\else\textellipsis\kern0.16em\fi}
+%% FIX: Restore documented ellipsis aliases used by existing fixtures and documents.
+\newcommand{\tdots}{\ldots}                           % Alias: adequate for dialogue
+\renewcommand{\cdots}{\ensuremath{\llt@origcdots}}    % Standard math dots
+\newcommand{\fdots}{\ldots}                           % Alias: standard is fine
+\newcommand{\edots}{\ldots}                           % Alias: standard is fine
+\makeatother
 
 % DEGREE, PRIME, AND TECHNICAL SYMBOLS
 % Properly aligned and spaced for Pagella
@@ -331,6 +366,7 @@
 \newcommand{\degrees}{\kern0.05em\textdegree\kern0.05em} % Temperature/angles
 \newcommand{\primetext}{\kern0.02em\raisebox{0.1ex}{\(\prime\)}\kern0.02em} % Prime mark
 \newcommand{\dblprimetext}{\kern0.02em\raisebox{0.1ex}{\(\prime\prime\)}\kern0.02em} % Double prime
+%% FIX: Provide math-symbol text fallbacks for T1 encodings that lack glyphs.
 
 % Ordinal indicators with proper kerning
 \newcommand{\ordth}{\textsuperscript{\kern0.02em th\kern0.02em}}
@@ -369,8 +405,13 @@
 \renewcommand{\textpm}{\kern0.08em\ensuremath{\pm}\kern0.08em}
 \providecommand{\texttimes}{\kern0.08em\ensuremath{\times}\kern0.08em}
 \providecommand{\textdiv}{\kern0.08em\ensuremath{\div}\kern0.08em}
-\newcommand{\textapprox}{\kern0.08em\ensuremath{\approx}\kern0.08em}
-\newcommand{\textinfty}{\kern0.08em\ensuremath{\infty}\kern0.08em}
+%% FIX: Register text-symbol commands for T1 using math wrappers.
+\DeclareRobustCommand{\llttextapprox}{\kern0.08em\ensuremath{\approx}\kern0.08em}
+\DeclareRobustCommand{\llttextinfty}{\kern0.08em\ensuremath{\infty}\kern0.08em}
+\DeclareTextCommandDefault{\textapprox}{\llttextapprox}
+\DeclareTextCommand{\textapprox}{T1}{\llttextapprox}
+\DeclareTextCommandDefault{\textinfty}{\llttextinfty}
+\DeclareTextCommand{\textinfty}{T1}{\llttextinfty}
 
 % ARROWS WITH SPACING
 \newcommand{\larrow}{\kern0.08em\ensuremath{\leftarrow}\kern0.08em}
@@ -409,8 +450,13 @@
 
 % SPECIAL CASES
 \newcommand{\apos}{'}                                  % Smart apostrophe
-\renewcommand{\dag}{\kern0.05em\dag\kern0.05em}       % Dagger
-\renewcommand{\ddag}{\kern0.05em\ddag\kern0.05em}     % Double dagger
+%% FIX: Preserve original dagger commands before adding spacing wrappers.
+\makeatletter
+\let\llt@origdag\dag
+\let\llt@origddag\ddag
+\renewcommand{\dag}{\kern0.05em\llt@origdag\kern0.05em}       % Dagger
+\renewcommand{\ddag}{\kern0.05em\llt@origddag\kern0.05em}     % Double dagger
+\makeatother
 
 % ------------------------------------------------------------------------------
 
@@ -486,6 +532,13 @@
 \newcommand{\term}[1]{\semantic{term}{#1}}
 \newcommand{\acro}[1]{\semantic{acro}{#1}}
 \newcommand{\work}[1]{\semantic{work}{#1}}
+%% FIX: Restore legacy first-use term command as an alias for semantic terms.
+\newcommand{\termintro}[1]{\semantic{term}{#1}}
+%% FIX: Restore legacy small-caps variant commands used by existing fixtures.
+\newcommand{\regsc}[1]{{\scshape\SetTracking{encoding={T1,OT1}}{30}\lsstyle #1}}
+\newcommand{\itsc}[1]{{\itshape\scshape\SetTracking{encoding={T1,OT1}}{20}\lsstyle #1}}
+\newcommand{\headsc}[1]{{\bfseries\scshape\SetTracking{encoding={T1,OT1}}{60}\lsstyle #1}}
+\newcommand{\inlinebsc}[1]{{\bfseries\scshape\SetTracking{encoding={T1,OT1}}{45}\lsstyle #1}}
 
 % --- NESTED EMPHASIS HANDLERS ---
 
@@ -512,6 +565,9 @@
 \newcommand{\subtleemph}[1]{\emph{#1}}  % Color emphasis removed (accessibility)
 \newcommand{\externalref}[1]{\emph{#1}}  % Deprecated - use \emph
 \newcommand{\importantnote}[1]{\strongemph{#1}}  % Deprecated - use \strongemph
+%% FIX: Restore legacy emphasis API names used by existing fixtures and documents.
+\newcommand{\boolemph}[1]{\critical{#1}}  % Deprecated - use \critical
+\newcommand{\maxemph}[1]{\critical{#1}}   % Deprecated - use \critical
 \newcommand{\codecomment}[1]{\textit{#1}}  % Deprecated - use \code or \textit
 
 % --- Front Matter Optimization (Hochuli's principles) ---
@@ -583,123 +639,13 @@
 %
 % ------------------------------------------------------------------------------
 
-% MICROTYPE PACKAGE CONFIGURATION (moved earlier; block kept for reference)
-% Hochuli's optimal settings adapted for TeX Gyre Pagella
-% Load without protrusion first to allow custom settings
-\RequirePackage[
-  activate={true,nocompatibility},
-  final,
-  tracking=true,
-  kerning=true,
-  spacing=true,
-  factor=1050,                        % Pagella: slightly less protrusion needed
-  stretch=15,                         % Pagella: wider chars allow more flexibility
-  shrink=15,
-  protrusion=false,                   % Disable initially to load custom settings
-  verbose=silent                      % Suppress tracking override warnings
-]{microtype}
+%% FIX: Delegate microtype package loading and active tuning to the module.
+\makeatletter
+\@ifpackageloaded{lltmicrotype}{}{\RequirePackage{lltmicrotype}}
+\makeatother
 
-% ==============================================================================
-% SMALL CAPS TRACKING OPTIMIZATION (Size & Context Responsive)
-% ==============================================================================
-%
-% Implements Hochuli's principle that tracking must respond to:
-% 1. Weight (bold needs more space)
-% 2. Size (larger sizes need more tracking)
-% 3. Context (body text vs. display)
-%
-% ------------------------------------------------------------------------------
-
-% Regular small caps in body text (most common usage)
-\SetTracking{
-  encoding = {T1},
-  shape = sc,
-  series = {m,l},
-  size = {footnotesize,small,normalsize}
-}{30}  % 3% - optimal for Pagella at text sizes
-
-% Bold small caps in body text (prevent density)
-\SetTracking{
-  encoding = {T1},
-  shape = sc,
-  series = {b,bx},
-  size = {footnotesize,small,normalsize}
-}{45}  % 4.5% - compensate for bold weight
-
-% Display small caps (larger sizes)
-\SetTracking{
-  encoding = {T1},
-  shape = sc,
-  size = {large,Large,LARGE}
-}{80}  % 8% - architectural presence
-
-% Title small caps (largest sizes)
-\SetTracking{
-  encoding = {T1},
-  shape = sc,
-  size = {huge,Huge}
-}{120}  % 12% - maximum elegance
-
-% Hochuli: Optimal dash spacing for Pagella
-\SetExtraKerning[unit=space]
-   {encoding={T1}, family={qpl}, series={*}, size={footnotesize,small,normalsize}}
-   {\textendash={350,350}, % em-dash spacing (tighter for Pagella)
-    \textemdash={250,250}} % en-dash spacing
-
-% Hochuli: Fine-tune problematic letter pairs in bold Pagella
-\SetExtraKerning[unit=space]
-  {encoding={T1}, family={qpl}, series={b}}
-  {
-    T={100,0}, % Loosen before T
-    V={80,0},  % Loosen before V  
-    W={60,0},  % Loosen before W
-    Y={90,0},  % Loosen before Y
-    "={0,-100} % Tighten quotes
-  }
-
-% Hochuli: Monospace microtype optimization for code readability
-\SetTracking{encoding={T1}, family={zi4}}{-20} % Slight negative tracking for density
-\SetExtraKerning[unit=space]
-  {encoding={T1}, family={zi4}}
-  {
-    (={100,0},  % Loosen before opening parens
-    )={0,100},  % Loosen after closing parens
-    \textunderscore={50,50} % Space around underscores
-  }
-
-% Hochuli's "Detail in Typography": Size-responsive bold tracking
-% Larger bold sizes need more generous tracking for optical balance
-\SetTracking{
-  encoding = {T1},
-  family = {fbb},
-  series = {b},
-  size = {Large,LARGE,huge,Huge}
-}{20}
-
-% Standard bold text tracking (body text sizes)
-\SetTracking{
-  encoding = {T1},
-  series = b
-}{-10}
-
-% Hochuli: Bold small caps optimization for Pagella
-% 2% tracking (20/1000em) - excellent weight distribution
-\SetTracking{
-  encoding = {T1},
-  shape = sc,
-  series = bx  % Bold extended weight
-}{20}
-
-% KERNING NOTE: SetExtraKerning removed due to compilation issues
-% The microtype package's character protrusion and expansion features
-% provide sufficient typography enhancement without manual kerning adjustments
-
-% Bold italic small caps (if needed)
-\SetTracking{
-  encoding = {T1},
-  shape = scit,
-  series = bx
-}{18}
+%% FIX: Active microtype tracking and extra-kerning setup lives in lltmicrotype.
+% Small-caps, code, and emphasis commands rely on lltmicrotype for tracking/kerning.
 
 % Hochuli: Optimize word spacing for Pagella's wider characters
 \spaceskip=0.35em plus 0.25em minus 0.15em
@@ -838,9 +784,10 @@
 % STANDARD BLOCK QUOTE
 % For quotations without paragraph breaks
 \makeatletter
+%% FIX: Use \list with \endlist so quote environments close correctly.
 \renewenvironment{quote}{%
   \vspace{\gridunit}%     % 1 grid unit before
-  \begin{list}{}{%
+  \list{}{%
     \setlength{\leftmargin}{2\gridunit}%       % 2 grid units (Pagella proportion)
     \setlength{\rightmargin}{2\gridunit}%      % Symmetric margins
     \setlength{\topsep}{0pt}%              % Spacing handled explicitly
@@ -864,7 +811,7 @@
 \makeatletter
 \renewenvironment{quotation}{%
   \vspace{\gridunit}%
-  \begin{list}{}{%
+  \list{}{%
     \setlength{\leftmargin}{2\gridunit}%
     \setlength{\rightmargin}{2\gridunit}%
     \setlength{\topsep}{0pt}%
@@ -896,7 +843,7 @@
 \makeatletter
 \newenvironment{emphasisquote}{%
   \vspace{1.5\gridunit}%     % 1.5 units before
-  \begin{list}{}{%
+  \list{}{%
     \setlength{\leftmargin}{3\gridunit}%       % 3 grid units
     \setlength{\rightmargin}{3\gridunit}%      % Dramatic inset
     \setlength{\topsep}{0pt}%
@@ -953,6 +900,8 @@
 % Hochuli: "Quotation marks should hang into the margin for optical alignment"
 
 % Lettrine/drop cap support moved to headings module
+%% FIX: Load lettrine before defining public drop-cap commands that use it.
+\RequirePackage{lettrine}
 
 % ==============================================================================
 % CONSERVATIVE SECTION OPENING ENHANCEMENTS
@@ -1018,6 +967,12 @@
 
 % Deprecated - use \vspace{\gridunit} directly
 \newcommand{\majorsectionspace}{\vspace{\gridunit}}
+%% FIX: Restore legacy section divider command used by existing fixtures.
+\newcommand{\thinrulebreak}{%
+  \par\vspace{\gridunit}%
+  \noindent\rule{\textwidth}{0.4pt}%
+  \par\vspace{\gridunit}%
+}
 
 % FIRST PARAGRAPH ENHANCEMENT
 % Special treatment for opening paragraph of sections
@@ -1283,14 +1238,24 @@
 }
 
 % CONDITIONAL SUBSECTION BARRIERS
-% Only insert barriers if floats are pending (requires placeins package)
+% Insert barriers only when the explicit package option enables them.
 \let\originalsubsection\subsection
+%% FIX: Make subsection float-barrier behavior explicit; topnumber is not a pending-float test.
+\makeatletter
 \renewcommand{\subsection}{%
-  \ifnum\value{topnumber}>0  % Check if floats are pending
+  \ifllt@subsectionbarriers
     \FloatBarrier
   \fi
   \originalsubsection
 }
+\AtBeginDocument{%
+  \ifllt@subsectionbarriers
+    \PackageInfo{lltpaperstyle}{subsection float barriers enabled}%
+  \else
+    \PackageInfo{lltpaperstyle}{subsection float barriers disabled}%
+  \fi
+}
+\makeatother
 
 % MANUAL BARRIER COMMANDS
 % For fine-grained control when automatic barriers aren't sufficient
@@ -1317,12 +1282,12 @@
 % HERE-FLOAT ALTERNATIVES
 % Smart placement commands that degrade gracefully
 
-% Try-here float - attempts [h] then falls back to [tbp]
+% Try-here float - attempts here placement with a top fallback
 \newcommand{\tryherefigure}[1]{%
-  \begin{figure}[h]
+  %% FIX: Use [ht] directly to avoid LaTeX rewriting bare [h] at compile time.
+  \begin{figure}[ht]
     #1
   \end{figure}
-  % If that fails, LaTeX automatically tries [tbp]
 }
 
 % Force-here float - uses minipage for absolute placement
@@ -1330,6 +1295,8 @@
   \vspace{\gridunit}  % Grid space before
   \noindent\begin{minipage}{\textwidth}
     \centering
+    %% FIX: Disable hypcap for floatless captions to avoid ignored-option warnings.
+    \captionsetup{hypcap=false}%
     #1
   \end{minipage}
   \vspace{\gridunit}  % Grid space after
@@ -1339,6 +1306,8 @@
 \newenvironment{herefloat}{%
   \vspace*{\dimexpr\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
   \begin{center}%
+  %% FIX: Disable hypcap for floatless captions to avoid ignored-option warnings.
+  \captionsetup{hypcap=false}%
 }{%
   \end{center}%
   \vspace*{\dimexpr\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
@@ -1446,6 +1415,8 @@
 \newcommand{\tabnote}[1]{%
   {\itshape Notes:} #1\par%
 }
+%% FIX: Restore legacy note command aliases used by existing fixtures.
+\newcommand{\tablenote}[1]{\tabnote{#1}}
 
 \newcommand{\tabsource}[1]{%
   {\itshape Source:} #1\par%
@@ -1483,6 +1454,7 @@
 \newcommand{\fignote}[1]{%
   {\itshape Notes:} #1\par%
 }
+\newcommand{\figurenote}[1]{\fignote{#1}}
 
 \newcommand{\figsource}[1]{%
   {\itshape Source:} #1\par%
@@ -2199,15 +2171,8 @@
 \newcommand{\seealso}[1]{see also \cref{#1}}
 \newcommand{\Seealso}[1]{See also \cref{#1}}
 
-% DEPRECATED COMMAND WARNING
-% Warn users about direct \ref usage
-\let\oldref\ref
-\renewcommand{\ref}[1]{%
-  \PackageWarning{paperstyle}{%
-    Direct \string\ref\space usage detected for label '#1'. 
-    Consider using \string\cref\space or \string\Cref\space instead}%
-  \oldref{#1}%
-}
+%% FIX: Leave LaTeX's core \ref unchanged; style nudges belong in linting.
+% Prefer \cref and \Cref in template prose, but do not alter \ref at runtime.
 
 % ------------------------------------------------------------------------------
 
@@ -2834,25 +2799,12 @@
 %
 % ------------------------------------------------------------------------------
 
-% ADVANCED MICROTYPE CONFIGURATION
-% Fine-tuned for Pagella's character shapes with ultimate precision
-\microtypesetup{
-  protrusion=true,
-  expansion=true,
-  kerning=true,
-  tracking=true,
-  spacing=true,
-  babel=true,  % Enable language-specific optimizations
-  final        % Production-quality settings
-}
-
-% The protrusion settings are defined below and will be applied automatically
-% to the qpl (Pagella) font family when microtype is active
+%% FIX: Active microtype setup moved to lltmicrotype to avoid duplicated owners.
 
 % ==============================================================================
 % PDF STRING HANDLING FOR HYPERREF
 % ==============================================================================
-% 
+%
 % Provides robust commands that automatically handle PDF bookmarks
 % preventing hyperref warnings about formatting in PDF strings
 %
@@ -2883,204 +2835,6 @@
   \@ifundefined{texorpdfstring}{\var{#1}}{\texorpdfstring{\var{#1}}{#1}}%
 }
 \makeatother
-
-% ENHANCED OPTICAL MARGIN ALIGNMENT (v2.1)
-% Aggressive character protrusion for professional typography
-% Following Gutenberg's principle: perfect optical alignment at text edges
-
-% Define custom protrusion for Pagella regular text
-\SetProtrusion{
-  encoding = {T1,OT1},
-  family = qpl
-}{
-  % PUNCTUATION - Maximum protrusion for clean margins
-  \textquoteleft = {1400,}, \textquoteright = {,1400},     % 40% more aggressive
-  \textquotedblleft = {1400,}, \textquotedblright = {,1400},
-  ' = {1200,}, ' = {,1200},      % Apostrophes/single quotes
-  " = {1200,}, " = {,1200},      % Double quotes
-  . = {,1200}, {,} = {,1200},    % Periods/commas - full protrusion
-  : = {,1000}, ; = {,1100},      % Colon/semicolon - substantial
-  ! = {,1200}, ? = {,1200},      % Exclamation/question - match period
-  ( = {900,}, ) = {,900},        % Parentheses - increased
-  [ = {700,}, ] = {,700},        % Brackets - moderate increase
-  \{ = {600,}, \} = {,600},      % Braces - slight increase
-  / = {300,400}, \ = {400,300},  % Slashes - asymmetric
-  
-  % DASHES - Aggressive protrusion for clean right margins
-  - = {1000,1000},   % Hyphen - maximum reasonable protrusion
-  – = {600,600},     % En dash - substantial increase
-  — = {400,400},     % Em dash - moderate (due to length)
-  
-  % CAPITALS - Negative protrusion for overhanging letters
-  A = {100,100}, C = {80,}, D = {,50}, F = {,150}, G = {80,},
-  J = {150,}, K = {,80}, L = {,120}, O = {50,50}, P = {,100},
-  Q = {50,70}, R = {,50}, S = {50,50}, 
-  T = {-50,150},     % Negative left protrusion (overhangs naturally)
-  U = {50,50}, 
-  V = {-50,150},     % Negative left protrusion
-  W = {-30,120},     % Slight negative left protrusion
-  X = {80,80}, 
-  Y = {-50,150},     % Negative left protrusion
-  
-  % LOWERCASE - Refined for Pagella's proportions
-  a = {,70}, c = {70,}, d = {,50}, e = {,70}, f = {,120},
-  g = {70,70}, h = {,50}, i = {,50}, j = {150,}, k = {,70},
-  l = {,70}, m = {,50}, n = {,50}, o = {70,70}, p = {70,70},
-  q = {70,}, r = {,100}, s = {50,50}, t = {,100}, u = {,50},
-  v = {70,70}, w = {60,60}, x = {70,70}, y = {70,150}, z = {,70},
-  
-  % NUMERALS - Oldstyle figure optimization
-  1 = {250,250}, 2 = {70,120}, 3 = {120,70}, 4 = {150,150},
-  5 = {70,120}, 6 = {70,70}, 7 = {150,100}, 8 = {70,70},
-  9 = {70,70}, 0 = {70,70}
-}
-
-% ITALIC PROTRUSION - Enhanced for slanted characters
-\SetProtrusion{
-  encoding = {T1,OT1},
-  family = qpl,
-  shape = it
-}{
-  % Adjusted for italic slant with more aggressive settings
-  A = {150,50}, F = {,200}, J = {200,}, L = {,150},
-  P = {,150}, T = {-30,150}, V = {-30,100}, W = {-20,100},
-  Y = {-30,150}, f = {,200}, j = {200,}, p = {100,100},
-  y = {100,200}
-}
-
-% SMALL CAPS PROTRUSION - Subtle adjustments for all-caps context
-\SetProtrusion{
-  encoding = {T1,OT1},
-  family = qpl,
-  shape = sc
-}{
-  % Small caps need less protrusion due to uniform height
-  a = {80,80}, j = {150,}, t = {-20,100}, v = {-20,80}, 
-  w = {-20,80}, y = {-20,100}
-}
-
-% SMALL TEXT PROTRUSION - Optimized for footnotes and captions
-% Smaller text needs more conservative protrusion to maintain readability
-\SetProtrusion{
-  encoding = {T1,OT1},
-  family = qpl,
-  size = {tiny,scriptsize,footnotesize}
-}{
-  % More conservative for small sizes to maintain readability
-  \textquoteleft = {1000,}, \textquoteright = {,1000},
-  \textquotedblleft = {1000,}, \textquotedblright = {,1000},
-  . = {,900}, {,} = {,900},      % Slightly less aggressive
-  : = {,700}, ; = {,800},        % Reduced for clarity
-  ! = {,900}, ? = {,900},
-  ( = {700,}, ) = {,700},
-  - = {800,800},                 % Hyphen - still strong but reduced
-  % Capitals need less adjustment at small sizes
-  T = {-30,100}, V = {-30,100}, W = {-20,80}, Y = {-30,100},
-  % Lowercase - very subtle at small sizes
-  f = {,80}, j = {100,}, r = {,70}, t = {,70}, y = {50,100}
-}
-
-% BOLD PROTRUSION - Adjusted for heavier weight
-% Bold text needs different protrusion due to increased stroke weight
-\SetProtrusion{
-  encoding = {T1,OT1},
-  family = qpl,
-  series = {b,bx}
-}{
-  % Bold punctuation needs slightly less protrusion
-  \textquoteleft = {1200,}, \textquoteright = {,1200},
-  \textquotedblleft = {1200,}, \textquotedblright = {,1200},
-  . = {,1000}, {,} = {,1000},    % Reduced from regular
-  : = {,800}, ; = {,900},
-  ! = {,1000}, ? = {,1000},
-  ( = {800,}, ) = {,800},
-  - = {900,900},                 % Slightly less than regular
-  % Bold capitals - adjusted for weight
-  A = {80,80}, T = {-40,120}, V = {-40,120}, W = {-25,100}, Y = {-40,120},
-  % Bold lowercase - compensate for weight
-  f = {,100}, j = {120,}, r = {,80}, t = {,80}, y = {60,120}
-}
-
-% DISPLAY SIZE PROTRUSION - More aggressive for large text
-\SetProtrusion{
-  encoding = {T1,OT1},
-  family = qpl,
-  size = {Large,LARGE,huge,Huge}
-}{
-  % Extra protrusion for display sizes
-  \textquoteleft = {1600,}, \textquoteright = {,1600},
-  . = {,1400}, {,} = {,1400},
-  - = {1200,1200},
-  T = {-80,200}, V = {-80,200}, W = {-50,150}, Y = {-80,200}
-}
-
-% MATHEMATICAL SYMBOL PROTRUSION
-% Special handling for inline math and symbols
-\SetProtrusion{
-  encoding = {T1,OT1},
-  family = qpl
-}{
-  % Mathematical operators and symbols
-  + = {250,250}, - = {350,350}, = = {300,300},
-  < = {400,200}, > = {200,400},
-  * = {400,400}, / = {200,300},
-  % Special characters
-  \textdagger = {200,300}, \textdaggerdbl = {200,300},
-  \textsection = {200,200}, \textparagraph = {,300},
-  \textasteriskcentered = {300,300},
-  % Currency symbols
-  \textdollar = {100,100}, \textsterling = {100,}, \texteuro = {,100},
-  % Other special punctuation
-  \textexclamdown = {300,}, \textquestiondown = {300,},
-  \guillemotleft = {400,200}, \guillemotright = {200,400}
-}
-
-% REFINED EXPANSION SETTINGS
-% Conservative but effective character expansion
-\SetExpansion{
-  encoding = {T1,OT1},
-  family = qpl
-}{
-  factor = 1000,
-  stretch = 15,    % Conservative stretch (was 20)
-  shrink = 15,     % Symmetric compression
-  step = 3         % Very fine gradation (was 5)
-}
-
-% Character-specific expansion limits
-\SetExpansion{
-  encoding = T1,
-  family = qpl
-}{
-  % More expandable characters
-  A = 500, D = 500, H = 700, M = 800, N = 700, O = 500,
-  U = 700, W = 800,
-  % Less expandable to preserve shape
-  I = 300, J = 300, i = 300, j = 300, l = 300,
-  % Standard expansion for most
-  a = 700, b = 700, c = 700, d = 700, e = 700,
-  % Numbers moderate expansion
-  0 = 500, 1 = 300, 2 = 500, 3 = 500, 4 = 500,
-  5 = 500, 6 = 500, 7 = 500, 8 = 500, 9 = 500
-}
-
-% ENHANCED SPACING ADJUSTMENTS
-% Fine-tuned punctuation spacing
-\SetExtraSpacing{
-  encoding = T1,
-  family = qpl
-}{
-  {,} = {50,150,200},   % More space after comma
-  . = {100,250,300},    % Substantial space after period
-  : = {50,150,200},     % Medium space after colon
-  ; = {50,150,200},     % Medium space after semicolon
-  ! = {100,250,300},    % Match period spacing
-  ? = {100,250,300},    % Match period spacing
-  ) = {50,150,200},     % Space after closing paren
-  ] = {50,100,150},     % Space after closing bracket
-  ' = {50,100,150},     % Space after apostrophe
-  " = {50,150,200}      % Space after closing quote
-}
 
 % ==============================================================================
 % PARAGRAPH OPTIMIZATION COMMANDS
