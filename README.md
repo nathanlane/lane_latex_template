@@ -16,7 +16,7 @@ This (living) template applies classic typographic principles to create scholarl
 - **Optically Refined Typo** - Using typographic principles
 - **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
-- **Smart Citations** – biblatex with Chicago style, DOI/URL linking, natbib fallback
+- **Smart Citations** – biblatex with Chicago style, DOI/URL linking, and native natbib mode
 - **Floats** – Comprehensive figure/table system with booktabs, tabularx, and smart placement
 - **Lists** – Multiple environments with refined bullets and optimal spacing
 - **Accessibility** – WCAG 2.1 AA compliant colors with semantic emphasis commands
@@ -70,10 +70,10 @@ That's it! You now have a professionally typeset academic paper.
 
 ### Tested Build Environments
 
-Verified on May 27, 2026:
+Verified locally on May 28, 2026; Overleaf evidence must come from the project compile log:
 
-- **Local**: TeX Live 2025 at `/usr/local/texlive/2025`, `latexmk` 4.86a, Biber 2.20, using `latexmk -pdf -interaction=nonstopmode main.tex`.
-- **Overleaf**: TeX Live 2024, verified on May 27, 2026 with the project Recompile action.
+- **Local**: TeX Live 2025 at `/usr/local/texlive/2025` (`tlmgr` revision 76773), pdfTeX 1.40.28, `latexmk` 4.86a, Biber 2.20, using `latexmk -pdf -interaction=nonstopmode main.tex`.
+- **Overleaf**: TeX Live 2024 annual release; the exact Overleaf build identifier is not available in this local checkout and must be copied from the Overleaf compile log before claiming Overleaf Definition of Done.
 
 ### Quick Setup
 
@@ -285,16 +285,17 @@ Load the style with options:
 \usepackage{lltpaperstyle}           % Standard (all features)
 \usepackage[grid]{lltpaperstyle}     % Show baseline grid
 \usepackage[minimal]{lltpaperstyle}  % Essential features only
-\usepackage[draft]{lltpaperstyle}    # Draft mode
+\usepackage[draft]{lltpaperstyle}    % Draft mode
 ```
 
 Available options:
 - `grid` / `nogrid` – Show/hide baseline grid overlay
 - `minimal` – Load only essential features
-- `natbib` – Use natbib compatibility mode
-- `nocolor` – Disable all custom colors
-- `draft` – Enable draft mode
+- `natbib` – Load native `natbib` author-year citation support instead of automatic `biblatex`
+- `nocolor` – Map semantic template colors to black/grayscale values
+- `draft` – Enable draft-mode diagnostics, including draft-mode `microtype`
 - `nobiblatex` – Disable automatic biblatex loading
+- `subsectionbarriers` / `nosubsectionbarriers` – Enable/disable automatic float barriers before subsections
 
 ### Modular Architecture
 
@@ -306,10 +307,10 @@ The style system is fully modularized:
 - `lltfonts` – Font configuration
 - `lltheadings` – Section heading styles
 - `lltlists` – List typography
+- `lltmicrotype` – Enhanced character protrusion, expansion, and spacing
 
 **Optional modules**:
 - `lltparagraphs` – Advanced paragraph formatting
-- `lltmicrotype` – Enhanced character protrusion
 - `llthochuli` – Advanced optical adjustments
 
 ---

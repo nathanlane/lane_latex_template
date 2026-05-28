@@ -10,11 +10,35 @@ harness under `tests/`.
 
 - `make lint` - passed
 - `make build` - passed and produced `main.pdf`
-- `pytest -q` - passed, 7 tests
+- `pytest -q` - passed, 16 tests
+- `tests/run-tests.sh` - passed, 29 fixture files / 87 checks
+- Default `main.pdf` raster output matched before and after microtype
+  consolidation across all 41 pages.
 
 The build still emits content-level overfull/underfull box warnings in
 `main.tex`; those were not treated as package code findings unless the package
 implementation caused the behavior.
+
+## Resolution Status
+
+Implemented on 2026-05-28:
+
+- `nocolor` now uses option-aware semantic color definitions instead of relying
+  on dependent modules not to reload colors.
+- `draft` now controls the active `microtype` package/setup mode through
+  `lltmicrotype`.
+- `natbib` mode now loads native `natbib` author-year support; it does not
+  promise biblatex command emulation.
+- Runtime warnings for normal `\ref` usage were removed.
+- Subsection float barriers are explicit and can be disabled with
+  `nosubsectionbarriers`.
+- Active microtype package loading and tuning now live in `lltmicrotype`; the
+  main package only loads the module.
+- The supplemental fixture harness now compiles current package names, runs a
+  normal second LaTeX pass, and covers restored legacy command compatibility.
+- Follow-up P1/P2 review findings are resolved: public `\textapprox` and
+  `\textinfty` commands compile, and active tracking/extra-kerning setup is
+  owned by `lltmicrotype`.
 
 ## Findings
 

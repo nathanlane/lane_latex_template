@@ -83,9 +83,10 @@
 
 % STANDARD BLOCK QUOTE
 \makeatletter
+%% FIX: Use \list with \endlist so quote environments close correctly.
 \renewenvironment{quote}{%
   \vspace{\gridunit}%                       % 1 grid unit before
-  \begin{list}{}{%
+  \list{}{%
     \setlength{\leftmargin}{2\gridunit}%   % 2 grid units
     \setlength{\rightmargin}{2\gridunit}%  % Symmetric margins
     \setlength{\topsep}{0pt}%
@@ -108,7 +109,7 @@
 \makeatletter
 \renewenvironment{quotation}{%
   \vspace{\gridunit}%
-  \begin{list}{}{%
+  \list{}{%
     \setlength{\leftmargin}{2\gridunit}%
     \setlength{\rightmargin}{2\gridunit}%
     \setlength{\topsep}{0pt}%
@@ -138,7 +139,7 @@
 \makeatletter
 \newenvironment{emphasisquote}{%
   \vspace{1.5\gridunit}%                   % 1.5 units before
-  \begin{list}{}{%
+  \list{}{%
     \setlength{\leftmargin}{3\gridunit}%  % 3 grid units
     \setlength{\rightmargin}{3\gridunit}% % Dramatic inset
     \setlength{\topsep}{0pt}%

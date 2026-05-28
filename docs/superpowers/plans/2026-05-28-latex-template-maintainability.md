@@ -886,18 +886,31 @@ Expected:
 
 ## Final Self-Review Checklist
 
-- [ ] `nocolor` no longer reloads colored semantic values through dependent modules.
-- [ ] `draft` no longer conflicts with unconditional microtype `final` settings.
-- [ ] `natbib` compiles native natbib commands with optional arguments; full biblatex command emulation is not promised.
-- [ ] `nobiblatex` remains a no-automatic-bibliography option.
-- [ ] `\ref` is not redefined at package runtime.
-- [ ] Subsection float barriers are explicit and documented.
-- [ ] `lltpaperstyle.sty` has less duplicate subsystem ownership after microtype consolidation.
-- [ ] Microtype ownership is singular: active tuning lives in `lltmicrotype`, and `lltpaperstyle` only loads the module.
-- [ ] Default visual raster hashes match before and after microtype consolidation, or the accepted visual delta is documented.
-- [ ] Every LaTeX fix has a `%% FIX:` rationale.
-- [ ] README and changelog match the implemented behavior.
-- [ ] `make lint`, `make build`, `pytest -q`, and `tests/run-tests.sh` pass.
+- [x] `nocolor` no longer reloads colored semantic values through dependent modules.
+- [x] `draft` no longer conflicts with unconditional microtype `final` settings.
+- [x] `natbib` compiles native natbib commands with optional arguments; full biblatex command emulation is not promised.
+- [x] `nobiblatex` remains a no-automatic-bibliography option.
+- [x] `\ref` is not redefined at package runtime.
+- [x] Subsection float barriers are explicit and documented.
+- [x] `lltpaperstyle.sty` has less duplicate subsystem ownership after microtype consolidation.
+- [x] Microtype ownership is singular: active tuning lives in `lltmicrotype`, and `lltpaperstyle` only loads the module.
+- [x] Default visual raster hashes match before and after microtype consolidation, or the accepted visual delta is documented.
+- [x] Every LaTeX fix has a `%% FIX:` rationale.
+- [x] README and changelog match the implemented behavior.
+- [x] `make lint`, `make build`, `pytest -q`, and `tests/run-tests.sh` pass.
+
+## Implementation Results
+
+- Focused option-contract tests were added in `tests/test_option_contracts.py`.
+- The initial red test run exposed failures in `nocolor`, `draft`, `natbib`,
+  subsection barrier reporting, and `nosubsectionbarriers`.
+- Microtype consolidation preserved default visual output: all 41 `main.pdf`
+  page rasters matched byte-for-byte before and after the move.
+- Follow-up review resolved the remaining P1/P2 issues: public text-symbol
+  commands are covered directly, and active tracking/extra-kerning setup no
+  longer remains in `paper/lltpaperstyle.sty`.
+- The final gates passed: `make lint`, `make build`, `pytest -q` with 16 tests,
+  and `tests/run-tests.sh` with 29 fixture files / 87 checks.
 
 ## Reviewer Findings
 

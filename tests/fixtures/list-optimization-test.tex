@@ -1,8 +1,8 @@
 \documentclass[11pt,a4paper]{article}
 %% FIX: Use the renamed package file; legacy package file is no longer shipped.
-\usepackage{../../paper/lltpaperstyle}
+\usepackage{lltpaperstyle}
 %% FIX: Use the renamed grid overlay package file shipped by the template.
-\usepackage{../../paper/lltgridoverlay}
+\usepackage{lltgridoverlay}
 \usepackage{lipsum}
 
 \begin{document}
@@ -37,7 +37,7 @@ The refined bullets are now 80\% of their original size with optical adjustments
 
 Old style (if using \texttt{\textbackslash bulletmark} directly):
 \begin{itemize}
-\item[\textcolor{gray}{0.20}{\textbullet}] Original bullet at 20\% gray (80\% black)
+\item[\textcolor{bulletgray}{\textbullet}] Original bullet at 20\% gray (80\% black)
 \item[\elegantbullet] New elegant bullet - scaled to 80\%, 25\% gray (75\% black)
 \item[\elegantdot] Alternative dot style - naturally smaller and more refined
 \end{itemize}

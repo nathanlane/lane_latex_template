@@ -276,6 +276,27 @@
   before={\vspace{-\parskip}\vspace{\paper@listhalfbaseline}},
   after={\vspace{-\parskip}\vspace{\paper@listhalfbaseline}}
 }
+%% FIX: Define nested readableitem labels so recursive readable lists compile.
+\setlist[readableitem,2]{
+  label=\llap{\refineddash\hspace{0.15em}},
+  leftmargin=\paper@listhangindent,
+  labelindent=0pt,
+  labelsep=0.55em,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listhalfbaseline,
+  partopsep=0pt
+}
+\setlist[readableitem,3]{
+  label=\llap{\diamondmark\hspace{0.15em}},
+  leftmargin=\paper@listhangindent,
+  labelindent=0pt,
+  labelsep=0.55em,
+  itemsep=\paper@listquarterbaseline,
+  parsep=0pt,
+  topsep=\paper@listhalfbaseline,
+  partopsep=0pt
+}
 
 % Define the label command for academicitem
 \renewcommand{\labelacademicitemi}{\dashmark}
