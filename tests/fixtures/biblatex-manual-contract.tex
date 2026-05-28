@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage[
+  backend=biber,
+  style=authoryear,
+  natbib=true,
+  sorting=nyt,
+  maxcitenames=2,
+  maxbibnames=99,
+  giveninits=true,
+  uniquename=init,
+  doi=true,
+  url=true,
+  isbn=false
+]{biblatex}
+\addbibresource{references.bib}
+\usepackage[nobiblatex]{lltpaperstyle}
+
+\begin{document}
+
+\section{Manual Bibliography Contract}
+Manual bibliography loading should work when the style is loaded with
+\texttt{nobiblatex}.\autocite{butterick2019practical}
+
+\printbibliography
+
+\end{document}

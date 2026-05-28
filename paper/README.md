@@ -39,7 +39,7 @@ Professional typography is automatically applied.
 
 ```latex
 \documentclass[11pt]{article}
-\input{paper/preamble.tex}  % Includes lltpaperstyle + biblatex-chicago
+\input{paper/preamble.tex}  % Loads lltpaperstyle and default biblatex
 
 \begin{document}
 Your content with citations~\cite{key}.
@@ -604,6 +604,11 @@ The system uses a two-pass auxiliary file mechanism:
 ## Citation and Bibliography System
 
 ### Primary System (biblatex with biber)
+
+The canonical path is to load `lltpaperstyle`, which auto-loads the default
+biblatex configuration, then register `references.bib`. Use
+`\usepackage[nobiblatex]{lltpaperstyle}` only when loading biblatex manually with
+custom options.
 
 ```latex
 % Essential citation commands

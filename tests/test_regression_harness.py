@@ -46,3 +46,14 @@ def test_compatibility_backports_fixture_passes():
     assert "A *" not in pdf_text
     assert "B [" not in pdf_text
     assert "Short Appendix]Long Appendix" not in pdf_text
+
+
+def test_manual_biblatex_contract_passes():
+    result = subprocess.run(
+        ["bash", "tests/test-bibliography.sh", "tests/fixtures/biblatex-manual-contract.tex"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

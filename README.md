@@ -193,7 +193,23 @@ Create a professional title page with mathematical spacing:
 
 ### Citations and Bibliography
 
-The template uses biblatex with Chicago author-date style:
+The template uses biblatex with Chicago author-date style. The standard preamble
+loads `lltpaperstyle`, which auto-loads the default biblatex configuration; then
+it registers `references.bib`:
+
+```latex
+\usepackage{lltpaperstyle}
+\addbibresource{references.bib}
+```
+
+For custom biblatex options, load biblatex manually and disable automatic
+loading:
+
+```latex
+\usepackage[backend=biber,style=authoryear]{biblatex}
+\addbibresource{references.bib}
+\usepackage[nobiblatex]{lltpaperstyle}
+```
 
 ```latex
 % In your text
@@ -296,6 +312,9 @@ Available options:
 - `draft` – Enable draft-mode diagnostics, including draft-mode `microtype`
 - `nobiblatex` – Disable automatic biblatex loading
 - `subsectionbarriers` / `nosubsectionbarriers` – Enable/disable automatic float barriers before subsections
+- `nocolor` – Disable all custom colors
+- `draft` – Enable draft mode
+- `nobiblatex` – Disable automatic biblatex loading after you load biblatex manually
 
 ### Modular Architecture
 

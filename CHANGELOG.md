@@ -17,6 +17,9 @@ All notable changes to the Lane LaTeX Template are documented here.
 - Restored legacy emphasis, small-caps, dash, ellipsis, note, divider, and symbol command compatibility covered by existing fixtures.
 - Fixed quote/list environment closure, nested `readableitem` labels, dagger recursion, and floatless caption warnings surfaced by the fixture harness.
 - Updated LaTeX fixtures to use current package names and a two-pass compile harness for stable hyperref/rerun checks.
+- Clarified the canonical bibliography loading contract and documented the manual `nobiblatex` override path.
+- Added regression coverage for manually loaded biblatex with `lltpaperstyle[nobiblatex]`.
+- Fixed the bibliography test harness package search path for direct fixture runs.
 - Documented the Poppler `pdftotext` dependency used by PDF text regression assertions.
 - Made the compatibility regression test skip PDF text assertions clearly when `pdftotext` is unavailable.
 
