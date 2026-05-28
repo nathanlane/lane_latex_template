@@ -30,8 +30,8 @@
 % ------------------------------------------------------------------------------
 % CORE TYPOGRAPHY SYSTEM WITH INTEGRATED BIBLIOGRAPHY
 % ------------------------------------------------------------------------------
-% lltpaperstyle now automatically loads biblatex with sensible defaults
-% This eliminates the need for manual biblatex configuration in most cases
+% lltpaperstyle automatically loads biblatex with the template defaults.
+% Use the nobiblatex option only when you need custom biblatex options.
 %% FIX: Load the renamed package by package name to match \ProvidesPackage.
 \usepackage{lltpaperstyle}
 
@@ -42,17 +42,12 @@
 % ------------------------------------------------------------------------------
 % CUSTOM BIBLIOGRAPHY CONFIGURATION (Optional)
 % ------------------------------------------------------------------------------
-% If you need custom biblatex options, load biblatex BEFORE lltpaperstyle:
+% If you need custom biblatex options, load biblatex BEFORE lltpaperstyle and
+% pass nobiblatex so the template does not load biblatex a second time:
 %
 % \usepackage[backend=bibtex,style=numeric]{biblatex}
-% \usepackage[nobiblatex]{lltpaperstyle}
 % \addbibresource{references.bib}
-%
-% Or disable automatic loading and configure manually:
-%
 % \usepackage[nobiblatex]{lltpaperstyle}
-% \usepackage[your-options]{biblatex}
-% \addbibresource{references.bib}
 
 % No custom formatting - using vanilla biblatex for maximum compatibility
 

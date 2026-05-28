@@ -4,6 +4,9 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## 2026-05-28
 
+- Clarified the canonical bibliography loading contract and documented the manual `nobiblatex` override path.
+- Added regression coverage for manually loaded biblatex with `lltpaperstyle[nobiblatex]`.
+- Fixed the bibliography test harness package search path for direct fixture runs.
 - Documented the Poppler `pdftotext` dependency used by PDF text regression assertions.
 - Made the compatibility regression test skip PDF text assertions clearly when `pdftotext` is unavailable.
 

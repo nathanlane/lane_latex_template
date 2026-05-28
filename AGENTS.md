@@ -67,13 +67,20 @@ Keep extra folders to an absolute minimum.  Empty dirs should contain a `.gitkee
 
 ## 3  LaTeX Quick Start
 
-1. In your document preamble **first** load bibliography, **then** the style:
+1. In your document preamble load the template style, then register the bibliography:
+
+   ```latex
+   \usepackage{lltpaperstyle} % master template; auto-loads default biblatex
+   \addbibresource{references.bib}
+   ```
+
+   For custom `biblatex` options, load `biblatex` yourself and disable the
+   template's automatic bibliography loading:
 
    ```latex
    \usepackage[backend=biber,style=authoryear]{biblatex}
    \addbibresource{references.bib}
-
-   \usepackage{lltpaperstyle} % master template
+   \usepackage[nobiblatex]{lltpaperstyle}
    ```
 2. Compile with `latexmk -pdf -synctex=1 main.tex` (local) or just click *Recompile* on Overleaf.
 3. Obey Chicago author-date citation style (`\textcite`, `\autocite`).
