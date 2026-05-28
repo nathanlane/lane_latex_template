@@ -25,6 +25,9 @@ LOG_DIR="$OUTPUT_DIR/logs"
 # Create directories
 mkdir -p "$LOG_DIR"
 
+# FIX: Keep direct bibliography harness runs working when TEXINPUTS is unset.
+export TEXINPUTS=".:./paper:./paper/modules:${TEXINPUTS:-}"
+
 echo -e "${YELLOW}Testing bibliography compilation for: $TEST_FILE${NC}"
 
 # Step 1: First LaTeX compilation
@@ -47,7 +50,7 @@ if [ -f "${BASENAME}.bcf" ]; then
         echo -e "  ${GREEN}✓${NC} Biber processing successful"
         
         # Check for biber warnings
-        local biber_warnings=$(grep -c "WARN" "$LOG_DIR/${BASENAME}_biber.log" || true)
+        biber_warnings=$(grep -c "WARN" "$LOG_DIR/${BASENAME}_biber.log" || true)
         if [ "$biber_warnings" -gt 0 ]; then
             echo -e "  ${YELLOW}⚠${NC}  Biber warnings: $biber_warnings"
             grep "WARN" "$LOG_DIR/${BASENAME}_biber.log" | head -3 | sed 's/^/    /'
