@@ -1,15 +1,13 @@
 This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex)
  restricted \write18 enabled.
 entering extended mode
-
-(/Users/nathanlane/code/lane_latex_template/tests/fixtures/compatibility-backpo
-rts.tex
+(/Users/nathanlane/code/lane_latex_template/tests/fixtures/emphasis_demo.tex
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-05-26>
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/size10.clo))
-(./paper/lltpaperstyle.sty
+(./paper/preamble.tex (./paper/lltpaperstyle.sty
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/inputenc.sty)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/biblatex/biblatex.sty
 (/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
@@ -137,14 +135,14 @@ ty)) (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/txtbabel.def)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel-english/english.ldf
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/locale/en/babel-english.t
-ex)))) (/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/t1qpl.fd)
-(./compatibility-backports.aux)
+ex))))) (/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/t1qpl.fd)
+(./emphasis_demo.aux)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/omlnpxmi.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxexa.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/lmsnpxsy.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/lmxnpxexx.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/biblatex/lbx/english.lbx)
-No file compatibility-backports.bbl.
+No file emphasis_demo.bbl.
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -159,7 +157,7 @@ LaTeX Warning: Command \showhyphens   has changed.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-ppl.cfg)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/ltcaption.sty)
-(./compatibility-backports.out) (./compatibility-backports.out)
+(./emphasis_demo.out) (./emphasis_demo.out)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/ot1qpl.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg)
@@ -169,12 +167,16 @@ LaTeX Warning: Command \showhyphens   has changed.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxsym.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxsyc.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/se-pdfdoc.def)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/ts1qpl.fd)
 [1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
 ocal/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc}{/usr/local/texl
-ive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
-[2] (./compatibility-backports.aux) )</usr/local/texlive/2025/texmf-dist/fonts/
-type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
-public/tex-gyre/qplr.pfb>
-Output written on compatibility-backports.pdf (2 pages, 101883 bytes).
-Transcript written on compatibility-backports.log.
+ive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec-sc.enc}{/usr/local/texlive/20
+25/texmf-dist/fonts/enc/dvips/newpx/px-lms.enc}]
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/ts1qpl.fd)
+[2{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
+[3] (./emphasis_demo.aux) )</usr/local/texlive/2025/texmf-dist/fonts/type1/publ
+ic/newpx/pxsys.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-g
+yre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qp
+lbi.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pf
+b></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb>
+Output written on emphasis_demo.pdf (3 pages, 247817 bytes).
+Transcript written on emphasis_demo.log.

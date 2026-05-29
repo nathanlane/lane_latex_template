@@ -1,16 +1,12 @@
 This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex)
  restricted \write18 enabled.
 entering extended mode
-
-(/Users/nathanlane/code/lane_latex_template/tests/fixtures/compatibility-backpo
-rts.tex
+(./tests/fixtures/biblatex-manual-contract.tex
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-05-26>
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/size10.clo))
-(./paper/lltpaperstyle.sty
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/inputenc.sty)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/biblatex/biblatex.sty
 (/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
 (/usr/local/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty)
@@ -36,6 +32,8 @@ Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
 (/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def))
 (/usr/local/texlive/2025/texmf-dist/tex/latex/biblatex/blx-case-expl3.sty
 (/usr/local/texlive/2025/texmf-dist/tex/latex/l3packages/xparse/xparse.sty)))
+(./paper/lltpaperstyle.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/inputenc.sty)
 (./paper/modules/lltcompilationfixes.sty) (./paper/modules/lltdimensions.sty
 (/usr/local/texlive/2025/texmf-dist/tex/latex/geometry/geometry.sty
 (/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/ifvtex.sty)))
@@ -137,14 +135,18 @@ ty)) (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/txtbabel.def)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel-english/english.ldf
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/locale/en/babel-english.t
-ex)))) (/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/t1qpl.fd)
-(./compatibility-backports.aux)
+ex))))
+
+Package biblatex Warning: Load 'inputenc' before biblatex.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/t1qpl.fd)
+(./biblatex-manual-contract.aux)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/omlnpxmi.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxexa.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/lmsnpxsy.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/lmxnpxexx.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/biblatex/lbx/english.lbx)
-No file compatibility-backports.bbl.
+(./biblatex-manual-contract.bbl)
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -159,7 +161,7 @@ LaTeX Warning: Command \showhyphens   has changed.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-ppl.cfg)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/ltcaption.sty)
-(./compatibility-backports.out) (./compatibility-backports.out)
+(./biblatex-manual-contract.out) (./biblatex-manual-contract.out)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/ot1qpl.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg)
@@ -169,12 +171,22 @@ LaTeX Warning: Command \showhyphens   has changed.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxsym.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxsyc.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/se-pdfdoc.def)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/ts1qpl.fd)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
 [1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
 ocal/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc}{/usr/local/texl
-ive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
-[2] (./compatibility-backports.aux) )</usr/local/texlive/2025/texmf-dist/fonts/
-type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
-public/tex-gyre/qplr.pfb>
-Output written on compatibility-backports.pdf (2 pages, 101883 bytes).
-Transcript written on compatibility-backports.log.
+ive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-5.enc}{/usr/local/texlive
+/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec-sc.enc}]
+(./biblatex-manual-contract.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+Package biblatex Warning: Please rerun LaTeX.
+(biblatex)                Page breaks have changed.
+
+ )</usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolat
+a-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb
+.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb><
+/usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb>
+Output written on biblatex-manual-contract.pdf (1 page, 159046 bytes).
+Transcript written on biblatex-manual-contract.log.

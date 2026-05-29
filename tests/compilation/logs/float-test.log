@@ -1,14 +1,12 @@
 This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex)
  restricted \write18 enabled.
 entering extended mode
-
-(/Users/nathanlane/code/lane_latex_template/tests/fixtures/compatibility-backpo
-rts.tex
+(/Users/nathanlane/code/lane_latex_template/tests/fixtures/float-test.tex
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-05-26>
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/size10.clo))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/size11.clo))
 (./paper/lltpaperstyle.sty
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/inputenc.sty)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/biblatex/biblatex.sty
@@ -137,20 +135,25 @@ ty)) (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/txtbabel.def)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel-english/english.ldf
 (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/locale/en/babel-english.t
-ex)))) (/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/t1qpl.fd)
-(./compatibility-backports.aux)
+ex)))) (/usr/local/texlive/2025/texmf-dist/tex/latex/lipsum/lipsum.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/lipsum/lipsum.ltd.tex))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/mwe/mwe.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/blindtext/blindtext.sty
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/xspace.sty)))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/t1qpl.fd)
+(./float-test.aux)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/omlnpxmi.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxexa.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/lmsnpxsy.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/lmxnpxexx.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/biblatex/lbx/english.lbx)
-No file compatibility-backports.bbl.
+No file float-test.bbl.
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
-(/usr/local/texlive/2025/texmf-dist/tex/latex/grfext/grfext.sty)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg))
 (/usr/local/texlive/2025/texmf-dist/tex/latex/upquote/upquote.sty)
 
@@ -159,7 +162,7 @@ LaTeX Warning: Command \showhyphens   has changed.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-ppl.cfg)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/ltcaption.sty)
-(./compatibility-backports.out) (./compatibility-backports.out)
+(./float-test.out) (./float-test.out)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/ot1qpl.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg)
@@ -169,12 +172,21 @@ LaTeX Warning: Command \showhyphens   has changed.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxsym.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/newpx/unpxsyc.fd)
 (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/se-pdfdoc.def)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/ts1qpl.fd)
 [1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
-ocal/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc}{/usr/local/texl
-ive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
-[2] (./compatibility-backports.aux) )</usr/local/texlive/2025/texmf-dist/fonts/
-type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
-public/tex-gyre/qplr.pfb>
-Output written on compatibility-backports.pdf (2 pages, 101883 bytes).
-Transcript written on compatibility-backports.log.
+ocal/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc} </usr/local/tex
+live/2025/texmf-dist/tex/latex/mwe/example-image-a.pdf>]
+[2]
+[3 </usr/local/texlive/2025/texmf-dist/tex/latex/mwe/example-image-b.pdf>]
+[4 </usr/local/texlive/2025/texmf-dist/tex/latex/mwe/example-image-c.pdf>]
+[5 </usr/local/texlive/2025/texmf-dist/tex/latex/mwe/example-image.pdf>]
+[6]
+[7]
+[8]
+[9]
+[10]
+[11] (./float-test.aux) )</usr/local/texlive/2025/texmf-dist/fonts/type1/public
+/lm/lmss17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/
+qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.p
+fb>
+Output written on float-test.pdf (11 pages, 145834 bytes).
+Transcript written on float-test.log.
