@@ -1,7 +1,7 @@
 ---
 topic: lane-2-compatibility-and-package-api
 created: 2026-07-01
-status: Needs Resolution
+status: Frozen
 ---
 
 # Lane 2 Compatibility And Package API
@@ -33,25 +33,35 @@ keeping all typography and visual defaults unchanged.
 
 - Mode: branch in checkout.
 - Repository path: `/Users/nathanlane/code/lane_latex_template`.
-- Branch: `main`.
+- Branch: `codex/lane-2-compatibility-and-package-api` (create or switch from
+  `main` before implementation).
 - Worktree path: `/Users/nathanlane/code/lane_latex_template`.
+- Detached: no.
+- Plan path: `tmp/ai-plans/lane-2-compatibility-and-package-api.md`.
 - External-output collision risk: low. This lane may run `latexmk` and shell harnesses
   that write local generated artifacts; no Overleaf, network, or external cache writes
   are planned.
+- Waiver: none; implementation must not proceed directly on `main`.
 
 ## Files In Scope
 
 - `paper/preamble-natbib.tex`
-  - Repair pathing or usage problems that currently break natbib entry points.
+  - Repair load-order, package-option, and duplicate-alias problems that currently
+    break natbib entry points.
 - `paper/lltpaperstyle.sty`
   - Resolve module ownership and preloading behavior that affects API
     compatibility.
+- `paper/lltpaperstyleminimal.sty`
+  - Validate the separate minimal package load as distinct from the main-package
+    `minimal` option.
 - `paper/modules/lltfontfallbacks.sty`
   - Validate standalone-loading behavior and compatibility expectations.
 - `paper/modules/lltfontfeatures.sty`
   - Validate standalone-loading behavior and compatibility expectations.
-- `paper/modules/lltpaperstyleminimal.sty`
-  - Confirm real `minimal` contract and avoid regressions in reduced module sets.
+- `paper/modules/lltlists.sty`
+  - Add local standalone dependency declarations if needed for environment hooks.
+- `paper/modules/lltmathgridlocked.sty`
+  - Add local standalone dependency declarations if needed for environment hooks.
 - `paper/modules/lltparagraphs.sty`
   - Confirm load-order interactions when used standalone or with preloaded modules.
 - `paper/modules/lltmicrotype.sty`
@@ -59,9 +69,12 @@ keeping all typography and visual defaults unchanged.
     requires a minimal compatibility adjustment.
 - `paper/modules/README.md`
   - Align standalone and preload claims with observed behavior.
-- `paper/llt.dtx`
-- `paper/llt.ins`
+- `paper/lltpaperstyle.dtx`
+- `paper/lltpaperstyle.ins`
   - Verify .dtx/.ins extraction path and generated package outputs.
+- `paper/README-DTX.md`
+  - Mark the docstrip path non-authoritative until a release-packaging pass rebuilds
+    it from the live package source.
 - `main.tex`
   - Keep as a controlled integration test for API loading paths and preload
     contract changes.
@@ -84,17 +97,27 @@ keeping all typography and visual defaults unchanged.
     with a plan delta.
 - Net-new abstractions: 0.
   - Keep scope to contract-preserving compatibility fixes.
-- Expected changed-file budget: 8-16 tracked files.
+- Expected changed-file budget: 10-18 tracked files.
   - Focus on `paper/` package files, `main.tex`, harnesses, tests, and
     compatibility-facing docs/changelog.
+  - New compatibility probes should run from temp dirs or existing harness files;
+    durable fixture files require a new plan delta.
 
 ## Assumptions
 
 - Lane 1 decisions about warning policy are stable and accepted.
 - Manual `biblatex` loading and module preloading are active user-facing compatibility
   surfaces and should be kept explicit in docs.
-- Any `.dtx`/`.ins` output mismatch must be reconciled before asserting release-like
-  distribution claims.
+- `.dtx`/`.ins` outputs are non-authoritative for this lane; mark that clearly
+  rather than asserting release-like distribution readiness.
+- Standalone module support remains a public contract for modules documented as
+  standalone; this lane fixes the in-scope dependency gaps rather than narrowing
+  the claim by default.
+- The main package `minimal` option means reduced typography modules, while
+  `paper/lltpaperstyleminimal.sty` is a distinct package surface that must be
+  validated separately.
+- Module preloading is a supported extension mechanism only for documented
+  load-order cases; unsupported orders must be rejected or documented explicitly.
 - Standalone module compatibility can be validated from local tooling without external
   package publication or network dependencies.
 
@@ -107,27 +130,31 @@ keeping all typography and visual defaults unchanged.
    - `pytest -q`
    - `tests/run-tests.sh`
    - Capture baseline `rg` checks for package entry points and module loads.
-2. Repair broken preamble API paths:
-   - Validate `paper/preamble-natbib.tex` import path and document the resulting
-     behavior.
+2. Repair broken natbib preamble API behavior:
+   - Load `lltpaperstyle` with the intended natbib option/order and remove duplicate
+     citation aliases that redefine existing natbib commands.
    - Confirm no stale references remain in active docs and integration points.
 3. Resolve DTX/INS extraction contract:
-   - Inspect `paper/llt.dtx` and `paper/llt.ins` generation paths and outputs.
-   - Decide whether generated artifacts are authoritative for compatibility promises;
-     if not, mark them as non-authoritative in docs in the same scope.
+   - Inspect `paper/lltpaperstyle.dtx` and `paper/lltpaperstyle.ins` generation
+     paths and outputs.
+   - Mark the generated artifacts and maintainer instructions as non-authoritative
+     until a future release-packaging pass rebuilds them from the live package
+     source.
 4. Validate standalone module behavior:
-   - Probe `lltfontfallbacks`, `lltfontfeatures`, and `lltpaperstyleminimal`
-     loading paths as standalone/optional modules.
+   - Probe `lltfontfallbacks`, `lltfontfeatures`, `lltlists`,
+     `lltmathgridlocked`, and the separate `lltpaperstyleminimal` package load.
+   - Add local dependency declarations such as `etoolbox` where an in-scope module
+     uses environment hooks standalone.
    - Ensure failures are reported with actionable contract wording rather than
      silent fallback.
 5. Reconcile module preload collisions:
    - Verify `lltparagraphs` preload interactions and ordering against
      `lltpaperstyle`.
-   - Remove ambiguous or conflicting preload semantics where safe, without changing
-     typography output defaults.
+   - Keep documented preloading supported while rejecting or documenting unsupported
+     load orders, without changing typography output defaults.
 6. Validate `biblatex` compatibility:
-   - Audit manual `biblatex` loading calls in build/docs paths and ensure they do not
-     add warnings in supported usage.
+   - Assert the existing manual `biblatex` contract fixture emits no
+     `biblatex Warning` under supported usage.
    - Keep non-visual compatibility fixes in place with clear scope notes.
 7. Update module ownership and documentation:
    - Align `paper/modules/README.md` and `README.md` with the actual supported
@@ -137,13 +164,13 @@ keeping all typography and visual defaults unchanged.
 
 ## Risks
 
-- DTX/INS and standalone-module claims may require broader packaging decisions that
-  exceed this lane and could defer parts of the API to a future packaging pass.
+- DTX/INS rebuild work exceeds this lane; docs must prevent maintainers from treating
+  the stale docstrip path as authoritative.
 - Resolving module preload compatibility without visual deltas may require API
   contract changes that affect documented "out-of-the-box" expectations.
 - Some compatibility paths may be accepted as best-effort if no stable external
   packaging distribution contract is present; those exceptions must be documented.
-- If `paper/modules/lltpaperstyleminimal.sty` is narrower than current docs claim,
+- If `paper/lltpaperstyleminimal.sty` is narrower than current docs claim,
   docs changes could be larger than code changes.
 - Tests currently assert shell return codes and PDF text; a regression in API surface
   may require adding compatibility probes and could increase verification scope.
@@ -162,14 +189,26 @@ tests/run-tests.sh
 git status --short
 ```
 
-Add focused compatibility checks for:
+Add focused compatibility checks from temp dirs or existing harness files for:
 
-- natbib preamble path resolution
-- `.dtx` / `.ins` generation path and outputs
-- `lltfontfallbacks`, `lltfontfeatures`, `lltpaperstyleminimal` standalone load
+- natbib preamble load order, option selection, and duplicate citation aliases
+- `.dtx` / `.ins` non-authoritative docs and extraction-path behavior
+- `lltfontfallbacks`, `lltfontfeatures`, `lltlists`, `lltmathgridlocked`, and
+  separate-package `lltpaperstyleminimal` standalone loads
 - module preload order (`lltparagraphs` + `lltpaperstyle`)
-- manual `biblatex` loading path under supported scenarios
-- minimal option behavior
+- manual `biblatex` loading path under supported scenarios, including absence of
+  `biblatex Warning` in the existing manual-contract fixture
+- main-package `minimal` option behavior, distinct from separate
+  `lltpaperstyleminimal` package behavior
+
+### Execution Results
+
+- Pending.
+
+### Verifier Validation
+
+- Method: pending
+- Evidence: No review has run yet.
 
 ## Reviewer Findings
 
@@ -266,3 +305,53 @@ Add focused compatibility checks for:
 
 No other material findings; Constraints, Risks, and the verification command
 set are consistent with the roadmap and Lane 1 outcomes.
+
+## Resolutions
+
+1. `accepted-current` — Corrected the three bad scope tokens to
+   `paper/lltpaperstyle.dtx`, `paper/lltpaperstyle.ins`, and
+   `paper/lltpaperstyleminimal.sty` before freeze.
+2. `accepted-current` — Updated `Worktree Context` with the intended
+   implementation branch `codex/lane-2-compatibility-and-package-api`,
+   `Detached: no`, the canonical plan path, and an explicit no-waiver rule
+   against implementing directly on `main`.
+3. `accepted-current` — Recorded the four Lane-2 gate decisions before freeze:
+   `.dtx`/`.ins` is non-authoritative for this lane; standalone support remains
+   public for documented standalone modules; `minimal` means reduced typography
+   modules while `lltpaperstyleminimal` is a separate package surface; documented
+   module preloading remains supported, with unsupported load orders rejected or
+   documented explicitly.
+4. `accepted-current` — Chose the code-fix route for the named standalone module
+   gaps by adding `paper/modules/lltlists.sty` and
+   `paper/modules/lltmathgridlocked.sty` to scope for local dependency
+   declarations such as `etoolbox`; the plan does not narrow the README claim by
+   default.
+5. `accepted-current` — Split the main-package `minimal` option from the separate
+   `paper/lltpaperstyleminimal.sty` package throughout scope, assumptions, and
+   verification bullets.
+6. `accepted-current` — Kept the zero-new-durable-files budget by requiring new
+   probes to use temp dirs or existing harness files unless a later plan delta
+   explicitly authorizes fixtures.
+7. `accepted-current` — Added the missing lifecycle sections and stubs:
+   `Execution Results`, `Verifier Validation`, `Resolutions`, and `Plan Deltas`.
+8. `accepted-current` — Accepted the advisory wording tightening: step 2 now names
+   natbib load-order/option/alias defects, and step 6 narrows `biblatex`
+   verification to the existing manual-contract fixture warning check.
+
+## Plan Deltas
+
+- Status advanced from `Needs Resolution` to `Frozen` after all critic findings
+  were routed.
+- Worktree baseline changed from direct `main` implementation to the branch
+  `codex/lane-2-compatibility-and-package-api` with no direct-main waiver.
+- Scope tokens were corrected for DTX/INS and the separate minimal package, and
+  scope was expanded to `paper/README-DTX.md`, `paper/modules/lltlists.sty`, and
+  `paper/modules/lltmathgridlocked.sty`.
+- Assumptions now record the four Lane-2 public-contract decisions before
+  implementation.
+- Implementation and verification wording now distinguish natbib load-order/API
+  defects, DTX non-authoritative documentation, standalone module dependency
+  fixes, module preload support, manual `biblatex` warning checks, the main
+  `minimal` option, and the separate `lltpaperstyleminimal` package.
+- Lifecycle stubs were added for downstream `implement-from-plan` and
+  `review-diff-vs-plan` writes.
