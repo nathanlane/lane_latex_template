@@ -14,6 +14,13 @@ All notable changes to the Lane LaTeX Template are documented here.
 - Classified `main.log`/`main.blg` warning policy and spacing-integrity check as
   advisory in this lane; updated verification guidance in `README.md`,
   `tests/README.md`, and `docs/technical/TESTING.md`.
+- Made `tests/check-spacing-integrity.sh` self-describe as an advisory diagnostic
+  that always exits 0 except on genuine tooling errors, matching the documented
+  non-gating role (previously it exited 1 on heuristic spacing flags).
+- Corrected the `tlmgr install` list in `README.md` to match the fonts actually
+  loaded (`tgpagella`, `inconsolata`, `newpx`/newpxmath, `mathalfa`, `booktabs`);
+  removed the spurious sans-serif math entry (`newpxsf`, no such package; the
+  template loads no sans math).
 
 ## 2026-05-28
 

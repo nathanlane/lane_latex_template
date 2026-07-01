@@ -5,6 +5,12 @@
 # Purpose: Detect global spacing issues that might not be caught by compilation
 # This script analyzes PDFs for anomalies that indicate spacing leaks
 #
+# STATUS: Advisory diagnostic only (Lane 1 build-hygiene decision). It reports
+# heuristic density/efficiency warnings but never fails the build: it always
+# exits 0 except on genuine tooling errors (missing poppler utilities). Do not
+# use it as a hard pass/fail gate unless the heuristics are recalibrated for the
+# template PDF. See docs/technical/TESTING.md for the current warning policy.
+#
 # Usage: ./check-spacing-integrity.sh [pdf-file]
 # ==============================================================================
 
@@ -103,7 +109,7 @@ analyze_pdf() {
         echo -e "${GREEN}✓ No spacing issues detected${NC}"
         return 0
     else
-        echo -e "${RED}✗ $issues potential spacing issues found${NC}"
+        echo -e "${YELLOW}⚠ $issues potential spacing issue(s) flagged (advisory)${NC}"
         return 1
     fi
 }
@@ -125,13 +131,15 @@ if [ $# -eq 0 ]; then
     done
     
     if [ "$failed" -gt 0 ]; then
-        echo -e "${RED}Failed: $failed PDFs have potential spacing issues${NC}"
-        exit 1
+        echo -e "${YELLOW}Advisory: $failed PDF(s) flagged potential spacing issues (diagnostic only, not a build gate)${NC}"
     else
-        echo -e "${GREEN}Success: All PDFs pass spacing integrity checks${NC}"
-        exit 0
+        echo -e "${GREEN}All PDFs pass spacing integrity heuristics${NC}"
     fi
+    # %% FIX: Advisory diagnostic only (Lane 1); heuristic flags must not fail the build.
+    exit 0
 else
     # Analyze specific PDF
-    analyze_pdf "$1"
+    # %% FIX: Advisory diagnostic only (Lane 1); heuristic flags must not set a non-zero build-gate status.
+    analyze_pdf "$1" || true
+    exit 0
 fi

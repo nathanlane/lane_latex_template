@@ -82,7 +82,7 @@ Verified locally on May 28, 2026; Overleaf evidence must come from the project c
 make check
 
 # Install missing packages (if any)
-tlmgr install tgpagella inconsolata newpxsf newpx booktabs
+tlmgr install tgpagella inconsolata newpx mathalfa booktabs
 
 # Test compilation
 make lint
