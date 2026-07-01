@@ -1,7 +1,7 @@
 ---
 topic: lane-2-compatibility-and-package-api
 created: 2026-07-01
-status: Needs Review Resolution
+status: Frozen
 ---
 
 # Lane 2 Compatibility And Package API
@@ -47,23 +47,27 @@ keeping all typography and visual defaults unchanged.
 
 - `paper/preamble-natbib.tex`
   - Repair load-order, package-option, and duplicate-alias problems that currently
-    break natbib entry points.
+    break natbib entry points, including the TeX Live 2025 `doi.sty`
+    `\doiprefix` contract.
 - `paper/lltpaperstyle.sty`
-  - Resolve module ownership and preloading behavior that affects API
-    compatibility.
+  - Resolve module ownership, preloading behavior, and package loading order that
+    affects API compatibility.
 - `paper/lltpaperstyleminimal.sty`
   - Validate the separate minimal package load as distinct from the main-package
-    `minimal` option.
+    `minimal` option, including standalone dependencies for package hooks.
 - `paper/modules/lltfontfallbacks.sty`
-  - Validate standalone-loading behavior and compatibility expectations.
+  - Validate standalone-loading behavior and compatibility expectations, including
+    local conditionals needed outside the main package.
 - `paper/modules/lltfontfeatures.sty`
-  - Validate standalone-loading behavior and compatibility expectations.
+  - Validate standalone-loading behavior and compatibility expectations, including
+    idempotent text-symbol fallbacks.
 - `paper/modules/lltlists.sty`
   - Add local standalone dependency declarations if needed for environment hooks.
 - `paper/modules/lltmathgridlocked.sty`
   - Add local standalone dependency declarations if needed for environment hooks.
 - `paper/modules/lltparagraphs.sty`
-  - Confirm load-order interactions when used standalone or with preloaded modules.
+  - Confirm and repair load-order interactions when used standalone or with
+    preloaded modules.
 - `paper/modules/lltmicrotype.sty`
   - Read-only by default unless an API contract for module loading explicitly
     requires a minimal compatibility adjustment.
@@ -125,6 +129,8 @@ keeping all typography and visual defaults unchanged.
 
 1. Rebaseline compatibility evidence and keep a clean working index:
    - `git status --porcelain=v1`
+   - Confirm the branch diff does not ship the out-of-scope `.claude/commands/`
+     metadata; remove or move it off the lane branch before PR if still present.
    - `make lint`
    - `latexmk -pdf -interaction=nonstopmode main.tex`
    - `pytest -q`
@@ -133,6 +139,10 @@ keeping all typography and visual defaults unchanged.
 2. Repair broken natbib preamble API behavior:
    - Load `lltpaperstyle` with the intended natbib option/order and remove duplicate
      citation aliases that redefine existing natbib commands.
+   - Guard or remove the `\doiprefix` customization so TeX Live 2025 `doi.sty`
+     compiles the documented natbib entry point.
+   - Clean up any remaining no-op or self-referential citation aliases and comments
+     that no longer describe natbib behavior.
    - Confirm no stale references remain in active docs and integration points.
 3. Resolve DTX/INS extraction contract:
    - Inspect `paper/lltpaperstyle.dtx` and `paper/lltpaperstyle.ins` generation
@@ -143,6 +153,9 @@ keeping all typography and visual defaults unchanged.
 4. Validate standalone module behavior:
    - Probe `lltfontfallbacks`, `lltfontfeatures`, `lltlists`,
      `lltmathgridlocked`, and the separate `lltpaperstyleminimal` package load.
+   - Repair the currently failing standalone surfaces: `lltfontfallbacks`
+     undefined conditionals, `lltfontfeatures` repeated text-symbol definitions,
+     and `lltpaperstyleminimal` missing package-hook dependencies.
    - Add local dependency declarations such as `etoolbox` where an in-scope module
      uses environment hooks standalone.
    - Ensure failures are reported with actionable contract wording rather than
@@ -150,16 +163,29 @@ keeping all typography and visual defaults unchanged.
 5. Reconcile module preload collisions:
    - Verify `lltparagraphs` preload interactions and ordering against
      `lltpaperstyle`.
+   - Repair the `\noindentpar` collision for the documented preload path or document
+     that exact load order as unsupported in the same commit.
    - Keep documented preloading supported while rejecting or documenting unsupported
      load orders, without changing typography output defaults.
 6. Validate `biblatex` compatibility:
+   - Fix the supported manual-`biblatex` loading path or update the documented
+     pattern before enforcing the no-warning gate.
    - Assert the existing manual `biblatex` contract fixture emits no
      `biblatex Warning` under supported usage.
    - Keep non-visual compatibility fixes in place with clear scope notes.
 7. Update module ownership and documentation:
    - Align `paper/modules/README.md` and `README.md` with the actual supported
      optional module and minimal options.
-8. Capture final compatibility results and commit plan-visible notes about any
+   - Remove any README wording that describes `lltpaperstyleminimal` as a
+     `lltpaperstyle` option; keep it documented only as a separate package surface.
+   - Replace blanket standalone-module claims with wording that matches the repaired
+     probes and table-listed support.
+8. Harden the compatibility probe harness:
+   - Add the missing main-package `minimal` option probe alongside the separate
+     `lltpaperstyleminimal` package probe.
+   - Let compatibility probes continue after individual failures and report the full
+     failure set before exiting nonzero.
+9. Capture final compatibility results and commit plan-visible notes about any
    remaining intentional limitations in compatibility claims.
 
 ## Risks
@@ -174,6 +200,9 @@ keeping all typography and visual defaults unchanged.
   docs changes could be larger than code changes.
 - Tests currently assert shell return codes and PDF text; a regression in API surface
   may require adding compatibility probes and could increase verification scope.
+- The active branch contains an out-of-scope metadata commit; it must be removed,
+  moved, or explicitly blocked before the lane PR so the compatibility branch does
+  not silently ship unrelated files.
 
 ## Test Plan
 
@@ -192,6 +221,8 @@ git status --short
 Add focused compatibility checks from temp dirs or existing harness files for:
 
 - natbib preamble load order, option selection, and duplicate citation aliases
+- natbib `doi.sty` compatibility, including absence of the `\doiprefix` undefined
+  error under TeX Live 2025
 - `.dtx` / `.ins` non-authoritative docs and extraction-path behavior
 - `lltfontfallbacks`, `lltfontfeatures`, `lltlists`, `lltmathgridlocked`, and
   separate-package `lltpaperstyleminimal` standalone loads
@@ -200,6 +231,8 @@ Add focused compatibility checks from temp dirs or existing harness files for:
   `biblatex Warning` in the existing manual-contract fixture
 - main-package `minimal` option behavior, distinct from separate
   `lltpaperstyleminimal` package behavior
+- compatibility-probe harness behavior that reports all probe failures before
+  exiting nonzero
 
 ### Execution Results
 
@@ -449,6 +482,39 @@ V10. **Advisory (minor, non-blocking).** (i) `run_compatibility_probes`
    natbib load-order/option/alias defects, and step 6 narrows `biblatex`
    verification to the existing manual-contract fixture warning check.
 
+### 2026-07-02 review-diff-vs-plan (Verifier)
+
+V1. `accepted-current` — The lifecycle contract was not completed and verifier
+    reruns show red gates, so the plan returns to `Frozen` for re-implementation
+    rather than advancing toward closeout.
+V2. `accepted-current` — Planned verification failures remain current blockers;
+    the re-implementation must make `pytest -q` and `tests/run-tests.sh` pass
+    before recording new execution results.
+V3. `accepted-current` — The natbib entry point still fails under TeX Live 2025;
+    the plan now requires guarding or removing the `\doiprefix` customization and
+    cleaning up stale/no-op citation aliases or comments.
+V4. `accepted-current` — The manual-`biblatex` no-warning gate is valid only after
+    the supported loading path or documented pattern is fixed; the plan now orders
+    that fix before asserting the gate.
+V5. `accepted-current` — The failing standalone/preload probes are in scope:
+    repair `lltfontfeatures`, `lltfontfallbacks`, `lltpaperstyleminimal`, and the
+    documented `lltparagraphs` preload path, or document any unsupported order in
+    the same commit.
+V6. `accepted-current` — Remove README wording that presents `lltpaperstyleminimal`
+    as a `lltpaperstyle` option; keep the existing separate-package note as the
+    supported contract.
+V7. `accepted-current` — Align `paper/modules/README.md` standalone claims with the
+    repaired probe set and table-listed support rather than leaving blanket support
+    claims.
+V8. `accepted-current` — Add the missing main-package `minimal` option probe beside
+    the separate `lltpaperstyleminimal` package probe.
+V9. `accepted-current` — The out-of-scope `.claude/commands/` metadata must not ship
+    silently in the lane branch; the re-implementation preflight must remove or move
+    it off the branch before PR, or block for explicit user direction.
+V10. `accepted-current` — Fold the advisory probe-harness, natbib comment, and
+     remaining alias cleanup into the V3/V5 re-implementation so reruns expose the
+     complete compatibility failure set.
+
 ## Plan Deltas
 
 - Status advanced from `Needs Resolution` to `Frozen` after all critic findings
@@ -466,3 +532,15 @@ V10. **Advisory (minor, non-blocking).** (i) `run_compatibility_probes`
   `minimal` option, and the separate `lltpaperstyleminimal` package.
 - Lifecycle stubs were added for downstream `implement-from-plan` and
   `review-diff-vs-plan` writes.
+- Status returned from `Needs Review Resolution` to `Frozen` because all
+  post-review verifier findings were routed `accepted-current`.
+- Re-implementation scope now explicitly includes the TeX Live 2025 natbib
+  `\doiprefix` failure, manual-`biblatex` input/loading-order warning, failing
+  standalone/preload module probes, invalid minimal-option documentation, blanket
+  standalone-module README claims, and the missing main-package `minimal` option
+  probe.
+- The compatibility harness plan now requires full failure-set reporting rather
+  than aborting at the first failed probe.
+- The branch-footprint preflight now requires the out-of-scope dot-claude command
+  metadata to be removed or moved off the lane branch, without expanding the lane
+  scope allowlist or silently shipping unrelated files.
