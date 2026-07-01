@@ -1,7 +1,7 @@
 ---
 topic: lane-1-build-hygiene-test-surface
 created: 2026-07-01
-status: Implementing
+status: Implemented
 ---
 
 # Lane 1 Build Hygiene Test Surface
@@ -253,12 +253,36 @@ Expected final signals:
 
 ### Execution Results
 
-- Pending.
+- Baseline pre-change porcelain (snapshot):  
+  ` M tests/compilation/logs/biblatex-manual-contract_pass1.log`  
+  ` M tests/compilation/logs/biblatex-manual-contract_pass2.log`  
+  ` M tests/compilation/logs/compatibility-backports.log`
+- Final checks executed and green:
+  - `make lint` (0)
+  - `latexmk -pdf -interaction=nonstopmode main.tex` (0)
+  - `latexmk -pdf -interaction=nonstopmode -g main.tex` (0)
+  - `pytest -q` (17 passed)
+  - `tests/check-spacing-integrity.sh main.pdf || true` (non-zero as expected for lane policy)
+  - `rg -n "Warning|Error|Undefined|Overfull|Underfull|WARN -" main.log main.blg` (shows accepted template-content warnings only)
+  - `rg -c "Unknown slot number" main.log` (241; accepted and deferred)
+- Final porcelain status is limited to:
+  - edited source/docs:
+    `.gitignore`, `references.bib`, `CHANGELOG.md`, `README.md`,
+    `tests/README.md`, `docs/technical/TESTING.md`
+  - deleted transient fixtures: all `tests/compilation/logs/*.log`
+- Warning policy now classifies `showhyphens`, remaining overfull/underfull
+  warnings, and microtype unknown-slot reports as accepted in this lane unless a
+  no-output-change fix is proven.
+- `tests/check-spacing-integrity.sh` is explicitly advisory.
 
 ### Verifier Validation
 
-- Method: pending.
-- Evidence: pending.
+- Method: command suite and artifact-state comparison against baseline.
+- Evidence:
+  - `make lint`, `latexmk -pdf -interaction=nonstopmode main.tex`,
+    `latexmk -pdf -interaction=nonstopmode -g main.tex`, and `pytest -q` all
+    exit 0.
+  - Baseline-status comparison captured in `Execution Results` shows expected log churn was converted to tracked deletions under the transient-log contract.
 
 ## External Agent Challenge Findings
 
@@ -394,3 +418,6 @@ resolve before implementation, not accepted decisions.
   for harness-contract and local/CI parity review.
 - 2026-07-01: Added explicit offline-safe ISBN handling, cross-lane Lane 2
   collision risk, and pre/post porcelain status comparison.
+- 2026-07-01: Completed log hygiene by removing all tracked
+  `tests/compilation/logs/*.log` artifacts from git and documenting transient log
+  handling; this changes expected final status to include staged deletions.
