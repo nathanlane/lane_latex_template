@@ -1,7 +1,7 @@
 ---
 topic: lane-2-compatibility-and-package-api
 created: 2026-07-01
-status: Implementing
+status: Needs Review Resolution
 ---
 
 # Lane 2 Compatibility And Package API
@@ -207,8 +207,11 @@ Add focused compatibility checks from temp dirs or existing harness files for:
 
 ### Verifier Validation
 
-- Method: pending
-- Evidence: No review has run yet.
+- Method: reran-planned-verification
+- Evidence: `make lint`, `latexmk` pass and the tree stays clean, but `pytest -q`
+  fails 4 of 18 and `tests/run-tests.sh` exits 1 at the natbib probe
+  (`! LaTeX Error: Command \doiprefix undefined`; manual-biblatex fixture log
+  contains `Package biblatex Warning: Load 'inputenc' before biblatex`).
 
 ## Reviewer Findings
 
@@ -305,6 +308,114 @@ Add focused compatibility checks from temp dirs or existing harness files for:
 
 No other material findings; Constraints, Risks, and the verification command
 set are consistent with the roadmap and Lane 1 outcomes.
+
+### 2026-07-02 review-diff-vs-plan (Verifier)
+
+Reviewed diff `main...codex/lane-2-compatibility-and-package-api`
+(implementation commit `df7e41c`, plus `bfa5988`). Scope gate script
+`scripts/check_workflow_gates.py` does not exist in this repo; a manual
+file-list-vs-scope-token check was performed instead.
+
+V1. **The implement step never completed its lifecycle contract.** Evidence:
+    frontmatter arrived at review as `status: Implementing` and
+    `Execution Results` still reads "Pending."; no `Implemented`/`Blocked`
+    status commit exists after `df7e41c`. Impact: the owner recorded no
+    verification, and rerunning it (V2) shows the gates are red — the honest
+    implement-step outcome was `Blocked` or continued work, not a silent
+    handoff. Routing hint: accepted-current — return to `Frozen` and
+    re-implement.
+
+V2. **Planned verification fails when rerun.** Evidence: `pytest -q` → 4
+    failed / 14 passed; `tests/run-tests.sh` exits 1. Three pytest failures
+    cascade from the natbib probe (V3); the fourth is the manual-biblatex
+    warning gate (V4). `make lint`, `latexmk -pdf ... main.tex`, and
+    `git status --short` (clean tree) pass. Impact: the lane's own test plan
+    rejects the implementation as shipped. Routing hint: accepted-current.
+
+V3. **The natbib entry point still fails to compile.** Evidence:
+    `paper/preamble-natbib.tex:80` runs `\renewcommand{\doiprefix}` but the
+    TeX Live 2025 `doi.sty` no longer defines `\doiprefix` →
+    `! LaTeX Error: Command \doiprefix undefined` in the probe log. The
+    load-order/option/alias repairs in `df7e41c` are correct as far as they
+    go (natbib loads once with `authoryear,round,semicolon,sort&compress`),
+    but the lane's central P1 repair is incomplete: the documented entry
+    point still cannot compile. Routing hint: accepted-current — guard or
+    drop the `\doiprefix` customization.
+
+V4. **The biblatex warning gate was added without the underlying fix.**
+    Evidence: `tests/test-bibliography.sh` now hard-fails on
+    `Package biblatex Warning`, but `paper/lltpaperstyle.sty:150/235/315`
+    still load `inputenc` after a manually loaded `biblatex`, so the
+    documented supported path emits `Load 'inputenc' before biblatex` and
+    the gate is permanently red. The canonical finding's fix order was:
+    change the loading/documentation first, then assert. Routing hint:
+    accepted-current — fix ordering (or the documented pattern) in the same
+    change that keeps the assertion.
+
+V5. **Four of seven compatibility probes fail; the in-scope contracts they
+    encode were never repaired.** Evidence (probe reruns, TeX Live 2025):
+    `standalone-lltfontfeatures` → `\textendash already defined`
+    (`paper/modules/lltfontfeatures.sty:154-155`, also self-referential
+    definitions; in scope, untouched); `standalone-lltfontfallbacks` →
+    `\inconsolataloadedtrue` undefined standalone
+    (`paper/modules/lltfontfallbacks.sty:15`, no local `\newif`);
+    `standalone-lltpaperstyleminimal` → `\AtEndPreamble` undefined
+    (`paper/lltpaperstyleminimal.sty:79`, no `etoolbox` require — the exact
+    defect class fixed in lltlists/lltmathgridlocked);
+    `preload-lltparagraphs-into-paperstyle` → `\noindentpar already defined`
+    (`paper/modules/lltparagraphs.sty:41` vs `paper/lltpaperstyle.sty:730`,
+    both `\newcommand`; step 5 produced no code or doc change). Impact:
+    steps 4-5 added probes encoding contracts that do not hold. Routing
+    hint: accepted-current — fix each surface or explicitly document it as
+    unsupported in the same commit, per the plan's no-silent-narrowing
+    constraint.
+
+V6. **README.md documents `lltpaperstyleminimal` as a package option.**
+    Evidence: new "Available options" bullet
+    "`lltpaperstyleminimal` – Load the standalone minimal package variant";
+    `paper/lltpaperstyle.sty:134-144` declares no such option and has no
+    `\DeclareOption*`, so `\usepackage[lltpaperstyleminimal]{lltpaperstyle}`
+    errors with an unknown-option failure. This reintroduces in docs the
+    option-vs-package conflation that Resolution 5 removed from the plan.
+    Routing hint: accepted-current — delete the bullet; the correct
+    clarifying Note below it already exists.
+
+V7. **`paper/modules/README.md` still overclaims standalone support.**
+    Evidence: line 3 ("can be used independently") and the Design
+    Principles line ("Each module can function standalone") were left as
+    blanket claims while the new inserted paragraph narrows support to
+    table-listed modules — and per V5 even two table-listed modules fail
+    standalone. Impact: step 7 ("align claims with observed behavior") is
+    not met. Routing hint: accepted-current — align wording with whatever
+    V5 resolution makes true.
+
+V8. **One planned probe is missing.** Evidence: the test-plan bullet
+    "main-package `minimal` option behavior, distinct from separate
+    `lltpaperstyleminimal` package behavior" has no corresponding probe in
+    `tests/run-tests.sh`. Routing hint: accepted-current — add the option
+    probe alongside the existing package probe.
+
+V9. **Out-of-scope commit on the lane branch breaks the footprint budget.**
+    Evidence: `bfa5988` adds six net-new files under `.claude/commands/`,
+    none in `Files In Scope`, against a net-new-durable-files budget of 0
+    with no plan delta; the roadmap's cross-lane rule requires commits
+    path-scoped to the active lane. Routing hint: deferred-backlog or
+    user-accepted delta — either drop/move the commit off the lane branch
+    or record an explicit justification; it should not ship silently inside
+    the lane PR.
+
+V10. **Advisory (minor, non-blocking).** (i) `run_compatibility_probes`
+    lacks the `|| true` continuation the fixture loop uses, so the first
+    probe failure aborts `tests/run-tests.sh` before remaining probes and
+    the summary run. (ii) `\providecommand{\cite}{\citep}` at
+    `paper/preamble-natbib.tex:62` is a no-op once natbib is loaded, so the
+    adjacent "Default to parenthetical" comment no longer describes the
+    behavior (natbib's `\cite` is textual in authoryear mode); either
+    restore `\renewcommand` after load or fix the comment. (iii) The kept
+    self-referential aliases (`\providecommand{\citeauthor}[1]{\citeauthor{#1}}`)
+    are latent infinite recursion if natbib were ever absent; the canonical
+    finding recommended deleting them. Routing hint: fold into the V3/V5
+    re-implementation.
 
 ## Resolutions
 
