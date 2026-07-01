@@ -19,6 +19,10 @@ make test-clean      # Test from clean state
 Some pytest regression checks inspect generated PDF text. Install Poppler so
 `pdftotext` is available, for example `brew install poppler` on macOS.
 
+`tests/compilation/logs/` is treated as a transient output directory.
+Harness logs are useful for local debugging but are ignored by git and are not part
+of the verification contract.
+
 ## Test Structure
 
 ```
@@ -34,7 +38,7 @@ tests/
 ## For New Users
 
 1. **Before submitting changes**, run `make test` to ensure nothing broke
-2. **If tests fail**, check the log files in `tests/compilation/logs/`
+2. **If tests fail**, inspect the latest generated logs in `tests/compilation/logs/`
 3. **Visual checks** are manual - compare PDFs in `tests/visual/output/`
 
 ## For Advanced Users

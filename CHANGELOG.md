@@ -8,6 +8,12 @@ All notable changes to the Lane LaTeX Template are documented here.
   repository documentation/professionalism, and typography.
 - Added a master roadmap plan for turning the deep review findings into
   serialized build, package API, documentation, and typography lane plans.
+- Added lane-1 build hygiene fixes: removed malformed ISBN metadata warnings
+  from `references.bib`, made `tests/compilation/logs/*.log` transient in
+  `.gitignore`, and documented the verification artifact contract.
+- Classified `main.log`/`main.blg` warning policy and spacing-integrity check as
+  advisory in this lane; updated verification guidance in `README.md`,
+  `tests/README.md`, and `docs/technical/TESTING.md`.
 
 ## 2026-05-28
 

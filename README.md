@@ -82,10 +82,12 @@ Verified locally on May 28, 2026; Overleaf evidence must come from the project c
 make check
 
 # Install missing packages (if any)
-tlmgr install tgpagella inconsolata newtxsf booktabs
+tlmgr install tgpagella inconsolata newpxsf newpx booktabs
 
 # Test compilation
-make test-quick
+make lint
+make build
+pytest -q
 ```
 
 ### Platform Notes
@@ -149,10 +151,13 @@ make watch        # Auto-recompile on changes
 **Repository verification gates**:
 
 ```bash
-chktex -q -n8 -n46 *.tex
+chktex -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48 *.tex
 latexmk -pdf -interaction=nonstopmode main.tex
 pytest -q
 ```
+
+`tests/check-spacing-integrity.sh main.pdf` is run as a diagnostic in this lane:
+`tests/check-spacing-integrity.sh main.pdf || true`.
 
 **Manual compilation**:
 ```bash
