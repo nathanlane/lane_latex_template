@@ -2,6 +2,26 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## 2026-07-01
+
+- Added a consolidated deep review findings note covering maintainability,
+  repository documentation/professionalism, and typography.
+- Added a master roadmap plan for turning the deep review findings into
+  serialized build, package API, documentation, and typography lane plans.
+- Added lane-1 build hygiene fixes: removed malformed ISBN metadata warnings
+  from `references.bib`, made `tests/compilation/logs/*.log` transient in
+  `.gitignore`, and documented the verification artifact contract.
+- Classified `main.log`/`main.blg` warning policy and spacing-integrity check as
+  advisory in this lane; updated verification guidance in `README.md`,
+  `tests/README.md`, and `docs/technical/TESTING.md`.
+- Made `tests/check-spacing-integrity.sh` self-describe as an advisory diagnostic
+  that always exits 0 except on genuine tooling errors, matching the documented
+  non-gating role (previously it exited 1 on heuristic spacing flags).
+- Corrected the `tlmgr install` list in `README.md` to match the fonts actually
+  loaded (`tgpagella`, `inconsolata`, `newpx`/newpxmath, `mathalfa`, `booktabs`);
+  removed the spurious sans-serif math entry (`newpxsf`, no such package; the
+  template loads no sans math).
+
 ## 2026-05-28
 
 - Added a LaTeX package code review report focused on maintainability, option contracts, and package API risks.

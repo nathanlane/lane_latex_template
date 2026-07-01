@@ -120,9 +120,7 @@ __pycache__/
 *.figlist
 *.makefile
 *.listing
-
-# But keep test compilation logs  
-!tests/compilation/logs/*.log
+# %% FIX: Treat raw test compilation logs as transient artifacts; do not track *.log in tests/compilation/logs.
 
 # Context files
 context/
@@ -135,5 +133,3 @@ CLAUDE.md
 .env
 .env.local
 .env.*.local
-tests/compilation/logs/minimal-root.log
-tests/compilation/logs/minimal.log

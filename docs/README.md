@@ -23,6 +23,7 @@ User guides and how-to documentation:
 
 ### 📋 plans/
 Optimization and implementation plans:
+- `../superpowers/plans/2026-07-01-deep-review-roadmap.md` - Master roadmap for staged deep-review remediation lanes
 - `../superpowers/plans/2026-05-28-latex-template-maintainability.md` - Checkpointed plan for package maintainability and option-contract fixes
 - `BIBLIOGRAPHY_OPTIMIZATION_PLAN.md` - Bibliography system improvements
 - `CAPTION_OPTIMIZATION_PLAN.md` - Caption typography enhancements
@@ -47,6 +48,7 @@ Style specifications and changelog:
 Technical documentation and summaries:
 - `CODE_HYGIENE_SUMMARY.md` - Code quality report
 - `COMPILATION_ERRORS_MASTER_LIST.md` - Known compilation issues
+- `DEEP_REVIEW_FINDINGS_2026-07-01.md` - Three-part maintainability, documentation, and typography review findings
 - `DIRECTORY_CLEANUP_SUMMARY.md` - Cleanup operation results
 - `FINAL_COMPILATION_STATUS.md` - Final build status report
 - `LATEX_CODE_REVIEW_2026-05-28.md` - Maintainability and package API code review

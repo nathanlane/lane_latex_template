@@ -36,6 +36,32 @@ make test-clean
 ls tests/compilation/*.pdf
 ```
 
+## Build Hygiene Verification
+
+For this lane, accepted verification is:
+
+```bash
+make lint
+latexmk -pdf -interaction=nonstopmode main.tex
+latexmk -pdf -interaction=nonstopmode -g main.tex
+pytest -q
+tests/check-spacing-integrity.sh main.pdf || true
+rg -n "Warning|Error|Undefined|Overfull|Underfull|WARN -" main.log main.blg
+rg -c "Unknown slot number" main.log
+git status --porcelain=v1
+```
+
+- `tests/check-spacing-integrity.sh` is **diagnostic only** in this lane; treat non-zero
+  results as evidence for future spacing review, not a blocking build gate.
+- `main.blg` warnings are reduced by removing malformed local ISBN metadata.
+- Accepted `main.log` warnings for this lane are:
+  - `LaTeX Warning: Command \\showhyphens`
+  - `Overfull` / `Underfull` lines where fixes require typography or prose changes
+  - `Package microtype Info: Unknown slot number`
+- Remaining warnings are documented in `main.log`/`main.blg` and should only be
+  changed in this lane when a warning can be eliminated without visual impact.
+- `tests/compilation/logs/*.log` are generated artifacts and are intentionally ignored from git tracking.
+
 ## Testing Framework
 
 ### Overview
