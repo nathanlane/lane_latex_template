@@ -2,6 +2,7 @@
 topic: lane-1-build-hygiene-test-surface
 created: 2026-07-01
 status: Implemented
+closed: 2026-07-01
 ---
 
 # Lane 1 Build Hygiene Test Surface
