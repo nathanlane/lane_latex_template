@@ -2,6 +2,24 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## 2026-07-02
+
+- Added compatibility fixes for natbib entry-point and standalone module contracts:
+  `paper/preamble-natbib.tex` now loads `lltpaperstyle` in `natbib` mode and
+  uses conditional citation aliases to avoid duplicate command-definition errors.
+- Added explicit standalone dependency declarations for `lltlists` (`graphicx`,
+  `etoolbox`) and `lltmathgridlocked` (`etoolbox`) so hooks and marker
+  rendering work when loaded outside `lltpaperstyle`.
+- Marked `.dtx/.ins` usage as non-authoritative in `paper/README-DTX.md` and
+  updated compatibility wording in `paper/modules/README.md` and `README.md` for
+  the separate `lltpaperstyleminimal` package surface.
+- Extended test harnesses with compatibility probes for standalone/preload contract
+  paths, including `lltfontfeatures`, and fixed harness artifact handling for
+  temporary compatibility probes.
+- Added manual biblatex-warning enforcement in `tests/test-bibliography.sh`.
+- Added regression assertion that `tests/run-tests.sh` executes compatibility
+  probes in the pytest harness.
+
 ## 2026-07-01
 
 - Added a consolidated deep review findings note covering maintainability,

@@ -2,6 +2,10 @@
 
 This directory contains the modular components of the lltpaperstyle LaTeX package. Each module provides specific functionality and can be used independently or as part of the complete lltpaperstyle system.
 
+As of this compatibility lane, the modules that declare standalone entry points are
+supported as independent loads; each module in this list now states required local
+dependencies and compatibility mode is validated through harness probes.
+
 > **Note**: As of July 2025, all modules have been renamed following the Lane LaTeX Template (LLT) naming convention. Module files now use the `llt` prefix (e.g., `lltcolors.sty` instead of `colors.sty`).
 
 ## Module Overview
@@ -13,7 +17,11 @@ This directory contains the modular components of the lltpaperstyle LaTeX packag
 | `lltcolors.sty` | Professional color system | xcolor |
 | `lltdimensions.sty` | Page geometry and grid system | geometry |
 | `lltheadings.sty` | Section and heading formatting | titlesec, lltcolors, lltdimensions |
-| `lltlists.sty` | List typography and environments | enumitem, lltcolors, lltdimensions |
+| `lltlists.sty` | List typography and environments | enumitem, etoolbox, graphicx, lltcolors, lltdimensions |
+| `lltmathgridlocked.sty` | Grid-aware display-math hooks | etoolbox, lltdimensions |
+| `lltparagraphs.sty` | Paragraph and quote behavior | lettrine, etoolbox, lltcolors, lltdimensions |
+| `lltfontfallbacks.sty` | Font availability fallback diagnostics | amssymb |
+| `lltfontfeatures.sty` | Font feature helpers | textcomp |
 
 ## Quick Start
 
@@ -28,7 +36,6 @@ This directory contains the modular components of the lltpaperstyle LaTeX packag
 ```latex
 % Just the color system
 \RequirePackage{lltcolors}
-```
 % Just the list styles
 \RequirePackage{lltlists}
 

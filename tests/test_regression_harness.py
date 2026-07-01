@@ -57,3 +57,15 @@ def test_manual_biblatex_contract_passes():
         timeout=120,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_run_tests_includes_compatibility_probes():
+    result = subprocess.run(
+        ["bash", "tests/run-tests.sh", "tests/fixtures/minimal-root.tex"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=240,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "compatibility probes" in result.stdout.lower()

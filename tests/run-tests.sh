@@ -16,9 +16,11 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 FIXTURES_DIR="$SCRIPT_DIR/fixtures"
 LOGS_DIR="$SCRIPT_DIR/compilation/logs"
 OUTPUT_DIR="$SCRIPT_DIR/visual/output"
+COMPAT_PROBES_DIR="$(mktemp -d)"
 
 # Create necessary directories
 mkdir -p "$LOGS_DIR" "$OUTPUT_DIR"
+trap 'rm -rf "$COMPAT_PROBES_DIR"' EXIT
 
 # Test results
 PASSED=0
@@ -46,6 +48,11 @@ test_latex_file() {
     local basename=$(basename "$tex_file" .tex)
     local log_file="$LOGS_DIR/${basename}.log"
     local pdf_output="$OUTPUT_DIR/${basename}.pdf"
+    local source_pdf="${tex_file%.tex}.pdf"
+    local source_aux="${tex_file%.tex}.aux"
+    local source_log="${tex_file%.tex}.log"
+    local source_out="${tex_file%.tex}.out"
+    local source_toc="${tex_file%.tex}.toc"
     
     log_info "Testing $basename..."
     
@@ -65,8 +72,8 @@ test_latex_file() {
         log_pass "  Compilation successful"
         
         # Move PDF to output directory
-        if [ -f "${basename}.pdf" ]; then
-            mv "${basename}.pdf" "$pdf_output"
+        if [ -f "$source_pdf" ]; then
+            mv "$source_pdf" "$pdf_output"
         fi
     else
         log_fail "  Compilation failed (see $log_file)"
@@ -107,9 +114,99 @@ test_latex_file() {
     fi
     
     # Clean up auxiliary files
-    rm -f "${basename}.aux" "${basename}.log" "${basename}.out" "${basename}.toc"
+    rm -f "$source_aux" "$source_log" "$source_out" "$source_toc"
     
     return 0
+}
+
+# Run a compatibility probe from a one-off inline source document.
+run_compatibility_probe() {
+    local name="$1"
+    local tex_file="$COMPAT_PROBES_DIR/${name}.tex"
+
+    cat > "$tex_file"
+    test_latex_file "$tex_file"
+}
+
+# Run compatibility probes for API entry points that are contract-sensitive.
+run_compatibility_probes() {
+    log_info "Running compatibility probes (standalone and preload contracts)"
+
+    run_compatibility_probe "prelude-natbib-preamble" <<'EOF'
+\documentclass[11pt]{article}
+\input{paper/preamble-natbib.tex}
+
+\begin{document}
+\section{Natbib Preamble Contract}
+\textcite{smith2020} described the framework in a foundational way.
+\autocite{smith2020}
+
+\begin{thebibliography}{1}
+\bibitem[Smith(2020)]{smith2020} Smith, A. 2020. Legacy citation style.
+\end{thebibliography}
+\end{document}
+EOF
+
+    run_compatibility_probe "standalone-lltpaperstyleminimal" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage{lltpaperstyleminimal}
+\begin{document}
+Minimal style surface compiles standalone.
+\end{document}
+EOF
+
+    run_compatibility_probe "standalone-lltlists" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage{lltlists}
+\begin{document}
+\begin{itemize}
+  \item List entry one.
+  \item List entry two.
+  \setlist[itemize,1]{label=\dashmark}
+\end{itemize}
+\end{document}
+EOF
+
+    run_compatibility_probe "standalone-lltmathgridlocked" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage{lltmathgridlocked}
+\begin{document}
+\[
+  E = mc^2
+\]
+\end{document}
+EOF
+
+    run_compatibility_probe "standalone-lltfontfeatures" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage{lltfontfeatures}
+\begin{document}
+\textfigs{123}
+\chemform{E=mc^2}
+\onehalf
+\end{document}
+EOF
+
+    run_compatibility_probe "preload-lltparagraphs-into-paperstyle" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage{lltparagraphs}
+\usepackage{lltpaperstyle}
+\begin{document}
+\paragraph{Preload contract}
+This verifies paragraph module preloading compatibility.
+\begin{quote}
+  Modular API contracts should remain stable under preload.
+\end{quote}
+\end{document}
+EOF
+
+    run_compatibility_probe "standalone-lltfontfallbacks" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage{lltfontfallbacks}
+\begin{document}
+\showfontconfig
+\end{document}
+EOF
 }
 
 # Main test runner
@@ -153,6 +250,8 @@ main() {
         test_latex_file "$fixture" || true
         echo
     done
+
+    run_compatibility_probes
     
     # Summary
     echo "Test Summary"
