@@ -1,7 +1,7 @@
 ---
 topic: lane-1-build-hygiene-test-surface
 created: 2026-07-01
-status: Frozen
+status: Implementing
 ---
 
 # Lane 1 Build Hygiene Test Surface
