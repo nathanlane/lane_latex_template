@@ -1,7 +1,7 @@
 ---
 topic: lane-2-compatibility-and-package-api
 created: 2026-07-01
-status: Implemented
+status: Needs Review Resolution
 ---
 
 # Lane 2 Compatibility And Package API
@@ -265,9 +265,13 @@ Add focused compatibility checks from temp dirs or existing harness files for:
 
 ### Verifier Validation
 
-- Method: pending
-- Evidence: Owner reran planned verification successfully; independent review has
-  not run after this implementation pass.
+- Method: reran-planned-verification
+- Evidence: Independently reran all planned commands on 2026-07-02: `make lint`
+  passes; forced `latexmk -g` rebuild produces `main.pdf` (41 pages, matching
+  the owner record); `pytest -q` 18 passed; `tests/run-tests.sh` Passed 115 /
+  Failed 0 with all nine compatibility probes green; `git status --short`
+  clean. Probe-level failures found in the first review pass no longer
+  reproduce.
 
 ## Reviewer Findings
 
@@ -472,6 +476,73 @@ V10. **Advisory (minor, non-blocking).** (i) `run_compatibility_probes`
     are latent infinite recursion if natbib were ever absent; the canonical
     finding recommended deleting them. Routing hint: fold into the V3/V5
     re-implementation.
+
+### 2026-07-02 review-diff-vs-plan (Verifier, pass 2)
+
+Reviewed diff `main...codex/lane-2-compatibility-and-package-api` after the
+rework commits (`6e11333`, `aa7a5b7`, `307f52f`). Manual scope check: all 18
+changed files are in `Files In Scope`; the out-of-scope `.claude/commands/`
+files were removed from the branch diff (V9 resolved). Prior findings V1-V9
+and V10(i)/(iii) are verified fixed: the `\doiprefix` guard, lazy `inputenc`
+loading, symmetric `\providecommand`/environment guards, the
+`\ifinconsolataloaded` typo repair, `lltpaperstyleminimal`'s `etoolbox`
+require, the removed README option bullet, the reworded standalone claims,
+the added `minimal`-option probe, and cumulative probe failure reporting all
+check out in code and under rerun (nine probes green, suite 115/0, pytest
+18/18).
+
+W1. **The reverse composition order still hard-fails and remains
+    undocumented.** Evidence: a probe compiling `\usepackage{lltpaperstyle}`
+    followed by `\usepackage{lltparagraphs}` fails with
+    `! LaTeX Error: Command \dialogue already defined`;
+    `paper/modules/lltparagraphs.sty` still defines `\dialogue`,
+    `\quoteattribution` (:136), `\academicdropcap` (:208), and the
+    `epigraph` (:62) / `emphasisquote` (:144) environments unguarded, while
+    `README.md:351` advertises `lltparagraphs` as an optional module without
+    stating any load order. Impact: the Task names "module composition" and
+    the Assumptions require unsupported orders to be "rejected or documented
+    explicitly"; a reader following the README's Modular Architecture
+    section would naturally load the module after the package and hit a raw
+    duplicate-definition error. Smallest fix is one documented sentence
+    ("load optional modules before `lltpaperstyle`; loading them after is
+    unsupported") or module-side guards mirroring the package's. Routing
+    hint: accepted-current (docs-only acceptable).
+
+W2. **CHANGELOG does not record the second commit's package-side fixes,
+    contradicting Execution Results.** Evidence: the 2026-07-02 section
+    covers the first-pass changes plus two harness/docs bullets, but omits
+    `aa7a5b7`'s material fixes: the `\doiprefix` guard, the
+    `inputenc` lazy-loading rework in `paper/lltpaperstyle.sty`, the
+    preload ownership shims in `lltpaperstyle`/`lltparagraphs`, the
+    `lltfontfallbacks` conditional repair, the `lltfontfeatures` dash-alias
+    repair, and `lltpaperstyleminimal`'s new `etoolbox` dependency.
+    The Constraints require CHANGELOG updates for material changes, and
+    `Execution Results` states "CHANGELOG.md records all material
+    compatibility/API fixes", which is currently inaccurate. Routing hint:
+    accepted-current — extend the 2026-07-02 section.
+
+W3. **Compatibility probes litter auxiliary files into the repo root.**
+    Evidence: after `tests/run-tests.sh`, the checkout root contains
+    `prelude-natbib-preamble.aux/.log/.out`, `standalone-*.aux/.log`, and
+    `main-package-minimal-option.aux/.bcf/.log/.out/.run.xml`. The probe
+    sources live in the temp dir, so `test_latex_file`'s cleanup paths
+    (`${tex_file%.tex}.aux` etc.) never match the files pdflatex writes
+    into `PROJECT_ROOT`; the PDF got a root-path fallback in `aa7a5b7` but
+    the auxiliary cleanup did not. The files are gitignored (tree stays
+    clean), but the lane's own CHANGELOG claims "fixed harness artifact
+    handling for temporary compatibility probes". Routing hint:
+    accepted-current — extend the cleanup to the same root-path fallback.
+
+W4. **Advisory (minor, non-blocking).** (i) The inline comment
+    "% Default to parenthetical" at the `\providecommand{\cite}{\citep}`
+    line still misdescribes natbib's actual `\cite` behavior even though
+    the `%% FIX:` note above it is now accurate; V10(ii) is otherwise
+    stale. (ii) Under the `nobiblatex` option with no manually loaded
+    `biblatex`, `inputenc` is now never loaded (the maybe-load call sits
+    only in the biblatex/natbib branch and minimal mode); harmless on
+    LaTeX ≥ 2018 where UTF-8 is the default, but it is a silent behavior
+    change for that path worth one CHANGELOG/docs line alongside W2.
+    Routing hint: fold into the W1-W3 fix commit.
 
 ## Resolutions
 
