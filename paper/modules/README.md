@@ -1,6 +1,6 @@
 # LLT Style Modules
 
-This directory contains the modular components of the lltpaperstyle LaTeX package. Each module provides specific functionality and can be used independently or as part of the complete lltpaperstyle system.
+This directory contains the modular components of the lltpaperstyle LaTeX package. Each module provides specific functionality; standalone use is supported where documented dependencies are present.
 
 As of this compatibility lane, the modules that declare standalone entry points are
 supported as independent loads; each module in this list now states required local
@@ -57,7 +57,7 @@ All modules follow these core principles:
 
 1. **Baseline Grid Alignment**: All vertical spacing aligns to a 13.2pt grid
 2. **Professional Typography**: Based on Butterick, Brown, and Hochuli
-3. **Modular Independence**: Each module can function standalone
+3. **Modular Independence**: Validated standalone modules list explicit dependency requirements
 4. **Graceful Degradation**: Fallbacks for missing dependencies
 5. **Overleaf Compatibility**: Tested on cloud LaTeX platforms
 

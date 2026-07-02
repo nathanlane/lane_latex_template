@@ -71,9 +71,14 @@ test_latex_file() {
         fi
         log_pass "  Compilation successful"
         
-        # Move PDF to output directory
+        # Move PDF to output directory.
+        # FIX: Probe sources can live outside the repo; pdflatex writes their
+        # PDF into the current directory when invoked from PROJECT_ROOT.
+        local root_pdf="$PROJECT_ROOT/${basename}.pdf"
         if [ -f "$source_pdf" ]; then
             mv "$source_pdf" "$pdf_output"
+        elif [ -f "$root_pdf" ]; then
+            mv "$root_pdf" "$pdf_output"
         fi
     else
         log_fail "  Compilation failed (see $log_file)"
@@ -131,8 +136,9 @@ run_compatibility_probe() {
 # Run compatibility probes for API entry points that are contract-sensitive.
 run_compatibility_probes() {
     log_info "Running compatibility probes (standalone and preload contracts)"
+    local probe_failures=0
 
-    run_compatibility_probe "prelude-natbib-preamble" <<'EOF'
+    if ! run_compatibility_probe "prelude-natbib-preamble" <<'EOF'
 \documentclass[11pt]{article}
 \input{paper/preamble-natbib.tex}
 
@@ -146,16 +152,33 @@ run_compatibility_probes() {
 \end{thebibliography}
 \end{document}
 EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
 
-    run_compatibility_probe "standalone-lltpaperstyleminimal" <<'EOF'
+    if ! run_compatibility_probe "main-package-minimal-option" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage[minimal]{lltpaperstyle}
+\begin{document}
+Main package minimal option contract is stable.
+\end{document}
+EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
+
+    if ! run_compatibility_probe "standalone-lltpaperstyleminimal" <<'EOF'
 \documentclass[11pt]{article}
 \usepackage{lltpaperstyleminimal}
 \begin{document}
 Minimal style surface compiles standalone.
 \end{document}
 EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
 
-    run_compatibility_probe "standalone-lltlists" <<'EOF'
+    if ! run_compatibility_probe "standalone-lltlists" <<'EOF'
 \documentclass[11pt]{article}
 \usepackage{lltlists}
 \begin{document}
@@ -166,8 +189,11 @@ EOF
 \end{itemize}
 \end{document}
 EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
 
-    run_compatibility_probe "standalone-lltmathgridlocked" <<'EOF'
+    if ! run_compatibility_probe "standalone-lltmathgridlocked" <<'EOF'
 \documentclass[11pt]{article}
 \usepackage{lltmathgridlocked}
 \begin{document}
@@ -176,8 +202,11 @@ EOF
 \]
 \end{document}
 EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
 
-    run_compatibility_probe "standalone-lltfontfeatures" <<'EOF'
+    if ! run_compatibility_probe "standalone-lltfontfeatures" <<'EOF'
 \documentclass[11pt]{article}
 \usepackage{lltfontfeatures}
 \begin{document}
@@ -186,8 +215,11 @@ EOF
 \onehalf
 \end{document}
 EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
 
-    run_compatibility_probe "preload-lltparagraphs-into-paperstyle" <<'EOF'
+    if ! run_compatibility_probe "preload-lltparagraphs-into-paperstyle" <<'EOF'
 \documentclass[11pt]{article}
 \usepackage{lltparagraphs}
 \usepackage{lltpaperstyle}
@@ -199,14 +231,28 @@ This verifies paragraph module preloading compatibility.
 \end{quote}
 \end{document}
 EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
 
-    run_compatibility_probe "standalone-lltfontfallbacks" <<'EOF'
+    if ! run_compatibility_probe "standalone-lltfontfallbacks" <<'EOF'
 \documentclass[11pt]{article}
 \usepackage{lltfontfallbacks}
 \begin{document}
 \showfontconfig
+Font fallback standalone surface compiles.
 \end{document}
 EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
+
+    if ((probe_failures > 0)); then
+        log_fail "$probe_failures compatibility probe failures"
+        return 1
+    else
+        log_pass "All compatibility probes passed"
+    fi
 }
 
 # Main test runner

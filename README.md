@@ -211,6 +211,7 @@ For custom biblatex options, load biblatex manually and disable automatic
 loading:
 
 ```latex
+\usepackage[utf8]{inputenc} % load before manual biblatex on pdfTeX
 \usepackage[backend=biber,style=authoryear]{biblatex}
 \addbibresource{references.bib}
 \usepackage[nobiblatex]{lltpaperstyle}
@@ -327,7 +328,6 @@ Available options:
 - `nobiblatex` – Disable automatic biblatex loading
 - `subsectionbarriers` / `nosubsectionbarriers` – Enable/disable automatic float barriers before subsections
 - `nocolor` – Disable all custom colors
-- `lltpaperstyleminimal` – Load the standalone minimal package variant
 
 Note: `\usepackage[minimal]{lltpaperstyle}` and
 `\usepackage{lltpaperstyleminimal}` are distinct surfaces.

@@ -151,8 +151,16 @@
 \newcommand{\textapostrophe}{\textquoteright}
 
 % Professional dashes with proper spacing
-\newcommand{\textendash}{\kern0.1em\textendash\kern0.1em}
-\newcommand{\textemdash}{\kern0.1em\textemdash\kern0.1em}
+\ifcsname lltfontfeatures@origtextendash\endcsname\else
+  \let\lltfontfeatures@origtextendash\textendash
+\fi
+\ifcsname lltfontfeatures@origtextemdash\endcsname\else
+  \let\lltfontfeatures@origtextemdash\textemdash
+\fi
+
+%% FIX: Preserve existing dash glyphs while avoiding self-referential redefinitions.
+\renewcommand{\textendash}{\kern0.1em\lltfontfeatures@origtextendash\kern0.1em}
+\renewcommand{\textemdash}{\kern0.1em\lltfontfeatures@origtextemdash\kern0.1em}
 
 % Degree symbol with proper spacing
 \newcommand{\degree}{\ensuremath{^\circ}}

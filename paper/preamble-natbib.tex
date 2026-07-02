@@ -59,8 +59,8 @@
 \setlength{\bibsep}{6.325pt}                          % Entry spacing (0.5 baseline units)
 
 % Professional citation punctuation
-%% FIX: Keep the \cite entry point stable without clobbering already-defined
-%% natbib citation commands.
+%% FIX: Preserve existing natbib \cite behavior; this alias is only a safe fallback
+%% when a legacy entry point has not yet defined \cite.
 \providecommand{\cite}{\citep}                        % Default to parenthetical
 \providecommand{\citestyle}[1]{\citep{#1}}           % Alias for consistency
 
@@ -77,7 +77,11 @@
 \renewcommand{\UrlFont}{\color{linknavy}\ttfamily}
 
 % Basic DOI formatting (less sophisticated than biblatex version)
-\renewcommand{\doiprefix}{DOI:\space}
+%% FIX: Guard legacy DOI prefix support for TeX Live variants that removed
+%% \doiprefix so the natbib entry-point compiles cleanly.
+\ifcsname doiprefix\endcsname
+  \renewcommand{\doiprefix}{DOI:\space}
+\fi
 
 % ------------------------------------------------------------------------------
 % CITATION COMMAND COMPATIBILITY
@@ -85,12 +89,10 @@
 % Provide compatibility commands for migration between systems
 
 % Aliases for biblatex-style commands (limited functionality)
-%% FIX: Use conditional aliases so legacy calls do not trigger duplicate
-%% command errors under natbib/biblatex mixed stacks.
+%% FIX: Keep alias set minimal and avoid self-referential definitions by only
+%% defining command wrappers where natbib does not already provide content.
 \providecommand{\textcite}[1]{\citet{#1}}            % Textual citation
 \providecommand{\autocite}[1]{\citep{#1}}            % Parenthetical citation
-\providecommand{\citeauthor}[1]{\citeauthor{#1}}     % Author only (already exists)
-\providecommand{\citeyear}[1]{\citeyear{#1}}         % Year only (already exists)
 
 % Note: Advanced biblatex features like pre/post notes are limited in natbib
 % Use standard natbib syntax: \citep[see][p. 42]{key}

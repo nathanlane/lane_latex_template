@@ -19,6 +19,11 @@ All notable changes to the Lane LaTeX Template are documented here.
 - Added manual biblatex-warning enforcement in `tests/test-bibliography.sh`.
 - Added regression assertion that `tests/run-tests.sh` executes compatibility
   probes in the pytest harness.
+- Hardened compatibility-probe control flow in `tests/run-tests.sh` so all probes
+  execute and report cumulative failures before failing the lane harness.
+- Removed the stale `lltpaperstyleminimal` option claim from `README.md` package
+  options and aligned standalone-module documentation language in
+  `paper/modules/README.md` with validated dependency requirements.
 
 ## 2026-07-01
 

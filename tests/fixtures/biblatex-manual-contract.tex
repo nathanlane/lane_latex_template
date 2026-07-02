@@ -1,4 +1,7 @@
 \documentclass{article}
+%% FIX: Manual biblatex users must load inputenc before biblatex to avoid the
+%% package warning emitted before lltpaperstyle can participate.
+\usepackage[utf8]{inputenc}
 \usepackage[
   backend=biber,
   style=authoryear,
