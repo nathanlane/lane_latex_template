@@ -217,6 +217,9 @@ loading:
 \usepackage[nobiblatex]{lltpaperstyle}
 ```
 
+With `nobiblatex`, the template does not load `biblatex` or `inputenc`.
+On pdfTeX with manual `biblatex`, load `inputenc` before `biblatex`, as shown.
+
 For legacy natbib-based documents, use the dedicated preamble:
 
 ```latex
@@ -350,6 +353,10 @@ The style system is fully modularized:
 **Optional modules**:
 - `lltparagraphs` – Advanced paragraph formatting
 - `llthochuli` – Advanced optical adjustments
+
+Load optional modules such as `lltparagraphs` before `lltpaperstyle`.
+Loading `lltparagraphs` after `lltpaperstyle` is unsupported unless the reverse
+order is fully guarded.
 
 ---
 

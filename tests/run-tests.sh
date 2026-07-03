@@ -53,6 +53,14 @@ test_latex_file() {
     local source_log="${tex_file%.tex}.log"
     local source_out="${tex_file%.tex}.out"
     local source_toc="${tex_file%.tex}.toc"
+    local source_bcf="${tex_file%.tex}.bcf"
+    local source_run_xml="${tex_file%.tex}.run.xml"
+    local root_aux="$PROJECT_ROOT/${basename}.aux"
+    local root_log="$PROJECT_ROOT/${basename}.log"
+    local root_out="$PROJECT_ROOT/${basename}.out"
+    local root_toc="$PROJECT_ROOT/${basename}.toc"
+    local root_bcf="$PROJECT_ROOT/${basename}.bcf"
+    local root_run_xml="$PROJECT_ROOT/${basename}.run.xml"
     
     log_info "Testing $basename..."
     
@@ -119,7 +127,12 @@ test_latex_file() {
     fi
     
     # Clean up auxiliary files
-    rm -f "$source_aux" "$source_log" "$source_out" "$source_toc"
+    # FIX: Compatibility probes can live in tmp dirs while pdflatex writes aux
+    # files into PROJECT_ROOT, so clean both source-path and root fallbacks.
+    rm -f "$source_aux" "$source_log" "$source_out" "$source_toc" \
+          "$source_bcf" "$source_run_xml" \
+          "$root_aux" "$root_log" "$root_out" "$root_toc" \
+          "$root_bcf" "$root_run_xml"
     
     return 0
 }

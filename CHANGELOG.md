@@ -6,16 +6,29 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 - Added compatibility fixes for natbib entry-point and standalone module contracts:
   `paper/preamble-natbib.tex` now loads `lltpaperstyle` in `natbib` mode and
-  uses conditional citation aliases to avoid duplicate command-definition errors.
+  uses conditional citation aliases to avoid duplicate command-definition errors;
+  the legacy DOI prefix customization is guarded for TeX Live variants without
+  `\doiprefix`.
+- Reworked `lltpaperstyle` package loading so `inputenc` is loaded lazily before
+  bibliography setup and never after manually loaded `biblatex`; documented that
+  `nobiblatex` leaves both bibliography and encoding setup to the caller unless a
+  modern LaTeX UTF-8 default is sufficient.
 - Added explicit standalone dependency declarations for `lltlists` (`graphicx`,
   `etoolbox`) and `lltmathgridlocked` (`etoolbox`) so hooks and marker
   rendering work when loaded outside `lltpaperstyle`.
+- Added paragraph preload ownership shims in `lltpaperstyle`/`lltparagraphs` so
+  the supported optional-module-before-main-package order remains stable, and
+  documented that loading `lltparagraphs` after `lltpaperstyle` is unsupported
+  unless the reverse order is fully guarded.
+- Repaired standalone module/package surfaces for `lltfontfallbacks` local
+  font-availability conditionals, `lltfontfeatures` dash/text-symbol aliases,
+  and `lltpaperstyleminimal`'s package-hook dependency on `etoolbox`.
 - Marked `.dtx/.ins` usage as non-authoritative in `paper/README-DTX.md` and
   updated compatibility wording in `paper/modules/README.md` and `README.md` for
   the separate `lltpaperstyleminimal` package surface.
 - Extended test harnesses with compatibility probes for standalone/preload contract
-  paths, including `lltfontfeatures`, and fixed harness artifact handling for
-  temporary compatibility probes.
+  paths, including `lltfontfeatures`, and fixed root-level auxiliary artifact
+  cleanup for temporary compatibility probes.
 - Added manual biblatex-warning enforcement in `tests/test-bibliography.sh`.
 - Added regression assertion that `tests/run-tests.sh` executes compatibility
   probes in the pytest harness.
