@@ -1,7 +1,7 @@
 ---
 topic: lane-2-compatibility-and-package-api
 created: 2026-07-01
-status: Implementing
+status: Implemented
 ---
 
 # Lane 2 Compatibility And Package API
@@ -275,6 +275,30 @@ Add focused compatibility checks from temp dirs or existing harness files for:
   probes passed.
 - `git status --short` before the final plan commit showed only the plan file
   modified.
+- Post-review W1-W4 pass completed on 2026-07-03 in implementation commit
+  `7dfaed4`:
+  - `README.md` now documents the supported optional-module order for
+    `lltparagraphs`: load optional modules before `lltpaperstyle`; reverse order
+    remains unsupported unless fully guarded.
+  - `CHANGELOG.md` now records the package-side fixes from `aa7a5b7`, including
+    lazy `inputenc` loading, the natbib `\doiprefix` guard, paragraph preload
+    shims, `lltfontfallbacks`, `lltfontfeatures`, and `lltpaperstyleminimal`.
+  - `tests/run-tests.sh` now cleans root-path fallback `.aux`, `.log`, `.out`,
+    `.bcf`, and `.run.xml` files for temporary compatibility probes.
+  - `paper/preamble-natbib.tex` no longer describes the fallback `\cite` alias
+    as parenthetical, and `README.md` documents the manual-`biblatex` /
+    `nobiblatex` encoding-loading contract.
+- Post-review verification rerun from the repo root on 2026-07-03:
+  - `make lint` passed.
+  - `latexmk -pdf -interaction=nonstopmode main.tex` passed with `main.pdf`
+    already up to date.
+  - `pytest -q` passed: `18 passed in 59.19s`.
+  - `tests/run-tests.sh` passed: `Passed: 115`, `Failed: 0`, and all
+    compatibility probes passed.
+  - `git status --short` was clean after implementation commit `7dfaed4`.
+  - Root-level compatibility-probe artifact check returned no matching
+    `prelude-*`, `main-package-minimal-option.*`, `standalone-*`, or
+    `preload-lltparagraphs-into-paperstyle.*` files.
 
 ### Verifier Validation
 
@@ -285,6 +309,12 @@ Add focused compatibility checks from temp dirs or existing harness files for:
   Failed 0 with all nine compatibility probes green; `git status --short`
   clean. Probe-level failures found in the first review pass no longer
   reproduce.
+- Evidence: Reran the planned post-review command set on 2026-07-03 after W1-W4:
+  `make lint` passed; `latexmk -pdf -interaction=nonstopmode main.tex` passed;
+  `pytest -q` passed with 18 tests; `tests/run-tests.sh` passed with Passed 115 /
+  Failed 0 and all compatibility probes green; `git status --short` was clean
+  after committing the implementation; a root-level compatibility-probe artifact
+  check found no leftover temp probe files.
 
 ## Reviewer Findings
 
