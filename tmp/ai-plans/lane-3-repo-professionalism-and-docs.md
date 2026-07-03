@@ -1,7 +1,7 @@
 ---
 topic: lane-3-repo-professionalism-and-docs
 created: 2026-07-03
-status: Draft
+status: Needs Resolution
 ---
 
 # Lane 3: Repository Professionalism And Documentation
@@ -248,7 +248,32 @@ count matches pre-change.
 
 ## Reviewer Findings
 
-- None yet.
+### 2026-07-03
+
+- [routing hint: accepted-current] `AGENTS.md` is in scope, but the plan only
+  changes its `pytest -q` description while leaving active Overleaf support and
+  Definition-of-Done claims at `AGENTS.md:4`, `AGENTS.md:36-37`, and
+  `AGENTS.md:85`. That conflicts with the resolved user gate to remove Overleaf
+  claims from public/active docs unless there is exact log evidence. Either add
+  those `AGENTS.md` lines to the Lane 3 scope and verification, or explicitly
+  waive `AGENTS.md` as non-public agent policy and explain why it may keep the
+  stronger Overleaf contract.
+- [routing hint: accepted-current] The second planned cleanup grep scans all of
+  `docs`, but live historical/review evidence under
+  `docs/technical/DEEP_REVIEW_FINDINGS_2026-07-01.md` and
+  `docs/superpowers/plans/2026-07-01-deep-review-roadmap.md` intentionally
+  contains `layout hash`, `format-python`, `FINAL_COMPILATION_STATUS`,
+  `docs/audits`, and/or `docs/plans`. Since the plan explicitly leaves
+  historical audit/roadmap material untouched, that grep will fail a correct
+  implementation. Narrow it to active docs or exclude the historical evidence
+  files.
+- [routing hint: accepted-current] The plan says `main.pdf` must remain
+  content-stable, but `main.pdf` is ignored and untracked in this checkout, so
+  `git status --short` cannot detect PDF churn. The planned `pdfinfo` page count
+  plus spot-check text is weaker than the zero rendered-output claim. Either
+  record and compare a pre/post text or raster artifact for `main.pdf`, or narrow
+  the verification claim to "no TeX/package inputs changed; local rebuild still
+  succeeds."
 
 ## Resolutions
 
