@@ -1,7 +1,7 @@
 ---
 topic: lane-3-repo-professionalism-and-docs
 created: 2026-07-03
-status: Needs Resolution
+status: Frozen
 ---
 
 # Lane 3: Repository Professionalism And Documentation
@@ -33,8 +33,11 @@ status: Needs Resolution
     `tmp/ai-plans/lane-2-compatibility-and-package-api.md` lines 81/119/261).
   - `main.tex` and the rendered `main.pdf` are **out of scope**. The demo paper
     is sample content; its academic subject (the East Asian Miracle) is not a
-    repository-identity defect and must not be edited in this lane. `main.pdf`
-    must remain content-stable.
+    repository-identity defect and must not be edited in this lane. No in-scope
+    file is a TeX/package input `\input` by `main.tex`, so `main.pdf` cannot
+    change; the plan verifies this **structurally** (the changed set contains no
+    `.tex`/`.sty`/`.cls`/`.bib`) plus a successful local rebuild — it does not
+    diff the untracked/gitignored PDF (see F3 resolution).
 - User constraints (decision gates resolved 2026-07-03 via grill-me):
   - **Overleaf** → *Remove the claims entirely* from public docs (not merely
     "pending verification").
@@ -67,7 +70,9 @@ Active edits (documentation / metadata only):
   "Overleaf-Specific Issues" section (this also removes the dead
   `preamble-overleaf.tex` / `paperstyle-overleaf` / `paperstyle-minimal`
   references).
-- `AGENTS.md` — correct the `pytest -q` "layout hashes" claim.
+- `AGENTS.md` — correct the `pytest -q` "layout hashes" claim (`:19`); remove the
+  active Overleaf support/DoD claims (`:4`, `:10`, `:36-37`, `:85`) per the
+  Overleaf gate (F1).
 - `Makefile` — rename the two identity strings in the header comment and the
   help `@echo` (comment/echo text only; no recipe or target logic).
 - `SECURITY.md` — make supported versions explicit.
@@ -142,8 +147,11 @@ material claim changes.
    "Overleaf-Specific Issues" section (TOC entry `:13`, mention `:35`, body
    `:323-384`) — this also removes the dead `preamble-overleaf.tex`,
    `paperstyle-overleaf`, `paperstyle-minimal` references. In `INSTALL.md:347`
-   reword the generic "consider Overleaf" fallback so it asserts no verified
-   compatibility (or drop it).
+   drop the Overleaf-named fallback (remove it, or genericize to "an online
+   LaTeX service" with **no** "Overleaf" mention) so no active doc names Overleaf.
+   In `AGENTS.md`, strike the Overleaf clauses (F1): the Mission line (`:4`),
+   "both platforms" (`:10`), the DoD Overleaf-render and Overleaf-build-number
+   lines (`:36-37`), and the Quick-Start "Recompile on Overleaf" clause (`:85`).
 
 3. **Repo identity, active files only (Group C).** Rename "East Asian Miracle
    Paper" / "EastAsia_Paper" identity strings to "Lane LaTeX Template" in:
@@ -197,9 +205,11 @@ material claim changes.
   verification step greps for dangling links.
 - **Version confusion.** Conflating repo-release vs package version. Mitigation:
   the reconciliation explains the two namespaces rather than forcing equality.
-- **Accidental visual/behavior change.** Mitigation: `main.tex` excluded;
-  rebuild `main.pdf` and confirm it is content-stable (page count + text
-  unchanged); `make lint` and `pytest -q` stay green.
+- **Accidental visual/behavior change.** Mitigation: no in-scope file is a TeX
+  input; verification asserts the changed set contains no `.tex`/`.sty`/`.cls`/
+  `.bib` (F3), the `latexmk` rebuild stays green, and `make lint` / `pytest -q`
+  pass. (`main.pdf` is gitignored/untracked, so git cannot diff it — hence the
+  structural input check rather than a PDF diff.)
 - **Makefile fragility.** Only comment/`@echo` text changes — no recipe lines,
   preserving tab structure.
 
@@ -214,28 +224,37 @@ make lint
 latexmk -pdf -interaction=nonstopmode main.tex
 pytest -q
 tests/run-tests.sh
-# Identity/paths/Overleaf claims fully cleared from ACTIVE files
-# (historical audit/optimization docs are expected to still match and are out of scope):
-rg -n "paper/paperstyle|paperstyle-overleaf|preamble-overleaf|Overleaf.*[Ww]orks automatically|East Asian Miracle Paper|EastAsia_Paper" \
+# Identity / broken load paths cleared from ACTIVE files (historical audit &
+# optimization docs are out of scope and expected to still match):
+rg -n "paper/paperstyle|paperstyle-overleaf|preamble-overleaf|East Asian Miracle Paper|EastAsia_Paper" \
    README.md INSTALL.md TROUBLESHOOTING.md AGENTS.md Makefile \
    docs/README.md docs/guides docs/technical/TESTING.md docs/PACKAGE_ROADMAP.md \
    paper/STYLE_GUIDE.md paper/CUSTOM_COMMANDS.md
-# Testing-doc + stale-index claims cleared:
+# No Overleaf references remain in active public docs (F1 gate):
+rg -n -i "overleaf" README.md INSTALL.md TROUBLESHOOTING.md AGENTS.md \
+   docs/README.md docs/technical/TESTING.md || echo "OK: active docs are Overleaf-free"
+# Testing-doc + stale-index claims cleared — ACTIVE files ONLY (F2). The
+# historical evidence docs (docs/technical/DEEP_REVIEW_FINDINGS_2026-07-01.md and
+# docs/superpowers/plans/2026-07-01-deep-review-roadmap.md) intentionally retain
+# these strings and are out of scope, so they are NOT scanned:
 rg -n "format-python|layout hash|FINAL_COMPILATION_STATUS|docs/audits|docs/plans|OVERLEAF_WARNING_SUPPRESSION" \
-   AGENTS.md README.md docs Makefile
+   AGENTS.md README.md docs/README.md docs/technical/TESTING.md Makefile
 # docs/README.md points only at existing files (no dangling links):
-#   manual/scripted check that each linked path resolves.
+#   scripted check that each linked path resolves.
 # Root license detected:
 ls LICENSE
-# main.pdf content-stable (page count unchanged, spot-check text):
-pdfinfo main.pdf | rg "Pages"
+# No TeX/package inputs touched, so main.pdf cannot change (F3). A printed path
+# below means an unexpected TeX input changed; no match prints OK:
+git diff --name-only main -- . | rg '\.(tex|sty|cls|bib)$' && echo "UNEXPECTED: TeX input changed" || echo "OK: no TeX/package inputs changed"
+# (the latexmk run above already confirms the local rebuild still succeeds.)
 git status --short
 ```
 
 Expected: `make lint` exit 0; `pytest -q` all pass; `tests/run-tests.sh` all
-pass; the active-file greps return no matches (historical docs untouched);
-`docs/README.md` links all resolve; root `LICENSE` present; `main.pdf` page
-count matches pre-change.
+pass; the active-file greps return no matches and the Overleaf check prints
+`OK` (historical/evidence docs untouched); `docs/README.md` links all resolve;
+root `LICENSE` present; the changed set contains no `.tex`/`.sty`/`.cls`/`.bib`
+(so `main.pdf` cannot change) and the `latexmk` rebuild succeeds.
 
 ### Execution Results
 
@@ -277,7 +296,39 @@ count matches pre-change.
 
 ## Resolutions
 
-- None yet.
+### 2026-07-04
+
+All three challenge findings verified against the live tree and routed
+`accepted-current` (folded into this plan pre-implementation; no
+re-implementation loop needed since nothing is implemented yet).
+
+- **F1 (AGENTS.md carries active Overleaf claims) → accepted-current.**
+  `AGENTS.md` is a tracked, publicly visible policy doc, so the resolved
+  "remove Overleaf claims entirely from active/public docs" gate applies to it.
+  Confirmed the claims at `AGENTS.md:4` (Mission), `:10` ("both platforms"),
+  `:36-37` (DoD Overleaf render + Overleaf build numbers), and `:85`
+  (Quick-Start "Recompile on Overleaf"). **Change:** expanded Files In Scope and
+  Implementation step 2 to strike those clauses; added an active-docs
+  Overleaf-free grep to Planned Verification. Also tightened `INSTALL.md:347`
+  to drop the Overleaf *name* (not just soften the claim) so the check is crisp.
+
+- **F2 (cleanup grep over-scans historical docs) → accepted-current.** Verified
+  9 intentional matches for the cleanup strings in the out-of-scope evidence
+  files (`docs/technical/DEEP_REVIEW_FINDINGS_2026-07-01.md`,
+  `docs/superpowers/plans/2026-07-01-deep-review-roadmap.md`), so the original
+  broad `docs` scan would false-fail a correct implementation. **Change:**
+  narrowed that grep to the active files Lane 3 actually edits
+  (`AGENTS.md README.md docs/README.md docs/technical/TESTING.md Makefile`) and
+  documented why the historical evidence docs are excluded.
+
+- **F3 (main.pdf stability claim unverifiable) → accepted-current.** Confirmed
+  `main.pdf` is gitignored and untracked, so `git status` cannot detect PDF
+  churn and a `pdfinfo` page count is a weak proxy for "zero rendered-output
+  change." Since **no in-scope file is a TeX/package input**, narrowed the claim
+  to "no `.tex`/`.sty`/`.cls`/`.bib` changed; local rebuild still succeeds,"
+  verified structurally via `git diff --name-only main` plus the existing
+  `latexmk` run. **Change:** updated the Constraints wording, the
+  Accidental-visual-change risk mitigation, and the Test Plan.
 
 ## Plan Deltas
 
