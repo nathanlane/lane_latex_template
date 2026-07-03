@@ -62,7 +62,7 @@
 %% FIX: Preserve existing natbib \cite behavior; this alias is only a safe fallback
 %% when a legacy entry point has not yet defined \cite.
 \providecommand{\cite}{\citep}                        % Legacy fallback only
-\providecommand{\citestyle}[1]{\citep{#1}}           % Alias for consistency
+\providecommand{\citestyle}[1]{\citep{#1}}           % No-op when natbib defines \citestyle; fallback only
 
 % ------------------------------------------------------------------------------
 % ENHANCED URL AND DOI SUPPORT

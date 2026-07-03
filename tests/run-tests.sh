@@ -310,8 +310,8 @@ main() {
         echo
     done
 
-    run_compatibility_probes
-    
+    run_compatibility_probes || true
+
     # Summary
     echo "Test Summary"
     echo "============"

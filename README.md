@@ -226,9 +226,9 @@ For legacy natbib-based documents, use the dedicated preamble:
 \input{paper/preamble-natbib.tex}
 ```
 
-It loads `lltpaperstyle` with the `natbib` option and provides the compatibility
-aliases (`\textcite`, `\autocite`, `\citeauthor`, `\citeyear`) expected by older
-documents.
+It loads `lltpaperstyle` with the `natbib` option and provides the `\textcite`
+and `\autocite` compatibility aliases expected by older documents (`\citeauthor`
+and `\citeyear` come natively from natbib).
 
 ```latex
 % In your text

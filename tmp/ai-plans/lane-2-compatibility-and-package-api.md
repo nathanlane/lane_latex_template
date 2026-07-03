@@ -1,7 +1,8 @@
 ---
 topic: lane-2-compatibility-and-package-api
 created: 2026-07-01
-status: Reviewed
+status: Closed
+closed: 2026-07-03
 ---
 
 # Lane 2 Compatibility And Package API
@@ -783,3 +784,43 @@ W4. `accepted-current` — Fold the stale natbib `\cite` comment and the
 - Status advanced from `Implemented` to `Reviewed` after the pass-3 verifier
   confirmed W1-W4 fixed, found no material findings (X1 is advisory only), and
   independently reran the full planned verification green.
+
+### 2026-07-03 X1 advisory follow-up (closeout)
+
+Addressed the three non-blocking pass-3 advisories (X1 i-iii). Scope: three
+one-line edits, all outside the rendered-PDF path, so the visual-defaults
+constraint is trivially preserved.
+
+X1(i). `accepted-current` — `tests/run-tests.sh` now calls
+    `run_compatibility_probes || true` instead of the bare call. Under
+    `set -euo pipefail` the bare call's `return 1` (line 265) aborted the
+    script before the "Test Summary" block. Every failing probe already
+    increments the global `FAILED` (`test_latex_file` -> `log_fail`), so the
+    trailing `[ $FAILED -gt 0 ] && exit 1` still forces a nonzero exit; the
+    guard only lets the summary print first, mirroring the existing
+    `test_latex_file "$fixture" || true` pattern.
+X1(ii). `accepted-current` — `README.md` no longer claims the natbib preamble
+    "provides" `\citeauthor`/`\citeyear`; those come natively from natbib. The
+    preamble defines only the `\textcite`/`\autocite` aliases, now stated as
+    such.
+X1(iii). `accepted-current` — the stale `% Alias for consistency` comment on
+    `\providecommand{\citestyle}` in `paper/preamble-natbib.tex` is now
+    "% No-op when natbib defines \citestyle; fallback only". Comment only; the
+    `\providecommand` code token stream is unchanged (the second
+    `% Alias for consistency` at `lltpaperstyle.sty:983` documents an unrelated
+    `\spacebreak` macro and was correctly left untouched).
+
+Independent correctness review (fresh subagent) returned GO: it re-derived the
+`set -e` + `((FAILED++))` + function-context bash semantics by execution and
+confirmed no false-negative exit-code regression, and verified the doc wordings
+against `natbib.sty` (native `\citeauthor`, `\citeyear`, `\citestyle`).
+Verification rerun: `make lint` exit 0; a failure-path simulation showed the old
+bare call aborted before the summary while the guarded call prints the summary
+and preserves exit 1; `tests/run-tests.sh` Passed 115 / Failed 0 with all
+compatibility probes green; `git status --porcelain` shows no root probe
+artifacts.
+
+- Status advanced from `Reviewed` to `Closed` with `closed: 2026-07-03` after
+  the X1 advisory follow-up landed and reverified. (Template convention records
+  closure via the `closed:` date; the `status` token is set to `Closed` per the
+  owner's instruction not to leave the plan at `Reviewed`.)
