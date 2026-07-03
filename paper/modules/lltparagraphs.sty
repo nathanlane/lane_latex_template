@@ -38,11 +38,15 @@
 \makeatother
 
 % Custom commands for controlling indentation
-\newcommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left
-\newcommand{\forceindent}{\hspace{\parindent}}        % Force indentation
+%% FIX: Use providecommand so preload order with \texttt{lltpaperstyle} stays
+%% compatible when the package redefines these commands.
+\providecommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left
+\providecommand{\forceindent}{\hspace{\parindent}}        % Force indentation
 
 % Centered paragraph
-\newcommand{\centeredpar}[1]{%
+%% FIX: Use providecommand so documented preloading into lltpaperstyle does not
+%% fail on duplicate helper definitions.
+\providecommand{\centeredpar}[1]{%
   {\centering\noindent#1\par}%
 }
 
@@ -212,7 +216,8 @@
 }
 
 % FIRST LINE SMALL CAPS
-\newcommand{\firstlinesc}[1]{%
+%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+\providecommand{\firstlinesc}[1]{%
   {\fontsize{11}{13.2}\selectfont%
    \SetTracking{encoding={T1,OT1}}{30}\lsstyle%
    \textsc{#1}}%
@@ -236,25 +241,33 @@
 \renewcommand{\spacebreak}{\sectionbreak}
 
 % OPENING PARAGRAPH ENVIRONMENT
+%% FIX: Avoid duplicate environment definitions when lltpaperstyle was loaded
+%% before this module.
+\makeatletter
+\@ifundefined{openingparagraph}{%
 \newenvironment{openingparagraph}{%
   \noindent%
   \setlength{\parindent}{0pt}%
 }{%
   \par%
 }
+}{}
+\makeatother
 
 % ==============================================================================
 % SPECIAL PARAGRAPH COMMANDS
 % ==============================================================================
 
 % Typography-aware ornamental paragraph break
-\newcommand{\paragraphbreak}{%
+%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+\providecommand{\paragraphbreak}{%
   \par\vspace{13.2pt}% 1 grid unit of vertical space
   \noindent%
 }
 
 % Inline sidenote command for margin annotations
-\newcommand{\sidenote}[1]{%
+%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+\providecommand{\sidenote}[1]{%
   \marginpar{%
     \footnotesize\raggedright%
     \setlength{\parindent}{0pt}%
@@ -264,8 +277,11 @@
 }
 
 % Legacy support commands
-\newcommand{\compactpar}{\vspace{-\quartergridunit}}
-\newcommand{\loosepars}{\vspace{\quartergridunit}}
-\newcommand{\majorsectionspace}{\vspace{\gridunit}}
+%% FIX: Use providecommand so this legacy helper remains preload-safe.
+\providecommand{\compactpar}{\vspace{-\quartergridunit}}
+%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+\providecommand{\loosepars}{\vspace{\quartergridunit}}
+%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+\providecommand{\majorsectionspace}{\vspace{\gridunit}}
 
 \endinput

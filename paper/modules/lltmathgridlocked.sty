@@ -8,6 +8,8 @@
 \ProvidesPackage{lltmathgridlocked}[2025/07/06 v1.0 Grid-Locked Mathematics]
 
 % Ensure dimensions are loaded for grid units
+%% FIX: Declare environment-hook support so this module can run standalone.
+\RequirePackage{etoolbox}        % For environment hooks used by this standalone module
 \makeatletter
 \@ifpackageloaded{lltdimensions}{}{%
   \RequirePackage{lltdimensions}%

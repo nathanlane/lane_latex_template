@@ -35,24 +35,19 @@
 % ------------------------------------------------------------------------------
 % CORE TYPOGRAPHY SYSTEM
 % ------------------------------------------------------------------------------
-% Load the comprehensive lltpaperstyle.sty package
-% Note: The biblatex-specific formatting in lltpaperstyle.sty will be ignored
-% when using this natbib-based preamble
-
-\usepackage{lltpaperstyle}
+% Load the comprehensive lltpaperstyle.sty package in natbib mode so we use the
+% native citation stack and avoid mixed-package side effects.
+%% FIX: Load once with the documented natbib option to prevent duplicate bibliography
+%% backends.
+%% FIX: Preserve historic natbib punctuation/ordering defaults while delegating load.
+\PassOptionsToPackage{semicolon,sort&compress}{natbib}
+\usepackage[natbib]{lltpaperstyle}
 
 % ------------------------------------------------------------------------------
-% NATBIB BIBLIOGRAPHY CONFIGURATION  
+% NATBIB BIBLIOGRAPHY CONFIGURATION
 % ------------------------------------------------------------------------------
 % Traditional natbib system for legacy compatibility
 % Provides Chicago Manual of Style author-date format
-
-\usepackage[
-  authoryear,           % Author-year citation style
-  round,                % Round parentheses for citations
-  semicolon,            % Semicolon separator for multiple citations
-  sort&compress         % Sort and compress citation lists
-]{natbib}
 
 % Set bibliography style to Chicago author-date format
 % Note: Requires chicago.bst file (usually included in TeX distributions)
@@ -64,8 +59,10 @@
 \setlength{\bibsep}{6.325pt}                          % Entry spacing (0.5 baseline units)
 
 % Professional citation punctuation
-\renewcommand{\cite}{\citep}                          % Default to parenthetical
-\newcommand{\citestyle}[1]{\citep{#1}}               % Alias for consistency
+%% FIX: Preserve existing natbib \cite behavior; this alias is only a safe fallback
+%% when a legacy entry point has not yet defined \cite.
+\providecommand{\cite}{\citep}                        % Legacy fallback only
+\providecommand{\citestyle}[1]{\citep{#1}}           % No-op when natbib defines \citestyle; fallback only
 
 % ------------------------------------------------------------------------------
 % ENHANCED URL AND DOI SUPPORT
@@ -80,7 +77,11 @@
 \renewcommand{\UrlFont}{\color{linknavy}\ttfamily}
 
 % Basic DOI formatting (less sophisticated than biblatex version)
-\renewcommand{\doiprefix}{DOI:\space}
+%% FIX: Guard legacy DOI prefix support for TeX Live variants that removed
+%% \doiprefix so the natbib entry-point compiles cleanly.
+\ifcsname doiprefix\endcsname
+  \renewcommand{\doiprefix}{DOI:\space}
+\fi
 
 % ------------------------------------------------------------------------------
 % CITATION COMMAND COMPATIBILITY
@@ -88,10 +89,10 @@
 % Provide compatibility commands for migration between systems
 
 % Aliases for biblatex-style commands (limited functionality)
-\newcommand{\textcite}[1]{\citet{#1}}                % Textual citation
-\newcommand{\autocite}[1]{\citep{#1}}                % Parenthetical citation
-\newcommand{\citeauthor}[1]{\citeauthor{#1}}         % Author only (already exists)
-\newcommand{\citeyear}[1]{\citeyear{#1}}             % Year only (already exists)
+%% FIX: Keep alias set minimal and avoid self-referential definitions by only
+%% defining command wrappers where natbib does not already provide content.
+\providecommand{\textcite}[1]{\citet{#1}}            % Textual citation
+\providecommand{\autocite}[1]{\citep{#1}}            % Parenthetical citation
 
 % Note: Advanced biblatex features like pre/post notes are limited in natbib
 % Use standard natbib syntax: \citep[see][p. 42]{key}

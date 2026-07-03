@@ -113,6 +113,15 @@ if [ -f "${BASENAME}.pdf" ]; then
     mv "${BASENAME}.pdf" "$OUTPUT_DIR/"
 fi
 
+# Ensure manual biblatex contract emits no package warnings.
+if grep -q "Package biblatex Warning" "${LOG_DIR}/${BASENAME}_pass3.log"; then
+    echo -e "  ${RED}✗${NC} Manual biblatex contract produced biblatex warnings"
+    grep -n "Package biblatex Warning" "${LOG_DIR}/${BASENAME}_pass3.log" | head -5 | sed 's/^/    /'
+    exit 1
+else
+    echo -e "  ${GREEN}✓${NC} Manual biblatex contract is warning-free"
+fi
+
 # Clean up
 rm -f "${BASENAME}.aux" "${BASENAME}.log" "${BASENAME}.out" "${BASENAME}.toc" 
 rm -f "${BASENAME}.bcf" "${BASENAME}.bbl" "${BASENAME}.blg" "${BASENAME}.run.xml"

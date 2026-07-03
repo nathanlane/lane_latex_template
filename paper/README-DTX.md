@@ -1,6 +1,11 @@
 # LaTeX Documentation Format (.dtx)
 
-The Lane LaTeX Template is now available in standard LaTeX documentation format (.dtx) for CTAN distribution.
+The Lane LaTeX Template is available in standard LaTeX documentation format (.dtx) for CTAN distribution.
+
+> Lane-2 compatibility note: for this template lane, `lltpaperstyle.dtx` and
+> `lltpaperstyle.ins` are **non-authoritative** for API behavior. Edit and validate
+> the live `.sty` sources under `paper/` directly; treat this extraction path as
+> a legacy packaging scaffold until a release rebuild is completed.
 
 ## Files
 
@@ -13,7 +18,7 @@ The Lane LaTeX Template is now available in standard LaTeX documentation format 
 ```bash
 latex lltpaperstyle.ins
 ```
-This creates `lltpaperstyle.sty` from the .dtx file.
+This creates `lltpaperstyle.sty` from the .dtx file for release packaging workflows.
 
 ### Build the Documentation
 ```bash

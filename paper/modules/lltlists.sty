@@ -8,6 +8,11 @@
 \ProvidesPackage{lltlists}[2025/07/03 v1.0 List Typography System]
 
 % Dependencies
+%% FIX: Declare graphics support because standalone marker rendering uses
+%% \scalebox for size-tuned list symbols.
+\RequirePackage{graphicx}         % Marker scaling with \scalebox
+%% FIX: Declare environment-hook support for standalone module loading.
+\RequirePackage{etoolbox}         % Environment hooks used in standalone mode
 \RequirePackage{enumitem}         % List spacing control
 
 % Ensure colors are loaded

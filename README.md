@@ -211,10 +211,24 @@ For custom biblatex options, load biblatex manually and disable automatic
 loading:
 
 ```latex
+\usepackage[utf8]{inputenc} % load before manual biblatex on pdfTeX
 \usepackage[backend=biber,style=authoryear]{biblatex}
 \addbibresource{references.bib}
 \usepackage[nobiblatex]{lltpaperstyle}
 ```
+
+With `nobiblatex`, the template does not load `biblatex` or `inputenc`.
+On pdfTeX with manual `biblatex`, load `inputenc` before `biblatex`, as shown.
+
+For legacy natbib-based documents, use the dedicated preamble:
+
+```latex
+\input{paper/preamble-natbib.tex}
+```
+
+It loads `lltpaperstyle` with the `natbib` option and provides the `\textcite`
+and `\autocite` compatibility aliases expected by older documents (`\citeauthor`
+and `\citeyear` come natively from natbib).
 
 ```latex
 % In your text
@@ -313,13 +327,15 @@ Available options:
 - `grid` / `nogrid` – Show/hide baseline grid overlay
 - `minimal` – Load only essential features
 - `natbib` – Load native `natbib` author-year citation support instead of automatic `biblatex`
-- `nocolor` – Map semantic template colors to black/grayscale values
 - `draft` – Enable draft-mode diagnostics, including draft-mode `microtype`
 - `nobiblatex` – Disable automatic biblatex loading
 - `subsectionbarriers` / `nosubsectionbarriers` – Enable/disable automatic float barriers before subsections
 - `nocolor` – Disable all custom colors
-- `draft` – Enable draft mode
-- `nobiblatex` – Disable automatic biblatex loading after you load biblatex manually
+
+Note: `\usepackage[minimal]{lltpaperstyle}` and
+`\usepackage{lltpaperstyleminimal}` are distinct surfaces.
+The former uses the main package with reduced module loading; the latter loads the
+separate lightweight package.
 
 ### Modular Architecture
 
@@ -332,10 +348,15 @@ The style system is fully modularized:
 - `lltheadings` – Section heading styles
 - `lltlists` – List typography
 - `lltmicrotype` – Enhanced character protrusion, expansion, and spacing
+- `lltmathgridlocked` – Grid-locked equation spacing hooks
 
 **Optional modules**:
 - `lltparagraphs` – Advanced paragraph formatting
 - `llthochuli` – Advanced optical adjustments
+
+Load optional modules such as `lltparagraphs` before `lltpaperstyle`.
+Loading `lltparagraphs` after `lltpaperstyle` is unsupported unless the reverse
+order is fully guarded.
 
 ---
 
