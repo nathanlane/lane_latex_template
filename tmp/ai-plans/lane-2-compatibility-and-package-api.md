@@ -1,7 +1,7 @@
 ---
 topic: lane-2-compatibility-and-package-api
 created: 2026-07-01
-status: Needs Review Resolution
+status: Frozen
 ---
 
 # Lane 2 Compatibility And Package API
@@ -146,6 +146,8 @@ keeping all typography and visual defaults unchanged.
      compiles the documented natbib entry point.
    - Clean up any remaining no-op or self-referential citation aliases and comments
      that no longer describe natbib behavior.
+   - Correct stale inline comments that still describe `\cite` as parenthetical
+     after natbib has supplied its own command behavior.
    - Confirm no stale references remain in active docs and integration points.
 3. Resolve DTX/INS extraction contract:
    - Inspect `paper/lltpaperstyle.dtx` and `paper/lltpaperstyle.ins` generation
@@ -168,6 +170,9 @@ keeping all typography and visual defaults unchanged.
      `lltpaperstyle`.
    - Repair the `\noindentpar` collision for the documented preload path or document
      that exact load order as unsupported in the same commit.
+   - Document the supported optional-module composition order explicitly: optional
+     paragraph modules must be loaded before `lltpaperstyle`, and loading
+     `lltparagraphs` after `lltpaperstyle` is unsupported unless fully guarded.
    - Keep documented preloading supported while rejecting or documenting unsupported
      load orders, without changing typography output defaults.
 6. Validate `biblatex` compatibility:
@@ -183,11 +188,19 @@ keeping all typography and visual defaults unchanged.
      `lltpaperstyle` option; keep it documented only as a separate package surface.
    - Replace blanket standalone-module claims with wording that matches the repaired
      probes and table-listed support.
+   - Extend `CHANGELOG.md` so every material package-side fix from the
+     compatibility rework is recorded, including lazy `inputenc`, natbib
+     `\doiprefix`, paragraph preload shims, fallback/font-feature repairs, and
+     `lltpaperstyleminimal`'s hook dependency.
+   - Note the `nobiblatex`/manual-biblatex loading contract clearly enough that the
+     warning-free path is reproducible.
 8. Harden the compatibility probe harness:
    - Add the missing main-package `minimal` option probe alongside the separate
      `lltpaperstyleminimal` package probe.
    - Let compatibility probes continue after individual failures and report the full
      failure set before exiting nonzero.
+   - Clean compatibility-probe auxiliary files from the repo root as well as the
+     temporary source directory, because `pdflatex` runs from `PROJECT_ROOT`.
 9. Capture final compatibility results and commit plan-visible notes about any
    remaining intentional limitations in compatibility claims.
 
@@ -609,6 +622,23 @@ V10. `accepted-current` — Fold the advisory probe-harness, natbib comment, and
      remaining alias cleanup into the V3/V5 re-implementation so reruns expose the
      complete compatibility failure set.
 
+### 2026-07-02 review-diff-vs-plan (Verifier, pass 2)
+
+W1. `accepted-current` — Document the supported optional-module load order for
+    `lltparagraphs`: load optional modules before `lltpaperstyle`; loading
+    `lltparagraphs` after `lltpaperstyle` is unsupported unless the reverse order
+    is fully guarded.
+W2. `accepted-current` — Extend the 2026-07-02 `CHANGELOG.md` entry so it records
+    the material package-side compatibility fixes from the second implementation
+    commit, including lazy `inputenc`, `\doiprefix`, preload shims,
+    `lltfontfallbacks`, `lltfontfeatures`, and `lltpaperstyleminimal`.
+W3. `accepted-current` — Fix compatibility-probe auxiliary cleanup so temporary
+    probes do not leave root-level `.aux`, `.log`, `.out`, `.bcf`, or `.run.xml`
+    files after `tests/run-tests.sh`.
+W4. `accepted-current` — Fold the stale natbib `\cite` comment and the
+    `nobiblatex`/manual-biblatex loading-order note into the W1-W3
+    re-implementation pass.
+
 ## Plan Deltas
 
 - Status advanced from `Needs Resolution` to `Frozen` after all critic findings
@@ -646,3 +676,9 @@ V10. `accepted-current` — Fold the advisory probe-harness, natbib comment, and
 - The out-of-scope `.claude/commands/` files were removed from the lane branch in
   commit `6e11333`, resolving the V9 branch-footprint blocker without expanding
   Lane 2 scope.
+- Status returned from `Needs Review Resolution` to `Frozen` because the pass-2
+  verifier findings W1-W4 were routed `accepted-current`.
+- Re-implementation scope now includes explicit README/docs wording for optional
+  module load order, expanded CHANGELOG coverage for the second package-side fix
+  commit, root-level auxiliary cleanup for temp compatibility probes, and cleanup
+  of the stale natbib `\cite` comment / manual-biblatex loading-order note.
