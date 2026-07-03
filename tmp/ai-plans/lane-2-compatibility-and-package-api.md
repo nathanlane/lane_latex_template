@@ -1,7 +1,7 @@
 ---
 topic: lane-2-compatibility-and-package-api
 created: 2026-07-01
-status: Implemented
+status: Reviewed
 ---
 
 # Lane 2 Compatibility And Package API
@@ -315,6 +315,13 @@ Add focused compatibility checks from temp dirs or existing harness files for:
   Failed 0 and all compatibility probes green; `git status --short` was clean
   after committing the implementation; a root-level compatibility-probe artifact
   check found no leftover temp probe files.
+- Evidence: Pass-3 verifier independently reran the full planned command set on
+  2026-07-03: `make lint` passed; a forced `latexmk -g -pdf` rebuild produced
+  `main.pdf` (41 pages, exit 0, no errors); `pytest -q` 18 passed;
+  `tests/run-tests.sh` Passed 115 / Failed 0 with all eight compatibility
+  probes green; `git status --short` clean; no `prelude-*`, `standalone-*`,
+  `preload-*`, or `main-package-minimal-option.*` artifacts in the repo root
+  after the suite run.
 
 ## Reviewer Findings
 
@@ -587,6 +594,67 @@ W4. **Advisory (minor, non-blocking).** (i) The inline comment
     change for that path worth one CHANGELOG/docs line alongside W2.
     Routing hint: fold into the W1-W3 fix commit.
 
+### 2026-07-03 review-diff-vs-plan (Verifier, pass 3)
+
+Reviewed diff `main...codex/lane-2-compatibility-and-package-api` after the
+W1-W4 followup commits (`7dfaed4`, `12721df`). Manual scope check: all 18
+changed files are modifications inside `Files In Scope`, with zero net-new
+files (footprint budget of 0 held; probes run from a `mktemp -d` dir) and no
+`.claude/commands/` content on the branch (V9 stays resolved).
+
+Prior findings W1-W4 are verified fixed in code, docs, and under rerun:
+
+- W1: `README.md` (Modular Architecture) now states "Load optional modules
+  such as `lltparagraphs` before `lltpaperstyle`. Loading `lltparagraphs`
+  after `lltpaperstyle` is unsupported unless the reverse order is fully
+  guarded." — the docs-only route the finding explicitly allowed. The
+  supported preload order is additionally guarded on the package side
+  (`\providecommand` / `\@ifundefined` shims in `lltpaperstyle.sty` and
+  `lltparagraphs.sty`); the reverse order remains unguarded in
+  `lltparagraphs.sty` and is now documented as unsupported.
+- W2: the 2026-07-02 `CHANGELOG.md` section now records the second commit's
+  package-side fixes: the `\doiprefix` guard, lazy `inputenc` loading,
+  paragraph preload ownership shims, `lltfontfallbacks` conditional repair,
+  `lltfontfeatures` dash-alias repair, `lltpaperstyleminimal`'s `etoolbox`
+  dependency, and the `lltlists`/`lltmathgridlocked` standalone dependency
+  declarations. The W4(ii) `nobiblatex`/encoding note is present in both
+  `CHANGELOG.md` and `README.md` ("With `nobiblatex`, the template does not
+  load `biblatex` or `inputenc`.").
+- W3: `test_latex_file` now removes root-path fallback `.aux`, `.log`,
+  `.out`, `.toc`, `.bcf`, and `.run.xml` files; verified empirically — after
+  a full `tests/run-tests.sh` run the repo root contains no probe artifacts.
+- W4(i): the stale "% Default to parenthetical" comment is gone; the
+  `\providecommand{\cite}{\citep}` line now reads "% Legacy fallback only"
+  with an accurate `%% FIX:` note.
+
+Independent verification rerun (see Verifier Validation): `make lint` passed;
+forced `latexmk -g` rebuild produced `main.pdf` (41 pages) with no errors,
+consistent with the visual-defaults constraint; `pytest -q` 18 passed;
+`tests/run-tests.sh` Passed 115 / Failed 0 with all compatibility probes
+green; `git status --short` clean; no root probe artifacts. Spot checks:
+no stale `\ifinconsolataaloaded` references remain; all `##1` doubled-token
+fallbacks in `lltfontfallbacks.sty` sit inside `\newcommand` bodies where
+doubling is required; neither `lltfontfallbacks` nor `lltfontfeatures` is
+loaded by the main package, so their repairs cannot alter default output;
+`paper/modules/README.md` code fences remain balanced after the edit.
+
+X1. **Advisory (minor, non-blocking; no material findings this pass).**
+    (i) When a compatibility probe fails, `run_compatibility_probes`
+    returns 1 and `set -euo pipefail` ends `tests/run-tests.sh` before the
+    final "Test Summary" block; every probe still runs, each failure is
+    logged, the cumulative count prints, and the exit code is nonzero, so
+    the plan's full-failure-set requirement is met — only the trailing
+    Passed/Failed recap is skipped in that path. (ii) `README.md` says the
+    natbib preamble "provides the compatibility aliases (`\textcite`,
+    `\autocite`, `\citeauthor`, `\citeyear`)"; the preamble now defines only
+    the first two, while `\citeauthor`/`\citeyear` come natively from natbib
+    (the self-referential aliases were correctly deleted) — the commands all
+    work as documented, the attribution is just loose. (iii) The
+    "% Alias for consistency" comment on `\providecommand{\citestyle}` is
+    stale: with natbib loaded first the line is a deliberate no-op that
+    preserves natbib's native `\citestyle`. Routing hint: fold into any
+    future docs pass; none of these block `Reviewed`.
+
 ## Resolutions
 
 1. `accepted-current` — Corrected the three bad scope tokens to
@@ -712,3 +780,6 @@ W4. `accepted-current` — Fold the stale natbib `\cite` comment and the
   module load order, expanded CHANGELOG coverage for the second package-side fix
   commit, root-level auxiliary cleanup for temp compatibility probes, and cleanup
   of the stale natbib `\cite` comment / manual-biblatex loading-order note.
+- Status advanced from `Implemented` to `Reviewed` after the pass-3 verifier
+  confirmed W1-W4 fixed, found no material findings (X1 is advisory only), and
+  independently reran the full planned verification green.
