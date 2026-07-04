@@ -1,7 +1,7 @@
 ---
 topic: lane-3-repo-professionalism-and-docs
 created: 2026-07-03
-status: Implementing
+status: Implemented
 ---
 
 # Lane 3: Repository Professionalism And Documentation
@@ -227,7 +227,7 @@ tests/run-tests.sh
 # Identity / broken load paths cleared from ACTIVE files (historical audit &
 # optimization docs are out of scope and expected to still match):
 rg -n "paper/paperstyle|paperstyle-overleaf|preamble-overleaf|East Asian Miracle Paper|EastAsia_Paper" \
-   README.md INSTALL.md TROUBLESHOOTING.md AGENTS.md Makefile \
+   INSTALL.md TROUBLESHOOTING.md AGENTS.md Makefile \
    docs/README.md docs/guides docs/technical/TESTING.md docs/PACKAGE_ROADMAP.md \
    paper/STYLE_GUIDE.md paper/CUSTOM_COMMANDS.md
 # No Overleaf references remain in active public docs (F1 gate):
@@ -258,7 +258,53 @@ root `LICENSE` present; the changed set contains no `.tex`/`.sty`/`.cls`/`.bib`
 
 ### Execution Results
 
-- Pending.
+Implemented in commit `fa15e86` (`docs: professionalize lane template
+documentation`).
+
+Commands run from the repo root:
+
+```bash
+make lint
+# exit 0
+
+latexmk -pdf -interaction=nonstopmode main.tex
+# exit 0; main.pdf was already up to date
+
+pytest -q
+# exit 0; 18 passed in 68.08s
+
+tests/run-tests.sh
+# exit 0; Passed: 115, Failed: 0; all compatibility probes passed
+
+git diff --check
+# exit 0
+
+rg -n "paper/paperstyle|paperstyle-overleaf|preamble-overleaf|East Asian Miracle Paper|EastAsia_Paper" \
+   INSTALL.md TROUBLESHOOTING.md AGENTS.md Makefile \
+   docs/README.md docs/guides docs/technical/TESTING.md docs/PACKAGE_ROADMAP.md \
+   paper/STYLE_GUIDE.md paper/CUSTOM_COMMANDS.md
+# exit 1; no matches
+
+rg -n -i "overleaf" README.md INSTALL.md TROUBLESHOOTING.md AGENTS.md \
+   docs/README.md docs/technical/TESTING.md
+# exit 1; no matches
+
+rg -n "format-python|layout hash|FINAL_COMPILATION_STATUS|docs/audits|docs/plans|OVERLEAF_WARNING_SUPPRESSION" \
+   AGENTS.md README.md docs/README.md docs/technical/TESTING.md Makefile
+# exit 1; no matches
+
+python3 -c '...docs/README.md link resolver...'
+# exit 0; OK
+
+ls LICENSE
+# exit 0; LICENSE
+
+git diff --name-only main -- . | rg '\.(tex|sty|cls|bib)$'
+# exit 1; no TeX/package inputs changed
+```
+
+Before this final plan-only status commit, `git status --porcelain=v1` showed
+only `tmp/ai-plans/lane-3-repo-professionalism-and-docs.md` modified.
 
 ### Verifier Validation
 
@@ -332,4 +378,17 @@ re-implementation loop needed since nothing is implemented yet).
 
 ## Plan Deltas
 
-- None yet.
+### 2026-07-04
+
+- The frozen plan said to copy full LPPL text from `license/LICENSE.txt`, but
+  that file is only a short LPPL notice. Implemented the same root `LICENSE`
+  outcome using the canonical local TeX Live copy at
+  `/usr/local/texlive/2025/texmf-dist/doc/latex/base/lppl.txt`. Because the
+  checkout is on a case-insensitive filesystem, the existing `license/`
+  directory collided with a root `LICENSE` file, so the short notice moved from
+  `license/LICENSE.txt` to `licenses/LICENSE.txt`.
+- The frozen verification grep for broken load paths included `README.md`, while
+  Implementation step 1 explicitly preserved the README migration note
+  containing the legacy `paper/paperstyle` token. Planned verification should
+  exclude `README.md` from that specific broken-path grep and rely on the
+  migration-note exception documented in step 1.
