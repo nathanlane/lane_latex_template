@@ -2,6 +2,21 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## 2026-07-04
+
+- Removed active documentation claims about unverified external build support,
+  keeping the public setup guidance tied to locally verified `latexmk`, `chktex`,
+  pytest, and shell-harness checks.
+- Replaced stale `paper/paperstyle` examples in installation and troubleshooting
+  docs with current `lltpaperstyle` package names while preserving the README
+  migration note for older documents.
+- Reworked active repository-identity text, testing guidance, docs index,
+  supported-version policy, and release/version wording around the Lane LaTeX
+  Template.
+- Added a root `LICENSE` containing the LPPL v1.3c text, renamed the legacy
+  short-notice directory to `licenses/` to avoid a case-folding collision, and
+  archived the duplicate troubleshooting guide under `docs/archive/`.
+
 ## 2026-07-02
 
 - Added compatibility fixes for natbib entry-point and standalone module contracts:

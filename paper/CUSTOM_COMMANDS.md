@@ -75,7 +75,7 @@ Dynamic article title with elegant formatting.
 - **Color:** Softened navy (RGB 25,50,80)
 - **Tracking:** 20 units (2% letter spacing)
 - **Spacing after:** 2 grid units (26.4pt)
-- **Example:** `\articletitle{The East Asian Miracle}`
+- **Example:** `\articletitle{A Research Article Title}`
 
 #### `\articletitlefootnote{title}{footnote}`
 Article title with acknowledgment footnote.

@@ -83,8 +83,8 @@ The style provides systematic commands for professional title pages following ec
 **Title Commands:**
 ```latex
 % Standard title (18pt, perfect for most papers)
-\articletitle{The East Asian Miracle:\\[0.3\baselineskip]
-Industrial Policy and Economic Development}
+\articletitle{A Research Article Title:\\[0.3\baselineskip]
+Subtitle for the Article}
 
 % Compact title (16pt, for papers with many authors)
 \articletitlecompact{Long Title That Needs Less Space}

@@ -1,4 +1,4 @@
-# EastAsia_Paper LaTeX Package – Comprehensive Roadmap
+# Lane LaTeX Template Package - Comprehensive Roadmap
 
 > This document expands upon the high-level action plan outlined previously.  It is **the single source of truth** for the package’s near-term direction, milestones, and decision-making history.  Update this file whenever scope or sequencing changes.
 

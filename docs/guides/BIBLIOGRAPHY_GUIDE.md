@@ -1,6 +1,6 @@
 # Bibliography Workflow Guide
 
-This guide explains the bibliography system for the East Asian Miracle paper, which uses **biblatex** with **biber** backend and Chicago Manual of Style (17th edition) author-date format.
+This guide explains the bibliography system for the Lane LaTeX Template, which uses **biblatex** with **biber** backend and Chicago Manual of Style (17th edition) author-date format.
 
 ## Quick Start
 

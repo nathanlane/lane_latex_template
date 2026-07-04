@@ -1,87 +1,59 @@
 # Documentation Index
 
-This directory contains all project documentation organized by category.
+<!-- %% FIX: Replace stale generated-looking links with a curated index of tracked docs. -->
 
-## Directory Structure
+This directory collects active user guides, maintainer notes, historical audits,
+and archived implementation plans for the Lane LaTeX Template.
 
-### 📊 audits/
-Comprehensive audits and analysis reports:
-- `AUDIT_FINDINGS.md` - Initial project audit findings
-- `EMPHASIS_HIERARCHY_AUDIT.md` - Typography emphasis system analysis
-- `MATHEMATICAL_TYPOGRAPHY_AUDIT.md` - Mathematical typesetting review
-- `PROFESSIONAL_AUDIT_SUMMARY.md` - Overall professional assessment
-- `REPOSITORY_AUDIT.md` - Repository structure analysis
-- `TITLE_FOOTNOTE_AUDIT.md` - Title page footnote system audit
-- `title_page_grid_audit.md` - Title page grid alignment analysis
-- `typography-audit-report.md` - Complete typography system audit
+## Active User Guides
 
-### 📚 guides/
-User guides and how-to documentation:
-- `BIBLIOGRAPHY_GUIDE.md` - Bibliography and citation system guide
-- `LATEX_STYLE_STANDARDS.md` - LaTeX coding standards and conventions
-- `OVERLEAF_WARNING_SUPPRESSION_GUIDE.md` - Guide to handling Overleaf warnings
+- [Bibliography Guide](guides/BIBLIOGRAPHY_GUIDE.md) - Citation and bibliography workflow.
+- [LaTeX Style Standards](guides/LATEX_STYLE_STANDARDS.md) - Source-formatting and typography conventions.
+- [Package Naming Convention](PACKAGE_NAMING_CONVENTION.md) - Current `llt` package naming rules.
+- [Grid System Reference](GRID_SYSTEM_REFERENCE.md) - Grid commands and layout concepts.
 
-### 📋 plans/
-Optimization and implementation plans:
-- `../superpowers/plans/2026-07-01-deep-review-roadmap.md` - Master roadmap for staged deep-review remediation lanes
-- `../superpowers/plans/2026-05-28-latex-template-maintainability.md` - Checkpointed plan for package maintainability and option-contract fixes
-- `BIBLIOGRAPHY_OPTIMIZATION_PLAN.md` - Bibliography system improvements
-- `CAPTION_OPTIMIZATION_PLAN.md` - Caption typography enhancements
-- `CODEBASE_CLEANUP_ROADMAP.md` - Repository cleanup strategy
-- `CODE_STYLE_HYGIENE_PLAN.md` - Code quality improvement plan
-- `FINAL_MICRO_ADJUSTMENTS_PLAN.md` - Final typography refinements
-- `FLOAT_OPTIMIZATION_PLAN.md` - Figure and table placement optimization
-- `HEADING_OPTIMIZATION_PLAN.md` - Section heading improvements
-- `HYPHENATION_OPTIMIZATION_PLAN.md` - Hyphenation system enhancements
-- `INITIAL_CAPS_PLAN.md` - Drop caps and initial capitals design
-- `LATEX_PACKAGE_OPTIMIZATION_ROADMAP.md` - Package refactoring strategy
-- `LIST_OPTIMIZATION_PLAN.md` - List typography improvements
-- `PAPERSTYLE_CLEANUP_PLAN.md` - Style package cleanup strategy
-- `PARAGRAPH_OPTIMIZATION_PLAN.md` - Paragraph formatting enhancements
-- `SPECIAL_CHARACTERS_OPTIMIZATION_PLAN.md` - Special character handling
+## Active Maintainer References
 
-### 🎨 style/
-Style specifications and changelog:
-- `CHANGELOG.md` - Project version history and changes
+- [Testing Guide](technical/TESTING.md) - Local build, lint, pytest, and shell-harness checks.
+- [Deep Review Findings](technical/DEEP_REVIEW_FINDINGS_2026-07-01.md) - Consolidated review findings that drive the current lane roadmap.
+- [LaTeX Code Review](technical/LATEX_CODE_REVIEW_2026-05-28.md) - Maintainability and package API findings.
+- [Package Brittleness Analysis](technical/PACKAGE_BRITTLENESS_ANALYSIS.md) - Package reliability risks and recommendations.
+- [Grid Unit Conversion Audit](technical/GRID_UNIT_CONVERSION_AUDIT.md) - Grid-unit conversion details.
 
-### 🔧 technical/
-Technical documentation and summaries:
-- `CODE_HYGIENE_SUMMARY.md` - Code quality report
-- `COMPILATION_ERRORS_MASTER_LIST.md` - Known compilation issues
-- `DEEP_REVIEW_FINDINGS_2026-07-01.md` - Three-part maintainability, documentation, and typography review findings
-- `DIRECTORY_CLEANUP_SUMMARY.md` - Cleanup operation results
-- `FINAL_COMPILATION_STATUS.md` - Final build status report
-- `LATEX_CODE_REVIEW_2026-05-28.md` - Maintainability and package API code review
-- `PAPERSTYLE_CLEANUP_SUMMARY.md` - Style package cleanup results
-- `TESTING.md` - Testing procedures and results
-- `TITLE_FOOTNOTE_FIX.md` - Title footnote implementation fix
+## Roadmaps And Workflow Notes
 
-### 📐 typography/
-Typography-specific documentation:
-- `BASELINE-GRID.md` - Baseline grid system specification
-- `BLOCKQUOTE_LIST_OPTIMIZATION.md` - Quote and list formatting
-- `CROSS_REFERENCE_TYPOGRAPHY_OPTIMIZATION.md` - Cross-reference styling
-- `SPACING_OPTIMIZATION_NOTES.md` - Spacing system documentation
+- [Package Roadmap](PACKAGE_ROADMAP.md) - Historical package roadmap and future packaging ideas.
+- [Deep Review Roadmap](superpowers/plans/2026-07-01-deep-review-roadmap.md) - Current serialized lane plan for review remediation.
+- [AI Workflow Plan Template](ai-workflow/plan-template.md) - Living-plan lifecycle and status conventions.
+- [Style Changelog](style/CHANGELOG.md) - Legacy style-package changelog.
 
-## Quick Links
+## Typography And Grid Notes
 
-- **Getting Started**: See [guides/LATEX_STYLE_STANDARDS.md](guides/LATEX_STYLE_STANDARDS.md)
-- **Current Status**: See [technical/FINAL_COMPILATION_STATUS.md](technical/FINAL_COMPILATION_STATUS.md)
-- **Optimization Roadmap**: See [plans/LATEX_PACKAGE_OPTIMIZATION_ROADMAP.md](plans/LATEX_PACKAGE_OPTIMIZATION_ROADMAP.md)
-- **Typography System**: See [typography/BASELINE-GRID.md](typography/BASELINE-GRID.md)
-- **Package Naming**: See [PACKAGE_NAMING_CONVENTION.md](PACKAGE_NAMING_CONVENTION.md)
+- [Baseline Grid](typography/BASELINE-GRID.md) - Baseline-grid design notes.
+- [Blockquote/List Optimization](typography/BLOCKQUOTE_LIST_OPTIMIZATION.md) - Historical quote/list typography work.
+- [Cross-Reference Typography](typography/CROSS_REFERENCE_TYPOGRAPHY_OPTIMIZATION.md) - Cross-reference typography notes.
+- [Spacing Optimization](typography/SPACING_OPTIMIZATION_NOTES.md) - Spacing-system notes.
+- [Grid Development Notes](development/grid/README.md) - Development notes and experiments for grid tooling.
+
+## Historical Audits And Archives
+
+- [Local Fork Template Audit](LOCAL_FORK_TEMPLATE_AUDIT_2026-05-27.md)
+- [Typography Audit Report](TYPOGRAPHY_AUDIT_REPORT.md)
+- [LaTeX Template Review](LATEX_TEMPLATE_REVIEW.md)
+- [Archived Plans](archive/)
+- [Legacy Troubleshooting Guide](archive/TROUBLESHOOTING-legacy.md)
 
 ## Package Naming Convention
 
-As of July 2025, the Lane LaTeX Template (LLT) packages use a systematic naming convention:
-- Main style package: `lltpaperstyle` (formerly `paper/paperstyle`)
-- Module packages: `llt{modulename}` (e.g., `lltcolors`, `lltfonts`, `lltlists`)
-- Loading method: Direct package names without path prefixes
+The current main style package is `lltpaperstyle`.
+Module packages use the `llt` prefix, such as `lltcolors`, `lltfonts`, and
+`lltlists`.
+Load packages by package name rather than path prefix.
 
 ## Documentation Standards
 
-All documentation follows these conventions:
-- **File Names**: UPPERCASE with underscores for word separation
-- **Format**: Markdown with clear section headers
-- **Status**: Documents marked as PLAN are proposals; others are implemented features
-- **Dates**: ISO format (YYYY-MM-DD) when applicable
+- Use Markdown with clear section headers.
+- Prefer links to tracked files.
+- Mark historical or proposal documents clearly when they are not current user
+  guidance.
+- Use ISO dates (`YYYY-MM-DD`) when dates are needed.
