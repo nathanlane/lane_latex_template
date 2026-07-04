@@ -1,4 +1,4 @@
-# LaTeX Style Standards for East Asian Miracle Paper
+# LaTeX Style Standards for Lane LaTeX Template
 
 This document codifies the LaTeX source code formatting standards for this project, ensuring consistency, maintainability, and professional quality.
 
@@ -171,14 +171,14 @@ Maintain systematic order in preamble:
 
 ### LaTeX Source Files
 - **Main document**: `main.tex`
-- **Style definitions**: `lltpaperstyle.sty` (formerly `paper/paperstyle.sty`)
+- **Style definitions**: `lltpaperstyle.sty` (formerly the legacy path-prefixed style file)
 - **Preamble**: `paper/preamble.tex`
 - **Title page**: `paper/titlepage.tex`
 - **Appendices**: `appendices/*.tex`
 
 ### Package Loading Convention
 As of July 2025, the Lane LaTeX Template uses a new naming convention:
-- Main package: `\usepackage{lltpaperstyle}` (not `\usepackage{paper/paperstyle}`)
+- Main package: `\usepackage{lltpaperstyle}` (not the legacy path-prefixed package name)
 - Modules: `\RequirePackage{lltcolors}`, `\RequirePackage{lltfonts}`, etc.
 - No path prefixes needed with the new naming system
 
@@ -227,4 +227,4 @@ pdflatex main.tex && echo "Success"
 
 ---
 
-*This document is part of the East Asian Miracle Paper project style guide.*
+*This document is part of the Lane LaTeX Template project style guide.*

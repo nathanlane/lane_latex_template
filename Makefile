@@ -1,4 +1,5 @@
-# Makefile for East Asian Miracle Paper
+# Makefile for Lane LaTeX Template
+# %% FIX: Keep active command help aligned with the repository identity.
 # Production-grade LaTeX compilation workflow
 
 # Variables
@@ -277,7 +278,7 @@ warnings:
 # Help target
 .PHONY: help
 help:
-	@echo "East Asian Miracle Paper - Makefile targets:"
+	@echo "Lane LaTeX Template - Makefile targets:"
 	@echo ""
 	@echo "Compilation targets:"
 	@echo "  make build      - AGENTS.md latexmk build gate"

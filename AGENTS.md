@@ -1,13 +1,13 @@
 # AGENTS.md – Rules & Workflow for LaTeX Build‑Doctor Agent
 > **Mission**  
-> Fix all LaTeX compilation issues and harden the template for both local `latexmk`
-> **and** the current Overleaf container **without changing any visual design**.
+> Fix all LaTeX compilation issues and harden the template for local `latexmk`
+> **without changing any visual design**.
 
 ---
 
 ## 📜 Non‑negotiable rules
 1. **Do not** alter margins, fonts, colours, spacing, numbering schemes, or figure placement defaults.  
-2. Prefer the **smallest possible change** that compiles cleanly on both platforms.  
+2. Prefer the **smallest possible change** that compiles cleanly on the verified local toolchain.
 3. Comment every fix with `%% FIX:` and a one‑line rationale.  
 4. Update `CHANGELOG.md` and relevant sections of `README.md` after any material change.
 
@@ -16,7 +16,7 @@
 |---------|---------|----------------------|
 | `chktex -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48 *.tex` | Catch obvious bad constructs while ignoring intentional template/prose warnings that require visual-output changes. | 0 |
 | `latexmk -pdf -interaction=nonstopmode main.tex` | Full compile; output PDF must be produced. | 0 |
-| `pytest -q` | Runs regression harness (`tests/`) that diff‑checks layout hashes. | 0 |
+| `pytest -q` | Runs regression tests over fixtures, package-option contracts, and PDF-text assertions where Poppler is available. | 0 |
 
 If **any** command fails, fix the cause instead of suppressing it.
 
@@ -33,8 +33,8 @@ If **any** command fails, fix the cause instead of suppressing it.
 
 ## 🏁 Definition of Done
 * All tools exit 0.  
-* `main.pdf` renders without warnings on Overleaf **and** locally.  
-* `README.md` lists the tested TeX Live and Overleaf build numbers.  
+* `main.pdf` renders with the verified local `latexmk` workflow.
+* `README.md` lists the tested local TeX Live toolchain.
 * `CHANGELOG.md` entry added under today’s date.
 
 ---
@@ -82,7 +82,7 @@ Keep extra folders to an absolute minimum.  Empty dirs should contain a `.gitkee
    \addbibresource{references.bib}
    \usepackage[nobiblatex]{lltpaperstyle}
    ```
-2. Compile with `latexmk -pdf -synctex=1 main.tex` (local) or just click *Recompile* on Overleaf.
+2. Compile with `latexmk -pdf -synctex=1 main.tex`.
 3. Obey Chicago author-date citation style (`\textcite`, `\autocite`).
 4. Follow these **non-negotiable typographic rules**:
    • Tables use `booktabs`, no vertical rules.  

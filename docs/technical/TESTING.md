@@ -1,6 +1,7 @@
 # Testing and Quality Assurance Guide
 
-This document provides comprehensive documentation for the testing, validation, and debugging infrastructure in the East Asian Miracle Paper project.
+This document provides comprehensive documentation for the testing, validation, and debugging infrastructure in the Lane LaTeX Template project.
+<!-- %% FIX: Align the active testing guide with the repository's current verification commands. -->
 
 ## Table of Contents
 
@@ -61,6 +62,20 @@ git status --porcelain=v1
 - Remaining warnings are documented in `main.log`/`main.blg` and should only be
   changed in this lane when a warning can be eliminated without visual impact.
 - `tests/compilation/logs/*.log` are generated artifacts and are intentionally ignored from git tracking.
+
+## Current Verification Gates
+
+| Command | Purpose | Blocking |
+|---------|---------|----------|
+| `make lint` | Runs the AGENTS.md `chktex` lint gate. | Yes |
+| `make build` | Runs `latexmk -pdf -interaction=nonstopmode main.tex`. | Yes |
+| `pytest -q` | Runs Python regression tests for build targets, package-option contracts, and PDF-text assertions when Poppler is available. | Yes |
+| `tests/run-tests.sh` | Runs the shell fixture and compatibility-probe harness. | Yes for compatibility lanes |
+| `tests/check-spacing-integrity.sh main.pdf || true` | Emits spacing diagnostics for later typography review. | No |
+
+Generated PDFs and logs live under `tests/compilation/` and
+`tests/visual/output/`; persistent baselines should only be changed in a lane
+that explicitly approves visual output updates.
 
 ## Testing Framework
 
@@ -419,8 +434,8 @@ make validate
 Python scripts are automatically formatted and checked:
 
 ```bash
-# Format Python code with black
-make format-python
+# Format active TeX sources
+make format
 
 # Check Python style
 black --check src/py/
@@ -694,7 +709,7 @@ VERBOSE=1 ./tests/run-tests.sh
 ./src/sh/validate_latex_style.sh main.tex | less
 
 # Fix automatically (where possible)
-make format-python
+make format
 ```
 
 #### 3. **Grid Misalignment**

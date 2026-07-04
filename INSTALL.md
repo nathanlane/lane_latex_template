@@ -241,7 +241,7 @@ mpm --install=tgpagella
 
 Run the diagnostic command:
 ```bash
-pdflatex -interaction=nonstopmode "\RequirePackage{paper/paperstyle}\paperstylediagnostics\stop"
+pdflatex -interaction=nonstopmode "\RequirePackage{lltpaperstyle}\paperstylediagnostics\stop"
 ```
 
 ### Getting Help
@@ -261,11 +261,11 @@ If you're having trouble with the full installation, try the minimal setup:
      tgpagella geometry article hyperref
    ```
 
-2. **Use compatibility mode**:
+2. **Use minimal mode**:
    Create a file `minimal.tex`:
    ```latex
    \documentclass{article}
-   \usepackage[compat]{paper/paperstyle}
+   \usepackage[minimal]{lltpaperstyle}
    \begin{document}
    Your content here
    \end{document}
@@ -328,20 +328,21 @@ Example customization:
 \definecolor{sectioncolor}{RGB}{0,0,0}
 
 % Load main package
-\usepackage{paper/paperstyle}
+\usepackage{lltpaperstyle}
 
 % Add optional enhancements
-\usepackage{paper/modules/microtype-config}
-\usepackage{paper/modules/hochuli-refinements}
+\usepackage{lltmicrotype}
+\usepackage{llthochuli}
 ```
 
 ## Next Steps
 
 - Read `README.md` for usage instructions
 - See `paper/STYLE_GUIDE.md` for typography guidelines
-- Check `docs/TROUBLESHOOTING.md` for common issues
+- Check `TROUBLESHOOTING.md` for common issues
 - Review example documents in `examples/`
 
 ---
 
-**Note**: This template requires a complete LaTeX installation. If you encounter persistent issues, consider using an online service like Overleaf, which has all packages pre-installed.
+<!-- %% FIX: Avoid naming unverified external platforms in active installation docs. -->
+**Note**: This template requires a complete LaTeX installation. If you encounter persistent package issues, use a complete TeX Live, MacTeX, or MiKTeX setup.

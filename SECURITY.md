@@ -31,7 +31,12 @@ If you accidentally commit sensitive data:
 
 ## Supported Versions
 
-Currently supporting the latest version only.
+<!-- %% FIX: Replace vague support language with explicit repository-release status. -->
+
+| Version | Supported |
+|---------|-----------|
+| `v0.1.0-beta` repository release | Yes |
+| Earlier alpha snapshots | No |
 
 ## Security Best Practices
 

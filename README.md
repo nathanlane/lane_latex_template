@@ -1,4 +1,4 @@
-# Academic Paper LaTeX Template
+# Lane LaTeX Template
 
 **By Nathan Lane / Industrial Policy Group**
 
@@ -11,6 +11,7 @@ This (living) template applies classic typographic principles to create scholarl
 
 ## ✨ Features
 
+<!-- %% FIX: Keep active feature claims limited to locally verified support. -->
 - **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
 - **Baseline Grid System** – 13.2pt rhythm with systematic proportional relationships
 - **Optically Refined Typo** - Using typographic principles
@@ -20,7 +21,7 @@ This (living) template applies classic typographic principles to create scholarl
 - **Floats** – Comprehensive figure/table system with booktabs, tabularx, and smart placement
 - **Lists** – Multiple environments with refined bullets and optimal spacing
 - **Accessibility** – WCAG 2.1 AA compliant colors with semantic emphasis commands
-- **Cross-Platform** – Works with local LaTeX and Overleaf
+- **Local Build Workflow** – Verified with local `latexmk`, `chktex`, and pytest gates
 
 ---
 
@@ -70,10 +71,10 @@ That's it! You now have a professionally typeset academic paper.
 
 ### Tested Build Environments
 
-Verified locally on May 28, 2026; Overleaf evidence must come from the project compile log:
+<!-- %% FIX: Remove unsupported external build claims and keep the local toolchain explicit. -->
+Verified locally on July 4, 2026:
 
 - **Local**: TeX Live 2025 at `/usr/local/texlive/2025` (`tlmgr` revision 76773), pdfTeX 1.40.28, `latexmk` 4.86a, Biber 2.20, using `latexmk -pdf -interaction=nonstopmode main.tex`.
-- **Overleaf**: TeX Live 2024 annual release; the exact Overleaf build identifier is not available in this local checkout and must be copied from the Overleaf compile log before claiming Overleaf Definition of Done.
 
 ### Quick Setup
 
@@ -95,7 +96,6 @@ pytest -q
 - **macOS**: Use MacTeX or install via Homebrew
 - **Linux**: Install texlive-full from your package manager
 - **Windows**: Use MiKTeX or WSL with TeX Live
-- **Overleaf**: Works automatically without configuration
 
 ### Environment Variables (Optional)
 
@@ -166,8 +166,6 @@ biber main
 pdflatex main.tex
 pdflatex main.tex
 ```
-
-**Overleaf**: Just click the Recompile button
 
 ---
 
@@ -540,10 +538,6 @@ make              # Full rebuild
 
 ### Platform-Specific Notes
 
-**Overleaf**:
-- All features work automatically
-- Use "TeX Live 2023" or later in Menu → Settings
-
 **Windows**:
 - Use WSL for Make commands
 - Or compile manually with pdflatex/biber
@@ -639,38 +633,25 @@ Core packages:
 
 ## Version History
 
-Current Release: v0.1.0-beta
+<!-- %% FIX: Separate repository release status from the bundled package version. -->
+Repository release: `v0.1.0-beta`.
 
-**Version v0.1.0-beta (July 2025)**
-- Public repository
-- All preamble files and documentation
-- Migration guides and README files
-- API reference and appendices
-- Module documentation
-- Version history sections
+Bundled package version: `lltpaperstyle` reports `v1.7` in
+`paper/lltpaperstyle.sty`.
 
-**Version v1.4-alpha:v1.6-alpha (July 2025)**
-- Added `llt` package naming convention
-- Implemented modular architecture
-- Enhanced grid system with visual overlay
-- Improved cross-platform compatibility
-
-**Version v1.0-alpha:v1.3-alpha (June 2025)**
-- Professional appendix management system
-- Enhanced optical margin alignment
-- Sophisticated list typography
-- QJE-style table notes
+The repository release tracks this template as a reusable project. The bundled
+package version tracks the internal LaTeX style API.
 
 ### Versioning 
 
-Historical Versions: All old development versions are now labeled as alpha:
-•  v1.6-alpha (was v1.6)
-•  v1.5-alpha (was v1.5) 
-•  v1.4-alpha (was v1.4)
-•  v1.3-alpha (was v1.3)
-•  v1.2-alpha (was v1.2)
-•  v1.1-alpha (was v1.1)
-•  v1.0-alpha (was v1.0)
+Historical package-development versions are alpha snapshots:
+- `v1.6-alpha` (was `v1.6`)
+- `v1.5-alpha` (was `v1.5`)
+- `v1.4-alpha` (was `v1.4`)
+- `v1.3-alpha` (was `v1.3`)
+- `v1.2-alpha` (was `v1.2`)
+- `v1.1-alpha` (was `v1.1`)
+- `v1.0-alpha` (was `v1.0`)
 
 ### Migration Notes
 

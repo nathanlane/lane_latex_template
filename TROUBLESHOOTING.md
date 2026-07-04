@@ -1,6 +1,7 @@
 # Troubleshooting Guide
 
 This guide helps resolve common issues with the Lane LaTeX Template.
+<!-- %% FIX: Keep active troubleshooting tied to verified local package names. -->
 
 ## Table of Contents
 - [Compilation Errors](#compilation-errors)
@@ -10,7 +11,6 @@ This guide helps resolve common issues with the Lane LaTeX Template.
 - [Float Problems](#float-problems)
 - [Typography Issues](#typography-issues)
 - [Package Conflicts](#package-conflicts)
-- [Overleaf-Specific Issues](#overleaf-specific-issues)
 - [Testing and Validation](#testing-and-validation)
 
 ## Compilation Errors
@@ -32,11 +32,6 @@ This guide helps resolve common issues with the Lane LaTeX Template.
    mpm --install=[package-name]
    ```
 
-2. For Overleaf: The package might not be available. Use compatibility mode:
-   ```latex
-   \usepackage[compat]{paper/paperstyle}
-   ```
-
 ### "Undefined control sequence" Error
 
 **Symptoms**: Commands like `\articletitle` or `\gridunit` not recognized
@@ -45,12 +40,12 @@ This guide helps resolve common issues with the Lane LaTeX Template.
 1. Ensure paperstyle is loaded:
    ```latex
    \input{paper/preamble.tex}  % or
-   \usepackage{paper/paperstyle}
+   \usepackage{lltpaperstyle}
    ```
 
 2. Check module loading order - some commands require specific modules:
    ```latex
-   \usepackage{paper/modules/dimensions}  % For \gridunit
+   \usepackage{lltdimensions}  % For \gridunit
    ```
 
 ### Compilation Warnings
@@ -79,14 +74,14 @@ This guide helps resolve common issues with the Lane LaTeX Template.
 
 2. Use font fallback module:
    ```latex
-   \usepackage{paper/modules/font-fallbacks}
+   \usepackage{lltfontfallbacks}
    \enablecompatibilitymode
    ```
 
 3. Manual fallback to Palatino:
    ```latex
-   \usepackage{palatino}  % Before paperstyle
-   \usepackage{paper/paperstyle}
+   \usepackage{palatino}  % Before lltpaperstyle
+   \usepackage{lltpaperstyle}
    ```
 
 ### Small Caps Not Working
@@ -314,76 +309,10 @@ This guide helps resolve common issues with the Lane LaTeX Template.
 
 **Solution**: Load cleveref last:
 ```latex
-\usepackage{paper/paperstyle}
+\usepackage{lltpaperstyle}
 % ... other packages ...
 \usepackage{cleveref}  % Must be near end
 \usepackage{hyperref}  % Must be last
-```
-
-## Overleaf-Specific Issues
-
-### "Incomplete \iffalse" Error
-
-**Symptoms**: Overleaf compilation fails with:
-```
-! Incomplete \iffalse; all text was ignored after line 20.
-```
-
-**Cause**: Overleaf's LaTeX environment handles catcodes and package initialization differently than local installations.
-
-**Status**: **Under investigation** - Works locally but fails on Overleaf
-
-**Solution**:
-Use the Overleaf-compatible version:
-
-```latex
-\documentclass{article}
-\input{paper/preamble-overleaf.tex}
-\begin{document}
-Your content here
-\end{document}
-```
-
-**Alternative**: Load the style directly:
-```latex
-\usepackage{paper/paperstyle-overleaf}
-```
-
-**Benefits of Overleaf version**:
-- No @ symbols in user-facing code
-- Simplified internal mechanisms  
-- Maintains core typography features
-- Reliable on all cloud platforms
-
-**See OVERLEAF_COMPATIBILITY.md** for detailed information
-
-**Technical Details**: 
-- Overleaf renames files to `output.tex` internally
-- Stricter catcode handling for `@` symbols
-- Different package expansion timing
-- Issue occurs at `\begin{document}` during initialization
-
-### Compilation Timeout
-
-**Solutions**:
-1. Use draft mode for editing:
-   ```latex
-   \documentclass[draft]{article}
-   ```
-
-2. Disable microtype temporarily:
-   ```latex
-   \usepackage[draft]{microtype}
-   ```
-
-3. Use quick compilation:
-   - Menu → Recompile → Fast [draft]
-
-### Font Not Available
-
-**Solution**: Overleaf has all fonts, but ensure:
-```latex
-\usepackage[T1]{fontenc}  % Before fonts
 ```
 
 ## Testing and Validation
@@ -457,7 +386,7 @@ make diagnose
 If nothing else works:
 ```latex
 \documentclass{article}
-\usepackage{paper/paperstyle-minimal}
+\usepackage{lltpaperstyleminimal}
 \begin{document}
 Your content here
 \end{document}

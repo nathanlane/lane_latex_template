@@ -1,5 +1,8 @@
 # Troubleshooting Guide
 
+> Archived legacy troubleshooting page. The root `TROUBLESHOOTING.md` is the
+> canonical active guide.
+
 This guide helps resolve common issues when using the East Asia Paper LaTeX template.
 
 ## Table of Contents
