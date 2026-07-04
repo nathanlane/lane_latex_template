@@ -2,6 +2,7 @@
 topic: lane-3-repo-professionalism-and-docs
 created: 2026-07-03
 status: Reviewed
+closed: 2026-07-04
 ---
 
 # Lane 3: Repository Professionalism And Documentation
@@ -421,3 +422,12 @@ re-implementation loop needed since nothing is implemented yet).
   containing the legacy `paper/paperstyle` token. Planned verification should
   exclude `README.md` from that specific broken-path grep and rely on the
   migration-note exception documented in step 1.
+
+### 2026-07-04 (closeout)
+
+- Closed at `status: Reviewed` + `closed: 2026-07-04` (schema-correct closed
+  form; the lifecycle has no separate `Closed` state). Close-eligible: review
+  Method is `reran-planned-verification` (a positive validation method).
+- `closed:` is plan bookkeeping only; it does not merge the branch. The Lane 3
+  work ships to `main` via PR from `codex/lane-3-repo-professionalism-and-docs`,
+  mirroring the Lane 2 flow (PR #7).
