@@ -1,7 +1,7 @@
 ---
 topic: lane-3-repo-professionalism-and-docs
 created: 2026-07-03
-status: Implemented
+status: Reviewed
 ---
 
 # Lane 3: Repository Professionalism And Documentation
@@ -308,8 +308,8 @@ only `tmp/ai-plans/lane-3-repo-professionalism-and-docs.md` modified.
 
 ### Verifier Validation
 
-- Method: pending
-- Evidence: pending
+- Method: reran-planned-verification
+- Evidence: Independently re-ran the planned set — `make lint`=0, `pytest -q` 18 passed, `tests/run-tests.sh` 115/0; active-doc identity/Overleaf/`format-python`/layout-hash greps all clean; every `llt*` package named in edited docs (lltpaperstyle, lltpaperstyleminimal, lltdimensions, lltmicrotype, llthochuli, lltfontfallbacks) resolves to a real `.sty`; `docs/README.md` all 23 links resolve; no `.tex`/`.sty`/`.cls`/`.bib` in the changed set (so `main.pdf` cannot move). Both Plan-Delta deviations independently confirmed justified and non-blocking; no scope-gate/hook exists in this repo to trip on the unlisted `licenses/` path.
 
 ## Reviewer Findings
 
@@ -339,6 +339,35 @@ only `tmp/ai-plans/lane-3-repo-professionalism-and-docs.md` modified.
   record and compare a pre/post text or raster artifact for `main.pdf`, or narrow
   the verification claim to "no TeX/package inputs changed; local rebuild still
   succeeds."
+
+### 2026-07-04 (review-diff-vs-plan verifier pass)
+
+No material findings — the implementation matches the frozen plan; status
+advanced to `Reviewed`. Independent verification plus per-file diff review
+confirmed:
+
+- All eight finding groups (A–H) implemented. Every active-doc identity,
+  Overleaf, broken-path, and testing-claim target is cleared, while the
+  historical audit/optimization docs are left untouched and the
+  `The East Asian Miracle` *citation example* (`BIBLIOGRAPHY_GUIDE.md:62`) is
+  preserved per plan intent.
+- No new broken paths introduced: every `llt*` package named in the edited docs
+  resolves to a real `.sty` file.
+- Constraints honored: no `.tex`/`.sty`/`.cls`/`.bib` changed, so `main.pdf`
+  cannot move; `make lint` / `pytest -q` / `tests/run-tests.sh` all green.
+
+Two deviations were found and independently judged **non-blocking / accepted**
+(both already recorded under Plan Deltas 2026-07-04):
+
+- `license/ → licenses/` directory rename — necessary to avoid a root-`LICENSE`
+  case-fold collision on a case-insensitive filesystem; documented in
+  `CHANGELOG.md`. The only referrer to the old path is a frozen, out-of-scope
+  historical evidence doc (`DEEP_REVIEW_FINDINGS_2026-07-01.md`), so nothing
+  functional dangles, and no scope-gate/hook exists in this repo to enforce the
+  Files-In-Scope allowlist.
+- Full LPPL text sourced from the TeX Live canonical copy rather than the short
+  `license/LICENSE.txt` notice — same root-`LICENSE` outcome with better
+  provenance.
 
 ## Resolutions
 
