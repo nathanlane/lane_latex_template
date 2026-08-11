@@ -2413,7 +2413,9 @@
   \def\refinedsc#1{#1}%        % Refined small caps -> plain text
   \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
   \def\titlesc#1{#1}%          % Title small caps -> plain text
-  \def\SetTracking#1#2{#2}%    % Remove tracking commands
+  %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
+  %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
+  \def\SetTracking#1#2{}%      % Remove tracking commands
   \def\lsstyle{}%              % Remove letterspacing style
   \let\\\space%                % Line break -> space
   \def\hspace#1{ }%            % Horizontal space -> space
@@ -2766,7 +2768,10 @@
 \pretolerance=150           % First pass without hyphenation
 \tolerance=800              % Second pass (reduced from 1000)
 \emergencystretch=1em       % Last resort (reduced from 3em)
-\hfuzz=0.2pt               % Tighter overfull tolerance
+%% FIX: comment said "Tighter overfull tolerance" but LaTeX's default \hfuzz
+%% is 0.1pt — 0.2pt is *looser*. Value kept (changing it would surface new
+%% overfull warnings); comment corrected.
+\hfuzz=0.2pt               % Slightly relaxed overfull tolerance (default: 0.1pt)
 \vfuzz=0.2pt               % Matching vertical tolerance
 
 % PARAGRAPH COMPOSITION
