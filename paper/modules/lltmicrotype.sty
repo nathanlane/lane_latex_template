@@ -181,10 +181,11 @@
   ! = {,1200}, ? = {,1200},      % Exclamation/question - match period
   ( = {900,}, ) = {,900},        % Parentheses - increased
   [ = {700,}, ] = {,700},        % Brackets - moderate increase
-  %% FIX: \{ \} and \textbackslash have no OT1 slot, and "\ " (control space)
-  %% was a mistyped backslash; microtype logged 39-43 "Unknown slot number"
-  %% messages per build. Braces dropped from protrusion; backslash moved to
-  %% the T1-only list below.
+  %% FIX: \{ \} triggered "Unknown slot number" warnings in OT1 (no slots
+  %% there); they are re-declared in the T1-only list below as
+  %% \textbraceleft/\textbraceright. "\ " (control space) was a mistyped
+  %% backslash and is inert (interword space is glue, no glyph to protrude);
+  %% the intended backslash key is declared as \textbackslash in the T1 list.
   / = {300,400},                 % Slash - asymmetric
   
   % DASHES - Aggressive protrusion for clean right margins
@@ -295,11 +296,12 @@
 
 % MATHEMATICAL SYMBOL PROTRUSION
 %% FIX: split by encoding. The combined T1/OT1 list declared characters with
-%% no slot there (microtype logged 241 "Unknown slot number" messages per
-%% build, hidden by verbose=silent): \textdagger, \textdaggerdbl,
-%% \textparagraph, \textasteriskcentered, \texteuro have no T1 slot, and none
-%% of these symbols have OT1 slots. T1-valid symbols stay in T1; the rest move
-%% to TS1. Measured against Lane's own main.log.
+%% no slot there (microtype logged 231 "Unknown slot number" messages per
+%% build, demoted to Info by verbose=silent): \textdagger, \textdaggerdbl,
+%% \textparagraph, \textasteriskcentered, \texteuro have no T1 slot; in OT1 all
+%% twelve symbol keys fail microtype's slot lookup (four exist only as OT1
+%% \DeclareTextCommand, which has no slot). T1-valid symbols stay in T1; the
+%% TS1-only five move to TS1; OT1 is dropped. Measured against main.log.
 \SetProtrusion{
   encoding = {T1},
   family = qpl
@@ -310,6 +312,7 @@
   * = {400,400}, / = {200,300},
   % Special characters with T1 slots
   \textsection = {200,200},
+  \textbraceleft = {600,}, \textbraceright = {,600},  % Braces - slight increase
   \textbackslash = {400,300},
   \textdollar = {100,100}, \textsterling = {100,},
   \textexclamdown = {300,}, \textquestiondown = {300,},
