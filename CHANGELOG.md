@@ -2,7 +2,7 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
-## 2026-08-11
+## 2026-08-12
 
 - **Breaking rename:** `\sectionbreak` → `\sectionsep` and `\paragraphbreak` →
   `\paragraphsep`. titlesec executes any defined `\<level>break` macro as a
