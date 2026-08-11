@@ -181,8 +181,11 @@
   ! = {,1200}, ? = {,1200},      % Exclamation/question - match period
   ( = {900,}, ) = {,900},        % Parentheses - increased
   [ = {700,}, ] = {,700},        % Brackets - moderate increase
-  \{ = {600,}, \} = {,600},      % Braces - slight increase
-  / = {300,400}, \ = {400,300},  % Slashes - asymmetric
+  %% FIX: \{ \} and \textbackslash have no OT1 slot, and "\ " (control space)
+  %% was a mistyped backslash; microtype logged 39-43 "Unknown slot number"
+  %% messages per build. Braces dropped from protrusion; backslash moved to
+  %% the T1-only list below.
+  / = {300,400},                 % Slash - asymmetric
   
   % DASHES - Aggressive protrusion for clean right margins
   - = {1000,1000},   % Hyphen - maximum reasonable protrusion
@@ -291,23 +294,37 @@
 }
 
 % MATHEMATICAL SYMBOL PROTRUSION
+%% FIX: split by encoding. The combined T1/OT1 list declared characters with
+%% no slot there (microtype logged 241 "Unknown slot number" messages per
+%% build, hidden by verbose=silent): \textdagger, \textdaggerdbl,
+%% \textparagraph, \textasteriskcentered, \texteuro have no T1 slot, and none
+%% of these symbols have OT1 slots. T1-valid symbols stay in T1; the rest move
+%% to TS1. Measured against Lane's own main.log.
 \SetProtrusion{
-  encoding = {T1,OT1},
+  encoding = {T1},
   family = qpl
 }{
   % Mathematical operators and symbols
   + = {250,250}, - = {350,350}, = = {300,300},
   < = {400,200}, > = {200,400},
   * = {400,400}, / = {200,300},
-  % Special characters
-  \textdagger = {200,300}, \textdaggerdbl = {200,300},
-  \textsection = {200,200}, \textparagraph = {,300},
-  \textasteriskcentered = {300,300},
-  % Currency symbols
-  \textdollar = {100,100}, \textsterling = {100,}, \texteuro = {,100},
-  % Other special punctuation
+  % Special characters with T1 slots
+  \textsection = {200,200},
+  \textbackslash = {400,300},
+  \textdollar = {100,100}, \textsterling = {100,},
   \textexclamdown = {300,}, \textquestiondown = {300,},
   \guillemotleft = {400,200}, \guillemotright = {200,400}
+}
+
+\SetProtrusion{
+  encoding = {TS1},
+  family = qpl
+}{
+  % TS1-only symbols (no T1/OT1 slot)
+  \textdagger = {200,300}, \textdaggerdbl = {200,300},
+  \textparagraph = {,300},
+  \textasteriskcentered = {300,300},
+  \texteuro = {,100}
 }
 
 % ==============================================================================

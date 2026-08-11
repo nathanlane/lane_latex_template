@@ -21,6 +21,18 @@ All notable changes to the Lane LaTeX Template are documented here.
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
 - Filed the adopter defect report under `notes/`.
+- Fixed `\SetTracking` leaking its tracking amount into PDF bookmarks
+  ("1 60Identification Strategy"): the `\pdfstringdefDisableCommands`
+  substitution now discards both arguments.
+- Corrected the `\hfuzz=0.2pt` comment: it is *looser* than LaTeX's 0.1pt
+  default, not "tighter" (value unchanged).
+- Split the qpl protrusion lists by encoding: TS1-only symbols
+  (`\textdagger`, `\textdaggerdbl`, `\textparagraph`,
+  `\textasteriskcentered`, `\texteuro`) moved to a TS1 list, OT1 dropped
+  (none of the declared symbols have OT1 slots), brace keys dropped (no text
+  slot at all), and a mistyped `\ ` (control space) backslash key spelled
+  `\textbackslash` in the T1 list. "Unknown slot number" microtype messages
+  per build: 241 → 0.
 - Recorded the baseline-grid decision in
   `docs/typography/BASELINE-GRID-DECISION.md`: re-document the true measured
   values (10.95pt body, 16.32pt baseline) and treat `\gridunit` as a spacing
