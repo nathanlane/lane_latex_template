@@ -21,6 +21,12 @@ All notable changes to the Lane LaTeX Template are documented here.
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
 - Filed the adopter defect report under `notes/`.
+- Recorded the baseline-grid decision in
+  `docs/typography/BASELINE-GRID-DECISION.md`: re-document the true measured
+  values (10.95pt body, 16.32pt baseline) and treat `\gridunit` as a spacing
+  quantum, not the document baseline; making the 13.2pt grid real was rejected
+  because it requires removing `\linespread` and would shrink documents ~19%.
+  Research brief: `notes/baseline-grid-decision-brief.md`.
 
 ## 2026-07-04
 
