@@ -205,3 +205,45 @@ def test_nosubsectionbarriers_reports_disabled_mode(tmp_path):
     )
     assert_compiles(result, log_text)
     assert "Package lltpaperstyle Info: subsection float barriers disabled" in log_text
+
+
+def test_math_redefs_default_off(tmp_path):
+    result, log_text = compile_latex(
+        tmp_path,
+        "mathredefs-default-contract",
+        r"""
+        \documentclass[11pt]{article}
+        \usepackage{lltpaperstyle}
+        \begin{document}
+        \makeatletter
+        \typeout{LLT_LE=\meaning\le}
+        \typeout{LLT_PHI=\meaning\phi}
+        \makeatother
+        $a \le b$
+        \end{document}
+        """,
+    )
+    assert_compiles(result, log_text)
+    assert "LLT_LE=\\mathchar" in log_text
+    assert "LLT_PHI=\\mathchar" in log_text
+
+
+def test_math_redefs_option_enables_variants(tmp_path):
+    result, log_text = compile_latex(
+        tmp_path,
+        "mathredefs-optin-contract",
+        r"""
+        \documentclass[11pt]{article}
+        \usepackage[mathredefs]{lltpaperstyle}
+        \begin{document}
+        \makeatletter
+        \typeout{LLT_LE=\meaning\le}
+        \typeout{LLT_PHI=\meaning\phi}
+        \makeatother
+        $a \le b$
+        \end{document}
+        """,
+    )
+    assert_compiles(result, log_text)
+    assert "LLT_LE=\\long macro:->\\leqslant" in log_text
+    assert "LLT_PHI=\\long macro:->\\varphi" in log_text

@@ -39,6 +39,7 @@ Complete reference for all commands, environments, and options provided by the `
 | `nocolor` | off | Disable all custom colors (black text only) |
 | `draft` | off | Enable draft mode with visible overfull boxes |
 | `nobiblatex` | off | Disable automatic biblatex loading |
+| `mathredefs` | off | Opt in to `\le`/`\ge`/`\epsilon`/`\phi`/`\vec` variant redefinitions (they change mathematical meaning; default keeps standard LaTeX semantics) |
 
 ### Examples
 
