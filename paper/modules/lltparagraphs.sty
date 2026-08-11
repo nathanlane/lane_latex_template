@@ -231,14 +231,15 @@
   \par\noindent%
 }
 
-% SECTION BREAK MARKERS
-\providecommand{\sectionbreak}{}
-\renewcommand{\sectionbreak}{%
+%% FIX: renamed \sectionbreak -> \sectionsep; titlesec reserves \<level>break
+%% as a hook it executes inside heading construction.
+\providecommand{\sectionsep}{}
+\renewcommand{\sectionsep}{%
   \vspace{2\gridunit}% 2 grid units of clean space
 }
 
 \providecommand{\spacebreak}{}
-\renewcommand{\spacebreak}{\sectionbreak}
+\renewcommand{\spacebreak}{\sectionsep}
 
 % OPENING PARAGRAPH ENVIRONMENT
 %% FIX: Avoid duplicate environment definitions when lltpaperstyle was loaded
@@ -259,8 +260,10 @@
 % ==============================================================================
 
 % Typography-aware ornamental paragraph break
-%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
-\providecommand{\paragraphbreak}{%
+%% FIX: renamed \paragraphbreak -> \paragraphsep and providecommand stays; the
+%% old name collided with titlesec's \<level>break hook and made run-in
+%% \paragraph fail with "perhaps a missing \item".
+\providecommand{\paragraphsep}{%
   \par\vspace{13.2pt}% 1 grid unit of vertical space
   \noindent%
 }

@@ -62,9 +62,10 @@
 % ==============================================================================
 
 % SECTIONS: Minimal flexibility for critical orphan prevention only
+%% FIX: \SetTracking is global and lltmicrotype's series=b rule annuls it on
+%% bold headings — dead code that churned the tracking list on every heading.
 \titleformat{\section}
-  {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{sectioncolor}%
-   \SetTracking{encoding=*}{80}\lsstyle}  % 18pt bold, softened navy, +8% tracking
+  {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{sectioncolor}}  % 18pt bold, softened navy
   {\thesection}
   {1em}
   {}
@@ -81,9 +82,9 @@
 }
 
 % SUBSECTIONS: Minimal flexibility
+%% FIX: same global-tracking conflict as \section; the +60 never took effect.
 \titleformat{\subsection}
-  {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{subsectioncolor}%
-   \SetTracking{encoding=*}{60}\lsstyle}  % 14pt bold, muted midnight, +6% tracking
+  {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{subsectioncolor}}  % 14pt bold, muted midnight
   {\thesubsection}
   {0.85em}
   {}
@@ -174,7 +175,8 @@
 % ==============================================================================
 
 % Grid-aligned section break
-\renewcommand{\sectionbreak}{%
+%% FIX: follow the \sectionbreak -> \sectionsep rename (titlesec hook collision).
+\renewcommand{\sectionsep}{%
   \par\vspace{2\gridunit}% Exactly 2 grid units
   \noindent
 }

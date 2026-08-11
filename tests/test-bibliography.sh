@@ -106,9 +106,15 @@ fi
 
 # Check page count
 if [ -f "${BASENAME}.pdf" ]; then
-    page_count=$(pdfinfo "${BASENAME}.pdf" 2>/dev/null | grep "Pages:" | awk '{print $2}')
-    echo -e "  ${GREEN}✓${NC} PDF created with $page_count pages"
-    
+    # FIX: pdfinfo (poppler) is optional; without it the empty pipeline result
+    # tripped `set -e` and the script exited 1 after every check had passed.
+    if command -v pdfinfo >/dev/null 2>&1; then
+        page_count=$(pdfinfo "${BASENAME}.pdf" 2>/dev/null | grep "Pages:" | awk '{print $2}')
+        echo -e "  ${GREEN}✓${NC} PDF created with $page_count pages"
+    else
+        echo -e "  ${GREEN}✓${NC} PDF created (pdfinfo unavailable, page count skipped)"
+    fi
+
     # Move to output directory
     mv "${BASENAME}.pdf" "$OUTPUT_DIR/"
 fi

@@ -882,7 +882,7 @@ custom options.
 % Optical refinements
 \quoteparagraph{"Quote"} % Hanging opening quote
 \dropcap{L}{etter}        % Two-line drop cap
-\paragraphbreak           % Three asterisks
+\paragraphsep             % Thematic paragraph break
 \numberedparagraph        % Margin numbering
 \resetparnumbers          % Reset counter
 \sidenote{text}           % Margin annotation

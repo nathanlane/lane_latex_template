@@ -160,14 +160,15 @@ The opening paragraph after a heading has no first-line indent.
 
 ### Section Breaks
 
-#### `\sectionbreak`
+#### `\sectionsep`
 Insert 2 grid units of white space.
+(Formerly `\sectionbreak`; renamed because titlesec executes any defined `\<level>break` as a heading hook.)
 
 #### `\asteriskbreak`
 Three centered asterisks for thematic breaks.
 
 ```latex
-\sectionbreak
+\sectionsep
 % or
 \asteriskbreak
 ```

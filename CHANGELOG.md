@@ -2,6 +2,26 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## 2026-08-11
+
+- **Breaking rename:** `\sectionbreak` → `\sectionsep` and `\paragraphbreak` →
+  `\paragraphsep`. titlesec executes any defined `\<level>break` macro as a
+  hook during heading construction; `\paragraphbreak` made run-in `\paragraph`
+  fail with "perhaps a missing `\item`", and `\sectionbreak` silently injected
+  `\vspace{2\gridunit}` (26.4pt) before every `\section` in place of the
+  intended `\@secpenalty`. After the rename, section spacing matches the
+  declared `\titlespacing` values — rendered output loses the accidental
+  26.4pt per-section gap and regains break-before-section penalties.
+- Removed `\SetTracking`/`\lsstyle` from the `\titleformat` blocks for
+  `\section` and `\subsection`: `\SetTracking` is global and the package's own
+  microtype `series=b` rule annulled the declared +80/+60 heading tracking, so
+  the lines were dead code that also churned the tracking list document-wide
+  (122 override messages per build).
+- Fixed run-in `\paragraph` emitting zero space before the following text
+  ("RobustnessEstimates"): dropped the `[~]` after-code and set the
+  `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
+- Filed the adopter defect report under `notes/`.
+
 ## 2026-07-04
 
 - Removed active documentation claims about unverified external build support,
