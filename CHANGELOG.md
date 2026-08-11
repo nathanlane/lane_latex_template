@@ -21,6 +21,15 @@ All notable changes to the Lane LaTeX Template are documented here.
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
 - Filed the adopter defect report under `notes/`.
+- Footnote machinery: marker box widened 7pt → 10.3pt (body and title-page
+  blocks) so two-digit markers keep the 3.7pt gap single digits had and
+  three-digit markers no longer overprint note text; wrapped-line indent
+  matches the wider box. Dropped footmisc's inert `hang,flushmargin` options
+  (Lane's own `\@makefntext` replaced their implementation) and the inert
+  `\footnotemargin` settings; documented `\PassOptionsToPackage` before
+  `\usepackage{lltpaperstyle}` as the supported way to pass footmisc options
+  such as `bottom` without an option clash. Corrected the `\footnote`
+  redefinition comment (the `\nobreak` acts on footnote text, not the mark).
 - **Behavior change:** the `\le`/`\ge`/`\epsilon`/`\phi`/`\vec` redefinitions
   moved behind a new `mathredefs` package option, default off. A typography
   package must not change what a manuscript's mathematics says; documents

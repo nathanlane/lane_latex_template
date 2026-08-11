@@ -1679,12 +1679,11 @@
   \setlength{\skip\footins}{\gridunit}%
   \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % 1 grid unit (vs 2 for main)
   \setlength{\footnotesep}{0.75\gridunit}   % 0.75 grid units - balanced separation
-  \setlength{\footnotemargin}{7pt}  % Same as main document
   % Use EXACT same formatting as main document
   \renewcommand{\@makefntext}[1]{%
-    \setlength{\parindent}{7pt}% Same as main
+    \setlength{\parindent}{10.3pt}% Same as main (widened marker box)
     \noindent
-    \makebox[7pt][l]{%
+    \makebox[10.3pt][l]{%
       \fontsize{6}{7}\selectfont  % Same as main
       \SetTracking{encoding={T1,OT1}}{50}\lsstyle % Same as main
       \@thefnmark
@@ -1708,12 +1707,11 @@
   \setlength{\skip\footins}{2\gridunit}%
   \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % Back to 2 grid units
   \setlength{\footnotesep}{0.25\gridunit}   % Back to 0.25 grid units
-  \setlength{\footnotemargin}{7pt}  % Back to main document setting
   % Restore main document footnote formatting
   \renewcommand{\@makefntext}[1]{%
-    \setlength{\parindent}{7pt}%
+    \setlength{\parindent}{10.3pt}%
     \noindent
-    \makebox[7pt][l]{%
+    \makebox[10.3pt][l]{%
       \fontsize{6}{7}\selectfont
       \SetTracking{encoding={T1,OT1}}{50}\lsstyle % Regular tracking
       \@thefnmark
@@ -1759,8 +1757,13 @@
 % ------------------------------------------------------------------------------
 
 % FOOTNOTE PACKAGE CONFIGURATION
-% Professional hanging indent and punctuation handling
-\RequirePackage[hang,flushmargin]{footmisc} % Hanging indent, flush left
+%% FIX: dropped the inert [hang,flushmargin] options — Lane's \@makefntext
+%% below replaces footmisc's implementation wholesale, so the options and
+%% their comment described behavior the package cancels. To pass footmisc
+%% options (e.g. bottom), use \PassOptionsToPackage{bottom}{footmisc} BEFORE
+%% loading lltpaperstyle; loading footmisc directly afterwards causes an
+%% option clash.
+\RequirePackage{footmisc} % Footnote layout hooks (\@footnotemark etc.)
 % fnpct package permanently removed due to fatal compilation conflicts
 
 % Professional foundry specifications for Pagella
@@ -1771,10 +1774,14 @@
 % Butterick's size relationships with systematic proportions
 \makeatletter
 \renewcommand\@makefntext[1]{%
-  % Professional hanging indent: 7pt (0.53 grid units)
-  \setlength{\parindent}{7pt}%
+  %% FIX: marker box widened 7pt -> 10.3pt. Measured at the marker's 6pt/+50
+  %% tracking, \oldstylenums{99} is 6.6pt wide, leaving 0.4pt in the 7pt box
+  %% (visually jammed; PDF extraction concatenated marker and word, e.g.
+  %% "16Our"), and three-digit marks overprinted the note text. 10.3pt gives
+  %% every marker up to 99 the 3.7pt gap single digits already had.
+  \setlength{\parindent}{10.3pt}%
   \noindent
-  \makebox[7pt][l]{%
+  \makebox[10.3pt][l]{%
     % Foundry spec: 6pt superscript with tracking
     \fontsize{6}{7}\selectfont
     \SetTracking{encoding={T1,OT1}}{50}\lsstyle % +50 units tracking
@@ -1809,9 +1816,11 @@
 % Use old-style figures if available in Pagella
 \renewcommand{\thefootnote}{\oldstylenums{\arabic{footnote}}}
 
-% Hochuli detail: Prevent footnote marks from breaking
+% Hochuli detail: footnote text begins unbreakable
 \let\oldfootnote\footnote
-%% FIX: Preserve LaTeX's optional footnote mark API while preventing breakable marks.
+%% FIX: Preserve LaTeX's optional footnote mark API. The \nobreak is inserted
+%% at the start of the footnote *text*; an earlier comment claimed it prevents
+%% footnote marks from breaking, which it does not do.
 \renewcommand{\footnote}[2][]{%
   \if\relax\detokenize{#1}\relax
     \oldfootnote{\nobreak#2}%
@@ -1823,7 +1832,10 @@
 % Additional footnote optimizations for professional typography
 % Ensure consistent measurements throughout document
 \AtBeginDocument{%
-  \setlength{\footnotemargin}{7pt}  % Match hanging indent precisely
+  %% FIX: \footnotemargin setting removed — it only takes effect through
+  %% footmisc's hang/flushmargin options, which this package no longer loads
+  %% (and its own \@makefntext replaces anyway). It was dead code
+  %% contradicting the dead flushmargin option.
   % Enable hyphenation in footnotes with constraints
   \hyphenpenalty=1000  % Tighter constraints for footnotes
   \exhyphenpenalty=2000  % Maximum 2 consecutive hyphens

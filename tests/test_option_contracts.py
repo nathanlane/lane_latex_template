@@ -247,3 +247,40 @@ def test_math_redefs_option_enables_variants(tmp_path):
     assert_compiles(result, log_text)
     assert "LLT_LE=\\long macro:->\\leqslant" in log_text
     assert "LLT_PHI=\\long macro:->\\varphi" in log_text
+
+
+def test_footmisc_option_passthrough_no_clash(tmp_path):
+    result, log_text = compile_latex(
+        tmp_path,
+        "footmisc-passthrough-contract",
+        r"""
+        \documentclass[11pt]{article}
+        \PassOptionsToPackage{bottom}{footmisc}
+        \usepackage{lltpaperstyle}
+        \begin{document}
+        Text with a note.\footnote{A footnote.}
+        \end{document}
+        """,
+    )
+    assert_compiles(result, log_text)
+    assert "Option clash for package footmisc" not in log_text
+
+
+def test_footnote_marker_box_fits_two_digits(tmp_path):
+    result, log_text = compile_latex(
+        tmp_path,
+        "footnote-marker-width-contract",
+        r"""
+        \documentclass[11pt]{article}
+        \usepackage{lltpaperstyle}
+        \begin{document}
+        \makeatletter
+        \setcounter{footnote}{98}
+        Text.\footnote{Two-digit marker note.}
+        Text.\footnote{Marker ninety-nine.}
+        \makeatother
+        \end{document}
+        """,
+    )
+    assert_compiles(result, log_text)
+    assert "Overfull \\hbox" not in log_text
