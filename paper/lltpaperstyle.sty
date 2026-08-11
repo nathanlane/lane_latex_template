@@ -129,6 +129,9 @@
 \newif\ifllt@nobiblatex
 \newif\ifllt@subsectionbarriers
 \llt@subsectionbarrierstrue
+%% FIX: opt-in flag for math redefinitions (they change mathematical meaning,
+%% not just appearance, so they must not be unconditional).
+\newif\ifllt@mathredefs
 
 % Declare package options
 \DeclareOption{grid}{\llt@gridtrue}
@@ -142,6 +145,9 @@
 %% FIX: Expose subsection float-barrier behavior as a documented package option.
 \DeclareOption{subsectionbarriers}{\llt@subsectionbarrierstrue}
 \DeclareOption{nosubsectionbarriers}{\llt@subsectionbarriersfalse}
+%% FIX: [mathredefs] opts into the \le/\ge/\epsilon/\phi/\vec redefinitions;
+%% default is standard LaTeX semantics.
+\DeclareOption{mathredefs}{\llt@mathredefstrue}
 
 % Process options
 \ProcessOptions\relax
@@ -2687,6 +2693,12 @@
 
 % MATHEMATICAL SYMBOLS ENHANCEMENT
 % Additional symbols and corrections for professional documents
+%% FIX: these redefinitions change mathematical meaning, not appearance — a
+%% paper distinguishing \epsilon from \varepsilon or \phi from \varphi loses
+%% the distinction silently, and \vec loses its arrow. Now opt-in via the
+%% [mathredefs] package option; default is standard LaTeX semantics.
+\makeatletter
+\ifllt@mathredefs
 \renewcommand{\le}{\leqslant}        % Slanted inequality (more elegant)
 \renewcommand{\ge}{\geqslant}        % Slanted inequality
 \renewcommand{\epsilon}{\varepsilon} % Lunate epsilon (preferred)
@@ -2694,6 +2706,8 @@
 
 % Vector notation with consistent weight
 \renewcommand{\vec}[1]{\mathbf{#1}}  % Bold vectors (modern style)
+\fi
+\makeatother
 
 % Set notation with proper spacing
 \providecommand{\set}[1]{\{#1\}}         % Set notation

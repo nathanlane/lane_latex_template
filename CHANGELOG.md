@@ -21,6 +21,11 @@ All notable changes to the Lane LaTeX Template are documented here.
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
 - Filed the adopter defect report under `notes/`.
+- **Behavior change:** the `\le`/`\ge`/`\epsilon`/`\phi`/`\vec` redefinitions
+  moved behind a new `mathredefs` package option, default off. A typography
+  package must not change what a manuscript's mathematics says; documents
+  relying on the variants should pass
+  `\usepackage[mathredefs]{lltpaperstyle}`.
 - Fixed `\SetTracking` leaking its tracking amount into PDF bookmarks
   ("1 60Identification Strategy"): the `\pdfstringdefDisableCommands`
   substitution now discards both arguments.

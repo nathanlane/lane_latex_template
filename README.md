@@ -328,6 +328,7 @@ Available options:
 - `draft` – Enable draft-mode diagnostics, including draft-mode `microtype`
 - `nobiblatex` – Disable automatic biblatex loading
 - `subsectionbarriers` / `nosubsectionbarriers` – Enable/disable automatic float barriers before subsections
+- `mathredefs` – Opt in to variant math glyphs (`\le`→`\leqslant`, `\ge`→`\geqslant`, `\epsilon`→`\varepsilon`, `\phi`→`\varphi`, `\vec`→bold). Off by default: the redefinitions change mathematical meaning, so standard LaTeX semantics ship unless requested
 - `nocolor` – Disable all custom colors
 
 Note: `\usepackage[minimal]{lltpaperstyle}` and
