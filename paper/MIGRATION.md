@@ -1,5 +1,10 @@
 # Migration Guide: v1.2-alpha to v1.5-alpha
 
+> **2026-08-11 rename:** `\sectionbreak` → `\sectionsep`, `\paragraphbreak` →
+> `\paragraphsep`. The old names collided with titlesec's `\<level>break`
+> heading hook and must not be defined at all; there is no compatibility alias.
+> Replace any use of the old names in your documents.
+
 This guide helps you migrate from paperstyle v1.2-alpha to the new modular v1.5-alpha.
 
 ## Overview of Changes

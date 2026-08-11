@@ -15,8 +15,8 @@ The headings module (`lltheadings.sty`) provides sophisticated section and headi
 
 | Level | Size | Leading | Color | Style |
 |-------|------|---------|-------|-------|
-| Section | 18pt | 26.4pt | Softened navy | Bold + 8% tracking |
-| Subsection | 14pt | 19.8pt | Muted midnight | Bold + 6% tracking |
+| Section | 18pt | 26.4pt | Softened navy | Bold |
+| Subsection | 14pt | 19.8pt | Muted midnight | Bold |
 | Subsubsection | 12pt | 13.2pt | Charcoal | Bold |
 | Paragraph | 11pt | 13.2pt | Dark gray | Bold italic |
 
@@ -72,8 +72,8 @@ The module provides four spacing presets:
 
 ### Section Breaks
 ```latex
-\sectionbreak  % Add 2 grid units of space
-\spacebreak    % Alias for \sectionbreak
+\sectionsep  % Add 2 grid units of space
+\spacebreak  % Alias for \sectionsep
 ```
 
 ### Safe Paragraph Heading
@@ -117,8 +117,8 @@ First paragraphs after headings are automatically flush left (no indent).
 ## Typography Details
 
 ### Tracking (Letter Spacing)
-- Sections: +8% for elegant bold
-- Subsections: +6% for readability
+- Bold headings follow the microtype module's global `series=b` rule (per-heading
+  `\SetTracking` was removed: it is global and was annulled by that rule)
 - Subsubsections: Normal tracking
 - Small caps: Context-dependent (3-12%)
 
@@ -233,8 +233,8 @@ Inline paragraph heading style...
 \spacioussections
 
 \section{The Beginning}
-\sectionbreak
+\sectionsep
 \section{The Middle}
-\sectionbreak
+\sectionsep
 \section{The End}
 ```

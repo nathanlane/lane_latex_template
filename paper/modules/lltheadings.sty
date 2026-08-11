@@ -88,9 +88,11 @@
 
 % Sections: Bold with sophisticated color and tracking
 % OPTIMIZED: Perfect grid alignment without optical adjustments
+%% FIX: \SetTracking is global and lltmicrotype's series=b rule annuls it on bold
+%% headings, so the +80 was dead code that also churned the tracking list
+%% document-wide on every heading (122 override messages per build).
 \titleformat{\section}
-  {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{sectioncolor}%
-   \SetTracking{encoding=*}{80}\lsstyle}  % 18pt bold, softened navy, +8% tracking
+  {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{sectioncolor}}  % 18pt bold, softened navy
   {\thesection}
   {1em}
   {}  % No optical compensation - achieve alignment through leading
@@ -101,9 +103,9 @@
 
 % Subsections: Bold with moderate tracking and midnight blue
 % OPTIMIZED: 19.8pt leading (1.5 grid units) for perfect alignment
+%% FIX: same global-tracking conflict as \section; the +60 never took effect.
 \titleformat{\subsection}
-  {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{subsectioncolor}%
-   \SetTracking{encoding=*}{60}\lsstyle}  % 14pt bold, muted midnight, +6% tracking
+  {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{subsectioncolor}}  % 14pt bold, muted midnight
   {\thesubsection}
   {0.85em}
   {}  % No optical compensation - proper leading ensures alignment
@@ -127,16 +129,18 @@
 % Paragraphs: Bold italic for contrast without blockiness
 % OPTIMIZED: Exact body text size and leading for perfect integration
 % Using runin format to avoid list environment conflicts
+%% FIX: the [~] after-code combined with a 0pt after-value yielded zero
+%% separation ("RobustnessEstimates"); titlesec drives run-in separation from
+%% the after-value, so set it to 0.75em and drop the tie.
 \titleformat{\paragraph}[runin]
   {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{paragraphcolor}}  % 11pt bold italic, dark gray
   {}
   {0em}
   {}
-  [~]  % Add space after heading
 \titlespacing*{\paragraph}
   {0pt}
   {13.2pt plus 3.3pt minus 1.65pt}  % 1 unit ±0.25/0.125
-  {0pt}  % No space after for runin format
+  {0.75em}  % Run-in separation from following text
 
 % ==============================================================================
 % ALTERNATIVE PARAGRAPH STYLES
@@ -148,14 +152,14 @@
   \titleformat{\paragraph}[runin]
     {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\scshape\color{paragraphcolor}%
      \SetTracking{encoding=*}{120}\lsstyle}  % 11pt bold small caps, +12% tracking
+    %% FIX: same run-in zero-separation bug as the default \paragraph.
     {}
     {0em}
     {}
-    [~]  % Add space after heading
   \titlespacing*{\paragraph}
     {0pt}
     {13.2pt plus 3.3pt minus 1.65pt}  % 1 unit ±0.25/0.125
-    {0pt}  % No space after for runin format
+    {0.75em}  % Run-in separation from following text
 }
 
 % Alternative: Display-style paragraph for maximum distinction
@@ -191,15 +195,18 @@
 }
 
 % Simple section break - clean space only
-\providecommand{\sectionbreak}{}
-\renewcommand{\sectionbreak}{%
+%% FIX: renamed \sectionbreak -> \sectionsep; titlesec executes any defined
+%% \<level>break as a hook inside heading construction, so the old name
+%% injected \vspace{2\gridunit} before every \section instead of \@secpenalty.
+\providecommand{\sectionsep}{}
+\renewcommand{\sectionsep}{%
   \par\vspace{2\gridunit}% 2 grid units of clean space
   \noindent
 }
 
 % Alias for compatibility
 \providecommand{\spacebreak}{}
-\renewcommand{\spacebreak}{\sectionbreak}
+\renewcommand{\spacebreak}{\sectionsep}
 
 % ==============================================================================
 % WIDOW AND ORPHAN CONTROL FOR HEADINGS
