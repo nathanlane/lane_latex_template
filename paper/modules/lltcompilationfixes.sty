@@ -39,9 +39,9 @@
 % ==============================================================================
 
 % Increase flexibility for page breaking
-\widowpenalty=9999      % Almost forbid widows
-\clubpenalty=9999       % Almost forbid orphans
-\raggedbottom           % Allow variable page heights
+%% FIX: \widowpenalty/\clubpenalty 9999 and \raggedbottom restatements
+%% removed — the canonical values (10000, \raggedbottom) live in
+%% lltpaperstyle.sty; this module's 9999 never survived load order anyway.
 
 % More flexible display spacing
 \setlength{\floatsep}{12pt plus 4pt minus 4pt}

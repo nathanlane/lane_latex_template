@@ -21,6 +21,16 @@ All notable changes to the Lane LaTeX Template are documented here.
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
 - Filed the adopter defect report under `notes/`.
+- Deleted silently overridden duplicate assignments: `\spaceskip`/`\xspaceskip`
+  (0.35em/0.5em declared early, 0.33em/0.48em in force), `\brokenpenalty`
+  (5000 → 2000 in force), `\postdisplaypenalty` (10000 → 2000 in force), and
+  the duplicate `\raggedbottom`, `\parindent`, and `\arraystretch`/`\tabcolsep`
+  defaults. The in-force values were kept, so rendering is unchanged
+  (verified: measured values byte-identical before/after). Widow/orphan
+  penalties now have one canonical home in `lltpaperstyle.sty` (10000/10000/
+  10000); the `lltheadings` and `lltcompilationfixes` restatements are gone,
+  and the gridlocked modules' softer penalties (5000) are documented as an
+  intentional grid-mode variant regime.
 - Footnote machinery: marker box widened 7pt → 11.5pt (body and title-page
   blocks). Measured at the marker's spec, Pagella's tabular old-style digits
   are 3.6pt each: two-digit markers (7.2pt) already overflowed the 7pt box
