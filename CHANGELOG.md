@@ -16,6 +16,11 @@ All 2026-08-12 entries below constitute the release.
 
 ## 2026-08-12
 
+- Fixed the three pre-existing overfull hboxes in the `main.tex` demo prose
+  (8.2pt section heading, 16.8pt and 49.5pt `verbatim` examples) by
+  rewording/reformatting demo content only — no template tolerance touched.
+  `main.log` now reports zero overfull hboxes.
+
 - **Breaking rename:** `\sectionbreak` → `\sectionsep` and `\paragraphbreak` →
   `\paragraphsep`. titlesec executes any defined `\<level>break` macro as a
   hook during heading construction; `\paragraphbreak` made run-in `\paragraph`
