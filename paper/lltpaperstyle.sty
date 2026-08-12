@@ -660,9 +660,9 @@
 %% FIX: Active microtype tracking and extra-kerning setup lives in lltmicrotype.
 % Small-caps, code, and emphasis commands rely on lltmicrotype for tracking/kerning.
 
-% Hochuli: Optimize word spacing for Pagella's wider characters
-\spaceskip=0.35em plus 0.25em minus 0.15em
-\xspaceskip=0.5em plus 0.3em minus 0.2em
+%% FIX: duplicate \spaceskip/\xspaceskip assignments removed. The pair here
+%% (0.35em/0.5em) was silently overridden ~2100 lines later (0.33em/0.48em);
+%% the later, in-force values are kept so rendering is unchanged.
 % titlesec now loaded by headings module
 \RequirePackage{enumitem}         % List spacing control
 \RequirePackage{caption}          % Figure/table caption control
@@ -718,9 +718,10 @@
 \displaywidowpenalty=10000
 
 % Additional perfectionist controls for Pagella
-\brokenpenalty=5000          % Penalty for page break after hyphenated line
-\predisplaypenalty=10000     % Keep at least 2 lines before display math
-\postdisplaypenalty=10000    % Keep at least 2 lines after display math
+%% FIX: duplicate \brokenpenalty (5000 here, 2000 later) and
+%% \postdisplaypenalty (10000 here, 2000 later) assignments removed; the
+%% later, in-force values are kept so rendering is unchanged. The duplicate
+%% \predisplaypenalty (same value both times) is kept at the later block.
 \interlinepenalty=2500       % Discourage page breaks within paragraphs
 
 % Prevent isolated section headings
@@ -1384,9 +1385,8 @@
 }
 
 % ENHANCED TABLE CONFIGURATION (moved after package loading)
-% Professional table defaults - basic array settings
-\renewcommand{\arraystretch}{1.2}       % Increased row height for readability
-\setlength{\tabcolsep}{8pt}             % Column separation for professional spacing
+%% FIX: duplicate \arraystretch{1.2}/\tabcolsep{8pt} defaults removed here;
+%% the identical pair under PROFESSIONAL TABLE DEFAULTS below is canonical.
 
 % LONGTABLE INTEGRATION (moved after package loading)
 
@@ -2804,7 +2804,8 @@
 % PARAGRAPH COMPOSITION
 \linepenalty=10            % Standard per-line penalty
 \parfillskip=0pt plus 1fil % Standard paragraph ending
-\parindent=13.2pt          % Maintain grid alignment (1 unit)
+%% FIX: duplicate \parindent assignment removed; lltdimensions.sty sets the
+%% identical \parindent=\gridunit (13.2pt) and always loads.
 
 % RIVER PREVENTION
 % Tighter word spacing for Pagella's wider characters
@@ -2946,7 +2947,8 @@
 
 % PAGE COMPOSITION
 % Butterick's final polish: Ensure proper page breaking
-\raggedbottom              % Prevents awkward stretched spacing
+%% FIX: duplicate \raggedbottom removed from this spot; the identical earlier
+%% assignment (kept) is the single canonical one.
 
 % ==============================================================================
 % FOOTER AND PAGE NUMBER SYSTEM (Optimized July 2, 2025)

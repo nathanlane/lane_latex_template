@@ -162,7 +162,9 @@
 
 % ==============================================================================
 % WIDOW AND ORPHAN CONTROL
-% ==============================================================================
+% NOTE: gridlocked mode deliberately uses softer penalties (5000) than the
+% default 10000: rigid grid spacing needs more break flexibility. This is an
+% intentional variant regime, not a restatement of the default values.
 % Less aggressive to work with tighter spacing
 \makeatletter
 \@secpenalty=-500            % Mild preference for breaks before sections
