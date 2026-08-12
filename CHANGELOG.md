@@ -2,6 +2,18 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## v2.0.0 — 2026-08-12
+
+Release cut after the adopter defect report
+(`notes/ADOPTER-DEFECT-REPORT-2026-08-11.md`). Two breaking changes:
+`\sectionbreak` → `\sectionsep` and `\paragraphbreak` → `\paragraphsep`
+(no aliases — the old names collide with titlesec's `\<level>break` hook and
+must not be defined), and the `\le`/`\ge`/`\epsilon`/`\phi`/`\vec`
+redefinitions moved behind the new `mathredefs` option (default off).
+Migration: `paper/MIGRATION.md`.
+
+All 2026-08-12 entries below constitute the release.
+
 ## 2026-08-12
 
 - **Breaking rename:** `\sectionbreak` → `\sectionsep` and `\paragraphbreak` →
