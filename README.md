@@ -644,13 +644,14 @@ Core packages:
 ## Version History
 
 <!-- %% FIX: Separate repository release status from the bundled package version. -->
-Repository release: `v0.1.0-beta`.
+Repository release: `v2.0.0`.
 
-Bundled package version: `lltpaperstyle` reports `v1.7` in
+Bundled package version: `lltpaperstyle` reports `v2.0` in
 `paper/lltpaperstyle.sty`.
 
-The repository release tracks this template as a reusable project. The bundled
-package version tracks the internal LaTeX style API.
+As of v2.0.0 the repository release and package version move together (they
+previously diverged: repo `v0.1.0-beta` vs package `v1.7`). v2.0.0 is the
+breaking-change release following the adopter defect report.
 
 ### Versioning 
 
