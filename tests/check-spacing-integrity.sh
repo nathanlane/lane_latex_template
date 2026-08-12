@@ -11,6 +11,9 @@
 # use it as a hard pass/fail gate unless the heuristics are recalibrated for the
 # template PDF. See docs/technical/TESTING.md for the current warning policy.
 #
+# Hard measured-value gates (the checks that would have caught the 2026-08
+# adopter defect report) live in tests/test_measured_values.py, not here.
+#
 # Usage: ./check-spacing-integrity.sh [pdf-file]
 # ==============================================================================
 

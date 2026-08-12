@@ -21,6 +21,20 @@ All notable changes to the Lane LaTeX Template are documented here.
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
 - Filed the adopter defect report under `notes/`.
+- Harness hardening: `make lint` now covers `paper/` and `appendices/` (was
+  root-only) and probes `-n48` support so ChkTeX 1.7.6 (TeX Live 2022) no
+  longer fails the gate; committed the missing `src/sh/check-packages.sh`
+  and made `make check-deps` fail loudly instead of echoing a fake-healthy
+  fallback; fixed `src/sh/validate_latex_style.sh` (errexit killed it on the
+  first diagnostic, paths escaped the repo root, and it checked another
+  project's files); rewrote the TESTING.md log-analysis section that
+  documented a never-committed `context/tools/log-parsing/` toolchain;
+  added `tests/test_measured_values.py` — compile-time assertions on the
+  measured `\baselineskip` (16.32pt), `\jot` (9.9pt), `\footnotesep` (inert
+  floor), canonical penalties, and the `\DeclareMathSizes` firing — the
+  regression net the defect report called for. Gates verified on both
+  TeX Live 2022 and 2026; TROUBLESHOOTING documents the stale-aux failure
+  when switching TeX Live versions.
 - Deleted silently overridden duplicate assignments: `\spaceskip`/`\xspaceskip`
   (0.35em/0.5em declared early, 0.33em/0.48em in force), `\brokenpenalty`
   (5000 → 2000 in force), `\postdisplaypenalty` (10000 → 2000 in force), and

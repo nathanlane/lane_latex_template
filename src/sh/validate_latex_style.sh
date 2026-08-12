@@ -23,12 +23,14 @@ warnings=0
 # Function to print colored output
 print_error() {
   echo -e "${RED}ERROR: $1${NC}" >&2
-  ((errors++))
+  # FIX: ((errors++)) returns exit 1 when the old value is 0, tripping
+  # errexit and killing the script on the first diagnostic.
+  errors=$((errors + 1))
 }
 
 print_warning() {
   echo -e "${YELLOW}WARNING: $1${NC}" >&2
-  ((warnings++))
+  warnings=$((warnings + 1))
 }
 
 print_success() {
@@ -101,7 +103,8 @@ check_latex_formatting() {
 
 # Check Python code style
 check_python_style() {
-  local py_files=$(find ../src/py -name "*.py" 2>/dev/null)
+  # FIX: main() already cd'd to the repo root; ../src/py escaped it.
+  local py_files=$(find src/python src/py -name "*.py" 2>/dev/null)
   
   if [[ -z "$py_files" ]]; then
     print_info "\nNo Python files to check"
@@ -129,7 +132,8 @@ check_python_style() {
 
 # Check bibliography entries
 check_bibliography() {
-  local bib_file="../references.bib"
+  # FIX: main() already cd'd to the repo root; ../references.bib escaped it.
+  local bib_file="references.bib"
   
   if [[ ! -f "$bib_file" ]]; then
     print_warning "Bibliography file not found: $bib_file"
@@ -152,10 +156,12 @@ check_bibliography() {
 # Main validation function
 main() {
   print_info "=== LaTeX Style Compliance Validator ==="
-  print_info "Checking East Asian Miracle paper..."
+  print_info "Checking Lane LaTeX Template..."
   
   # Change to repository root
-  cd "$(dirname "$0")/../.."
+  # FIX: resolve the script's real path so the target works from any cwd and
+  # through make; the previous literal path only worked by accident.
+  cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
   
   # Check required files exist
   local required_files=(
@@ -163,7 +169,7 @@ main() {
     "paper/lltpaperstyle.sty"
     "paper/preamble.tex"
     "references.bib"
-    "CLAUDE.md"
+    "AGENTS.md"
   )
   
   for file in "${required_files[@]}"; do
