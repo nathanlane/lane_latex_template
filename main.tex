@@ -523,8 +523,8 @@ The framework provides specialized table environments with systematic row spacin
 \safeparagraph{Grid Table Environments}~ The framework provides three grid-aligned environments:
 \begin{itemize}
 \item \code{gridtable} --- Standard rows (~21.8pt measured) for normal data
-\item \code{regressiontable} --- 19.8pt rows (1.5× grid) for statistical results
-\item \code{compacttable} --- 9.9pt rows (0.75× grid) for dense information
+\item \code{regressiontable} --- ~21.0pt rows (measured) for statistical results
+\item \code{compactgridtable} --- ~16.9pt rows (measured) for dense information
 \end{itemize}
 
 Each environment automatically sets \code{\textbackslash arraystretch} to maintain exact grid alignment while preserving the professional appearance of booktabs.
@@ -597,7 +597,7 @@ The \code{csquotes} package provides context-sensitive quotation handling:
 
 \section{Sophisticated List Typography}
 
-This framework implements advanced list typography synthesizing principles from Matthew Butterick, Tim Brown, and Jost Hochuli. The system provides multiple list styles optimized for different academic contexts, with precise hanging indents, baseline grid alignment, and sophisticated bullet symbols.
+This framework implements advanced list typography synthesizing principles from Matthew Butterick, Tim Brown, and Jost Hochuli. The system provides multiple list styles optimized for different academic contexts, with precise hanging indents, quantum-multiple spacing, and sophisticated bullet symbols.
 
 \subsection{Standard Lists with Professional Bullets}
 
@@ -728,8 +728,8 @@ Different list styles can be combined for complex hierarchical information:
 \safeparagraph{Spacing Mathematics} All list spacing derives from the quantum:
 \begin{compactitem}
 \item Full quantum: 13.2pt
-\item Half baseline: 6.6pt (for list separation)
-\item Quarter baseline: 3.3pt (for item spacing)
+\item Half quantum: 6.6pt (for list separation)
+\item Quarter quantum: 3.3pt (for item spacing)
 \end{compactitem}
 
 \safeparagraph{Measurement System} Horizontal measurements use em-based units:
@@ -790,10 +790,10 @@ The bibliography system integrates seamlessly with our color system and typograp
 \safeparagraph{Professional Bibliography Spacing}
 The bibliography uses our quantum spacing system:
 \begin{itemize}
-\item \emph{Entry spacing:} 6.325pt between entries (0.5 baseline units)
+\item \emph{Entry spacing:} 6.6pt between entries (0.5 quanta)
 \item \emph{Hanging indent:} 1.5em for optimal readability
 \item \emph{Name grouping:} 3.16pt spacing between author name groups
-\item \emph{Grid alignment:} All spacing derives from 12.65pt baseline
+\item \emph{Quantum rhythm:} All spacing derives from the 13.2pt quantum
 \end{itemize}
 
 \subsection{Natbib Compatibility}

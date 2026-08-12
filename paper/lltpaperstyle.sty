@@ -41,7 +41,7 @@
 %
 % USAGE:
 %   \usepackage{lltpaperstyle}                   % Full features
-%   \usepackage[grid]{lltpaperstyle}             % Show baseline grid
+%   \usepackage[grid]{lltpaperstyle}             % Show grid overlay
 %   \usepackage[minimal]{lltpaperstyle}          % Minimal features only
 %   \usepackage[natbib]{lltpaperstyle}           % Use native natbib support
 %   \usepackage[nocolor]{lltpaperstyle}          % Use black/grayscale colors
@@ -50,7 +50,7 @@
 %   \input{paper/preamble.tex}  % Recommended with bibliography
 %
 % PACKAGE OPTIONS:
-%   grid/nogrid - Enable/disable baseline grid overlay (default: nogrid)
+%   grid/nogrid - Enable/disable the grid overlay (default: nogrid)
 %   minimal     - Load only essential features (dimensions, compilation fixes)
 %   natbib      - Load native natbib support instead of biblatex
 %   nocolor     - Map semantic colors to black/grayscale values
@@ -796,7 +796,8 @@
 %
 % DESIGN DECISIONS:
 %   - Size: 10.5pt (95% of body) for subtle subordination
-%   - Leading: 13.2pt (1 quantum) maintained for consistent rhythm
+%% FIX: \fontsize{10.5}{13.2} under \linespread{1.20} gives a real 15.84pt
+%   - Leading: 15.84pt measured (13.2pt × \linespread)
 %   - Margins: 26.4pt (2 grid units) optimized for Pagella's width
 %   - Color: 15% gray matching paragraph heading hierarchy
 %   - Spacing: 1 grid unit before/after with asymmetric flexibility
@@ -1541,7 +1542,7 @@
 % ==============================================================================
 %
 % Implements a systematic title page design following Brown's modular scale,
-% Hochuli's baseline grid alignment, and Butterick's professional standards.
+% Hochuli's vertical rhythm, and Butterick's professional standards.
 % All measurements derive from the 13.2pt spacing quantum.
 %
 % MODULAR SCALE (Perfect Fourth 1.333):
@@ -2101,11 +2102,11 @@
 \RequirePackage{cleveref}        % Enhanced cross-referencing (must load after hyperref)
 
 % ==============================================================================
-% GRID-ALIGNED TABLE ROW SYSTEM
+% QUANTUM-SPACED TABLE ROW SYSTEM
 % ==============================================================================
 %
-% Implements baseline grid alignment for tables following professional
-% typography standards. Tables maintain vertical rhythm with body text
+% Implements quantum-multiple spacing for tables following professional
+% typography standards. Tables keep a consistent vertical rhythm
 % through precise row height control.
 %
 % KEY PRINCIPLES:
@@ -2335,7 +2336,7 @@
 % GRID-ALIGNED IMAGE SYSTEM
 % ==============================================================================
 %
-% Commands for ensuring images maintain the baseline grid through height
+% Commands for keeping image heights in quantum multiples through
 % constraints and automatic adjustment.
 %
 % KEY PRINCIPLES:
@@ -2585,8 +2586,8 @@
   \footnotesize\textit{Note: This page is best viewed in landscape orientation.}%
 }
 
-% GRID ALIGNMENT IN LANDSCAPE MODE
-% Maintain baseline grid even in rotated content
+% QUANTUM SPACING IN LANDSCAPE MODE
+% Keep quantum rhythm even in rotated content
 
 % Landscape grid spacing helper
 \newcommand{\landscapegridspace}{%
@@ -2980,7 +2981,7 @@
 % ==============================================================================
 %
 % Implements minimal, elegant page numbering following classical typography
-% principles with perfect baseline grid alignment.
+% principles with consistent quantum rhythm.
 %
 % PHILOSOPHY:
 %   - Minimal interference with content

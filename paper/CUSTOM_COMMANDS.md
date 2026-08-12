@@ -234,9 +234,9 @@ Regression table with spacious rows.
 - **Row height:** ~21.0pt measured (`\arraystretch` 1.15 × 16.32pt baseline + 2.2pt)
 - **Usage:** Statistical results
 
-#### `\begin{compacttable}[placement]...\end{compacttable}`
+#### `\begin{compactgridtable}[placement]...\end{compactgridtable}`
 Compact table for dense data.
-- **Row height:** 9.9pt (0.75 grid units)
+- **Row height:** ~16.9pt measured (`\arraystretch` 0.9 × 16.32pt baseline + 2.2pt)
 - **Font:** Small size
 
 ### Grid Spacing
@@ -340,7 +340,7 @@ Inter-element spacing
 ### Development Tools
 
 #### `\showgrid`
-Display baseline grid overlay
+Display the grid overlay (true-baseline and quantum lines)
 - **Usage:** Development only
 - **Requires:** `\usepackage{paper/gridoverlay}`
 

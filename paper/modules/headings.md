@@ -2,7 +2,7 @@
 
 ## Overview
 
-The headings module (`lltheadings.sty`) provides sophisticated section and heading formatting with perfect baseline grid alignment and professional typography.
+The headings module (`lltheadings.sty`) provides sophisticated section and heading formatting with quantum-multiple spacing and professional typography.
 
 ## Heading Hierarchy
 

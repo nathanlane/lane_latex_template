@@ -527,10 +527,10 @@ The system uses a two-pass auxiliary file mechanism:
   % For statistical results with standard errors
 \end{regressiontable}
 
-% Compact tables (9.9pt rows)
-\begin{compacttable}[tbp]
+% Compact tables (~16.9pt rows measured)
+\begin{compactgridtable}[tbp]
   % For dense information
-\end{compacttable}
+\end{compactgridtable}
 ```
 
 ### Landscape and Rotation Support

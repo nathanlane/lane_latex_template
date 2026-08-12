@@ -563,7 +563,7 @@ export TEXINPUTS=".:./paper//:"
 
 ### Development Guidelines
 
-1. **Typography first**: Don't break the baseline grid
+1. **Typography first**: Don't break the spacing quantum rhythm
 2. **Test everything**: Run `make test` before commits
 3. **Document changes**: Update relevant documentation
 4. **Follow style**: One sentence per line in LaTeX

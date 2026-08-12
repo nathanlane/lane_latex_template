@@ -2,9 +2,9 @@
 
 ## Overview
 
-The dimensions module (`lltdimensions.sty`) manages page geometry and implements a sophisticated baseline grid system for perfect vertical rhythm.
+The dimensions module (`lltdimensions.sty`) manages page geometry and implements the 13.2pt spacing quantum system for consistent vertical rhythm (the body baseline measures 16.32pt).
 
-## Grid System
+## Spacing Quantum System
 
 ### Foundation
 - **Base unit**: 13.2pt spacing quantum (nominal 11pt × 1.20; the actual baseline measures 16.32pt)

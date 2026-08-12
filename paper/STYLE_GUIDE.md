@@ -17,7 +17,7 @@ The style package implements three complementary typographic philosophies:
 ### Golden Rules
 
 **DO:**
-- Trust the baseline grid system - all spacing derives from 12.65pt units
+- Trust the spacing quantum system - all spacing derives from 13.2pt quantum multiples
 - Use semantic commands (`\emph{}`, `\bsc{}`, `\code{}`) over presentational formatting
 - Maintain consistent labeling conventions (`app:`, `fig:`, `tab:`, `eq:`)
 - Let the modular scale handle sizing relationships automatically
@@ -26,7 +26,7 @@ The style package implements three complementary typographic philosophies:
 - Manually adjust spacing with `\vspace{}` or `\hspace{}`
 - Use `\textbf{}` and `\textit{}` for emphasis - use `\emph{}` semantically
 - Override color schemes - use provided semantic color commands
-- Break the baseline grid with custom line spacing
+- Break the quantum rhythm with custom line spacing
 
 ## Text Typography Standards
 
@@ -127,7 +127,7 @@ Subtitle for the Article}
 ```
 
 **Spacing Principles:**
-- All vertical spacing uses baseline units (12.65pt) from Hochuli's grid
+- All vertical spacing uses the 13.2pt spacing quantum (body baseline measures 16.32pt)
 - Title sizes follow Brown's modular scale (18pt = 11pt × 1.333²)
 - Author names use subtle size increase (12pt = 11pt × 1.09)
 - Abstract width (85%) follows Butterick's optimal reading guidelines
@@ -288,7 +288,7 @@ Let $X$ be the features and $f$ be the function.
 
 The list system implements advanced typography principles from three masters:
 - **Butterick**: Professional bullet symbols, optimal hanging indents, clean spacing
-- **Brown**: Mathematical spacing relationships via modular scale, baseline grid alignment
+- **Brown**: Mathematical spacing relationships via modular scale, quantum rhythm
 - **Hochuli**: Micro-typographic refinements, sophisticated bullet hierarchy
 
 ### Standard List Environments
@@ -298,7 +298,7 @@ The list system implements advanced typography principles from three masters:
 % Primary level: Subtle gray bullet with optimal hanging indent
 \begin{itemize}
 \item First major point with professional typography
-\item Second major point maintains baseline grid alignment
+\item Second major point maintains quantum rhythm
   \begin{itemize}
   \item Nested point uses en-dash (Butterick's recommendation)
   \item Maintains progressive indentation for hierarchy
@@ -517,7 +517,7 @@ support the hypothesis\footnote{Statistical significance: p < 0.001}.
 
 **Automatic Features:**
 - **Sizing**: 8pt superscript, 9pt text with 11pt leading
-- **Spacing**: 12.65pt above footnotes, 6.325pt between
+- **Spacing**: 26.4pt (2 quanta) above the footnote rule; 12pt footnote baseline between notes
 - **Typography**: Oldstyle numerals, hanging indent, optimized word spacing
 
 ## Appendix Management
@@ -854,7 +854,7 @@ ResNet uses skip connections~\cite{tutorial2023deep}.
 ```latex
 % WRONG: Manual spacing
 \section{Title}\vspace{10pt}
-This breaks the baseline grid.
+This breaks the quantum rhythm.
 
 % WRONG: Presentational formatting  
 This is \textbf{important} text.
