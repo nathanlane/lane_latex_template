@@ -252,7 +252,7 @@ The template integrates \code{Inconsolata} (zi4 package) as the monospace font, 
 
 Inconsolata is scaled to 96\% for optimal harmony with Pagella, with enhanced character options and professional spacing.
 
-\section{The TeX Gyre Series: Production-Grade Typography}
+\section{The TeX Gyre Series: Production Typography}
 
 The TeX Gyre project represents a comprehensive enhancement of the standard PostScript fonts, providing production-grade OpenType alternatives with extensive language support, superior metrics, and professional typographic features. This template uses TeX Gyre Pagella, the enhanced version of Hermann Zapf's Palatino.
 
@@ -541,7 +541,7 @@ For tables spanning multiple pages, use \code{longtable} with proper header and 
   \midrule
   \endfirsthead
   
-  \multicolumn{4}{@{}l}{\tablename\ \thetable\ -- \textit{continued from previous page}} \\
+  \multicolumn{4}{l}{\tablename\ \thetable\ -- \textit{continued from prev.\ page}} \\
   \toprule
   Dataset & Size & Accuracy & Processing Time \\
   \midrule
@@ -833,12 +833,12 @@ For wide regression tables with many specifications, use the \code{landscapetabl
 \begin{landscapetable}[tbp]
   \caption{Regression Results with Multiple Specifications}
   \label{tab:wide-regression}
-  \begin{tabular}{l*{8}{c}}
+  \begin{tabular}{l*{6}{c}}
     \toprule
-    & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\
+    & (1) & (2) & (3) & (4) & (5) & (6) \\
     \midrule
-    Treatment & 0.234*** & 0.256*** & 0.245*** & 0.267*** & 0.278*** & 0.289*** & 0.291*** & 0.301*** \\
-    & (0.045) & (0.043) & (0.044) & (0.042) & (0.041) & (0.040) & (0.039) & (0.038) \\
+    Treatment & 0.234*** & 0.256*** & 0.245*** & 0.267*** & 0.278*** & 0.289*** \\
+    & (0.045) & (0.043) & (0.044) & (0.042) & (0.041) & (0.040) \\
     \bottomrule
   \end{tabular}
 \end{landscapetable}
