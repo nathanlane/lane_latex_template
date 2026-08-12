@@ -720,8 +720,8 @@
 % Additional perfectionist controls for Pagella
 %% FIX: duplicate \brokenpenalty (5000 here, 2000 later) and
 %% \postdisplaypenalty (10000 here, 2000 later) assignments removed; the
-%% later, in-force values are kept so rendering is unchanged.
-\predisplaypenalty=10000     % Keep at least 2 lines before display math
+%% later, in-force values are kept so rendering is unchanged. The duplicate
+%% \predisplaypenalty (same value both times) is kept at the later block.
 \interlinepenalty=2500       % Discourage page breaks within paragraphs
 
 % Prevent isolated section headings

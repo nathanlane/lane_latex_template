@@ -39,9 +39,13 @@
 % ==============================================================================
 
 % Increase flexibility for page breaking
-%% FIX: \widowpenalty/\clubpenalty 9999 and \raggedbottom restatements
-%% removed — the canonical values (10000, \raggedbottom) live in
-%% lltpaperstyle.sty; this module's 9999 never survived load order anyway.
+%% FIX: these 9999 values are for STANDALONE use of this module; under the
+%% full package the canonical 10000 block in lltpaperstyle.sty loads later
+%% and wins. Removing them silently dropped widow/orphan protection and
+%% \raggedbottom for the documented standalone-module pattern.
+\widowpenalty=9999      % Almost forbid widows (standalone fallback)
+\clubpenalty=9999       % Almost forbid orphans (standalone fallback)
+\raggedbottom           % Allow variable page heights (standalone fallback)
 
 % More flexible display spacing
 \setlength{\floatsep}{12pt plus 4pt minus 4pt}

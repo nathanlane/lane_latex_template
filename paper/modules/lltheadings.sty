@@ -217,8 +217,9 @@
 \@secpenalty=-1000           % Encourage breaks before sections
 \makeatother
 %% FIX: \clubpenalty/\widowpenalty restatements removed — the canonical
-%% widow/orphan penalties (10000) live in lltpaperstyle.sty; four modules
-%% previously made independent claims on the same registers.
+%% widow/orphan penalties (10000) live in lltpaperstyle.sty. Note: standalone
+%% use of this module gets LaTeX's defaults (150); load lltcompilationfixes
+%% for protection outside the full package.
 
 % Note: Environment hooks moved to individual modules to avoid conflicts
 % - List environment hooks are handled by lists.sty
