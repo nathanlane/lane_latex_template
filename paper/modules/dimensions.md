@@ -7,7 +7,7 @@ The dimensions module (`lltdimensions.sty`) manages page geometry and implements
 ## Grid System
 
 ### Foundation
-- **Base unit**: 13.2pt (derived from 11pt × 1.20 leading)
+- **Base unit**: 13.2pt spacing quantum (nominal 11pt × 1.20; the actual baseline measures 16.32pt)
 - **Grid philosophy**: All vertical spacing in multiples of base unit
 - **Purpose**: Consistent vertical rhythm throughout document
 

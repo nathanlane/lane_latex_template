@@ -784,7 +784,7 @@ Enhanced navy for external links.
 Display the grid overlay (true-baseline and quantum lines).
 
 #### `\hidegrid`
-Hide baseline grid.
+Hide the grid overlay.
 
 ### Grid-Aligned Commands
 

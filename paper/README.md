@@ -410,7 +410,7 @@ Foundry-optimized specifications for TeX Gyre Pagella:
 % Size Hierarchy
 Footnote text: 8.5pt (77% of 11pt body)
 Superscript: 6pt (70% of footnote size)
-Leading: 11pt (aligns to 0.833 gridlines)
+Leading: 12pt actual (10pt × \linespread{1.20})
 Hanging indent: 11.5pt (fits three-digit old-style markers)
 
 % Grid-Compliant Spacing
@@ -517,7 +517,7 @@ The system uses a two-pass auxiliary file mechanism:
 ### Grid-Aligned Tables
 
 ```latex
-% Standard rows (~22.2pt measured: \arraystretch 1.2 × 16.32pt + 2.2pt)
+% Standard rows (~21.8pt measured: \arraystretch 1.2 × 16.32pt + 2.2pt)
 \begin{gridtable}[tbp]
   % Content with automatic \arraystretch
 \end{gridtable}

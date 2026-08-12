@@ -123,7 +123,7 @@ Change bullet appearance globally:
 
 ## Spacing System
 
-All list spacing aligns to the baseline grid (13.2pt):
+All list spacing uses the 13.2pt spacing quantum:
 
 | Spacing Type | Value | Grid Units |
 |--------------|-------|------------|

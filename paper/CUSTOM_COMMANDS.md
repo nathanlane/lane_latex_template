@@ -226,12 +226,12 @@ Measure space ℳ
 
 #### `\begin{gridtable}[placement]...\end{gridtable}`
 Standard grid-aligned table.
-- **Row height:** 13.2pt (1 grid unit)
+- **Row height:** ~21.8pt measured (`\arraystretch` 1.2 × 16.32pt baseline + 2.2pt)
 - **Usage:** Normal data tables
 
 #### `\begin{regressiontable}[placement]...\end{regressiontable}`
 Regression table with spacious rows.
-- **Row height:** 19.8pt (1.5 grid units)
+- **Row height:** ~21.0pt measured (`\arraystretch` 1.15 × 16.32pt baseline + 2.2pt)
 - **Usage:** Statistical results
 
 #### `\begin{compacttable}[placement]...\end{compacttable}`
@@ -248,7 +248,7 @@ Insert half baseline space in tables.
 
 #### `\fullbaselinespace`
 Insert full baseline space.
-- **Height:** 13.2pt (1 grid unit)
+- **Height:** 13.2pt (1 quantum)
 
 #### `\baselinespace{multiplier}`
 Custom baseline space.
@@ -335,7 +335,7 @@ Minor title page spacing
 
 #### `\titlespaceinter`
 Inter-element spacing
-- **Height:** 13.2pt (1 grid unit)
+- **Height:** 13.2pt (1 quantum)
 
 ### Development Tools
 

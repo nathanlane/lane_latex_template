@@ -304,7 +304,7 @@ The list system implements advanced typography principles from three masters:
   \item Maintains progressive indentation for hierarchy
     \begin{itemize}
     \item Third level uses subtle gray diamond
-    \item All spacing derived from 13.2pt baseline
+    \item All spacing derived from the 13.2pt quantum
     \end{itemize}
   \end{itemize}
 \end{itemize}
@@ -397,7 +397,7 @@ which collectively determine performance.
 ### List Typography Best Practices
 
 **Spacing Principles:**
-- All vertical spacing derives from 13.2pt baseline (11pt × 1.20)
+- All vertical spacing derives from the 13.2pt spacing quantum (body baseline measures 16.32pt)
 - Item separation: 3.3pt (quarter baseline) for tight lists
 - List margins: 6.6pt (half baseline) above/below
 - Progressive indentation: 1.2em per nesting level

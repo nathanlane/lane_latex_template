@@ -53,7 +53,7 @@ All vertical spacing is defined in quantum multiples to maintain consistent rhyt
 ### Display Elements
 ```
 Display math:    1.5 quanta before/after (19.8pt)
-Figures/tables:  1.5 quanta before/after (19.8pt)
+Figures/tables:  1 quantum text/float separation (13.2pt ±3.3pt)
 Block quotes:    1 quantum before/after (13.2pt)
 Lists:           0.5 quanta internal spacing (6.6pt)
 ```
@@ -84,9 +84,9 @@ Captions:        0.5 quanta above/below (6.6pt)
 
 ### Float Spacing
 ```latex
-\setlength{\floatsep}{12pt plus 4pt minus 4pt}        % between floats
-\setlength{\textfloatsep}{15pt plus 4pt minus 4pt}    % text/float
-\setlength{\intextsep}{12pt plus 4pt minus 4pt}       % wrapped floats
+\setlength{\floatsep}{13.2pt plus 3.3pt minus 3.3pt}     % 1 quantum between floats (measured)
+\setlength{\textfloatsep}{13.2pt plus 3.3pt minus 3.3pt} % 1 quantum text/float (measured)
+\setlength{\intextsep}{9.9pt plus 1.65pt}                % 0.75 quanta wrapped floats (measured)
 ```
 
 ### Mathematical Content
@@ -162,4 +162,4 @@ Potential enhancements maintaining grid integrity:
 
 ---
 
-The baseline grid is not decorative—it's the foundation of professional typography. This implementation ensures every vertical measurement reinforces the reading rhythm established by the 13.2pt grid.
+The baseline grid is not decorative—it's the foundation of professional typography. This implementation ensures every vertical measurement reinforces the reading rhythm established by the 13.2pt spacing quantum.

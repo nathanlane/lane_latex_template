@@ -74,8 +74,8 @@
 % The lltpaperstyle package supports the following options:
 %
 % grid/nogrid (default: nogrid)
-%   - grid: Display the 13.2pt baseline grid overlay for typography debugging
-%   - nogrid: Hide the baseline grid (normal production mode)
+%   - grid: Display the grid overlay (true-baseline and quantum lines) for typography debugging
+%   - nogrid: Hide the grid overlay (normal production mode)
 %   - Usage: \usepackage[grid]{lltpaperstyle}
 %   - Effect: Loads gridoverlay module and automatically calls \showgrid
 %
@@ -796,7 +796,7 @@
 %
 % DESIGN DECISIONS:
 %   - Size: 10.5pt (95% of body) for subtle subordination
-%   - Leading: 13.2pt maintained for perfect grid alignment
+%   - Leading: 13.2pt (1 quantum) maintained for consistent rhythm
 %   - Margins: 26.4pt (2 grid units) optimized for Pagella's width
 %   - Color: 15% gray matching paragraph heading hierarchy
 %   - Spacing: 1 grid unit before/after with asymmetric flexibility
@@ -1082,7 +1082,7 @@
 %
 % Comprehensive mathematical typography using newpxmath harmonized with Pagella,
 % enhanced with professional symbol sets from mathalfa package.
-% All spacing aligned to the 13.2pt baseline grid.
+% All spacing in multiples of the 13.2pt quantum (baseline measures 16.32pt).
 %
 % FONT INTEGRATION:
 %   - newtxmath with libertine option for serif math harmony
@@ -1257,7 +1257,7 @@
 \makeatother
 
 % REFINED FLOAT SPACING - Tighter for conservative scientific papers
-% All measurements in baseline grid units (13.2pt) with minimal flexibility
+% All measurements in 13.2pt quantum multiples with minimal flexibility
 \setlength{\floatsep}{\gridunit}\addtolength{\floatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit}        % 1 unit ±0.25 (reduced)
 \setlength{\textfloatsep}{\gridunit}\addtolength{\textfloatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit}    % 1 unit ±0.25 (reduced from 2)
 \setlength{\intextsep}{0.75\gridunit}\addtolength{\intextsep}{0pt plus 0.125\gridunit minus 0pt}         % 0.75 units +0.125/-0 (tighter)
@@ -1429,7 +1429,7 @@
 % Economic Review standards with perfect grid alignment and optimal spacing.
 %
 % KEY PRINCIPLES:
-%   - Perfect baseline grid alignment (13.2pt system)
+%   - Consistent quantum-multiple spacing (13.2pt system)
 %   - Left-justified text matching QJE/AER style
 %   - Optimal spacing from table/figure content
 %   - Clear visual hierarchy with consistent formatting
@@ -1542,7 +1542,7 @@
 %
 % Implements a systematic title page design following Brown's modular scale,
 % Hochuli's baseline grid alignment, and Butterick's professional standards.
-% All measurements derive from the base 11pt/13.2pt system.
+% All measurements derive from the 13.2pt spacing quantum.
 %
 % MODULAR SCALE (Perfect Fourth 1.333):
 %   Title: 18pt (base section size, 11pt × 1.333²)
@@ -1551,7 +1551,7 @@
 %   Abstract content: 10pt (11pt × 0.91, small size)
 %
 % VERTICAL SPACING:
-%   All spacing in baseline units (13.2pt) or half units (6.6pt)
+%   All spacing in quanta (13.2pt) or half quanta (6.6pt)
 %   Maintains consistent vertical rhythm throughout title page
 %
 % REFERENCES:
@@ -1569,18 +1569,18 @@
 \def\modularscaleMinor{0.75}
 
 % SYSTEMATIC SPACING COMMANDS
-% All spacing derived from baseline grid and mathematical ratios
+% All spacing derived from the quantum and mathematical ratios
 % Optimized for Pagella's larger x-height and character proportions
 
 % Grid unit is now defined in lltdimensions.sty
-% \gridunit = 13.2pt (baseline grid)
+% \gridunit = 13.2pt (spacing quantum, not the baseline)
 
 \newlength{\titlespacemajor}
 \newlength{\titlespaceminor}
 \newlength{\titlespaceinter}
-\setlength{\titlespacemajor}{2\gridunit}     % 26.4pt (2.0 baseline units)
-\setlength{\titlespaceminor}{1.5\gridunit}   % 19.8pt (1.5 baseline units)
-\setlength{\titlespaceinter}{\gridunit}      % 13.2pt (1.0 baseline unit)
+\setlength{\titlespacemajor}{2\gridunit}     % 26.4pt (2.0 quanta)
+\setlength{\titlespaceminor}{1.5\gridunit}   % 19.8pt (1.5 quanta)
+\setlength{\titlespaceinter}{\gridunit}      % 13.2pt (1.0 quantum)
 
 % TITLE PAGE DIMENSIONS
 % Optimized for Pagella's wider characters
@@ -2109,7 +2109,8 @@
 % through precise row height control.
 %
 % KEY PRINCIPLES:
-%   - All table rows align to 13.2pt baseline grid (11pt × 1.20)
+%% FIX: rows do not align to a 13.2pt baseline (baseline is 16.32pt);
+%   - Table row heights derive from \arraystretch × the 16.32pt baseline
 %   - Multiple grid alignment options for different table densities
 %   - Maintains compatibility with regression tables and academic formats
 %   - Works seamlessly with booktabs for professional appearance
@@ -2243,7 +2244,7 @@
 % Configure table packages after loading
 \setlength{\aboverulesep}{0pt}          % Remove space above booktabs rules
 \setlength{\belowrulesep}{0pt}          % Remove space below booktabs rules
-\setlength{\extrarowheight}{2.2pt}       % Extra row height; measured standard row is 22.22pt (\arraystretch 1.2 × 16.32pt baseline + 2.2pt), not 13.2pt
+\setlength{\extrarowheight}{2.2pt}       % Extra row height; standard row measures 21.8pt (\arraystretch 1.2 × 16.32pt baseline + 2.2pt), not 13.2pt
 \setlength{\LTcapwidth}{\textwidth}     % Full-width captions for longtables
 \AtBeginEnvironment{longtable}{\llttablecaptionsetup}
 
@@ -2252,11 +2253,11 @@
 
 % Standard table environment
 %% FIX: row heights measure \arraystretch × 16.32pt baseline + 2.2pt
-%% \extrarowheight (e.g. 22.22pt here), not the quantum multiples the old
+%% \extrarowheight (e.g. 21.8pt here), not the quantum multiples the old
 %% comments claimed.
 \newenvironment{gridtable}[1][tbp]{%
   \begin{table}[#1]%
-  \renewcommand{\arraystretch}{1.2}% ~22.2pt rows measured
+  \renewcommand{\arraystretch}{1.2}% ~21.8pt rows measured
 }{%
   \end{table}%
 }
@@ -2291,7 +2292,7 @@
 % GRID ALIGNMENT COMMANDS
 % For manual control within existing tables
 
-% Set table to standard grid (13.2pt rows)
+% Set table to standard spacing (~21.8pt rows measured)
 \newcommand{\standardgrid}{%
   \renewcommand{\arraystretch}{1.2}%
 }
@@ -2599,7 +2600,7 @@
 % ==============================================================================
 %
 % Implements sophisticated mathematical typography following Knuth's principles
-% with specific optimizations for TeX Gyre Pagella and the 13.2pt baseline grid.
+% with specific optimizations for TeX Gyre Pagella and the 13.2pt spacing quantum.
 %
 % DESIGN PHILOSOPHY:
 %   - Knuth: "Mathematics must harmonize with surrounding text"
@@ -3075,7 +3076,7 @@
 }
 
 % OPTIMAL FOOTER METRICS
-% All measurements in baseline grid units (13.2pt)
+% All measurements in 13.2pt quantum multiples
 %
 % Text baseline to page number baseline: 39.6pt (3 units)
 %   - Provides clear separation
