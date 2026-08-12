@@ -409,7 +409,7 @@ Foundry-optimized specifications for TeX Gyre Pagella:
 Footnote text: 8.5pt (77% of 11pt body)
 Superscript: 6pt (70% of footnote size)
 Leading: 11pt (aligns to 0.833 gridlines)
-Hanging indent: 7pt (0.53 grid units)
+Hanging indent: 11.5pt (fits three-digit old-style markers)
 
 % Grid-Compliant Spacing
 Rule position: 26.4pt below text (2 grid units)
