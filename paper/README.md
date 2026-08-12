@@ -116,7 +116,7 @@ For complete module documentation, see [MODULES.md](MODULES.md).
 
 #### List Typography Module
 
-`lists.sty` gives you production-grade list environments aligned to the 13.2 pt baseline grid and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
+`lists.sty` gives you production-grade list environments spaced in 13.2pt quantum multiples and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
 
 * Level 1 • Professional grey bullet  
 * Level 2 – en-dash  
@@ -148,9 +148,10 @@ The style synthesizes three complementary approaches:
 2. **Professional Foundation** (Butterick): Optimal reading conditions with 65-character line length
 3. **Archival Refinements** (Hochuli): Micro-typographic perfection and technical excellence
 
-### Baseline Grid System
+### Spacing Quantum System
 
-All spacing uses the **13.2pt grid unit** system:
+All spacing uses the **13.2pt spacing quantum** system (a spacing unit; the
+body baseline measures 16.32pt — see `../docs/typography/BASELINE-GRID-DECISION.md`):
 
 ```latex
 \vspace{\gridunit}        % 1 unit (13.2pt)
@@ -347,7 +348,7 @@ These commands allow authors to add acknowledgments, funding information, or oth
 
 ### Spacing Principles
 
-All vertical spacing follows the 13.2pt grid system:
+All vertical spacing follows the 13.2pt quantum system:
 - **After title**: 1.5 grid units (19.8pt)
 - **After authors**: 1.5 grid units (19.8pt)
 - **Before abstract**: 2 grid units (26.4pt)
@@ -358,14 +359,15 @@ All vertical spacing follows the 13.2pt grid system:
 Systematic sizing with baseline-aligned spacing:
 
 **Sizing Hierarchy:**
-- **Superscript**: 8pt (11pt ÷ 1.375) with oldstyle numerals
-- **Footnote text**: 9pt (11pt ÷ 1.2) with 11pt leading
-- **Hanging indent**: 1.5em for optimal visual balance
+- **Superscript marker**: 6pt with oldstyle numerals and +50 tracking
+- **Footnote text**: 8.5pt with 12pt actual leading (10pt × \linespread)
+- **Hanging indent**: 11.5pt (fits three-digit old-style markers)
 
 **Spacing System:**
-- **Above footnotes**: 13.2pt (1 grid unit)
-- **Between footnotes**: 6.6pt (0.5 grid units)
-- **Footnote rule**: 2in width, 0.4pt height for subtle elegance
+- **Above footnotes**: 26.4pt (2 quanta) to the rule
+- **Between footnotes**: the 12pt footnote baseline (`\footnotesep` is an
+  inert floor, not inter-note space)
+- **Footnote rule**: 33% text width, 0.4pt height for subtle elegance
 
 ### Enhanced Optical Margin Alignment
 
@@ -412,9 +414,9 @@ Leading: 11pt (aligns to 0.833 gridlines)
 Hanging indent: 11.5pt (fits three-digit old-style markers)
 
 % Grid-Compliant Spacing
-Rule position: 26.4pt below text (2 grid units)
-Rule to footnote: 13.2pt (1 grid unit)
-Between footnotes: 3.3pt (0.25 grid units)
+Rule position: 26.4pt below text (2 quanta)
+Rule to footnote: 13.2pt (1 quantum)
+Between footnotes: 12pt footnote baseline (\footnotesep is an inert floor)
 Rule specs: 33% width, 0.4pt thickness, text color
 
 % Title Page Adjustments
@@ -515,7 +517,7 @@ The system uses a two-pass auxiliary file mechanism:
 ### Grid-Aligned Tables
 
 ```latex
-% Standard 13.2pt rows
+% Standard rows (~22.2pt measured: \arraystretch 1.2 × 16.32pt + 2.2pt)
 \begin{gridtable}[tbp]
   % Content with automatic \arraystretch
 \end{gridtable}

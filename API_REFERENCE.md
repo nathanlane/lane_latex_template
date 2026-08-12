@@ -32,8 +32,8 @@ Complete reference for all commands, environments, and options provided by the `
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `grid` | off | Display baseline grid overlay for typography debugging |
-| `nogrid` | **on** | Hide baseline grid (normal mode) |
+| `grid` | off | Display grid overlay (true-baseline and quantum lines) for typography debugging |
+| `nogrid` | **on** | Hide grid overlay (normal mode) |
 | `minimal` | off | Load only essential features (dimensions, compilation fixes) |
 | `natbib` | off | Use natbib compatibility mode instead of biblatex |
 | `nocolor` | off | Disable all custom colors (black text only) |
@@ -196,7 +196,7 @@ Conservative drop cap for academic use.
 
 | Command | Size | Description |
 |---------|------|-------------|
-| `\gridunit` | 13.2pt | One baseline grid unit |
+| `\gridunit` | 13.2pt | Spacing quantum (not the document baseline, which measures 16.32pt) |
 | `\halfgridunit` | 6.6pt | Half grid unit |
 | `\quartergridunit` | 3.3pt | Quarter grid unit |
 | `\onehalfgridunit` | 19.8pt | 1.5 grid units |
@@ -781,7 +781,7 @@ Enhanced navy for external links.
 ### Grid Display
 
 #### `\showgrid`
-Display baseline grid overlay.
+Display the grid overlay (true-baseline and quantum lines).
 
 #### `\hidegrid`
 Hide baseline grid.

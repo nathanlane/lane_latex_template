@@ -301,7 +301,7 @@ The template uses a modular typography system organized in `paper/modules/`:
 ### Core Modules (Automatically Loaded)
 - `compilation-fixes-simple.sty` - Fixes common LaTeX warnings
 - `colors.sty` - Professional color definitions (linknavy, sectioncolor, bulletgray)
-- `dimensions.sty` - Grid system (13.2pt baseline) and spacing commands
+- `dimensions.sty` - Spacing quantum system (13.2pt quantum) and spacing commands
 - `fonts.sty` - Font configuration (Pagella, Inconsolata, newpxmath, mathalfa)
 - `headings.sty` - Section heading styles with color hierarchy
 - `lists.sty` - List typography with refined bullets (6.6pt item spacing)

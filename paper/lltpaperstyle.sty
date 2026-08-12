@@ -688,17 +688,19 @@
 % This allows easy customization of page layout
 
 % ==============================================================================
-% V. BASELINE GRID AND SPACING SYSTEM
+% V. SPACING QUANTUM AND SPACING SYSTEM
 % ==============================================================================
 %
-% Implements systematic spacing based on a 13.2pt baseline grid derived from
+% Implements systematic spacing based on a 13.2pt spacing quantum derived from
 % Hochuli's principle that "consistent vertical rhythm improves readability."
 % All spacing relationships derive from this fundamental unit.
 %
 % MATHEMATICAL BASIS:
-%   Base text: 11pt
-%   Line spacing: 11pt × 1.20 = 13.2pt (optimized for Pagella's x-height)
-%   Half baseline: 6.6pt (paragraph spacing, footnote separation)
+%   Base text: 10.95pt (the class's 11pt option)
+%   Actual leading: 13.6pt × \linespread{1.20} = 16.32pt (measured)
+%   Spacing quantum: 13.2pt (11pt × 1.20 nominal) — a spacing unit, NOT the
+%   baseline; see docs/typography/BASELINE-GRID-DECISION.md
+%   Half quantum: 6.6pt (paragraph spacing, footnote separation)
 %
 % REFERENCES:
 %   - Hochuli, J. (1987). Detail in Typography. Chapter on vertical rhythm.
@@ -706,7 +708,7 @@
 %
 % ------------------------------------------------------------------------------
 
-% Baseline grid configuration has been moved to lltdimensions.sty
+% Spacing quantum configuration lives in lltdimensions.sty
 % The gridunit (13.2pt) and derived spacing values are defined there
 
 % Butterick's optimal line length: 45-90 characters (2-3 alphabets)
@@ -1096,7 +1098,8 @@
 % ------------------------------------------------------------------------------
 
 % DISPLAY MATHEMATICS SPACING
-% All spacing based on optimized baseline grid (13.2pt = 11pt × 1.20 leading)
+% All spacing based on the 13.2pt spacing quantum (NOT the document baseline,
+%% which measures 16.32pt — see docs/typography/BASELINE-GRID-DECISION.md)
 % Hochuli: "Consistent vertical rhythm improves readability"
 
 % --- Semantic Math Commands (Brown's systematic approach with enhanced fonts) ---
@@ -1740,7 +1743,7 @@
 %
 % SIZING HIERARCHY (Optimized for Pagella per foundry standards):
 %   Superscript: 6pt (70% of footnote size) with +50 units tracking
-%   Footnote text: 8.5pt (77% of body) with 10pt leading (tighter for readability)
+%   Footnote text: 8.5pt (77% of body); actual footnote leading is 12pt
 %   Hanging indent: 11.5pt (fits three-digit old-style markers)
 %
 % SPACING SYSTEM (Grid-compliant):
@@ -1788,7 +1791,8 @@
     \SetTracking{encoding={T1,OT1}}{50}\lsstyle % +50 units tracking
     \@thefnmark
   }%
-  % Professional sizing: 8.5pt text with 10pt leading (tighter for footnotes)
+  %% FIX: \linespread{1.20} scales this 10pt leading to a real 12pt footnote
+  %% baseline (measured); the "10pt" claim was wrong in three directions.
   \fontsize{8.5}{10}\selectfont
   % Optimized word spacing for small text (Pagella's generous x-height)
   \spaceskip=0.35em plus 0.175em minus 0.14em
@@ -1800,7 +1804,12 @@
 % Space before footnote block calculated for optimal grid recovery
 \setlength{\skip\footins}{2\gridunit}%
 \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % 2 grid units to rule
-\setlength{\footnotesep}{0.25\gridunit}   % 0.25 grid units between footnotes
+%% FIX: \footnotesep is not inter-note space — LaTeX inserts it as a floor on
+%% each note's first-line height. 0.25\gridunit = 3.3pt sits below the
+%% footnote strut (~8.4pt at the 12pt footnote baseline), so it is inert;
+%% between-note separation comes from the footnote \baselineskip. Value kept
+%% (any effective value would change rendering); comment corrected.
+\setlength{\footnotesep}{0.25\gridunit}   % inert floor below the footnote strut (~8.4pt)
 
 % Hochuli: Prevent footnote orphans (footnote split across pages)
 \interfootnotelinepenalty=10000
@@ -2234,34 +2243,37 @@
 % Configure table packages after loading
 \setlength{\aboverulesep}{0pt}          % Remove space above booktabs rules
 \setlength{\belowrulesep}{0pt}          % Remove space below booktabs rules
-\setlength{\extrarowheight}{2.2pt}       % Makes standard rows exactly 13.2pt with 11pt text
+\setlength{\extrarowheight}{2.2pt}       % Extra row height; measured standard row is 22.22pt (\arraystretch 1.2 × 16.32pt baseline + 2.2pt), not 13.2pt
 \setlength{\LTcapwidth}{\textwidth}     % Full-width captions for longtables
 \AtBeginEnvironment{longtable}{\llttablecaptionsetup}
 
 % GRID-ALIGNED TABLE ENVIRONMENTS
 % Professional table environments with automatic grid alignment
 
-% Standard grid-aligned table (1 baseline unit = 13.2pt rows)
+% Standard table environment
+%% FIX: row heights measure \arraystretch × 16.32pt baseline + 2.2pt
+%% \extrarowheight (e.g. 22.22pt here), not the quantum multiples the old
+%% comments claimed.
 \newenvironment{gridtable}[1][tbp]{%
   \begin{table}[#1]%
-  \renewcommand{\arraystretch}{1.2}% Exactly 13.2pt rows
+  \renewcommand{\arraystretch}{1.2}% ~22.2pt rows measured
 }{%
   \end{table}%
 }
 
-% Compact grid-aligned table (0.75 baseline units = 9.9pt spacing)
+% Compact table environment
 \newenvironment{compactgridtable}[1][tbp]{%
   \begin{table}[#1]%
-  \renewcommand{\arraystretch}{0.9}% Compact 9.9pt rows
+  \renewcommand{\arraystretch}{0.9}% ~16.9pt rows measured
   \small% Reduce font size for density
 }{%
   \end{table}%
 }
 
-% Spacious grid-aligned table (1.5 baseline units = 19.8pt rows)
+% Spacious table environment
 \newenvironment{spaciousgridtable}[1][tbp]{%
   \begin{table}[#1]%
-  \renewcommand{\arraystretch}{1.8}% Spacious 19.8pt rows
+  \renewcommand{\arraystretch}{1.8}% ~31.6pt rows measured
 }{%
   \end{table}%
 }
@@ -2284,18 +2296,18 @@
   \renewcommand{\arraystretch}{1.2}%
 }
 
-% Set table to compact grid (9.9pt rows)
+% Set table to compact spacing (~16.9pt rows measured)
 \newcommand{\compactgrid}{%
   \renewcommand{\arraystretch}{0.9}%
 }
 
-% Set table to spacious grid (19.8pt rows)
+% Set table to spacious spacing (~31.6pt rows measured)
 \newcommand{\spaciousgrid}{%
   \renewcommand{\arraystretch}{1.8}%
 }
 
 % Calculate custom grid alignment
-% Usage: \customgrid{1.5} for 1.5 baseline units
+% Usage: \customgrid{1.5} for 1.5 × the baseline as \arraystretch
 \newcommand{\customgrid}[1]{%
   \renewcommand{\arraystretch}{#1}%
 }
@@ -2616,7 +2628,10 @@
 \belowdisplayshortskip=13.2pt plus 3.3pt minus 3.3pt   % 1 unit ±0.25
 
 % Multi-line equation spacing
-\jot=6.6pt  % 0.5 grid units between aligned equations
+%% FIX: the unconditional \AtBeginDocument \addtolength below adds another
+%% 0.25\gridunit, so \jot ships as 9.9pt (measured), not 6.6pt. Value kept;
+%% the claim is corrected here and there.
+\jot=6.6pt  % 0.5 quanta before the \AtBeginDocument addition (ships as 9.9pt)
 
 % INLINE EQUATION SIZING
 % Compensate for Pagella's larger x-height with subtle scaling
@@ -2629,7 +2644,11 @@
 \makeatother
 
 % Optimized script sizes for Pagella readability
-\DeclareMathSizes{11}{11}{8}{6}  % text, script, scriptscript, tiny
+%% FIX: the document body runs at 10.95pt (the class's 11pt option), so the
+%% previous {11} key never fired and script sizes fell back to the class
+%% defaults (measured scriptscript 6.1pt, not the declared 6pt). Keyed to
+%% 10.95 so the declaration actually applies.
+\DeclareMathSizes{10.95}{10.95}{8}{6}  % text, script, scriptscript, tiny
 
 % EQUATION NUMBERING ALIGNMENT
 % Grid-aligned with upright numbers matching Pagella's oldstyle figures
@@ -2638,9 +2657,10 @@
 \renewcommand{\eqref}[1]{\textup{\tagform@{\ref{#1}}}}
 \makeatother
 
-% Ensure consistent spacing around equation numbers
+%% FIX: applies to EVERY multi-line display (the addition is unconditional),
+%% despite the earlier "numbered equations" claim. In-force \jot = 9.9pt.
 \AtBeginDocument{%
-  \addtolength{\jot}{0.25\gridunit}  % Add quarter grid unit between numbered equations
+  \addtolength{\jot}{0.25\gridunit}  % +0.25 quanta: total \jot = 9.9pt
 }
 
 % MULTI-LINE EQUATION OPTIMIZATION
@@ -2650,7 +2670,7 @@
 % Custom grid-aligned equation environments
 \newenvironment{grideqnarray}{%
   \begin{align}%
-  \setlength{\jot}{0.5\gridunit}%  % 0.5 grid units between lines
+  \setlength{\jot}{0.5\gridunit}%  % 0.5 quanta (6.6pt) — overrides the 9.9pt default
 }{%
   \end{align}%
 }
@@ -2808,7 +2828,11 @@
 %% identical \parindent=\gridunit (13.2pt) and always loads.
 
 % RIVER PREVENTION
-% Tighter word spacing for Pagella's wider characters
+%% FIX: \spaceskip is a glue register — its em values resolve at assignment
+%% time (preamble, body size), freezing one absolute word space for every
+%% size in the document (measured: body +31% vs Pagella's natural space,
+%% 18pt headings -20%). Values kept to preserve rendering; sizing the skip
+%% per-context would change line breaking document-wide.
 \spaceskip=0.33em plus 0.17em minus 0.12em  % Reduced from defaults
 \xspaceskip=0.48em plus 0.25em minus 0.15em % End-of-sentence spacing
 

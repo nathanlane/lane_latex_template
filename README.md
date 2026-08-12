@@ -13,7 +13,7 @@ This (living) template applies classic typographic principles to create scholarl
 
 <!-- %% FIX: Keep active feature claims limited to locally verified support. -->
 - **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
-- **Baseline Grid System** – 13.2pt rhythm with systematic proportional relationships
+- **Spacing Quantum System** – all vertical spacing in multiples of a 13.2pt quantum (body leading measures 16.32pt; see `docs/typography/BASELINE-GRID-DECISION.md`)
 - **Optically Refined Typo** - Using typographic principles
 - **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
@@ -316,13 +316,13 @@ Load the style with options:
 
 ```latex
 \usepackage{lltpaperstyle}           % Standard (all features)
-\usepackage[grid]{lltpaperstyle}     % Show baseline grid
+\usepackage[grid]{lltpaperstyle}     % Show grid overlay (baseline + quantum lines)
 \usepackage[minimal]{lltpaperstyle}  % Essential features only
 \usepackage[draft]{lltpaperstyle}    % Draft mode
 ```
 
 Available options:
-- `grid` / `nogrid` – Show/hide baseline grid overlay
+- `grid` / `nogrid` – Show/hide the grid overlay (true-baseline and quantum lines)
 - `minimal` – Load only essential features
 - `natbib` – Load native `natbib` author-year citation support instead of automatic `biblatex`
 - `draft` – Enable draft-mode diagnostics, including draft-mode `microtype`
@@ -370,9 +370,10 @@ The template uses a carefully selected font stack:
 - **Code**: Inconsolata (scaled to 96%)
 - **Features**: Real small caps, oldstyle figures, ligatures
 
-### Baseline Grid
+### Spacing Quantum
 
-All vertical spacing follows a 13.2pt grid:
+All vertical spacing follows a 13.2pt quantum (a spacing unit — the body
+baseline measures 16.32pt):
 
 ```latex
 \vspace{\gridunit}        % 13.2pt (1 unit)

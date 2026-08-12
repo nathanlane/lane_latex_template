@@ -53,7 +53,10 @@
 % ==============================================================================
 
 % Line spacing
-\linespread{1.20}  % Equivalent to 13.2pt for 11pt base
+%% FIX: \linespread scales the class baseline (13.6pt for the 11pt option),
+%% so actual leading is 16.32pt, not 13.2pt. 13.2pt survives only as the
+%% spacing quantum below.
+\linespread{1.20}  % 16.32pt actual leading for the 11pt class option
 
 % Paragraph settings
 \setlength{\parindent}{13.2pt}
