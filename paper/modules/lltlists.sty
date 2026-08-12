@@ -2,7 +2,7 @@
 % LISTS.STY - List Typography Module
 % ==============================================================================
 % Extracted from lltpaperstyle.sty for modular customization
-% Implements sophisticated list typography with baseline grid alignment
+% Implements sophisticated list typography with quantum-multiple spacing
 % ==============================================================================
 
 \ProvidesPackage{lltlists}[2025/07/03 v1.0 List Typography System]
@@ -36,7 +36,7 @@
 % ==============================================================================
 % Implements sophisticated list typography following:
 % - Butterick: Clean professional bullets and precise spacing
-% - Hochuli: Perfect baseline grid alignment
+% - Hochuli: Consistent vertical rhythm
 % - Brown: Systematic hierarchy through spacing
 %
 % HIERARCHY:
@@ -47,7 +47,7 @@
 % ==============================================================================
 
 % LIST SPACING PARAMETERS
-% All aligned to baseline grid (13.2pt)
+% All in multiples of the 13.2pt spacing quantum (baseline measures 16.32pt)
 % Internal lengths now prefixed with \paper@ to avoid namespace collisions
 \makeatletter
 \newlength{\paper@listhalfbaseline}
@@ -331,8 +331,8 @@
 % ==============================================================================
 % NESTED LIST SPACING REFINEMENT
 % ==============================================================================
-% Ensures consistent baseline grid alignment
-% Adjusted for more traditional spacing (0.5 grid units)
+% Ensures consistent quantum rhythm
+% Adjusted for more traditional spacing (0.5 quanta)
 
 % Remove the quarter baseline reduction to get full topsep spacing
 % This gives us 6.6pt (0.5 grid units) before/after lists

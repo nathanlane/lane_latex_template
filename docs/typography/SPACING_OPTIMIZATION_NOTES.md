@@ -53,7 +53,7 @@
 ## Impact
 
 - Document now 30 pages (was 32) - more efficient space usage
-- Maintains baseline grid system (13.2pt)
+- Maintains the 13.2pt spacing quantum system
 - More conservative, scientific appearance
 - Title page footnotes now professionally tight
 - Section transitions less dramatic

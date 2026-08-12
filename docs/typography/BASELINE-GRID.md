@@ -1,54 +1,69 @@
-# Baseline Grid System Documentation
+# Spacing Quantum System Documentation
+
+> **2026-08-12 correction.** This document previously claimed a "13.2pt
+> baseline grid." That premise was false: `\linespread{1.20}` scales the
+> class's 13.6pt baseline (the 11pt option sets 10.95pt on 13.6pt), so the
+> document baseline measures **16.32pt**, not 13.2pt. 13.2pt survives as the
+> **spacing quantum** — the unit vertical spaces are multiples of. The
+> decision and its evidence: `BASELINE-GRID-DECISION.md` (same directory) and
+> `notes/baseline-grid-decision-brief.md`.
 
 ## Foundation Principles
 
-The baseline grid is the fundamental organizing principle of professional typography. This template implements a rigorous 13.2pt baseline grid system optimized for academic journal articles.
+A consistent spacing quantum is the fundamental organizing principle of this
+template's vertical rhythm. All vertical spacing in the template is a multiple
+of a 13.2pt quantum.
 
-### Core Specifications
+### Core Specifications (measured)
 
-- **Body Text:** 11pt TeX Gyre Pagella
-- **Leading:** 120% (11pt × 1.20 = 13.2pt)
-- **Grid Unit:** 13.2pt
-- **Grid Fractions:** 
-  - Full unit: 13.2pt
-  - Half unit: 6.6pt
-  - Quarter unit: 3.3pt
-  - 1.5 units: 19.8pt
-  - 0.75 units: 9.9pt
+- **Body Text:** 10.95pt TeX Gyre Pagella (the class's `11pt` option)
+- **Leading:** 16.32pt (`\linespread{1.20}` × the class's 13.6pt baseline)
+- **Spacing Quantum:** 13.2pt
+- **Quantum Fractions:**
+  - Full quantum: 13.2pt
+  - Half quantum: 6.6pt
+  - Quarter quantum: 3.3pt
+  - 1.5 quanta: 19.8pt
+  - 0.75 quanta: 9.9pt
 
-### Why 120% Leading?
+### Why these proportions?
 
-The 120% leading ratio (13.2pt for 11pt text) is specifically optimized for TeX Gyre Pagella's characteristics:
+The quantum proportions are optimized for TeX Gyre Pagella's characteristics:
 - Larger x-height than traditional fonts
 - Wider character proportions
 - Stronger stroke contrast
 - Academic reading patterns (dense text, mathematical content)
 
+Note the actual leading (≈149% of the 10.95pt body) is on the generous side
+of the Bringhurst/Butterick bands — appropriate for Pagella's large x-height,
+the ~77-character measure, and math-dense text (see the decision brief).
+
 ## Hierarchical Alignment System
 
-All vertical spacing is defined in grid units to maintain perfect alignment:
+All vertical spacing is defined in quantum multiples to maintain consistent rhythm:
 
 ### Section Headings
 ```
-\section:       3 units before (39.6pt), 1.5 units after (19.8pt)
-\subsection:    2 units before (26.4pt), 1 unit after (13.2pt)
-\subsubsection: 1.5 units before (19.8pt), 0.75 units after (9.9pt)
-\paragraph:     1 unit before (13.2pt), 0.5 units after (6.6pt)
+\section:       3 quanta before (39.6pt), 1.5 quanta after (19.8pt)
+\subsection:    2 quanta before (26.4pt), 1 quantum after (13.2pt)
+\subsubsection: 1.5 quanta before (19.8pt), 0.75 quanta after (9.9pt)
+\paragraph:     1 quantum before (13.2pt), run-in with 0.75em separation
 ```
 
 ### Display Elements
 ```
-Display math:    1 unit before/after (13.2pt)
-Figures/tables:  1.5 units before/after (19.8pt)
-Block quotes:    1 unit before/after (13.2pt)
-Lists:           0.5 unit internal spacing (6.6pt)
+Display math:    1.5 quanta before/after (19.8pt)
+Figures/tables:  1 quantum text/float separation (13.2pt ±3.3pt)
+Block quotes:    1 quantum before/after (13.2pt)
+Lists:           0.5 quanta internal spacing (6.6pt)
 ```
 
 ### Micro-Typography
 ```
-Footnotes:       1 unit above first footnote (13.2pt)
-                 0.5 unit between footnotes (6.6pt)
-Captions:        0.5 unit above/below (6.6pt)
+Footnotes:       2 quanta before the footnote rule (26.4pt);
+                 between-note separation comes from the 12pt footnote
+                 baseline (\footnotesep is an inert floor, not inter-note space)
+Captions:        0.5 quanta above/below (6.6pt)
 ```
 
 ## Implementation Details
@@ -56,47 +71,49 @@ Captions:        0.5 unit above/below (6.6pt)
 ### LaTeX Configuration
 ```latex
 % Foundation
-\linespread{1.20}          % 11pt × 1.20 = 13.2pt grid
+\linespread{1.20}          % scales class baseline: 13.6pt × 1.20 = 16.32pt actual leading
 \setlength{\parskip}{0pt}  % Zero paragraph spacing
 \setlength{\parindent}{14pt} % ~1.2em for Pagella
 
-% Section spacing (grid-aligned)
-\titlespacing*{\section}{0pt}{39.6pt}{19.8pt}      % 3 units before, 1.5 after
-\titlespacing*{\subsection}{0pt}{26.4pt}{13.2pt}   % 2 units before, 1 after
-\titlespacing*{\subsubsection}{0pt}{19.8pt}{9.9pt} % 1.5 units before, 0.75 after
-\titlespacing*{\paragraph}{0pt}{13.2pt}{6.6pt}     % 1 unit before, 0.5 after
+% Section spacing (quantum multiples)
+\titlespacing*{\section}{0pt}{39.6pt}{19.8pt}      % 3 quanta before, 1.5 after
+\titlespacing*{\subsection}{0pt}{26.4pt}{13.2pt}   % 2 quanta before, 1 after
+\titlespacing*{\subsubsection}{0pt}{19.8pt}{9.9pt} % 1.5 quanta before, 0.75 after
+\titlespacing*{\paragraph}{0pt}{13.2pt}{0.75em}    % 1 quantum before, run-in separation
 ```
 
 ### Float Spacing
 ```latex
-\setlength{\floatsep}{19.8pt plus 2pt minus 2pt}      % 1.5 units between floats
-\setlength{\textfloatsep}{19.8pt plus 2pt minus 2pt}  % 1.5 units text/float
-\setlength{\intextsep}{13.2pt plus 1pt minus 1pt}     % 1 unit wrapped floats
+\setlength{\floatsep}{13.2pt plus 3.3pt minus 3.3pt}     % 1 quantum between floats (measured)
+\setlength{\textfloatsep}{13.2pt plus 3.3pt minus 3.3pt} % 1 quantum text/float (measured)
+\setlength{\intextsep}{9.9pt plus 1.65pt}                % 0.75 quanta wrapped floats (measured)
 ```
 
 ### Mathematical Content
 ```latex
-\setlength{\abovedisplayskip}{13.2pt}      % 1 unit exactly
-\setlength{\belowdisplayskip}{13.2pt}      % 1 unit exactly
-\setlength{\abovedisplayshortskip}{6.6pt}  % 0.5 unit exactly
-\setlength{\belowdisplayshortskip}{6.6pt}  % 0.5 unit exactly
+\abovedisplayskip=19.8pt plus 3.3pt minus 3.3pt        % 1.5 quanta
+\belowdisplayskip=19.8pt plus 3.3pt minus 3.3pt        % 1.5 quanta
+\abovedisplayshortskip=13.2pt plus 3.3pt minus 3.3pt   % 1 quantum
+\belowdisplayshortskip=13.2pt plus 3.3pt minus 3.3pt   % 1 quantum
 ```
 
 ## Verification Methods
 
 ### Visual Grid Test
-Use the included `grid-test.tex` to verify alignment:
-```bash
-pdflatex grid-test.tex
+Load the grid overlay to verify rhythm:
+```latex
+\usepackage[grid]{lltpaperstyle}
+\showgrid
 ```
-This overlays gray grid lines at 13.2pt intervals for visual verification.
+The overlay's base lines step at the true body baseline (16.32pt); the
+13.2pt quantum lines are reference multiples for spacing checks.
 
 ### Measurement Checklist
-1. Body text baselines align to every grid line
-2. Section headings land on grid lines after their spacing
-3. Mathematical displays maintain grid registration
-4. Lists preserve grid alignment through all nesting levels
-5. Footnotes begin and end on grid lines
+1. Vertical spaces between elements are quantum multiples
+2. Section headings use their declared quantum multiples
+3. Mathematical displays use their declared skips
+4. Lists preserve consistent internal spacing through nesting levels
+5. Footnote blocks separate per the 12pt footnote baseline
 
 ## Design Rationale
 
@@ -115,18 +132,18 @@ The system implements principles from:
 - **Brown:** Mathematical harmony through modular relationships
 
 ### Key Benefits
-1. **Visual Consistency:** Every element aligns to the invisible grid
+1. **Visual Consistency:** Vertical spacing derives from a single quantum
 2. **Reading Rhythm:** Consistent spacing reduces cognitive load
 3. **Professional Appearance:** Matches high-end journal typography
-4. **Maintainability:** All measurements derive from single grid unit
+4. **Maintainability:** All spacing measurements derive from a single quantum
 
 ## Troubleshooting
 
 ### Common Issues
 1. **Text drift:** Ensure \parskip is 0pt
-2. **Heading misalignment:** Verify spacing uses exact grid multiples
+2. **Heading spacing:** Verify spacing uses exact quantum multiples
 3. **Float disruption:** Use minimal plus/minus in spacing commands
-4. **Math spacing:** Check display skip settings match grid units
+4. **Math spacing:** Check display skip settings match quantum multiples
 
 ### Testing Protocol
 1. Compile with grid overlay
@@ -145,4 +162,4 @@ Potential enhancements maintaining grid integrity:
 
 ---
 
-The baseline grid is not decorative—it's the foundation of professional typography. This implementation ensures every vertical measurement reinforces the reading rhythm established by the 13.2pt grid.
+The baseline grid is not decorative—it's the foundation of professional typography. This implementation ensures every vertical measurement reinforces the reading rhythm established by the 13.2pt spacing quantum.

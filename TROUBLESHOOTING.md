@@ -144,11 +144,15 @@ This guide helps resolve common issues with the Lane LaTeX Template.
 
 ## Spacing and Layout Issues
 
-### Baseline Grid Misalignment
+### Spacing Quantum Misalignment
 
-**Symptoms**: Elements don't align to 13.2pt grid
+**Symptoms**: Elements don't align to the 13.2pt spacing quantum
 
 **Solutions**:
+Note: the base lines of the grid overlay step at the true body baseline (16.32pt);
+the 13.2pt quantum is a spacing unit, not the baseline. See
+`docs/typography/BASELINE-GRID-DECISION.md`.
+
 1. Use grid visualization:
    ```latex
    \usepackage{paper/gridoverlay}

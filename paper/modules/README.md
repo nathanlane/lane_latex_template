@@ -55,7 +55,7 @@ dependencies and compatibility mode is validated through harness probes.
 
 All modules follow these core principles:
 
-1. **Baseline Grid Alignment**: All vertical spacing aligns to a 13.2pt grid
+1. **Spacing Quantum**: All vertical spacing is a multiple of the 13.2pt quantum (the body baseline measures 16.32pt)
 2. **Professional Typography**: Based on Butterick, Brown, and Hochuli
 3. **Modular Independence**: Validated standalone modules list explicit dependency requirements
 4. **Graceful Degradation**: Fallbacks for missing dependencies

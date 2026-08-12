@@ -2,13 +2,13 @@
 
 ## Overview
 
-The headings module (`lltheadings.sty`) provides sophisticated section and heading formatting with perfect baseline grid alignment and professional typography.
+The headings module (`lltheadings.sty`) provides sophisticated section and heading formatting with quantum-multiple spacing and professional typography.
 
 ## Heading Hierarchy
 
 ### Design Principles
 - **Tim Brown's Modular Scale**: Perfect Fourth ratio (1.333)
-- **Grid Alignment**: All spacing in baseline units (13.2pt)
+- **Quantum Spacing**: All spacing in 13.2pt quantum multiples (the body baseline measures 16.32pt)
 - **Visual Hierarchy**: Size, weight, color, and spacing
 
 ### Heading Specifications
@@ -50,21 +50,21 @@ The module provides four spacing presets:
 
 **Spacious** (Original generous spacing):
 - Before section: 26.4pt (2 grid units)
-- After section: 13.2pt (1 grid unit)
+- After section: 13.2pt (1 quantum)
 - Best for: Books, reports with ample space
 
 **Moderate** (Default):
 - Before section: 19.8pt (1.5 grid units)
-- After section: 13.2pt (1 grid unit)
+- After section: 13.2pt (1 quantum)
 - Best for: Standard academic papers
 
 **Compact**:
-- Before section: 13.2pt (1 grid unit)
-- After section: 13.2pt (1 grid unit)
+- Before section: 13.2pt (1 quantum)
+- After section: 13.2pt (1 quantum)
 - Best for: Dense technical documents
 
 **Tight**:
-- Before section: 13.2pt (1 grid unit)
+- Before section: 13.2pt (1 quantum)
 - After section: 6.6pt (0.5 grid units)
 - Best for: Space-constrained documents
 

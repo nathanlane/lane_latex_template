@@ -68,6 +68,21 @@ All notable changes to the Lane LaTeX Template are documented here.
   quantum, not the document baseline; making the 13.2pt grid real was rejected
   because it requires removing `\linespread` and would shrink documents ~19%.
   Research brief: `notes/baseline-grid-decision-brief.md`.
+- Re-documented the grid-derived constants to match the measured build
+  (decision (b) follow-through; rendering unchanged except where noted):
+  every "13.2pt baseline/leading" claim in code comments and docs now states
+  the true values (10.95pt body, 16.32pt baseline, 13.2pt spacing quantum);
+  the `[grid]` overlay's base lines step at the real `\baselineskip` instead
+  of confirming the false premise; `\DeclareMathSizes` is keyed to 10.95pt so
+  it actually fires (scriptscript 6.1pt → 6pt, the declared value);
+  `\jot` (ships as 9.9pt), `\footnotesep` (inert floor, not inter-note
+  space), `\extrarowheight`/table-row (~21.8pt rows), footnote leading (12pt
+  actual), and the `\spaceskip` body-size freeze comments now describe what
+  the build does. Review sweep also corrected: float-skip values in
+  BASELINE-GRID.md (now the measured 13.2/13.2/9.9pt), table-row arithmetic
+  (~21.8pt standard), remaining false claims in STYLE_GUIDE,
+  CUSTOM_COMMANDS, modules docs, and the `main.tex` demo prose (main.pdf
+  demo text now states 10.95pt/16.32pt; 40 pages).
 
 ## 2026-07-04
 

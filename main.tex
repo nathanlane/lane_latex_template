@@ -151,13 +151,13 @@ This document demonstrates a comprehensive academic typography system synthesizi
 
 \subsection{Baseline Grid System}
 
-The foundation of this document is a rigorously implemented 13.2pt baseline grid system, established July 2, 2025. This grid ensures professional vertical rhythm throughout the document with ~90\% compliance.
+The foundation of this document is a rigorously implemented 13.2pt spacing quantum system, established July 2, 2025. All vertical spacing derives from the quantum, giving professional vertical rhythm throughout the document. (The body baseline measures 16.32pt; see \texttt{docs/typography/BASELINE-GRID-DECISION.md}.)
 
 \safeparagraph{Master Grid Definition}
 \begin{itemize}
 \item \emph{Project:} Lane LaTeX Template
-\item \emph{Baseline Unit:} 13.2pt (locked)
-\item \emph{Foundation:} 11pt/13.2pt TeX Gyre Pagella (11pt × 1.20 leading)
+\item \emph{Spacing Quantum:} 13.2pt
+\item \emph{Foundation:} 10.95pt/16.32pt TeX Gyre Pagella (the 11pt class option with \texttt{\textbackslash linespread\{1.20\}})
 \item \emph{Grid Compliance:} ~90\% (improved from 75\% baseline)
 \end{itemize}
 
@@ -176,7 +176,7 @@ This document demonstrates several grid-aware features:
 \item \emph{Text Font:} 11pt TeX Gyre Pagella with superior small caps design  
 \item \emph{Mathematical Font:} newpxmath harmonized with Pagella
 \item \emph{Monospace Font:} Inconsolata scaled to 96\% for optimal weight balance
-\item \emph{Baseline Grid:} 13.2pt rhythm with 120\% leading optimized for Pagella
+\item \emph{Spacing Quantum:} 13.2pt rhythm optimized for Pagella
 \item \emph{Typography:} Professional footnotes, advanced hyphenation, flexible spacing
 \end{itemize}
 
@@ -229,7 +229,7 @@ Proper citation formatting maintains reading flow while providing necessary attr
 
 Mathematical expressions use \texttt{newpxmath} with the \texttt{upright} option, providing serif mathematics that perfectly harmonizes with TeX Gyre Pagella. This configuration ensures upright Greek letters in text mode while maintaining italic in math mode. Enhanced symbol sets from \texttt{mathalfa} (Boondoxo calligraphic, Boondox blackboard bold and fraktur) ensure professional mathematical presentation.
 
-The spacing follows Hochuli's systematic principles with baseline grid alignment:
+The spacing follows Hochuli's systematic principles in quantum multiples:
 
 \begin{equation}
 f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
@@ -503,10 +503,10 @@ For tables requiring full text width, use \code{tabularx} with \code{X} column s
 
 \subsection{Grid-Aligned Tables}
 
-The framework provides specialized table environments that maintain the 13.2pt baseline grid:
+The framework provides specialized table environments with systematic row spacing:
 
 \begin{gridtable}[tbp]
-  \caption{Grid-Aligned Table with Standard Row Height (13.2pt)}
+  \caption{Grid-Aligned Table with Standard Row Height (~21.8pt measured)}
   \label{tab:grid-example}
   \centering
   \begin{tabular}{@{}lrrr@{}}
@@ -522,9 +522,9 @@ The framework provides specialized table environments that maintain the 13.2pt b
 
 \safeparagraph{Grid Table Environments}~ The framework provides three grid-aligned environments:
 \begin{itemize}
-\item \code{gridtable} --- Standard 13.2pt rows for normal data
-\item \code{regressiontable} --- 19.8pt rows (1.5× grid) for statistical results
-\item \code{compacttable} --- 9.9pt rows (0.75× grid) for dense information
+\item \code{gridtable} --- Standard rows (~21.8pt measured) for normal data
+\item \code{regressiontable} --- ~21.0pt rows (measured) for statistical results
+\item \code{compactgridtable} --- ~16.9pt rows (measured) for dense information
 \end{itemize}
 
 Each environment automatically sets \code{\textbackslash arraystretch} to maintain exact grid alignment while preserving the professional appearance of booktabs.
@@ -597,7 +597,7 @@ The \code{csquotes} package provides context-sensitive quotation handling:
 
 \section{Sophisticated List Typography}
 
-This framework implements advanced list typography synthesizing principles from Matthew Butterick, Tim Brown, and Jost Hochuli. The system provides multiple list styles optimized for different academic contexts, with precise hanging indents, baseline grid alignment, and sophisticated bullet symbols.
+This framework implements advanced list typography synthesizing principles from Matthew Butterick, Tim Brown, and Jost Hochuli. The system provides multiple list styles optimized for different academic contexts, with precise hanging indents, quantum-multiple spacing, and sophisticated bullet symbols.
 
 \subsection{Standard Lists with Professional Bullets}
 
@@ -606,7 +606,7 @@ Our default itemize environment uses subtle gray bullets with optimal hanging in
 \begin{itemize}
 \item \emph{Professional bullets:} The framework uses 20\% gray bullets for optimal visibility while maintaining professional appearance
 \item \emph{Precise hanging indent:} 1.8em indentation optimized for Pagella's wider characters ensures clean alignment
-\item \emph{Baseline grid integration:} All vertical spacing derives from the 13.2pt baseline (11pt × 1.20) for consistent rhythm
+\item \emph{Quantum integration:} All vertical spacing derives from the 13.2pt quantum for consistent rhythm
 \item \emph{Nested list progression:} Secondary levels use en-dash, tertiary use diamond symbols
   \begin{itemize}
   \item En-dash at second level follows Butterick's recommendation for professional documents
@@ -614,7 +614,7 @@ Our default itemize environment uses subtle gray bullets with optimal hanging in
   \item Professional gray coloring continues throughout hierarchy
     \begin{itemize}
     \item Diamond symbols at third level provide clear visual distinction
-    \item Maintains baseline grid alignment through all nesting levels
+    \item Maintains consistent rhythm through all nesting levels
     \item Maximum three levels recommended for optimal comprehension
     \end{itemize}
   \end{itemize}
@@ -676,7 +676,7 @@ The \texttt{displayitem} environment creates prominent lists with generous spaci
 \item \textbf{Practical Impact:} Improved readability leads to better comprehension and retention of academic content
 \end{displayitem}
 
-Display lists use full black bullets, bold text, and full baseline spacing (13.2pt) between items—reserved for highlighting crucial findings or conclusions.
+Display lists use full black bullets, bold text, and full quantum spacing (13.2pt) between items—reserved for highlighting crucial findings or conclusions.
 
 \subsection{Description Lists with Small Caps}
 
@@ -684,7 +684,7 @@ Professional term definitions using hanging format:
 
 \begin{description}
 \item[Modular Scale] A sequence of numbers that relate to one another in a meaningful way, used to create harmonious size relationships in typography
-\item[Baseline Grid] An invisible framework of horizontal lines spaced at regular intervals (here 13.2pt) that ensures consistent vertical rhythm
+\item[Spacing Quantum] A fixed vertical unit (here 13.2pt) from which all template spacing derives, ensuring consistent vertical rhythm
 \item[Hanging Indent] A formatting style where the first line starts at the margin while subsequent lines are indented, creating clear visual hierarchy
 \item[Tracking] The uniform adjustment of spacing between letters, measured in thousandths of an em, used here for small caps optimization
 \end{description}
@@ -725,11 +725,11 @@ Different list styles can be combined for complex hierarchical information:
 
 \subsection{Technical Implementation Details}
 
-\safeparagraph{Spacing Mathematics} All list spacing derives from the baseline grid:
+\safeparagraph{Spacing Mathematics} All list spacing derives from the quantum:
 \begin{compactitem}
-\item Full baseline: 13.2pt (11pt × 1.20 leading)
-\item Half baseline: 6.6pt (for list separation)
-\item Quarter baseline: 3.3pt (for item spacing)
+\item Full quantum: 13.2pt
+\item Half quantum: 6.6pt (for list separation)
+\item Quarter quantum: 3.3pt (for item spacing)
 \end{compactitem}
 
 \safeparagraph{Measurement System} Horizontal measurements use em-based units:
@@ -788,12 +788,12 @@ The bibliography system integrates seamlessly with our color system and typograp
 \end{itemize}
 
 \safeparagraph{Professional Bibliography Spacing}
-The bibliography uses our baseline grid system:
+The bibliography uses our quantum spacing system:
 \begin{itemize}
-\item \emph{Entry spacing:} 6.325pt between entries (0.5 baseline units)
+\item \emph{Entry spacing:} 6.6pt between entries (0.5 quanta)
 \item \emph{Hanging indent:} 1.5em for optimal readability
 \item \emph{Name grouping:} 3.16pt spacing between author name groups
-\item \emph{Grid alignment:} All spacing derives from 12.65pt baseline
+\item \emph{Quantum rhythm:} All spacing derives from the 13.2pt quantum
 \end{itemize}
 
 \subsection{Natbib Compatibility}

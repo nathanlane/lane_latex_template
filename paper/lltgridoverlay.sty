@@ -2,8 +2,8 @@
 % GRIDOVERLAY.STY - Visual Grid Overlay for Typography Testing
 % ==============================================================================
 %
-% Provides visual grid overlays for verifying baseline grid alignment
-% in professional typography. Designed for development and testing only.
+% Provides visual grid overlays for verifying vertical rhythm (true
+% baseline + 13.2pt quantum lines). Designed for development and testing only.
 %
 % USAGE:
 %   \usepackage{lltgridoverlay}  % Load package
@@ -34,7 +34,11 @@
 
 % Grid measurements
 \newlength{\gridoverlayunit}
-\setlength{\gridoverlayunit}{13.2pt} % Base grid unit
+%% FIX: \gridoverlayunit is the 13.2pt *spacing quantum* (\\gridunit), not the
+%% document baseline. The document baseline is 16.32pt (10.95pt class base
+%% 13.6pt × \linespread{1.20}); the base grid lines below step at the real
+%% \baselineskip so the overlay stops confirming the false 13.2pt premise.
+\setlength{\gridoverlayunit}{13.2pt} % Spacing quantum (not the baseline)
 
 % Grid visibility toggle
 \newif\ifshowgrid
@@ -68,8 +72,11 @@
       \pgfmathsetmacro{\pageheight}{\paperheight/28.4527}  % Convert to cm
       \pgfmathsetmacro{\pagewidth}{\paperwidth/28.4527}
       
-      % Base grid lines (every 13.2pt)
-      \foreach \y in {0,13.2,...,850} {
+      %% FIX: base lines step at the true \baselineskip (16.32pt), not the
+      %% 13.2pt quantum — the overlay previously confirmed the false premise.
+      \pgfmathsetmacro{\gridstep}{\baselineskip/1pt}
+      % Base grid lines (every \baselineskip — where body lines actually land)
+      \foreach \y in {0,\gridstep,...,850} {
         \draw[gridbase!30,line width=0.05pt] (0,\y pt) -- (\paperwidth,\y pt);
       }
       
@@ -102,15 +109,15 @@
       
       % Page info
       \node[black!40,font=\tiny,anchor=north east] at (\paperwidth-5pt,\paperheight-5pt) 
-        {Grid: 13.2pt | Page \thepage};
+        {Baseline: \the\baselineskip\ | Quantum: 13.2pt | Page \thepage};
       
       % Grid unit reference
       \node[black!40,font=\tiny,anchor=south west,align=left] at (5pt,5pt) {
         \begin{tabular}{@{}l@{}}
-        1 unit = 13.2pt\\
-        2 units = 26.4pt\\
-        3 units = 39.6pt\\
-        4 units = 52.8pt
+        quantum = 13.2pt\\
+        2 quanta = 26.4pt\\
+        3 quanta = 39.6pt\\
+        4 quanta = 52.8pt
         \end{tabular}
       };
       
