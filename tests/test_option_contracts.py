@@ -291,4 +291,9 @@ def test_footnote_marker_box_fits_three_digits(tmp_path):
     assert_compiles(result, log_text)
     match = re.search(r"LLT_MARK999=([0-9.]+)pt", log_text)
     assert match, log_text
-    assert float(match.group(1)) <= 11.5
+    # Compare against the actual \@makefntext box width in the package, not a
+    # hardcoded number, so the test fails if the box is shrunk again.
+    sty = (ROOT / "paper" / "lltpaperstyle.sty").read_text(encoding="utf-8")
+    boxes = re.findall(r"\\makebox\[([0-9.]+)pt\]", sty)
+    assert boxes, "no footnote marker box found in lltpaperstyle.sty"
+    assert float(match.group(1)) <= min(float(b) for b in boxes)
