@@ -1681,9 +1681,9 @@
   \setlength{\footnotesep}{0.75\gridunit}   % 0.75 grid units - balanced separation
   % Use EXACT same formatting as main document
   \renewcommand{\@makefntext}[1]{%
-    \setlength{\parindent}{10.3pt}% Same as main (widened marker box)
+    \setlength{\parindent}{11.5pt}% Same as main (widened marker box)
     \noindent
-    \makebox[10.3pt][l]{%
+    \makebox[11.5pt][l]{%
       \fontsize{6}{7}\selectfont  % Same as main
       \SetTracking{encoding={T1,OT1}}{50}\lsstyle % Same as main
       \@thefnmark
@@ -1709,9 +1709,9 @@
   \setlength{\footnotesep}{0.25\gridunit}   % Back to 0.25 grid units
   % Restore main document footnote formatting
   \renewcommand{\@makefntext}[1]{%
-    \setlength{\parindent}{10.3pt}%
+    \setlength{\parindent}{11.5pt}%
     \noindent
-    \makebox[10.3pt][l]{%
+    \makebox[11.5pt][l]{%
       \fontsize{6}{7}\selectfont
       \SetTracking{encoding={T1,OT1}}{50}\lsstyle % Regular tracking
       \@thefnmark
@@ -1741,7 +1741,7 @@
 % SIZING HIERARCHY (Optimized for Pagella per foundry standards):
 %   Superscript: 6pt (70% of footnote size) with +50 units tracking
 %   Footnote text: 8.5pt (77% of body) with 10pt leading (tighter for readability)
-%   Hanging indent: 7pt (0.53 grid units) for optimal proportion
+%   Hanging indent: 11.5pt (fits three-digit old-style markers)
 %
 % SPACING SYSTEM (Grid-compliant):
 %   Rule position: 26.4pt below main text (2 grid units)
@@ -1774,14 +1774,15 @@
 % Butterick's size relationships with systematic proportions
 \makeatletter
 \renewcommand\@makefntext[1]{%
-  %% FIX: marker box widened 7pt -> 10.3pt. Measured at the marker's 6pt/+50
-  %% tracking, \oldstylenums{99} is 6.6pt wide, leaving 0.4pt in the 7pt box
-  %% (visually jammed; PDF extraction concatenated marker and word, e.g.
-  %% "16Our"), and three-digit marks overprinted the note text. 10.3pt gives
-  %% every marker up to 99 the 3.7pt gap single digits already had.
-  \setlength{\parindent}{10.3pt}%
+  %% FIX: marker box widened 7pt -> 11.5pt. Measured at the marker's 6pt/+50
+  %% tracking, Pagella's tabular old-style digits are 3.6pt each:
+  %% \oldstylenums{99} = 7.2pt already overflowed the 7pt box (hidden by
+  %% \hfuzz=0.2pt; PDF extraction concatenated marker and word, e.g.
+  %% "16Our"), and \oldstylenums{999} = 10.8pt overprinted the note text.
+  %% 11.5pt fits three digits with 0.7pt to spare.
+  \setlength{\parindent}{11.5pt}%
   \noindent
-  \makebox[10.3pt][l]{%
+  \makebox[11.5pt][l]{%
     % Foundry spec: 6pt superscript with tracking
     \fontsize{6}{7}\selectfont
     \SetTracking{encoding={T1,OT1}}{50}\lsstyle % +50 units tracking

@@ -21,10 +21,13 @@ All notable changes to the Lane LaTeX Template are documented here.
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
 - Filed the adopter defect report under `notes/`.
-- Footnote machinery: marker box widened 7pt → 10.3pt (body and title-page
-  blocks) so two-digit markers keep the 3.7pt gap single digits had and
-  three-digit markers no longer overprint note text; wrapped-line indent
-  matches the wider box. Dropped footmisc's inert `hang,flushmargin` options
+- Footnote machinery: marker box widened 7pt → 11.5pt (body and title-page
+  blocks). Measured at the marker's spec, Pagella's tabular old-style digits
+  are 3.6pt each: two-digit markers (7.2pt) already overflowed the 7pt box
+  (hidden by `\hfuzz`) and three-digit markers (10.8pt) overprinted note
+  text; wrapped-line indent matches the wider box. Rendered delta: footnote
+  text shifts right 4.5pt (single-digit gap 3.4pt → 7.9pt, two-digit gap
+  → 4.3pt). Dropped footmisc's inert `hang,flushmargin` options
   (Lane's own `\@makefntext` replaced their implementation) and the inert
   `\footnotemargin` settings; documented `\PassOptionsToPackage` before
   `\usepackage{lltpaperstyle}` as the supported way to pass footmisc options
