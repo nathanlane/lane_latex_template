@@ -443,73 +443,31 @@ black --check src/py/
 
 ## Log Analysis Tools
 
-### Advanced Log Parser
+### Compilation Log Inspection
 
-The project includes a sophisticated log parsing system for analyzing LaTeX compilation output.
-
-#### Location
-```
-context/tools/log-parsing/
-├── parse_latex_logs.py      # Python log analyzer
-├── check_latex_logs.sh      # Bash wrapper
-└── LOG_PARSER_README.md     # Documentation
-```
-
-#### Features
-
-1. **Multi-format Support**
-   - LaTeX logs (`.log`)
-   - Biber logs (`.blg`)
-   - Auxiliary files
-
-2. **Issue Categorization**
-   - **ERRORS**: Compilation failures
-   - **WARNINGS**: Potential issues
-   - **OVERFULL**: Overfull hboxes/vboxes
-   - **UNDERFULL**: Underfull hboxes/vboxes
-   - **INFO**: Informational messages
-
-3. **Smart Filtering**
-   - Suppresses harmless warnings
-   - Highlights critical issues
-   - Provides context for errors
-
-#### Usage
+The harness writes per-fixture logs to `tests/compilation/logs/` on every run;
+`main.log` at the repo root is the template's own build log. There is no
+separate log-parsing toolchain — earlier revisions of this guide documented
+one at `context/tools/log-parsing/`, but that directory was never committed
+(`context/` is gitignored). Use grep:
 
 ```bash
-# Analyze main compilation log
-python context/tools/log-parsing/parse_latex_logs.py main.log
+# Errors
+grep -n "^!" main.log
 
-# Quick check with wrapper
-./context/tools/log-parsing/check_latex_logs.sh
+# Warnings worth attention
+grep -in "warning" main.log | grep -vi "harmless-pattern"
 
-# Summary mode (errors only)
-python context/tools/log-parsing/parse_latex_logs.py main.log --summary
+# Box problems
+grep -nE "Overfull \\hbox|Underfull \\hbox" main.log
 
-# Ignore box warnings
-python context/tools/log-parsing/parse_latex_logs.py main.log --no-boxes
-
-# Parse biber log
-python context/tools/log-parsing/parse_latex_logs.py main.blg
+# Fixture logs from the last harness run
+ls tests/compilation/logs/
 ```
 
-#### Output Examples
-
-```
-=== LaTeX Log Analysis ===
-File: main.log
-Total Issues: 3
-
-ERRORS (1):
-  Line 1234: Undefined control sequence \unknowncmd
-  Context: "This is \unknowncmd{text} that fails"
-  
-WARNINGS (2):
-  Line 567: Underfull \hbox (badness 10000)
-  Line 890: Package hyperref Warning: Token not allowed
-  
-Summary: 1 error, 2 warnings, 0 overfull, 0 underfull
-```
+The pytest harness (`tests/test_regression_harness.py`) fails fixtures on
+unexpected warnings automatically, so routine log review is only needed when
+a gate fails.
 
 ### Automated Error Detection
 
@@ -676,8 +634,8 @@ make test-clean
 
 ### 3. **Log Analysis**
 ```bash
-# After compilation issues
-python context/tools/log-parsing/parse_latex_logs.py main.log
+# After compilation issues, inspect the log directly
+grep -n "^!" main.log
 
 # Check for warnings
 grep -i "warning" main.log
@@ -725,11 +683,11 @@ This paragraph should align
 
 #### 4. **Compilation Warnings**
 ```bash
-# Filter harmful warnings
-python context/tools/log-parsing/parse_latex_logs.py main.log --no-boxes
-
 # See only errors
-python context/tools/log-parsing/parse_latex_logs.py main.log --critical
+grep -n "^!" main.log
+
+# Box warnings
+grep -n "Overfull\|Underfull" main.log
 ```
 
 ### Getting Help
@@ -933,5 +891,4 @@ When a test fails:
 For more information, see:
 - `/tests/README.md` - Quick testing guide
 - `/tests/TESTING_SUMMARY.md` - Framework details
-- `/context/tools/log-parsing/LOG_PARSER_README.md` - Log parser docs
 - `/tests/run-tests.sh` - Test runner implementation

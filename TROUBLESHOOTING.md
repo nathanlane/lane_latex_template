@@ -15,6 +15,17 @@ This guide helps resolve common issues with the Lane LaTeX Template.
 
 ## Compilation Errors
 
+### Sudden errors after switching TeX Live versions (e.g. cleveref `\@firstoffive`)
+
+**Symptoms**: Dozens of `Undefined control sequence` / `Paragraph ended before
+\@firstoffive` errors in a tree that compiled fine before.
+
+**Cause**: stale `.aux`/`.out` files written by a different TeX Live release
+are incompatible across kernel versions.
+
+**Solution**: `latexmk -C main.tex` (or `git clean` of build artifacts), then
+rebuild. Always clean when switching between TeX Live years.
+
 ### "Package not found" Error
 
 **Symptoms**: LaTeX stops with `! LaTeX Error: File 'package.sty' not found`

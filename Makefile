@@ -11,7 +11,12 @@ CHKTEX = chktex
 LATEXINDENT = latexindent
 LATEXFLAGS = -interaction=nonstopmode -halt-on-error
 # FIX: Suppress intentional template/prose warnings that require visual-output changes.
-CHKTEXFLAGS = -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48
+# FIX: -n48 exists only in chktex >= 1.7.7; older binaries (e.g. TeX Live
+# 2022's 1.7.6) error out with "Illegal warning number". Probe once at make
+# time and include the flag only when the local binary supports it.
+CHKTEXFLAGS = -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46
+CHKTEX_N48 := $(shell $(CHKTEX) -q -n48 main.tex >/dev/null 2>&1 && echo " -n48")
+CHKTEXFLAGS += $(CHKTEX_N48)
 PYTHON = python3
 BLACK = black
 
@@ -43,9 +48,11 @@ build:
 	$(LATEXMK) -pdf -interaction=nonstopmode $(MAIN).tex
 
 # FIX: Keep the lint gate identical to AGENTS.md.
+# FIX: glob the .tex sources that actually exist — root, paper/, and
+# appendices/ — instead of root only.
 .PHONY: lint
 lint:
-	$(CHKTEX) $(CHKTEXFLAGS) *.tex
+	$(CHKTEX) $(CHKTEXFLAGS) *.tex $(PAPER_DIR)/*.tex $(APPENDICES_DIR)/*.tex
 
 # FIX: Provide the documented indentation-only formatting target.
 .PHONY: fmt
@@ -218,10 +225,8 @@ setup: check
 .PHONY: check-deps
 check-deps:
 	@echo "==> Checking LaTeX package dependencies..."
-	@$(SRC_DIR)/sh/check-packages.sh || echo "Script not found - checking manually..."
-	@for pkg in biblatex microtype booktabs; do \
-		kpsewhich $$pkg.sty >/dev/null 2>&1 || echo "Missing: $$pkg"; \
-	done
+	@# FIX: fail loudly when the script is missing instead of faking health.
+	$(SRC_DIR)/sh/check-packages.sh
 
 # Testing targets
 .PHONY: test

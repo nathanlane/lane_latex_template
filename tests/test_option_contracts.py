@@ -245,8 +245,8 @@ def test_math_redefs_option_enables_variants(tmp_path):
         """,
     )
     assert_compiles(result, log_text)
-    assert "LLT_LE=\\long macro:->\\leqslant" in log_text
-    assert "LLT_PHI=\\long macro:->\\varphi" in log_text
+    assert "macro:->\\leqslant" in log_text  # 2022 kernel: \long macro; 2026+: plain macro
+    assert "macro:->\\varphi" in log_text
 
 
 def test_footmisc_option_passthrough_no_clash(tmp_path):

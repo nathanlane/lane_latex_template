@@ -72,9 +72,17 @@ That's it! You now have a professionally typeset academic paper.
 ### Tested Build Environments
 
 <!-- %% FIX: Remove unsupported external build claims and keep the local toolchain explicit. -->
-Verified locally on July 4, 2026:
+Verified locally on August 12, 2026 (all gates: `make lint`, `make build`,
+`make check-deps`, `make style-check`, pytest):
 
-- **Local**: TeX Live 2025 at `/usr/local/texlive/2025` (`tlmgr` revision 76773), pdfTeX 1.40.28, `latexmk` 4.86a, Biber 2.20, using `latexmk -pdf -interaction=nonstopmode main.tex`.
+- **TeX Live 2026** at `/usr/local/texlive/2026`, pdfTeX 1.40.29, using
+  `latexmk -pdf -interaction=nonstopmode main.tex`.
+- **TeX Live 2022** at `/Library/TeX/texbin`, pdfTeX 1.40.24, `latexmk` 4.77,
+  Biber 2.17, ChkTeX 1.7.6 (the `make lint` gate probes `-n48` support and
+  drops it on binaries older than ChkTeX 1.7.7).
+
+Earlier verification (July 4, 2026): TeX Live 2025, pdfTeX 1.40.28,
+`latexmk` 4.86a, Biber 2.20.
 
 ### Quick Setup
 
