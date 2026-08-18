@@ -10,20 +10,18 @@ make clean    # remove auxiliary files
 Requires TeX Live 2020+ with `tgpagella`, `inconsolata`, `newpx`, `mathalfa`,
 and `booktabs`. Verify your installation with `make check-deps`.
 
-## Running the Test Suites
+## Pre-commit Gates
 
-Three suites must all pass before committing:
+All four must pass before committing (per `AGENTS.md`):
 
 ```bash
-# 1. Shell harness (LaTeX compilation + compatibility probes)
-bash tests/run-tests.sh
-
-# 2. Python regression tests (measured values, contract assertions)
-python3 -m pytest -q
-
-# 3. Convenience alias that calls tests/run-tests.sh
-make test
+make lint              # chktex on *.tex, paper/*.tex, appendices/*.tex
+make build             # latexmk full compile → main.pdf
+bash tests/run-tests.sh  # shell harness: LaTeX fixtures + compatibility probes
+python3 -m pytest -q   # regression tests: measured values, contract assertions
 ```
+
+`make test` is a convenience alias for `bash tests/run-tests.sh`.
 
 The pytest harness requires `pdftotext` (Poppler) for PDF text assertions; it
 skips those assertions cleanly when `pdftotext` is unavailable.

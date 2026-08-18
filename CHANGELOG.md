@@ -24,8 +24,10 @@ Pre-release hygiene batch (branch `chore/pre-release-hygiene`):
   cloners) and dead link to deleted plan doc; retargeted Contributing
   section to new `CONTRIBUTING.md`.
 - Version reconciliation: bumped `\ProvidesPackage` in `lltcolors.sty`,
-  `lltfonts.sty`, and `llthochuli.sty` from `v1.0` to `v1.1 [2026/08/12]`
-  to match every sibling module (`lltpaperstyle.sty` at `v2.0` unchanged).
+  `lltfonts.sty`, and `llthochuli.sty` from `v1.0 [2025/07/0x]` to
+  `v1.1 [2026/08/12]` to align with the 2026-08-12 release date shared by
+  all other modules; `lltpaperstyle.sty` (`v2.0`) and `lltmicrotype.sty`
+  (`v1.2`) are unchanged.
 - Added `CONTRIBUTING.md`: build (`make`), test suites (`bash tests/run-tests.sh`,
   `python3 -m pytest -q`, `make test`), `llt` namespace convention, and
   module doc locations.
@@ -65,7 +67,7 @@ All 2026-08-12 entries below constitute the release.
 - Fixed run-in `\paragraph` emitting zero space before the following text
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
-- Filed the adopter defect report under `notes/`.
+- Filed the adopter defect report (see git history: `notes/ADOPTER-DEFECT-REPORT-2026-08-11.md`).
 - Harness hardening: `make lint` now covers `paper/` and `appendices/` (was
   root-only) and probes `-n48` support so ChkTeX 1.7.6 (TeX Live 2022) no
   longer fails the gate; committed the missing `src/sh/check-packages.sh`
