@@ -111,8 +111,10 @@ __pycache__/
 
 # Generated PDFs (keep only essential examples)
 *.pdf
-!figures/*.pdf                    # Keep figure assets  
-!tests/visual/output/*.pdf         # Keep visual test baselines
+# Keep figure assets
+!figures/*.pdf
+# Keep visual test baselines
+!tests/visual/output/*.pdf
 
 # Additional LaTeX build artifacts
 *.fls

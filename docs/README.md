@@ -23,8 +23,6 @@ and archived implementation plans for the Lane LaTeX Template.
 ## Roadmaps And Workflow Notes
 
 - [Package Roadmap](PACKAGE_ROADMAP.md) - Historical package roadmap and future packaging ideas.
-- [Deep Review Roadmap](superpowers/plans/2026-07-01-deep-review-roadmap.md) - Current serialized lane plan for review remediation.
-- [AI Workflow Plan Template](ai-workflow/plan-template.md) - Living-plan lifecycle and status conventions.
 - [Style Changelog](style/CHANGELOG.md) - Legacy style-package changelog.
 
 ## Typography And Grid Notes
