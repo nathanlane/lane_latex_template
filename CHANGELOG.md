@@ -10,10 +10,12 @@ Pre-release hygiene batch (branch `chore/pre-release-hygiene`):
   `\section{Conservative Drop Cap Guidelines}` so the `\academicdropcap{W}{…}`
   call no longer falls at the bottom of page 3 where lettrine emits
   `*** ATTENTION REQUIRED ***`. Suite now reports 0 failures.
-- Fixed `.gitignore`: lines `!figures/*.pdf` and `!tests/visual/output/*.pdf`
-  carried trailing inline comments (`# …`), which git does not parse — the
-  negations were silently inert. Moved comments to their own preceding lines;
-  `git check-ignore -v figures/test.pdf` now returns the negation rule.
+- Fixed `.gitignore`: `!figures/*.pdf` carried a trailing inline comment
+  (`# …`), which git does not parse — the negation was silently inert. Moved
+  the comment to its own preceding line; `git check-ignore -v figures/test.pdf`
+  now returns the negation rule. Dropped `!tests/visual/output/*.pdf` entirely:
+  those PDFs are regenerated on every `tests/run-tests.sh` run and should stay
+  ignored.
 - Removed 21 tracked internal-workspace files (`archive/**`, `tmp/ai-plans/**`,
   `docs/superpowers/plans/**`, `docs/tmp/plans/**`, `docs/ai-workflow/**`,
   `notes/**`). History retains the full content. Fixed all dead links in

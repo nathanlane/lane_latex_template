@@ -12,7 +12,9 @@ and `booktabs`. Verify your installation with `make check-deps`.
 
 ## Pre-commit Gates
 
-All four must pass before committing (per `AGENTS.md`):
+All four must pass before committing (`make lint`, `make build`, and
+`python3 -m pytest -q` are gated by `AGENTS.md`; the shell harness is
+documented in `docs/technical/TESTING.md`):
 
 ```bash
 make lint              # chktex on *.tex, paper/*.tex, appendices/*.tex
