@@ -1,6 +1,6 @@
 # Makefile for Lane LaTeX Template
 # %% FIX: Keep active command help aligned with the repository identity.
-# Production-grade LaTeX compilation workflow
+# LaTeX compilation workflow
 
 # Variables
 MAIN = main
@@ -212,7 +212,6 @@ check:
 setup: check
 	@echo "==> Setting up project structure..."
 	@mkdir -p $(FIGURES_DIR) $(DATA_DIR)/raw $(DATA_DIR)/processed
-	@touch $(DATA_DIR)/raw/.gitkeep $(DATA_DIR)/processed/.gitkeep
 	@echo "==> Testing minimal compilation..."
 	@if $(MAKE) test-quick; then \
 		echo "==> Setup complete! You can now run 'make pdf' to build the paper."; \

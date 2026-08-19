@@ -6,12 +6,7 @@ If you discover a security vulnerability, please email the maintainer directly i
 
 ## API Keys and Secrets
 
-This repository uses environment variables for API keys. These should NEVER be committed to version control.
-
-### Setup
-1. Copy `.env.example` to `.env`
-2. Add your API keys to `.env`
-3. Ensure `.env` is listed in `.gitignore`
+If you extend this template with scripts that require API keys, never commit credentials to version control.
 
 ### If You Accidentally Commit Secrets
 

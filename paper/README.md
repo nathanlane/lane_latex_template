@@ -69,21 +69,21 @@ Main content...
 ```
 lltpaperstyle.sty (main package)
 ├── Core Modules (automatically loaded):
-│   ├── lltcompilation-fixes-simple.sty - Common LaTeX warning fixes
+│   ├── lltcompilationfixes.sty        - Common LaTeX warning fixes
 │   ├── lltfonts.sty                   - Font configuration (Pagella, Inconsolata, math)
 │   ├── lltcolors.sty                  - Professional color system
 │   ├── lltdimensions.sty              - Grid system and spacing definitions
 │   ├── lltheadings.sty                - Section heading styles with colors
-│   └── lltlists.sty                   - List typography with refined bullets
+│   ├── lltlists.sty                   - List typography with refined bullets
+│   └── lltmicrotype.sty               - Enhanced character protrusion and expansion
 │
 └── Optional Enhancement Modules:
     ├── lltparagraphs.sty              - Advanced paragraph formatting
-    ├── lltmicrotype-config.sty        - Enhanced character protrusion
-    ├── lltheadings-gridlocked.sty     - Stricter grid alignment
-    ├── lltmathematics-gridlocked.sty  - Minimal math flexibility
-    ├── llthochuli-refinements.sty     - Advanced optical adjustments
-    ├── lltfont-features.sty           - Full Pagella feature access
-    └── lltfont-fallbacks.sty          - Compatibility mode
+    ├── lltheadingsgridlocked.sty      - Stricter grid alignment
+    ├── lltmathgridlocked.sty          - Minimal math flexibility
+    ├── llthochuli.sty                 - Optical adjustments; kerning pairs and last-line control apply on load; ligature suppression and hanging-quote commands are opt-in
+    ├── lltfontfeatures.sty            - Full Pagella feature access
+    └── lltfontfallbacks.sty           - Compatibility mode
 ```
 
 ### Using Individual Modules
@@ -116,7 +116,7 @@ For complete module documentation, see [MODULES.md](MODULES.md).
 
 #### List Typography Module
 
-`lists.sty` gives you production-grade list environments spaced in 13.2pt quantum multiples and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
+`lltlists.sty` gives you carefully tuned list environments spaced in 13.2pt quantum multiples and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
 
 * Level 1 • Professional grey bullet  
 * Level 2 – en-dash  
