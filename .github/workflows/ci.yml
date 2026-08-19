@@ -8,12 +8,16 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
     name: Build and test
     runs-on: ubuntu-latest
     container:
-      image: texlive/texlive:latest
+      image: texlive/texlive:TL2025-historic
     timeout-minutes: 45
 
     steps:
@@ -24,6 +28,12 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Check package dependencies
+        run: make check
+
+      - name: Lint LaTeX sources
+        run: make lint
 
       - name: Build LaTeX document
         run: make build
@@ -40,3 +50,4 @@ jobs:
         with:
           name: main-pdf
           path: main.pdf
+          if-no-files-found: ignore
