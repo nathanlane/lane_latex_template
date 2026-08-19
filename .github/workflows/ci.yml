@@ -32,6 +32,8 @@ jobs:
       # The container runs as a different user than the one owning the checkout,
       # so git refuses the repo as "dubious ownership" and tests that shell out
       # to git (tests/test_infrastructure.py) fail with exit 128.
+      # Do not delete this as redundant: actions/checkout registers
+      # safe.directory only for its own step, so later steps still need it.
       - name: Mark workspace safe for git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
