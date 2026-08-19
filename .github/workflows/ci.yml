@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check package dependencies
-        run: make check
+        run: make check-deps
 
       - name: Lint LaTeX sources
         run: make lint
