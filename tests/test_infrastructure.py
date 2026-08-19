@@ -122,6 +122,16 @@ def test_math_spacing_check_flags_operators_inside_brace_groups():
     assert run_math_spacing_check(r"Inline ${x=y}$ here." + "\n")
 
 
+def test_math_spacing_check_ignores_nested_subscripts():
+    # Indices nest; the exemption must follow brace depth, not stop at the
+    # first closing brace.
+    body = (
+        r"Inline $x_{\mathrm{i=1}}$ and $x^{\mathrm{n+1}}$ here."
+        "\n"
+    )
+    assert not run_math_spacing_check(body)
+
+
 def test_math_spacing_check_ignores_unspaced_subscripts():
     # Indices are conventionally unspaced; flagging them is a false positive.
     # Regression guard for the BSD-grep bracket-range fix.
