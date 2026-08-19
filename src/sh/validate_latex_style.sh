@@ -82,8 +82,32 @@ check_latex_formatting() {
     print_info "  Required prefixes: sec:, subsec:, fig:, tab:, eq:, alg:, lst:, thm:, def:, app:"
   fi
   
-  # Check for spacing around math operators
-  if grep -E '\$[^$]*[=+\-*/][^ =+\-*/\$][^$]*\$' "$file" > /dev/null; then
+  # Check for spacing around math operators.
+  # Subscript and superscript spans are removed first: an index such as
+  # \sum_{i=1}^n or x_{\mathrm{i=1}} is conventionally unspaced and is not a
+  # defect. Only those spans are exempt — removing every brace group would
+  # hide real defects inside \sqrt{x+y} or ${x=y}$. The scan tracks brace
+  # depth because indices nest, which a bracket expression cannot express.
+  # perl is already required by the toolchain (latexmk is a perl script).
+  if perl -ne '
+      while (/(?<!\\)[_^]\{/g) {
+        my $start = $-[0];
+        my $i = $+[0] - 1;
+        my $depth = 0;
+        while ($i < length) {
+          my $c = substr($_, $i, 1);
+          if ($c eq "\\") { $i += 2; next }
+          $depth++ if $c eq "{";
+          $depth-- if $c eq "}";
+          last if $depth == 0;
+          $i++;
+        }
+        substr($_, $start, $i - $start + 1) = "";
+        pos($_) = $start;
+      }
+      $f = 1 if /\$[^\$]*[=+*\/-][^ =+*\/\$-][^\$]*\$/;
+      END { exit($f ? 0 : 1) }
+    ' "$file"; then
     print_warning "Missing spaces around math operators in $filename"
     print_info "  Use spaces: \$x = y + z\$ not \$x=y+z\$"
   fi

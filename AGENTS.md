@@ -129,7 +129,7 @@ Always prefer **clarity**, **minimalism**, and **reversibility**.
 
 ## 7  Resources
 
-* Full style spec → `CLAUDE.md` (for typography deep-dive).  
+* Full style spec → `paper/STYLE_GUIDE.md`; typography deep-dive → `docs/typography/`.  
 * OpenAI API docs → <https://platform.openai.com/docs>.  
 * Chicago Manual of Style (author-date).  
 * Butterick’s *Practical Typography* (for quick reference).

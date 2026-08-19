@@ -306,7 +306,7 @@ This section demonstrates how all three typography systems work together harmoni
 The implementation uses \code{scipy.optimize.minimize} with the \filepath{L-BFGS-B} algorithm.
 The \code{gradient} function computes $\nabla f(x) = 2A^T(Ax - b)$ for efficient convergence in the Hilbert space $\hilbert = L^2(\real^n)$.
 
-\safeparagraph{Statistical Analysis Integration} When analyzing data with \code{pandas}, we often compute sample statistics like $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ and $s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$.
+\safeparagraph{Statistical Analysis Integration} When analyzing data with \code{pandas}, we often compute sample statistics like $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ and $s^2 = \frac{1}{n - 1}\sum_{i=1}^n (x_i - \bar{x})^2$.
 The \inlinecode{DataFrame.describe()} method provides these automatically, while custom functions like \var{compute\_confidence\_interval} handle more complex calculations in the probability space $(\Omega, \mathcal{F}, \prob)$.
 
 \safeparagraph{Algorithmic Complexity} The algorithm runs in $O(n \log n)$ time complexity, implemented using the \code{heapq} module.

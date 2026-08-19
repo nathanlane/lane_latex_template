@@ -77,3 +77,68 @@ def test_active_build_inputs_do_not_use_removed_paperstyle_package():
         if stale_re.search(text):
             offenders.append(rel_path)
     assert offenders == []
+
+
+def run_math_spacing_check(body):
+    """Run validate_latex_style.sh over a probe .tex and report whether the
+    math-operator check fired for it.
+
+    The validator scans `find . -name "*.tex"` from the repo root and ignores
+    arguments, so the probe must live inside the checkout. The directory name
+    is unique per process so concurrent runs cannot clobber each other, and
+    mkdir is exclusive so an unrelated pre-existing path is never destroyed.
+    """
+    stem = f"mathspacingprobe{os.getpid()}"
+    probe_dir = ROOT / f".style-probe-{os.getpid()}"
+    probe = probe_dir / f"{stem}.tex"
+    probe_dir.mkdir()
+    try:
+        probe.write_text(body, encoding="utf-8")
+        result = subprocess.run(
+            ["bash", "src/sh/validate_latex_style.sh"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+    finally:
+        probe.unlink(missing_ok=True)
+        probe_dir.rmdir()
+    output = result.stdout + result.stderr
+    assert "invalid character range" not in output, output
+    # The validator must not be failing for an unrelated reason, or the
+    # substring assertions below would be meaningless.
+    assert result.returncode == 0, output
+    return f"math operators in {stem}.tex" in output
+
+
+def test_math_spacing_check_flags_unspaced_operators():
+    assert run_math_spacing_check("Inline $x=y+z$ here.\n")
+
+
+def test_math_spacing_check_flags_operators_inside_brace_groups():
+    # A brace group is not an exemption: these are real defects.
+    assert run_math_spacing_check(r"Inline $\sqrt{x+y}$ here." + "\n")
+    assert run_math_spacing_check(r"Inline ${x=y}$ here." + "\n")
+
+
+def test_math_spacing_check_ignores_nested_subscripts():
+    # Indices nest; the exemption must follow brace depth, not stop at the
+    # first closing brace.
+    body = (
+        r"Inline $x_{\mathrm{i=1}}$ and $x^{\mathrm{n+1}}$ here."
+        "\n"
+    )
+    assert not run_math_spacing_check(body)
+
+
+def test_math_spacing_check_ignores_unspaced_subscripts():
+    # Indices are conventionally unspaced; flagging them is a false positive.
+    # Regression guard for the BSD-grep bracket-range fix.
+    body = (
+        r"Inline $\norm{x}_2 = \sqrt{\sum_{i=1}^n x_i^2}$ and"
+        "\n"
+        r"$\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ here."
+        "\n"
+    )
+    assert not run_math_spacing_check(body)

@@ -2,6 +2,36 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## Unreleased
+
+Cleanup nits (branch `chore/cleanup-nits-32`, issue #32):
+
+- Retargeted `AGENTS.md` §7's dead `CLAUDE.md` reference to `paper/STYLE_GUIDE.md`
+  and `docs/typography/`. No `CLAUDE.md` has ever existed in this repository.
+- Fixed the BSD-grep `invalid character range` warning emitted by
+  `src/sh/validate_latex_style.sh` on every file (43 per run). The math-operator
+  bracket expressions used `[=+\-*/]`; BSD grep reads `\` literally inside a
+  bracket expression, so this parsed as the reversed range `\`(0x5C)→`*`(0x2A).
+- Rewrote that check to exempt subscript and superscript spans before testing
+  for unspaced operators. Repairing the bracket expression alone made the check
+  fire on `\sum_{i=1}^n` in `main.tex` and `tests/fixtures/full-features.tex`;
+  indices are conventionally unspaced, so those were false positives the broken
+  expression had been masking. The exemption is deliberately narrow — exempting
+  every brace group would hide real defects such as `$\sqrt{x+y}$` and `${x=y}$`
+  — and it tracks brace depth, since indices nest (`x_{\mathrm{i=1}}`).
+- Spaced the operator in `\frac{1}{n-1}` at `main.tex:309`, the one genuine hit
+  the repaired check found. TeX ignores whitespace in math mode; the rendered
+  PDF text is unchanged (verified by `pdftotext` comparison — the PDF's bytes
+  differ only through its embedded build timestamp).
+- Added regression coverage for the check in `tests/test_infrastructure.py`, in
+  all four directions: unspaced operators flag, operators inside brace groups
+  still flag, and neither flat nor nested unspaced indices do. The check previously had no
+  behavioural test, which is how one that silently malfunctioned went unnoticed.
+- Added `poppler-utils` to the CI workflow's apt step. The PDF-text regression
+  assertions in `tests/test_regression_harness.py` were skipping silently in CI
+  for want of `pdftotext`, so footnote-mark and appendix-title leakage was
+  caught only on machines with Poppler installed.
+
 ## v2.1.0 — 2026-08-19
 
 Release polish pass (branch `chore/release-polish`):
