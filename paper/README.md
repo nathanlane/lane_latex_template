@@ -74,14 +74,14 @@ lltpaperstyle.sty (main package)
 │   ├── lltcolors.sty                  - Professional color system
 │   ├── lltdimensions.sty              - Grid system and spacing definitions
 │   ├── lltheadings.sty                - Section heading styles with colors
-│   └── lltlists.sty                   - List typography with refined bullets
+│   ├── lltlists.sty                   - List typography with refined bullets
+│   └── lltmicrotype.sty               - Enhanced character protrusion and expansion
 │
 └── Optional Enhancement Modules:
     ├── lltparagraphs.sty              - Advanced paragraph formatting
-    ├── lltmicrotype.sty               - Enhanced character protrusion
     ├── lltheadingsgridlocked.sty      - Stricter grid alignment
     ├── lltmathgridlocked.sty          - Minimal math flexibility
-    ├── llthochuli.sty                 - Advanced optical adjustments (opt-in commands)
+    ├── llthochuli.sty                 - Optical adjustments; kerning pairs and last-line control apply on load; ligature suppression and hanging-quote commands are opt-in
     ├── lltfontfeatures.sty            - Full Pagella feature access
     └── lltfontfallbacks.sty           - Compatibility mode
 ```
