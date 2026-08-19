@@ -82,8 +82,17 @@ check_latex_formatting() {
     print_info "  Required prefixes: sec:, subsec:, fig:, tab:, eq:, alg:, lst:, thm:, def:, app:"
   fi
   
-  # Check for spacing around math operators
-  if grep -E '\$[^$]*[=+\-*/][^ =+\-*/\$][^$]*\$' "$file" > /dev/null; then
+  # Check for spacing around math operators.
+  # Brace groups are stripped first: subscripts and macro arguments such as
+  # \sum_{i=1}^n or \frac{1}{n-1} are conventionally unspaced and are not
+  # defects. perl is already required by the toolchain (latexmk is a perl
+  # script), and BSD grep cannot express this without the bracket-range bug
+  # this check used to trigger.
+  if perl -ne '
+      while (s/\{[^{}]*\}//g) {}
+      $f = 1 if /\$[^\$]*[=+*\/-][^ =+*\/\$-][^\$]*\$/;
+      END { exit($f ? 0 : 1) }
+    ' "$file"; then
     print_warning "Missing spaces around math operators in $filename"
     print_info "  Use spaces: \$x = y + z\$ not \$x=y+z\$"
   fi

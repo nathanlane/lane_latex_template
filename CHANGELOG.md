@@ -2,6 +2,31 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## Unreleased
+
+Cleanup nits (branch `chore/cleanup-nits-32`, issue #32):
+
+- Retargeted `AGENTS.md` §7's dead `CLAUDE.md` reference to `paper/STYLE_GUIDE.md`
+  and `docs/typography/`. No `CLAUDE.md` has ever existed in this repository.
+- Fixed the BSD-grep `invalid character range` warning emitted by
+  `src/sh/validate_latex_style.sh` on every file (43 per run). The math-operator
+  bracket expressions used `[=+\-*/]`; BSD grep reads `\` literally inside a
+  bracket expression, so this parsed as the reversed range `\`(0x5C)→`*`(0x2A).
+- Rewrote that check to strip brace groups before testing for unspaced
+  operators. Repairing the bracket expression alone made the check fire on
+  `\sum_{i=1}^n` and `\frac{1}{n-1}` in `main.tex` and
+  `tests/fixtures/full-features.tex` — subscripts and macro arguments are
+  conventionally unspaced, so those were false positives the broken expression
+  had been masking. `make style-check` output is now identical to its previous
+  output minus the grep errors: 31 warnings, 0 errors, 0 false positives.
+- Added regression coverage for both directions of that check in
+  `tests/test_infrastructure.py`; it previously had no behavioural test, which
+  is how a check that silently malfunctioned went unnoticed.
+- Added `poppler-utils` to the CI workflow's apt step. The PDF-text regression
+  assertions in `tests/test_regression_harness.py` were skipping silently in CI
+  for want of `pdftotext`, so footnote-mark and appendix-title leakage was
+  caught only on machines with Poppler installed.
+
 ## v2.1.0 — 2026-08-19
 
 Release polish pass (branch `chore/release-polish`):

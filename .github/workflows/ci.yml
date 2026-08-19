@@ -21,10 +21,13 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - name: Install Python, make, and git
+      # poppler-utils supplies pdftotext/pdfinfo. Without it the PDF-text
+      # regression assertions in tests/test_regression_harness.py skip silently,
+      # so footnote-mark and appendix-title leakage is caught only locally.
+      - name: Install Python, make, git, and Poppler
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends git make python3 python3-pytest
+          apt-get install -y --no-install-recommends git make python3 python3-pytest poppler-utils
 
       - name: Checkout
         uses: actions/checkout@v4

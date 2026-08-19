@@ -77,3 +77,46 @@ def test_active_build_inputs_do_not_use_removed_paperstyle_package():
         if stale_re.search(text):
             offenders.append(rel_path)
     assert offenders == []
+
+
+def run_math_spacing_check(body):
+    """Run validate_latex_style.sh over a probe .tex and report whether the
+    math-operator check fired for it.
+
+    The validator scans `find . -name "*.tex"` from the repo root and ignores
+    arguments, so the probe must live inside the checkout.
+    """
+    probe_dir = ROOT / ".style-probe-tmp"
+    probe = probe_dir / "mathspacingprobe.tex"
+    probe_dir.mkdir(exist_ok=True)
+    try:
+        probe.write_text(body, encoding="utf-8")
+        result = subprocess.run(
+            ["bash", "src/sh/validate_latex_style.sh"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+    finally:
+        probe.unlink(missing_ok=True)
+        probe_dir.rmdir()
+    output = result.stdout + result.stderr
+    assert "invalid character range" not in output, output
+    return "math operators in mathspacingprobe.tex" in output
+
+
+def test_math_spacing_check_flags_unspaced_operators():
+    assert run_math_spacing_check("Inline $x=y+z$ here.\n")
+
+
+def test_math_spacing_check_ignores_unspaced_braced_arguments():
+    # Subscripts and macro arguments are conventionally unspaced; flagging them
+    # is a false positive. Regression guard for the BSD-grep bracket-range fix.
+    body = (
+        r"Inline $\norm{x}_2 = \sqrt{\sum_{i=1}^n x_i^2}$ and"
+        "\n"
+        r"$s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$ here."
+        "\n"
+    )
+    assert not run_math_spacing_check(body)
