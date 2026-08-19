@@ -1,10 +1,8 @@
 # Lane LaTeX Template
 
-**By Nathan Lane / Industrial Policy Group**
+A living LaTeX template for academic papers with optimized typography. Actively used and revised.
 
-A (not yet) production-grade LaTeX template for academic papers with optimized typography. 
-
-This (living) template applies classic typographic principles to create scholarly articles. For more on typography principles: [https://github.com/nathanlane/nathanstypographynotes/](https://github.com/nathanlane/nathanstypographynotes/)
+This template applies classic typographic principles to create scholarly articles. For more on typography principles: [https://github.com/nathanlane/nathanstypographynotes/](https://github.com/nathanlane/nathanstypographynotes/)
 
 
 ---
@@ -14,7 +12,7 @@ This (living) template applies classic typographic principles to create scholarl
 <!-- %% FIX: Keep active feature claims limited to locally verified support. -->
 - **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
 - **Spacing Quantum System** – all vertical spacing in multiples of a 13.2pt quantum (body leading measures 16.32pt; see `docs/typography/BASELINE-GRID-DECISION.md`)
-- **Optically Refined Typo** - Using typographic principles
+- **Optical Refinements** – `llthochuli` module applies custom Pagella kerning pairs, selective ligature suppression, hanging punctuation for opening quotes, and last-line length control to prevent short orphaned lines
 - **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
 - **Smart Citations** – biblatex with Chicago style, DOI/URL linking, and native natbib mode
@@ -104,20 +102,6 @@ pytest -q
 - **macOS**: Use MacTeX or install via Homebrew
 - **Linux**: Install texlive-full from your package manager
 - **Windows**: Use MiKTeX or WSL with TeX Live
-
-### Environment Variables (Optional)
-
-If you're using the AI-assisted features or data analysis scripts, create a `.env` file:
-
-```bash
-# Copy the example file
-cp .env.example .env
-
-# Edit with your API keys (never commit real keys!)
-GEMINI_API_KEY=your_api_key_here
-```
-
-**Note**: The `.env` file is git-ignored to protect your credentials. Never commit API keys to version control.
 
 ---
 

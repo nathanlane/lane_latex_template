@@ -116,7 +116,7 @@ For complete module documentation, see [MODULES.md](MODULES.md).
 
 #### List Typography Module
 
-`lists.sty` gives you production-grade list environments spaced in 13.2pt quantum multiples and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
+`lists.sty` gives you carefully tuned list environments spaced in 13.2pt quantum multiples and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
 
 * Level 1 • Professional grey bullet  
 * Level 2 – en-dash  

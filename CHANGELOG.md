@@ -2,6 +2,20 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## v2.1.0 — 2026-08-19
+
+Release polish pass (branch `chore/release-polish`):
+
+- Removed byline and IPG attribution from README.md and `pdfauthor` metadata in main.tex.
+- Updated tagline: "A living LaTeX template… Actively used and revised."
+- Removed all "production-grade" phrasing from README.md, main.tex, and paper/README.md.
+- Fixed stub bullet in README.md features list with specific claims about `llthochuli` optical refinements.
+- Deleted research-repo scaffolding: `.env.example`, `data/raw/.gitkeep`, `data/processed/.gitkeep`; removed dead `cp .env.example .env` instructions from README.md and SECURITY.md; removed `touch .gitkeep` from `make setup` target.
+
+Added GitHub Actions CI workflow (branch `ci/build-and-test`, merged 2026-08-18): build and pytest gates now run on push and pull request.
+
+Pre-release hygiene batch (branch `chore/pre-release-hygiene`, merged 2026-08-18):
+
 ## 2026-08-18
 
 Pre-release hygiene batch (branch `chore/pre-release-hygiene`):

@@ -8,11 +8,6 @@ If you discover a security vulnerability, please email the maintainer directly i
 
 This repository uses environment variables for API keys. These should NEVER be committed to version control.
 
-### Setup
-1. Copy `.env.example` to `.env`
-2. Add your API keys to `.env`
-3. Ensure `.env` is listed in `.gitignore`
-
 ### If You Accidentally Commit Secrets
 
 If you accidentally commit sensitive data:
