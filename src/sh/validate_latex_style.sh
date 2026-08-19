@@ -83,13 +83,14 @@ check_latex_formatting() {
   fi
   
   # Check for spacing around math operators.
-  # Brace groups are stripped first: subscripts and macro arguments such as
-  # \sum_{i=1}^n or \frac{1}{n-1} are conventionally unspaced and are not
-  # defects. perl is already required by the toolchain (latexmk is a perl
-  # script), and BSD grep cannot express this without the bracket-range bug
-  # this check used to trigger.
+  # Subscript and superscript groups are stripped first: an index such as
+  # \sum_{i=1}^n is conventionally unspaced and is not a defect. Only those
+  # groups are exempt — stripping every brace group would hide real defects
+  # inside \sqrt{x+y} or ${x=y}$. perl is already required by the toolchain
+  # (latexmk is a perl script), and BSD grep cannot express this without the
+  # bracket-range bug this check used to trigger.
   if perl -ne '
-      while (s/\{[^{}]*\}//g) {}
+      while (s/(?<!\\)[_^]\{[^{}]*\}//g) {}
       $f = 1 if /\$[^\$]*[=+*\/-][^ =+*\/\$-][^\$]*\$/;
       END { exit($f ? 0 : 1) }
     ' "$file"; then

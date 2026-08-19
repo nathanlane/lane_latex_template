@@ -12,16 +12,20 @@ Cleanup nits (branch `chore/cleanup-nits-32`, issue #32):
   `src/sh/validate_latex_style.sh` on every file (43 per run). The math-operator
   bracket expressions used `[=+\-*/]`; BSD grep reads `\` literally inside a
   bracket expression, so this parsed as the reversed range `\`(0x5C)→`*`(0x2A).
-- Rewrote that check to strip brace groups before testing for unspaced
-  operators. Repairing the bracket expression alone made the check fire on
-  `\sum_{i=1}^n` and `\frac{1}{n-1}` in `main.tex` and
-  `tests/fixtures/full-features.tex` — subscripts and macro arguments are
-  conventionally unspaced, so those were false positives the broken expression
-  had been masking. `make style-check` output is now identical to its previous
-  output minus the grep errors: 31 warnings, 0 errors, 0 false positives.
-- Added regression coverage for both directions of that check in
-  `tests/test_infrastructure.py`; it previously had no behavioural test, which
-  is how a check that silently malfunctioned went unnoticed.
+- Rewrote that check to exempt subscript and superscript groups before testing
+  for unspaced operators. Repairing the bracket expression alone made the check
+  fire on `\sum_{i=1}^n` in `main.tex` and `tests/fixtures/full-features.tex`;
+  indices are conventionally unspaced, so those were false positives the broken
+  expression had been masking. The exemption is deliberately narrow — exempting
+  every brace group would hide real defects such as `$\sqrt{x+y}$` and `${x=y}$`.
+- Spaced the operator in `\frac{1}{n-1}` at `main.tex:309`, the one genuine hit
+  the repaired check found. TeX ignores whitespace in math mode; the rendered
+  PDF text is unchanged (verified by `pdftotext` comparison — the PDF's bytes
+  differ only through its embedded build timestamp).
+- Added regression coverage for the check in `tests/test_infrastructure.py`, in
+  all three directions: unspaced operators flag, operators inside brace groups
+  still flag, and unspaced indices do not. The check previously had no
+  behavioural test, which is how one that silently malfunctioned went unnoticed.
 - Added `poppler-utils` to the CI workflow's apt step. The PDF-text regression
   assertions in `tests/test_regression_harness.py` were skipping silently in CI
   for want of `pdftotext`, so footnote-mark and appendix-title leakage was

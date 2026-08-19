@@ -84,11 +84,14 @@ def run_math_spacing_check(body):
     math-operator check fired for it.
 
     The validator scans `find . -name "*.tex"` from the repo root and ignores
-    arguments, so the probe must live inside the checkout.
+    arguments, so the probe must live inside the checkout. The directory name
+    is unique per process so concurrent runs cannot clobber each other, and
+    mkdir is exclusive so an unrelated pre-existing path is never destroyed.
     """
-    probe_dir = ROOT / ".style-probe-tmp"
-    probe = probe_dir / "mathspacingprobe.tex"
-    probe_dir.mkdir(exist_ok=True)
+    stem = f"mathspacingprobe{os.getpid()}"
+    probe_dir = ROOT / f".style-probe-{os.getpid()}"
+    probe = probe_dir / f"{stem}.tex"
+    probe_dir.mkdir()
     try:
         probe.write_text(body, encoding="utf-8")
         result = subprocess.run(
@@ -103,20 +106,29 @@ def run_math_spacing_check(body):
         probe_dir.rmdir()
     output = result.stdout + result.stderr
     assert "invalid character range" not in output, output
-    return "math operators in mathspacingprobe.tex" in output
+    # The validator must not be failing for an unrelated reason, or the
+    # substring assertions below would be meaningless.
+    assert result.returncode == 0, output
+    return f"math operators in {stem}.tex" in output
 
 
 def test_math_spacing_check_flags_unspaced_operators():
     assert run_math_spacing_check("Inline $x=y+z$ here.\n")
 
 
-def test_math_spacing_check_ignores_unspaced_braced_arguments():
-    # Subscripts and macro arguments are conventionally unspaced; flagging them
-    # is a false positive. Regression guard for the BSD-grep bracket-range fix.
+def test_math_spacing_check_flags_operators_inside_brace_groups():
+    # A brace group is not an exemption: these are real defects.
+    assert run_math_spacing_check(r"Inline $\sqrt{x+y}$ here." + "\n")
+    assert run_math_spacing_check(r"Inline ${x=y}$ here." + "\n")
+
+
+def test_math_spacing_check_ignores_unspaced_subscripts():
+    # Indices are conventionally unspaced; flagging them is a false positive.
+    # Regression guard for the BSD-grep bracket-range fix.
     body = (
         r"Inline $\norm{x}_2 = \sqrt{\sum_{i=1}^n x_i^2}$ and"
         "\n"
-        r"$s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$ here."
+        r"$\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ here."
         "\n"
     )
     assert not run_math_spacing_check(body)
