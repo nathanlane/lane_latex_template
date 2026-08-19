@@ -1,6 +1,6 @@
 # Makefile for Lane LaTeX Template
 # %% FIX: Keep active command help aligned with the repository identity.
-# Production-grade LaTeX compilation workflow
+# LaTeX compilation workflow
 
 # Variables
 MAIN = main

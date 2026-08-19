@@ -12,7 +12,7 @@ This template applies classic typographic principles to create scholarly article
 <!-- %% FIX: Keep active feature claims limited to locally verified support. -->
 - **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
 - **Spacing Quantum System** – all vertical spacing in multiples of a 13.2pt quantum (body leading measures 16.32pt; see `docs/typography/BASELINE-GRID-DECISION.md`)
-- **Optical Refinements** – `llthochuli` module applies custom Pagella kerning pairs, selective ligature suppression, hanging punctuation for opening quotes, and last-line length control to prevent short orphaned lines
+- **Optical Refinements** – Optional `llthochuli` module; when loaded, automatically applies custom Pagella kerning pairs and last-line length control (`\parfillskip`); also provides opt-in commands for selective ligature suppression and hanging punctuation at paragraph openings
 - **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
 - **Smart Citations** – biblatex with Chicago style, DOI/URL linking, and native natbib mode
@@ -628,7 +628,7 @@ Core packages:
 ## Version History
 
 <!-- %% FIX: Separate repository release status from the bundled package version. -->
-Repository release: `v2.0.0`.
+Repository release: `v2.1.0`.
 
 Bundled package version: `lltpaperstyle` reports `v2.0` in
 `paper/lltpaperstyle.sty`.
