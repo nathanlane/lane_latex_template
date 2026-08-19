@@ -5,8 +5,7 @@
 > class's 13.6pt baseline (the 11pt option sets 10.95pt on 13.6pt), so the
 > document baseline measures **16.32pt**, not 13.2pt. 13.2pt survives as the
 > **spacing quantum** — the unit vertical spaces are multiples of. The
-> decision and its evidence: `BASELINE-GRID-DECISION.md` (same directory) and
-> `notes/baseline-grid-decision-brief.md`.
+> decision and its evidence: `BASELINE-GRID-DECISION.md` (same directory).
 
 ## Foundation Principles
 

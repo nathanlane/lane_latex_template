@@ -2,10 +2,42 @@
 
 All notable changes to the Lane LaTeX Template are documented here.
 
+## 2026-08-18
+
+Pre-release hygiene batch (branch `chore/pre-release-hygiene`):
+
+- Fixed `tests/fixtures/opening-test.tex`: added `\clearpage` before the
+  `\section{Conservative Drop Cap Guidelines}` so the `\academicdropcap{W}{…}`
+  call no longer falls at the bottom of page 3 where lettrine emits
+  `*** ATTENTION REQUIRED ***`. Suite now reports 0 failures.
+- Fixed `.gitignore`: `!figures/*.pdf` carried a trailing inline comment
+  (`# …`), which git does not parse — the negation was silently inert. Moved
+  the comment to its own preceding line; `git check-ignore -v figures/test.pdf`
+  now returns the negation rule. Dropped `!tests/visual/output/*.pdf` entirely:
+  those PDFs are regenerated on every `tests/run-tests.sh` run and should stay
+  ignored.
+- Removed 21 tracked internal-workspace files (`archive/**`, `tmp/ai-plans/**`,
+  `docs/superpowers/plans/**`, `docs/tmp/plans/**`, `docs/ai-workflow/**`,
+  `notes/**`). History retains the full content. Fixed all dead links in
+  surviving tracked files that pointed into these paths (README.md,
+  docs/README.md, docs/typography/BASELINE-GRID.md,
+  docs/typography/BASELINE-GRID-DECISION.md, CHANGELOG.md).
+- README.md: removed dead link to `CLAUDE.md` (gitignored, absent for
+  cloners) and dead link to deleted plan doc; retargeted Contributing
+  section to new `CONTRIBUTING.md`.
+- Version reconciliation: bumped `\ProvidesPackage` in `lltcolors.sty`,
+  `lltfonts.sty`, and `llthochuli.sty` from `v1.0 [2025/07/0x]` to
+  `v1.1 [2026/08/12]` to align with the 2026-08-12 release date shared by
+  all other modules; `lltpaperstyle.sty` (`v2.0`) and `lltmicrotype.sty`
+  (`v1.2`) are unchanged.
+- Added `CONTRIBUTING.md`: build (`make`), test suites (`bash tests/run-tests.sh`,
+  `python3 -m pytest -q`, `make test`), `llt` namespace convention, and
+  module doc locations.
+
 ## v2.0.0 — 2026-08-12
 
-Release cut after the adopter defect report
-(`notes/ADOPTER-DEFECT-REPORT-2026-08-11.md`). Two breaking changes:
+Release cut after the adopter defect report (see git history:
+`notes/ADOPTER-DEFECT-REPORT-2026-08-11.md`). Two breaking changes:
 `\sectionbreak` → `\sectionsep` and `\paragraphbreak` → `\paragraphsep`
 (no aliases — the old names collide with titlesec's `\<level>break` hook and
 must not be defined), and the `\le`/`\ge`/`\epsilon`/`\phi`/`\vec`
@@ -37,7 +69,7 @@ All 2026-08-12 entries below constitute the release.
 - Fixed run-in `\paragraph` emitting zero space before the following text
   ("RobustnessEstimates"): dropped the `[~]` after-code and set the
   `\titlespacing` after-value to `0.75em` (same fix applied to `\paragraphsc`).
-- Filed the adopter defect report under `notes/`.
+- Filed the adopter defect report (see git history: `notes/ADOPTER-DEFECT-REPORT-2026-08-11.md`).
 - Harness hardening: `make lint` now covers `paper/` and `appendices/` (was
   root-only) and probes `-n48` support so ChkTeX 1.7.6 (TeX Live 2022) no
   longer fails the gate; committed the missing `src/sh/check-packages.sh`
@@ -98,7 +130,7 @@ All 2026-08-12 entries below constitute the release.
   values (10.95pt body, 16.32pt baseline) and treat `\gridunit` as a spacing
   quantum, not the document baseline; making the 13.2pt grid real was rejected
   because it requires removing `\linespread` and would shrink documents ~19%.
-  Research brief: `notes/baseline-grid-decision-brief.md`.
+  Research brief archived in git history as `notes/baseline-grid-decision-brief.md`.
 - Re-documented the grid-derived constants to match the measured build
   (decision (b) follow-through; rendering unchanged except where noted):
   every "13.2pt baseline/leading" claim in code comments and docs now states

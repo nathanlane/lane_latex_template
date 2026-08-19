@@ -569,6 +569,8 @@ export TEXINPUTS=".:./paper//:"
 
 ## Contributing
 
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for build instructions, test commands, and the `llt` namespace convention.
+
 ### Development Guidelines
 
 1. **Typography first**: Don't break the spacing quantum rhythm
@@ -600,9 +602,7 @@ make validate     # Style validation
 - **[API Reference](API_REFERENCE.md)** – Complete command reference
 - **[Style Guide](paper/STYLE_GUIDE.md)** – Typography standards
 - **[Code Review Report](docs/technical/LATEX_CODE_REVIEW_2026-05-28.md)** – Maintainability and package API findings
-- **[Maintainability Fix Plan](docs/superpowers/plans/2026-05-28-latex-template-maintainability.md)** – Checkpointed implementation plan for review findings
 - **[Testing Guide](tests/README.md)** – Test framework documentation
-- **[CLAUDE.md](CLAUDE.md)** – Development philosophy
 
 ### Key Commands
 

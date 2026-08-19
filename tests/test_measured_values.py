@@ -1,8 +1,9 @@
 """Measured-value regression tests.
 
 These assert the *measured* build values, not the comments — the failure mode
-of the adopter defect report (notes/ADOPTER-DEFECT-REPORT-2026-08-11.md),
-where comments claimed 13.2pt and the build shipped 16.32pt. If the template
+of the adopter defect report (archived in git history as
+notes/ADOPTER-DEFECT-REPORT-2026-08-11.md), where comments claimed 13.2pt
+and the build shipped 16.32pt. If the template
 ever makes the 13.2pt grid real (decision (a)), update these expectations
 deliberately; they encode decision (b) in
 docs/typography/BASELINE-GRID-DECISION.md.

@@ -15,7 +15,7 @@ and archived implementation plans for the Lane LaTeX Template.
 ## Active Maintainer References
 
 - [Testing Guide](technical/TESTING.md) - Local build, lint, pytest, and shell-harness checks.
-- [Deep Review Findings](technical/DEEP_REVIEW_FINDINGS_2026-07-01.md) - Consolidated review findings that drive the current lane roadmap.
+- [Deep Review Findings](technical/DEEP_REVIEW_FINDINGS_2026-07-01.md) - Consolidated review findings (2026-07-01).
 - [LaTeX Code Review](technical/LATEX_CODE_REVIEW_2026-05-28.md) - Maintainability and package API findings.
 - [Package Brittleness Analysis](technical/PACKAGE_BRITTLENESS_ANALYSIS.md) - Package reliability risks and recommendations.
 - [Grid Unit Conversion Audit](technical/GRID_UNIT_CONVERSION_AUDIT.md) - Grid-unit conversion details.
@@ -23,8 +23,6 @@ and archived implementation plans for the Lane LaTeX Template.
 ## Roadmaps And Workflow Notes
 
 - [Package Roadmap](PACKAGE_ROADMAP.md) - Historical package roadmap and future packaging ideas.
-- [Deep Review Roadmap](superpowers/plans/2026-07-01-deep-review-roadmap.md) - Current serialized lane plan for review remediation.
-- [AI Workflow Plan Template](ai-workflow/plan-template.md) - Living-plan lifecycle and status conventions.
 - [Style Changelog](style/CHANGELOG.md) - Legacy style-package changelog.
 
 ## Typography And Grid Notes

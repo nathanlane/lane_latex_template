@@ -111,8 +111,9 @@ __pycache__/
 
 # Generated PDFs (keep only essential examples)
 *.pdf
-!figures/*.pdf                    # Keep figure assets  
-!tests/visual/output/*.pdf         # Keep visual test baselines
+#%% FIX: Negate only figures/ — adopters store real figure assets there (README.md §Figures).
+# tests/visual/output/*.pdf are regenerated on every run-tests.sh run; do not un-ignore them.
+!figures/*.pdf
 
 # Additional LaTeX build artifacts
 *.fls

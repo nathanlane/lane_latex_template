@@ -2,8 +2,8 @@
 
 **Date:** 2026-08-11
 **Status:** Decided
-**Evidence:** `notes/ADOPTER-DEFECT-REPORT-2026-08-11.md` (finding 1),
-`notes/baseline-grid-decision-brief.md`
+**Evidence:** adopter defect report (finding 1) and decision brief (both
+archived in git history under `notes/`)
 
 ## Decision
 
