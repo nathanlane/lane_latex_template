@@ -338,7 +338,6 @@ Example customization:
 \usepackage{lltpaperstyle}
 
 % Add optional enhancements
-\usepackage{lltmicrotype}
 \usepackage{llthochuli}
 ```
 

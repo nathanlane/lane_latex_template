@@ -21,7 +21,7 @@ For quick start, basic usage, and compilation instructions, see [`../README.md`]
 
 ## Modular Architecture
 
-**Since v1.5**: The package is structured as independent modules for better maintainability and customization.
+**Since v1.5-alpha**: The package is structured as independent modules for better maintainability and customization.
 
 ### Module Structure
 
@@ -105,7 +105,7 @@ Bullet symbol commands:
 
 #### Paragraph Spacing Commands
 
-Paragraph style switchers (all use `\gridunit` = 13.2pt for indent):
+Paragraph style switchers (indent and parskip per command):
 
 ```latex
 \classicalparagraphs      % 13.2pt indent, 0pt parskip (default)
@@ -127,7 +127,7 @@ The style synthesizes three complementary approaches:
 
 ### Spacing Quantum System
 
-All spacing uses the **13.2pt spacing quantum** system (a spacing unit; the
+Most spacing uses the **13.2pt spacing quantum** system (a spacing unit; the
 body baseline measures 16.32pt — see `../docs/typography/BASELINE-GRID-DECISION.md`):
 
 ```latex
@@ -781,8 +781,8 @@ For troubleshooting, see [`../TROUBLESHOOTING.md`](../TROUBLESHOOTING.md).
 
 The body baseline is **16.32pt** (`\linespread{1.20}` scales the class's 13.6pt
 baseline: 13.6 × 1.20 = 16.32pt). The **13.2pt spacing quantum** (`\gridunit`) is
-a separate unit used for vertical spacing throughout the layout — it is not the
-baseline pitch. See `../docs/typography/BASELINE-GRID-DECISION.md` for the derivation.
+a separate unit used for most vertical spacing — it is not the baseline pitch.
+See `../docs/typography/BASELINE-GRID-DECISION.md` for the derivation.
 
 ```latex
 Body baseline: 16.32pt  (document leading)
@@ -814,7 +814,7 @@ Quarter quantum (\quartergridunit): 3.3pt
 
 - **Compilation Speed**: Two-pass system requires `pdflatex` twice for appendix detection
 - **Memory Usage**: Microtype and font loading increase memory requirements
-- **Compatibility**: Tested with TeX Live 2022+ (see [`../README.md`](../README.md) for verified environments); MiKTeX not verified
+- **Compatibility**: Tested with TeX Live 2022, 2025, 2026 (see [`../README.md`](../README.md) for details); MiKTeX not verified
 
 ---
 

@@ -633,9 +633,9 @@ Repository release: `v2.1.0`.
 Bundled package version: `lltpaperstyle` reports `v2.0` in
 `paper/lltpaperstyle.sty`.
 
-As of v2.0.0 the repository release and package version move together (they
-previously diverged: repo `v0.1.0-beta` vs package `v1.7`). v2.0.0 is the
-breaking-change release following the adopter defect report.
+v2.0.0 was the breaking-change release following the adopter defect report
+(previously repo `v0.1.0-beta` vs package `v1.7`). Repository and package
+versions may diverge; see the files above for current values.
 
 ### Versioning 
 
