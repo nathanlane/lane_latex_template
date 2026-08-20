@@ -480,7 +480,7 @@ Adjust margins and spacing:
 
 ```latex
 \geometry{margin=2in}                      % Wider margins
-\setlength{\parindent}{2em}               # Larger indent
+\setlength{\parindent}{2em}               % Larger indent
 \usepackage{lltpaperstyle}
 ```
 

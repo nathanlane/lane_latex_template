@@ -1,12 +1,11 @@
-# paperstyle.sty Documentation
+# lltpaperstyle Documentation
 
-**Version 1.6-alpha** | **Modular LaTeX Style Package for Academic Typography**
+**v2.0** | **Modular LaTeX Style Package for Academic Typography**
 
 A comprehensive LaTeX style package implementing professional typography principles from Matthew Butterick's *Practical Typography*, Tim Brown's *Modular Scale*, and Jost Hochuli's *Detail in Typography*.
 
 ## Table of Contents
 
-- [Quick Start](#quick-start)
 - [Modular Architecture](#modular-architecture)
 - [Typography Framework](#typography-framework)
 - [Font System Architecture](#font-system-architecture)
@@ -16,53 +15,13 @@ A comprehensive LaTeX style package implementing professional typography princip
 - [Professional Figures and Tables](#professional-figures-and-tables)
 - [Citation and Bibliography System](#citation-and-bibliography-system)
 - [Special Characters and Symbols](#special-characters-and-symbols)
-- [API Reference](#api-reference)
-- [Configuration Options](#configuration-options)
-- [Troubleshooting](#troubleshooting)
 - [Technical Implementation](#technical-implementation)
 
-## Quick Start
-
-### Basic Usage
-
-```latex
-\documentclass[11pt]{article}
-\usepackage{lltpaperstyle}
-
-\begin{document}
-\section{Your Content}
-Professional typography is automatically applied.
-\end{document}
-```
-
-### With Bibliography
-
-```latex
-\documentclass[11pt]{article}
-\input{paper/preamble.tex}  % Loads lltpaperstyle and default biblatex
-
-\begin{document}
-Your content with citations~\cite{key}.
-\printbibliography
-\end{document}
-```
-
-### With Appendices
-
-```latex
-\begin{document}
-Main content...
-
-\startappendices
-  \input{appendices/main_appendix.tex}
-  \input{appendices/tech_appendix.tex}
-\finishappendices
-\end{document}
-```
+For quick start, basic usage, and compilation instructions, see [`../README.md`](../README.md).
 
 ## Modular Architecture
 
-**Since v1.6-alpha**: The package is structured as independent modules for better maintainability and customization.
+**Since v2.0**: The package is structured as independent modules for better maintainability and customization.
 
 ### Module Structure
 
@@ -112,7 +71,7 @@ Load modules with custom settings before the main package:
 \usepackage{lltpaperstyle}
 ```
 
-For complete module documentation, see [MODULES.md](MODULES.md).
+For complete module documentation, see [modules/README.md](modules/README.md).
 
 #### List Typography Module
 
@@ -188,11 +147,11 @@ body baseline measures 16.32pt — see `../docs/typography/BASELINE-GRID-DECISIO
 - **sups**: Superior figures for ordinals and footnotes
 - **swashQ**: Elegant swash Q for enhanced typographic texture
 
-### Mathematical Typography (newtxmath + mathalfa)
+### Mathematical Typography (newpxmath + mathalfa)
 
 ```latex
 % Harmonized serif mathematics
-\usepackage[libertine]{newtxmath}
+\usepackage{newpxmath}
 \usepackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
 ```
 
@@ -204,21 +163,20 @@ body baseline measures 16.32pt — see `../docs/typography/BASELINE-GRID-DECISIO
 ### Monospace Typography (Inconsolata/zi4)
 
 ```latex
-% Optimized for Bembo harmony
-\usepackage[varqu,varl,scaled=0.93]{zi4}
+% Scaled for x-height harmony with Pagella
+\usepackage[varqu,varl,scaled=0.96]{zi4}
 ```
 
 **Optimization Features:**
-- **scaled=0.93**: Precise scaling for x-height harmony with Bembo
+- **scaled=0.96**: Precise scaling for x-height harmony with Pagella
 - **varqu**: Enhanced quotation marks for code clarity
 - **varl**: Improved lowercase L distinction
-- **Weight compensation**: 98% scaling prevents visual dominance
 
 ## Advanced Features
 
 ### Enhanced Bold Small Caps System
 
-Following fbb/fontaxes principles with weight compensation:
+Following fontaxes principles with weight compensation:
 
 ```latex
 % General purpose bold small caps
@@ -757,273 +715,9 @@ custom options.
 \dag, \ddag                  % †, ‡ with spacing
 ```
 
-## API Reference
+For the complete command reference, see [`../API_REFERENCE.md`](../API_REFERENCE.md).
 
-### Typography Commands
-
-#### Text Formatting
-
-```latex
-% Semantic emphasis hierarchy
-\emph{text}                        % Primary emphasis (italic↔roman)
-\strongemph{text}                  % Strong emphasis (bold)
-\term{technical term}              % Technical terms (italic)
-\person{Name}                      % Person names (small caps, 2.5% tracking)
-\acro{NASA}                        % Acronyms (small caps, 4% tracking)
-\work{Title}                       % Published works (italic)
-\meta{metadata}                    % General metadata (small caps, 3% tracking)
-\critical{WARNING}                 % Critical emphasis (bold small caps, 4.5% tracking)
-
-% Smart nesting handlers
-\smartitalic{text}                 % Context-aware italic
-\smartbold{text}                   % Context-aware bold
-
-% Special formatting
-\refinedsc{text}                   % Regular small caps with tracking
-\refinedscbold{text}               % Bold small caps with tracking
-\titlesc{text}                     % Title small caps (8-12% tracking)
-```
-
-#### Mathematical Notation
-
-```latex
-% Number sets
-\real, \complex, \integer, \rational, \natural, \field, \prob
-
-% Operators
-\norm{vector}                      % ||vector||
-\abs{number}                       % |number|
-\inner{u}{v}                       % ⟨u,v⟩
-\set{elements}                     % {elements}
-
-% Mathematical spaces (calligraphic)
-\hilbert, \banach, \algebra, \topology, \measure
-
-% Operators
-\tr, \rank, \Span, \supp, \argmax, \argmin
-```
-
-#### Code Typography
-
-```latex
-\code{basic-code}                  % General inline code
-\inlinecode{spaced-code}           % Micro-spaced code
-\balancedcode{mono-text}           % Balanced monospace
-\filepath{/path/to/file}           % File paths with hyphenation
-\var{variable_name}                % Italic variables
-\doccode{Description}{code}        % Mixed serif/mono
-```
-
-#### Color and Emphasis
-
-```latex
-\subtleemph{text}                  % Conservative blue emphasis
-\importantnote{text}               % Restrained red for warnings
-\externalref{text}                 % Navy blue for external links
-\internalref{text}                 % Gray for internal references
-\codecomment{text}                 % Italic gray for code comments
-```
-
-### Appendix System Commands
-
-```latex
-% Modern interface
-\begin{documentAppendices}
-  \input{appendices/file.tex}
-\end{documentAppendices}
-
-% Legacy interface (backward compatible)
-\startappendices
-\finishappendices
-```
-
-### Title Page Commands
-
-```latex
-% Dynamic title commands
-\articletitle{Title}                        % Auto-adjusts size (16-18pt)
-\articletitlefootnote{Title}{Acknowledgment} % Title with footnote
-\articletitlecompact{Title}                 % Fixed 16pt for many authors
-\articletitlecompactfootnote{Title}{Note}   % Compact with footnote
-
-% Author formatting
-\articleauthors{Names}                      % 12pt with \authorspace between
-\authorspace                                % 5% of text width
-\elegantauthor{Name}                        % Small caps author name
-
-% Supporting elements
-\articledate{\today}                        % Near-black for visibility
-\begin{articleabstract}                     % Golden ratio width (0.618×textwidth)
-  Abstract text...
-\end{articleabstract}
-\articlekeywords{keyword1, keyword2}        % Refined punctuation spacing
-\articlejel{A10, B20, C30}                 % JEL code formatting
-
-% Footnote modes
-\titlefootnotesetup                         % Switch to symbols (*, †, ‡)
-\titlefootnotereset                         % Return to numbers
-```
-
-### Paragraph Typography Commands
-
-```latex
-% Style switching
-\classicalparagraphs      % 13.2pt indent, 0pt spacing (default)
-\modernparagraphs         % 0pt indent, 6.6pt spacing
-\hybridparagraphs         % 9.9pt indent, 3.3pt spacing
-\quartergridparagraphs    % 13.2pt indent, 3.3pt spacing
-\thirdgridparagraphs      % 13.2pt indent, 4.4pt spacing
-
-% Special paragraphs
-\noindentpar              % Force flush left
-\forceindent              % Force indentation
-\centeredpar{text}        % Centered block
-\compactpar               % Reduces space before by 3.3pt
-\loosepars                % Adds 3.3pt before
-
-% Optical refinements
-\quoteparagraph{"Quote"} % Hanging opening quote
-\dropcap{L}{etter}        % Two-line drop cap
-\paragraphsep             % Thematic paragraph break
-\numberedparagraph        % Margin numbering
-\resetparnumbers          % Reset counter
-\sidenote{text}           % Margin annotation
-
-% Dialogue formatting
-\dialogue{text}           % Standard dialogue
-\rapidexchange{text}      % Quick exchange
-\speaker{Name}{words}     % Small caps speaker
-```
-
-### Quotation Environments
-
-```latex
-% Standard block quote
-\begin{quote}
-  Typography is the visual component of the written word.
-  \quoteattribution{Matthew Butterick}
-\end{quote}
-
-% Multi-paragraph quotation
-\begin{quotation}
-  First paragraph with indentation.
-  
-  Second paragraph maintains structure.
-\end{quotation}
-
-% Emphasis quote
-\begin{emphasisquote}
-  Typography exists to honor content.
-  \quoteattribution{Robert Bringhurst}
-\end{emphasisquote}
-```
-
-### List Typography Commands
-
-```latex
-% Available environments
-\begin{itemize}           % Standard with refined bullets
-\begin{academicitem}      % En-dash primary marker
-\begin{compactitem}       % No inter-item spacing
-\begin{displayitem}       % Bold items with generous spacing
-\begin{readableitem}      % Enhanced 0.5 unit spacing
-\begin{inlineitem}        % Inline (a); (b); (c)
-\begin{enumerate}         % Oldstyle figures
-\begin{description}       % Small caps labels
-
-% Bullet symbols
-\refinedbullet            % 80% scaled, 25% gray
-\refineddash              % En-dash, 30% gray
-\refinedcircle            % Open circle, 35% gray
-\refineddot               % Centered dot separator
-```
-
-### Grid Development Tools
-
-```latex
-% Visual overlay
-\usepackage{lltgridoverlay}
-\showgrid                 % Display grid lines
-\hidegrid                 % Hide grid lines
-
-% Grid-aligned images
-\gridincludegraphics[width=0.8\textwidth]{file}
-\begin{gridfigure}[tbp]
-  % Complete grid-aligned figure
-\end{gridfigure}
-
-% Grid spacing
-\gridunit                 % 13.2pt
-\halfgridunit             % 6.6pt
-\quartergridunit          % 3.3pt
-```
-
-## Configuration Options
-
-### Customizable Typography
-
-**Modular Scale Alternatives:**
-```latex
-% Replace Perfect Fourth (1.333) with:
-% Major Third: 1.25
-% Golden Ratio: 1.618
-% Major Sixth: 1.667
-```
-
-**Spacing Adjustments:**
-```latex
-% Classical indentation system (Bringhurst/Hochuli)
-\setlength{\parindent}{12pt}                         % ~1.1em for Bembo
-\setlength{\parskip}{0pt plus 1pt minus 0.5pt}       % Minimal spacing
-\setlength{\abovedisplayskip}{12.65pt plus 3pt minus 3pt}
-```
-
-**Color Customization:**
-```latex
-% Redefine any color in the professional palette
-\definecolor{paragraphgray}{gray}{0.25}    % Adjust contrast
-\definecolor{linknavy}{RGB}{0,102,180}     % Modify link color
-```
-
-### Microtype Tuning
-
-```latex
-% Enhanced character protrusion
-factor=1100                        % Conservative protrusion for Bembo
-
-% Word spacing flexibility  
-stretch=10, shrink=10              % Subtle elasticity
-
-% Small caps tracking
-\SetTracking{encoding={T1}, shape=sc}{30}  % 3% for Bembo
-```
-
-## Troubleshooting
-
-### Common Issues
-
-**Package Loading Order:**
-```latex
-% Correct order (implemented in paperstyle.sty)
-\usepackage{hyperref}              % Must load before cleveref
-\usepackage{cleveref}              % Enhanced cross-referencing
-```
-
-**Appendix Count Issues:**
-```latex
-% If appendix detection fails, delete auxiliary files and recompile
-rm *.aux *.out *.toc
-pdflatex main.tex
-pdflatex main.tex
-```
-
-**Font Warnings:**
-```latex
-% Common fontaxes warnings are expected and harmless
-Package fontaxes Warning: Axis `shape` not supported...
-```
-
-### Compatibility
+## Compatibility
 
 **Document Classes:**
 - ✅ `article` (recommended)
@@ -1031,19 +725,25 @@ Package fontaxes Warning: Axis `shape` not supported...
 - ✅ `book` (chapter-based appendices)
 - ❌ `memoir` (requires modifications)
 
-**Required Packages:**
-```latex
-% Core dependencies (auto-loaded)
-fbb, zi4, newtxmath, mathalfa, microtype, titlesec,
-enumitem, caption, geometry, appendix, cleveref
+**Core dependencies** (auto-loaded):
+`tgpagella`, `zi4`, `newpxmath`, `mathalfa`, `microtype`,
+`enumitem`, `caption`, `geometry`, `appendix`, `cleveref`
+
+For appendix count issues, delete auxiliary files and recompile:
+```bash
+latexmk -C main.tex  # or: rm *.aux *.out *.toc && pdflatex main.tex && pdflatex main.tex
 ```
+
+`Package fontaxes Warning: Axis 'shape' not supported` is harmless and expected.
+
+For troubleshooting, see [`../TROUBLESHOOTING.md`](../TROUBLESHOOTING.md).
 
 ## Technical Implementation
 
 ### Microtype Configuration
 
 ```latex
-% Hochuli's optimal settings for fbb/Bembo
+% Hochuli's optimal settings for Pagella
 \usepackage[
   activate={true,nocompatibility},
   final,
@@ -1058,12 +758,16 @@ enumitem, caption, geometry, appendix, cleveref
 
 ### Baseline Grid Mathematics
 
+The body baseline is **16.32pt** (11pt body × `\linespread{1.4836...}`, giving a
+leading of 16.32pt). The **13.2pt spacing quantum** (`\gridunit`) is a separate
+unit used for vertical spacing throughout the layout — it is not the baseline
+pitch. See `docs/typography/BASELINE-GRID-DECISION.md` for the derivation.
+
 ```latex
-% All spacing derives from 12.65pt baseline
-Base leading: 11pt × 1.15 = 12.65pt
-Half baseline: 12.65pt ÷ 2 = 6.325pt
-Display math: 12.65pt ± 3pt
-Paragraph skip: 6.325pt + 2pt - 1pt
+Body baseline: 16.32pt  (document leading)
+Spacing quantum (\gridunit): 13.2pt
+Half quantum (\halfgridunit): 6.6pt
+Quarter quantum (\quartergridunit): 3.3pt
 ```
 
 ### Appendix Counter Logic
@@ -1089,27 +793,8 @@ Paragraph skip: 6.325pt + 2pt - 1pt
 
 - **Compilation Speed**: Two-pass system requires `pdflatex` twice for appendix detection
 - **Memory Usage**: Microtype and font loading increase memory requirements
-- **Compatibility**: Tested with TeX Live 2023+ and MiKTeX current
+- **Compatibility**: Verified with TeX Live 2022+ and MiKTeX; see `README.md` for tested environments
 
 ---
 
-## Version History
-
-- **v1.6-alpha** (2025-07): Full modularization with enhanced features:
-  - Separated microtype-config module with 1400-unit protrusion
-  - Added paragraphs module for advanced formatting
-  - Implemented grid-locked variants for strict alignment
-  - Added landscape/rotation support for social science papers
-  - Enhanced color system with semantic hierarchy
-  - Improved footnote system with title page variants
-- **v1.5-alpha** (2025-07): Modularization and optical margin alignment:
-  - Split into independent modules (fonts, colors, dimensions, headings, lists)
-  - Enhanced character protrusion with size/weight-specific settings
-  - Added compilation-fixes-simple module
-- **v1.4-alpha** (2025-07): Cross-reference typography with cleveref
-- **v1.3-alpha** (2025-07): Mathematical typography optimization for Pagella
-- **v1.2-alpha** (2025-06): Added Chicago-compliant appendix system
-- **v1.1-alpha** (2025-06): Enhanced bold small caps system
-- **v1.0-alpha** (2025-06): Initial release with Butterick/Brown/Hochuli synthesis
-
-For support and updates, see the main repository documentation.
+For version history, see [`../CHANGELOG.md`](../CHANGELOG.md) and the `Version History` section of [`../README.md`](../README.md).

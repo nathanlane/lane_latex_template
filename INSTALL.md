@@ -20,7 +20,7 @@ This guide will help you set up the LaTeX template on your system with all requi
 
 2. **Build Tools**:
    - GNU Make
-   - Python 3.7+ (for data analysis scripts)
+   - Python 3.8+ (for pytest regression tests)
    - Git (for version control)
 
 3. **PDF Viewer**:
@@ -306,21 +306,21 @@ make diagnose
 The template uses a modular typography system organized in `paper/modules/`:
 
 ### Core Modules (Automatically Loaded)
-- `compilation-fixes-simple.sty` - Fixes common LaTeX warnings
-- `colors.sty` - Professional color definitions (linknavy, sectioncolor, bulletgray)
-- `dimensions.sty` - Spacing quantum system (13.2pt quantum) and spacing commands
-- `fonts.sty` - Font configuration (Pagella, Inconsolata, newpxmath, mathalfa)
-- `headings.sty` - Section heading styles with color hierarchy
-- `lists.sty` - List typography with refined bullets (6.6pt item spacing)
+- `lltcompilationfixes.sty` - Fixes common LaTeX warnings
+- `lltcolors.sty` - Professional color definitions (linknavy, sectioncolor, bulletgray)
+- `lltdimensions.sty` - Spacing quantum system (13.2pt quantum) and spacing commands
+- `lltfonts.sty` - Font configuration (Pagella, Inconsolata, newpxmath, mathalfa)
+- `lltheadings.sty` - Section heading styles with color hierarchy
+- `lltlists.sty` - List typography with refined bullets (6.6pt item spacing)
 
 ### Optional Enhancement Modules
-- `paragraphs.sty` - Advanced paragraph formatting, quotations, dialogue
-- `microtype-config.sty` - Enhanced character protrusion (up to 1400 units)
-- `headings-gridlocked.sty` - Stricter grid alignment (±0.125 vs ±0.25 units)
-- `mathematics-gridlocked.sty` - Minimal math flexibility (±0.0625 units)
-- `hochuli-refinements.sty` - Advanced optical adjustments
-- `font-features.sty` - Full Pagella feature access
-- `font-fallbacks.sty` - Compatibility mode with fallback chains
+- `lltparagraphs.sty` - Advanced paragraph formatting, quotations, dialogue
+- `lltmicrotype.sty` - Enhanced character protrusion (up to 1400 units)
+- `lltheadingsgridlocked.sty` - Stricter grid alignment (±0.125 vs ±0.25 units)
+- `lltmathgridlocked.sty` - Minimal math flexibility (±0.0625 units)
+- `llthochuli.sty` - Advanced optical adjustments
+- `lltfontfeatures.sty` - Full Pagella feature access
+- `lltfontfallbacks.sty` - Compatibility mode with fallback chains
 
 ### Module Features
 - **Modular loading**: Load only what you need
@@ -347,7 +347,6 @@ Example customization:
 - Read `README.md` for usage instructions
 - See `paper/STYLE_GUIDE.md` for typography guidelines
 - Check `TROUBLESHOOTING.md` for common issues
-- Review example documents in `examples/`
 
 ---
 
