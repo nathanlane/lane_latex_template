@@ -150,8 +150,11 @@
 % For users who prefer small caps but need strong contrast
 \newcommand{\paragraphsc}{
   \titleformat{\paragraph}[runin]
+    %% FIX(#39): drop dead \SetTracking{encoding=*}{120}; bold text resolves via
+    %% the T1 series=b list (lltmicrotype.sty:140 -> -10), which annuls the {120}
+    %% (measured: orig == bare), so \lsstyle alone is render-neutral, no message.
     {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\scshape\color{paragraphcolor}%
-     \SetTracking{encoding=*}{120}\lsstyle}  % 11pt bold small caps, +12% tracking
+     \lsstyle}  % 11pt bold small caps
     %% FIX: same run-in zero-separation bug as the default \paragraph.
     {}
     {0em}

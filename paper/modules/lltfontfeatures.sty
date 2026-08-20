@@ -62,22 +62,28 @@
 % Building on existing tracking, provide semantic commands
 
 % Title case small caps (maximum tracking for display)
+%% FIX(#39): this module deliberately exposes OT1 (\liningfigs/\tabularfigs at
+%% :23/:30). Every tracking list in lltmicrotype.sty:74-161 is encoding={T1}, so
+%% under OT1 no list matches and the {120} WAS effective; \textls[120] preserves
+%% it (bare \lsstyle would fall back to microtype's 50). Drops the override msg.
 \providecommand{\titlesc}{}% In case already defined
 \renewcommand{\titlesc}[1]{%
-  {\scshape\lsstyle #1}%
+  {\scshape\textls[120]{#1}}%
 }
 
 % Header small caps (moderate tracking)
+%% FIX(#39): OT1-effective {60} preserved via \textls[60]; see \titlesc above.
 \newcommand{\headersc}[1]{%
-  {\scshape\lsstyle #1}%
+  {\scshape\textls[60]{#1}}%
 }
 
 % Body text small caps (standard tracking - already defined as \textsc)
 % Just document the existing behavior
 
 % Tight small caps (minimal tracking for dense contexts)
+%% FIX(#39): OT1-effective {15} preserved via \textls[15]; see \titlesc above.
 \newcommand{\tightsc}[1]{%
-  {\scshape\lsstyle #1}%
+  {\scshape\textls[15]{#1}}%
 }
 
 % ==============================================================================

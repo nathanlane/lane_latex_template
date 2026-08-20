@@ -212,11 +212,11 @@
 % Optical adjustments for paragraph openings
 
 % First line with extra letter spacing
+%% FIX(#39): roman body text matches no tracking list, so the {20} WAS effective;
+%% \textls[20] preserves it (bare \lsstyle -> microtype fallback 50), no message.
 \newcommand{\spacedfirsline}[1]{%
   \begingroup
-  \lsstyle
-  \SetTracking{encoding={T1,OT1}}{20}%
-  #1\par
+  \textls[20]{#1}\par
   \endgroup
 }
 
