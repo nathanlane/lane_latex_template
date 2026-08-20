@@ -11,11 +11,11 @@ This template applies classic typographic principles to create scholarly article
 
 <!-- %% FIX: Keep active feature claims limited to locally verified support. -->
 - **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
-- **Spacing Quantum System** – all vertical spacing in multiples of a 13.2pt quantum (body leading measures 16.32pt; see `docs/typography/BASELINE-GRID-DECISION.md`)
+- **Spacing Quantum System** – most vertical spacing in multiples of a 13.2pt quantum; body leading measures 16.32pt (see `docs/typography/BASELINE-GRID-DECISION.md`)
 - **Optical Refinements** – Optional `llthochuli` module; when loaded, automatically applies custom Pagella kerning pairs and last-line length control (`\parfillskip`); also provides opt-in commands for selective ligature suppression and hanging punctuation at paragraph openings
 - **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
-- **Smart Citations** – biblatex with Chicago style, DOI/URL linking, and native natbib mode
+- **Smart Citations** – biblatex with author-year style, DOI/URL linking, and native natbib mode
 - **Floats** – Comprehensive figure/table system with booktabs, tabularx, and smart placement
 - **Lists** – Multiple environments with refined bullets and optimal spacing
 - **Accessibility** – WCAG 2.1 AA compliant colors with semantic emphasis commands
@@ -339,9 +339,9 @@ The style system is fully modularized:
 - `lltheadings` – Section heading styles
 - `lltlists` – List typography
 - `lltmicrotype` – Enhanced character protrusion, expansion, and spacing
-- `lltmathgridlocked` – Grid-locked equation spacing hooks
 
 **Optional modules**:
+- `lltmathgridlocked` – Grid-locked equation spacing hooks
 - `lltparagraphs` – Advanced paragraph formatting
 - `llthochuli` – Advanced optical adjustments
 
@@ -480,7 +480,7 @@ Adjust margins and spacing:
 
 ```latex
 \geometry{margin=2in}                      % Wider margins
-\setlength{\parindent}{2em}               # Larger indent
+\setlength{\parindent}{2em}               % Larger indent
 \usepackage{lltpaperstyle}
 ```
 
@@ -617,7 +617,7 @@ gridtable, landscapetable, documentAppendices
 
 Core packages:
 - `tgpagella` – TeX Gyre Pagella fonts
-- `newtxmath` – Mathematics
+- `newpxmath` – Mathematics
 - `biblatex` – Bibliography
 - `booktabs` – Professional tables
 - `cleveref` – Smart references
@@ -633,9 +633,9 @@ Repository release: `v2.1.0`.
 Bundled package version: `lltpaperstyle` reports `v2.0` in
 `paper/lltpaperstyle.sty`.
 
-As of v2.0.0 the repository release and package version move together (they
-previously diverged: repo `v0.1.0-beta` vs package `v1.7`). v2.0.0 is the
-breaking-change release following the adopter defect report.
+v2.0.0 was the breaking-change release following the adopter defect report
+(previously repo `v0.1.0-beta` vs package `v1.7`). Repository and package
+versions may diverge; see the files above for current values.
 
 ### Versioning 
 

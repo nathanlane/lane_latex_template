@@ -710,6 +710,9 @@ No indent, 6.6pt spacing.
 #### `\quartergridparagraphs`
 13.2pt indent, 3.3pt flexible spacing.
 
+#### `\thirdgridparagraphs`
+13.2pt indent, 4.4pt flexible spacing.
+
 ### Special Paragraph Commands
 
 #### `\noindentpar`
@@ -725,6 +728,15 @@ Centered paragraph block.
 \centeredpar{This paragraph is centered on the page.}
 ```
 
+#### `\compactpar` *(deprecated)*
+Pulls the following paragraph 3.3pt closer (subtracts one `\quartergridunit`).
+Retained for backward compatibility only; use `\vspace` directly in new
+documents.
+
+#### `\loosepars` *(deprecated)*
+Adds 3.3pt before the following paragraph (one `\quartergridunit`). Retained
+for backward compatibility only; use `\vspace` directly in new documents.
+
 #### `\quoteparagraph{text}` *(requires llthochuli module)*
 Paragraph with hanging opening quote.
 
@@ -735,18 +747,14 @@ Paragraph with hanging opening quote.
 
 ### Dialogue Commands
 
-#### Dialogue Commands *(not yet implemented)*
-
-The following dialogue commands are planned but not yet implemented:
-- `\dialogue{text}` - Standard dialogue formatting
-- `\rapidexchange{text}` - Quick dialogue with reduced indent  
-- `\speaker{name}{words}` - Dialogue with speaker name
+#### `\dialogue{text}`
+Standard dialogue with full indent. Wraps text in a new paragraph.
 
 ```latex
-% Future implementation:
-% \speaker{Alice}{I think we should reconsider.}
-% \speaker{Bob}{I agree completely.}
+\dialogue{``I think we should reconsider.''}
 ```
+
+Note: `\rapidexchange` and `\speaker` are not implemented.
 
 ## Color Commands
 

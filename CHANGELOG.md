@@ -4,6 +4,31 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Documentation pass over the entry docs (branch `docs/entry-docs-pass`, issue #41):
+
+- Cut `paper/README.md` from 1115 to roughly 690 lines, mostly duplication with
+  `README.md` and `API_REFERENCE.md`.
+- Corrected the documented font stack. `paper/README.md` claimed
+  `newtxmath[libertine]`, `scaled=0.93`, and Bembo; the packages actually loaded
+  are tgpagella, zi4 at `scaled=0.96`, newpxmath, and mathalfa
+  (`paper/modules/lltfonts.sty`).
+- Corrected microtype values (`1050/15/15`, not `1100/10/10`), the `\linespread`
+  figure (1.20), the citation style (`authoryear`, not Chicago), and the
+  bold-small-caps documentation, which described scaling and a `\balancedbsc`
+  command that do not exist.
+- Corrected two module classifications that contradicted the loader:
+  `lltmicrotype` is always loaded, `lltmathgridlocked` never is.
+- Removed a dead `examples/` reference from `INSTALL.md` and a
+  `docs/typography/` path that resolved relative to `paper/`.
+- Restored documentation for `\smartitalic`, `\smartbold`,
+  `\thirdgridparagraphs`, `\refinedbullet`, and `\refineddash`, which an
+  earlier draft of this pass had deleted while they remained implemented, and
+  marked `\compactpar` and `\loosepars` deprecated to match the code.
+- Narrowed claims to what is actually verified: tested TeX Live versions are
+  named individually, MiKTeX is marked unverified, and quantum spacing is
+  described as covering most rather than all vertical space, since
+  `paper/modules/lltheadings.sty` uses 18pt and 6pt.
+
 Cleanup nits (branch `chore/cleanup-nits-32`, issue #32):
 
 - Retargeted `AGENTS.md` §7's dead `CLAUDE.md` reference to `paper/STYLE_GUIDE.md`

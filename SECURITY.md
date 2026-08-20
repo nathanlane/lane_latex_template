@@ -30,8 +30,8 @@ If you accidentally commit sensitive data:
 
 | Version | Supported |
 |---------|-----------|
-| `v0.1.0-beta` repository release | Yes |
-| Earlier alpha snapshots | No |
+| `v2.1.0` | Yes |
+| Earlier releases | No |
 
 ## Security Best Practices
 
