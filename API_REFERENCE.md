@@ -728,11 +728,14 @@ Centered paragraph block.
 \centeredpar{This paragraph is centered on the page.}
 ```
 
-#### `\compactpar`
+#### `\compactpar` *(deprecated)*
 Pulls the following paragraph 3.3pt closer (subtracts one `\quartergridunit`).
+Retained for backward compatibility only; use `\vspace` directly in new
+documents.
 
-#### `\loosepars`
-Adds 3.3pt before the following paragraph (one `\quartergridunit`).
+#### `\loosepars` *(deprecated)*
+Adds 3.3pt before the following paragraph (one `\quartergridunit`). Retained
+for backward compatibility only; use `\vspace` directly in new documents.
 
 #### `\quoteparagraph{text}` *(requires llthochuli module)*
 Paragraph with hanging opening quote.
