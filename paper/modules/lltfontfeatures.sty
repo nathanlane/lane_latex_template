@@ -64,12 +64,12 @@
 % Title case small caps (maximum tracking for display)
 \providecommand{\titlesc}{}% In case already defined
 \renewcommand{\titlesc}[1]{%
-  {\scshape\SetTracking{encoding={T1,OT1}}{120}\lsstyle #1}%
+  {\scshape\lsstyle #1}%
 }
 
 % Header small caps (moderate tracking)
 \newcommand{\headersc}[1]{%
-  {\scshape\SetTracking{encoding={T1,OT1}}{60}\lsstyle #1}%
+  {\scshape\lsstyle #1}%
 }
 
 % Body text small caps (standard tracking - already defined as \textsc)
@@ -77,7 +77,7 @@
 
 % Tight small caps (minimal tracking for dense contexts)
 \newcommand{\tightsc}[1]{%
-  {\scshape\SetTracking{encoding={T1,OT1}}{15}\lsstyle #1}%
+  {\scshape\lsstyle #1}%
 }
 
 % ==============================================================================

@@ -297,14 +297,14 @@
 % ELEGANT SMALL CAPS COMMAND
 % Enhanced small caps with superior visibility and elegance
 \newcommand{\refinedsc}[1]{%
-  {\scshape\SetTracking{encoding={T1,OT1}}{80}\lsstyle #1}%  % Increased tracking for better visibility
+  {\scshape\lsstyle #1}%  % Small caps, context-tracked (lltmicrotype sc list)
 }
 \newcommand{\refinedscbold}[1]{%
-  {\bfseries\scshape\SetTracking{encoding={T1,OT1}}{100}\lsstyle #1}%  % Bold small caps with generous tracking
+  {\bfseries\scshape\lsstyle #1}%  % Bold small caps, context-tracked
 }
 % Title page small caps with refined tracking
 \newcommand{\titlesc}[1]{%
-  {\fontsize{11pt}{13pt}\selectfont\scshape\SetTracking{encoding={T1,OT1}}{50}\lsstyle #1}%  % Reduced to 5% for readability
+  {\fontsize{11pt}{13pt}\selectfont\scshape\lsstyle #1}%  % Small caps, context-tracked
 }
 
 % Compatibility aliases for backward compatibility
@@ -518,13 +518,13 @@
 % --- Level 3: Metadata Emphasis ---
 % For structured information: names, acronyms, technical terms
 \newcommand{\meta}[1]{%
-  {\scshape\SetTracking{encoding={T1,OT1}}{30}\lsstyle #1}%  % 3% tracking
+  {\scshape\lsstyle #1}%  % Small caps, context-tracked
 }
 
 % --- Level 4: Critical Emphasis ---
 % Reserved for warnings, critical instructions (use very rarely)
 \newcommand{\critical}[1]{%
-  {\bfseries\scshape\SetTracking{encoding={T1,OT1}}{45}\lsstyle #1}%  % 4.5% tracking
+  {\bfseries\scshape\lsstyle #1}%  % Bold small caps, context-tracked
 }
 
 % --- UNIFIED EMPHASIS SYSTEM ---
@@ -533,8 +533,8 @@
 % Usage: \semantic{style}{text} where style = term, person, acro, work
 \newcommand{\semantic}[2]{%
   \ifstrequal{#1}{term}{\textit{#2}}{%
-  \ifstrequal{#1}{person}{{\scshape\SetTracking{encoding={T1,OT1}}{25}\lsstyle #2}}{%
-  \ifstrequal{#1}{acro}{{\small\scshape\SetTracking{encoding={T1,OT1}}{40}\lsstyle #2}}{%
+  \ifstrequal{#1}{person}{{\scshape\lsstyle #2}}{%
+  \ifstrequal{#1}{acro}{{\small\scshape\lsstyle #2}}{%
   \ifstrequal{#1}{work}{\textit{#2}}{%
   \textit{#2}% Default to italic
   }}}}%
@@ -548,10 +548,10 @@
 %% FIX: Restore legacy first-use term command as an alias for semantic terms.
 \newcommand{\termintro}[1]{\semantic{term}{#1}}
 %% FIX: Restore legacy small-caps variant commands used by existing fixtures.
-\newcommand{\regsc}[1]{{\scshape\SetTracking{encoding={T1,OT1}}{30}\lsstyle #1}}
-\newcommand{\itsc}[1]{{\itshape\scshape\SetTracking{encoding={T1,OT1}}{20}\lsstyle #1}}
-\newcommand{\headsc}[1]{{\bfseries\scshape\SetTracking{encoding={T1,OT1}}{60}\lsstyle #1}}
-\newcommand{\inlinebsc}[1]{{\bfseries\scshape\SetTracking{encoding={T1,OT1}}{45}\lsstyle #1}}
+\newcommand{\regsc}[1]{{\scshape\lsstyle #1}}
+\newcommand{\itsc}[1]{{\itshape\scshape\lsstyle #1}}
+\newcommand{\headsc}[1]{{\bfseries\scshape\lsstyle #1}}
+\newcommand{\inlinebsc}[1]{{\bfseries\scshape\lsstyle #1}}
 
 % --- NESTED EMPHASIS HANDLERS ---
 
@@ -587,7 +587,7 @@
 
 % Author formatting with tracked small caps (using microtype)
 \newcommand{\authorname}[1]{%
-  {\large\scshape\SetTracking{encoding={T1,OT1}}{60}\lsstyle #1}%
+  {\large\scshape\lsstyle #1}%
 }
 
 % Affiliation with italics (oldstyle handled by fbb package)
@@ -597,8 +597,8 @@
 
 % Keywords with controlled spacing (using microtype)
 \newcommand{\keywords}[1]{%
-  \noindent{\bfseries\SetTracking{encoding={T1,OT1}}{10}\lsstyle Keywords:} 
-  {\itshape\SetTracking{encoding={T1,OT1}}{5}\lsstyle #1}%
+  \noindent{\bfseries\lsstyle Keywords:}
+  {\itshape\textls[5]{#1}}%
 }
 
 % --- Monospace Font Optimization (Hochuli's harmonious integration) ---
@@ -967,8 +967,7 @@
 %% FIX: Use providecommand so lltparagraphs preload remains compatible.
 \providecommand{\firstlinesc}[1]{%
   {\fontsize{11}{13.2}\selectfont% Maintain body size
-   \SetTracking{encoding={T1,OT1}}{30}\lsstyle% Subtle tracking
-   \textsc{#1}}%
+   \lsstyle\textsc{#1}}%  % Subtle tracking (context-tracked small caps)
 }
 
 % SECTION OPENING WITH SMALL CAPS FIRST LINE
@@ -1032,8 +1031,7 @@
 \newcommand{\abstractopening}{%
   \begin{center}
     {\fontsize{12}{13.2}\selectfont%
-     \SetTracking{encoding={T1,OT1}}{80}\lsstyle%
-     \textsc{abstract}}%
+     \lsstyle\textsc{abstract}}%  % Context-tracked small caps
   \end{center}
   \vspace{0.5\gridunit}% 0.5 grid units
 }
@@ -1594,7 +1592,7 @@
 % Main title command - elegant with refined tracking
 \newcommand{\articletitle}[1]{%
   {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{sectioncolor}%
-   \SetTracking{encoding={T1,OT1}}{20}\lsstyle #1\par}%  % Bold with moderate tracking, softened navy
+   \lsstyle #1\par}%  % Bold title, context-tracked (softened navy)
   \vspace{\titlespacemajor}%
 }
 
@@ -1602,7 +1600,7 @@
 % Usage: \articletitlefootnote{Title}{Footnote text}
 \newcommand{\articletitlefootnote}[2]{%
   {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{sectioncolor}%
-   \SetTracking{encoding={T1,OT1}}{20}\lsstyle #1\footnote{#2}\par}%  % Bold with moderate tracking
+   {\lsstyle #1}\footnote{#2}\par}%  % Bold title, context-tracked; footnote scoped out
   \vspace{\titlespacemajor}%
 }
 
@@ -1689,8 +1687,7 @@
     \noindent
     \makebox[11.5pt][l]{%
       \fontsize{6}{7}\selectfont  % Same as main
-      \SetTracking{encoding={T1,OT1}}{50}\lsstyle % Same as main
-      \@thefnmark
+      \textls[50]{\@thefnmark}% Same as main
     }%
     \fontsize{8.5}{10}\selectfont % Back to normal leading
     \spaceskip=0.35em plus 0.175em minus 0.14em  % Same as main
@@ -1717,8 +1714,7 @@
     \noindent
     \makebox[11.5pt][l]{%
       \fontsize{6}{7}\selectfont
-      \SetTracking{encoding={T1,OT1}}{50}\lsstyle % Regular tracking
-      \@thefnmark
+      \textls[50]{\@thefnmark}% Regular tracking
     }%
     \fontsize{8.5}{10}\selectfont % Back to 8.5pt/10pt
     \spaceskip=0.35em plus 0.175em minus 0.14em
@@ -1789,8 +1785,7 @@
   \makebox[11.5pt][l]{%
     % Foundry spec: 6pt superscript with tracking
     \fontsize{6}{7}\selectfont
-    \SetTracking{encoding={T1,OT1}}{50}\lsstyle % +50 units tracking
-    \@thefnmark
+    \textls[50]{\@thefnmark}% +50 units tracking
   }%
   %% FIX: \linespread{1.20} scales this 10pt leading to a real 12pt footnote
   %% baseline (measured); the "10pt" claim was wrong in three directions.
