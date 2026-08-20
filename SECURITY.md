@@ -26,6 +26,8 @@ If you accidentally commit sensitive data:
 
 ## Supported Versions
 
+<!-- %% FIX: Replace vague support language with explicit repository-release status. -->
+
 | Version | Supported |
 |---------|-----------|
 | `v2.1.0` | Yes |

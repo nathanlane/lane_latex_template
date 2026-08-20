@@ -312,10 +312,10 @@ The template uses a modular typography system organized in `paper/modules/`:
 - `lltfonts.sty` - Font configuration (Pagella, Inconsolata, newpxmath, mathalfa)
 - `lltheadings.sty` - Section heading styles with color hierarchy
 - `lltlists.sty` - List typography with refined bullets (6.6pt item spacing)
+- `lltmicrotype.sty` - Enhanced character protrusion (factor 1050, stretch/shrink 15)
 
 ### Optional Enhancement Modules
 - `lltparagraphs.sty` - Advanced paragraph formatting, quotations, dialogue
-- `lltmicrotype.sty` - Enhanced character protrusion (up to 1400 units)
 - `lltheadingsgridlocked.sty` - Stricter grid alignment (±0.125 vs ±0.25 units)
 - `lltmathgridlocked.sty` - Minimal math flexibility (±0.0625 units)
 - `llthochuli.sty` - Advanced optical adjustments

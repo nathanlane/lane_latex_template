@@ -21,7 +21,7 @@ For quick start, basic usage, and compilation instructions, see [`../README.md`]
 
 ## Modular Architecture
 
-**Since v2.0**: The package is structured as independent modules for better maintainability and customization.
+**Since v1.5**: The package is structured as independent modules for better maintainability and customization.
 
 ### Module Structure
 
@@ -95,6 +95,24 @@ Example:
 You can customise markers or spacing—for instance, switch the top-level bullet to a dash:
 ```latex
 \setlist[itemize,1]{label=\dashmark}
+```
+
+Bullet symbol commands:
+```latex
+\refinedbullet    % 75% scaled bullet, subtlegray
+\refineddash      % En-dash with micro-kern, subtlegray
+```
+
+#### Paragraph Spacing Commands
+
+Paragraph style switchers (all use `\gridunit` = 13.2pt for indent):
+
+```latex
+\classicalparagraphs      % 13.2pt indent, 0pt parskip (default)
+\modernparagraphs         % 0pt indent, 6.6pt parskip
+\hybridparagraphs         % 9.9pt indent, 3.3pt parskip
+\quartergridparagraphs    % 13.2pt indent, 3.3pt parskip
+\thirdgridparagraphs      % 13.2pt indent, 4.4pt parskip
 ```
 
 ## Typography Framework
@@ -179,13 +197,12 @@ body baseline measures 16.32pt — see `../docs/typography/BASELINE-GRID-DECISIO
 Following fontaxes principles with weight compensation:
 
 ```latex
-% General purpose bold small caps
-\bsc{Text}                    % 0.97× scaling for weight balance
+% General purpose bold small caps (alias for \critical)
+\bsc{Text}                    % Bold small caps, 4.5% tracking
 
 % Contextual variants
-\headsc{Heading}              % Large with 5% letterspacing
-\inlinebsc{Inline}            % Footnote-sized for inline use
-\balancedbsc{Balanced}        % Color-compensated for headings
+\headsc{Heading}              % Bold small caps, 6% letterspacing
+\inlinebsc{Inline}            % Bold small caps, 4.5% tracking (no size change)
 ```
 
 ### Professional Color System
@@ -358,6 +375,10 @@ Sophisticated emphasis system optimized for TeX Gyre Pagella:
 
 % Smart nesting
 \emph{outer \emph{inner} outer}  % → italic roman italic
+
+% Context-aware nesting handlers
+\smartitalic{text}               % Italic in roman context, roman in italic context
+\smartbold{text}                 % Bold in regular context, bold-italic in bold context
 ```
 
 ### Professional Footnote System
@@ -750,18 +771,18 @@ For troubleshooting, see [`../TROUBLESHOOTING.md`](../TROUBLESHOOTING.md).
   tracking=true,
   kerning=true,
   spacing=true,
-  factor=1100,                     % Enhanced character protrusion
-  stretch=10,                      % Conservative word spacing
-  shrink=10
+  factor=1050,                     % Character protrusion
+  stretch=15,                      % Word spacing flexibility
+  shrink=15
 ]{microtype}
 ```
 
 ### Baseline Grid Mathematics
 
-The body baseline is **16.32pt** (11pt body × `\linespread{1.4836...}`, giving a
-leading of 16.32pt). The **13.2pt spacing quantum** (`\gridunit`) is a separate
-unit used for vertical spacing throughout the layout — it is not the baseline
-pitch. See `docs/typography/BASELINE-GRID-DECISION.md` for the derivation.
+The body baseline is **16.32pt** (`\linespread{1.20}` scales the class's 13.6pt
+baseline: 13.6 × 1.20 = 16.32pt). The **13.2pt spacing quantum** (`\gridunit`) is
+a separate unit used for vertical spacing throughout the layout — it is not the
+baseline pitch. See `../docs/typography/BASELINE-GRID-DECISION.md` for the derivation.
 
 ```latex
 Body baseline: 16.32pt  (document leading)
@@ -793,7 +814,7 @@ Quarter quantum (\quartergridunit): 3.3pt
 
 - **Compilation Speed**: Two-pass system requires `pdflatex` twice for appendix detection
 - **Memory Usage**: Microtype and font loading increase memory requirements
-- **Compatibility**: Verified with TeX Live 2022+ and MiKTeX; see `README.md` for tested environments
+- **Compatibility**: Tested with TeX Live 2022+ (see [`../README.md`](../README.md) for verified environments); MiKTeX not verified
 
 ---
 
