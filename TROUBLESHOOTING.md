@@ -166,14 +166,15 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
 
 1. Use grid visualization:
    ```latex
-   \usepackage{paper/gridoverlay}
+   \usepackage{lltgridoverlay}
    \showgrid
    ```
+   Or load the style with `[grid]`: `\usepackage[grid]{lltpaperstyle}`.
 
 2. Use grid-locked modules for stricter alignment:
    ```latex
-   \usepackage{paper/modules/headings-gridlocked}
-   \usepackage{paper/modules/mathematics-gridlocked}
+   \usepackage{lltheadingsgridlocked}
+   \usepackage{lltmathgridlocked}
    ```
 
 3. Manual adjustment with grid units:
@@ -322,13 +323,7 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
 
 ### Cleveref Conflicts
 
-**Solution**: Load cleveref last:
-```latex
-\usepackage{lltpaperstyle}
-% ... other packages ...
-\usepackage{cleveref}  % Must be near end
-\usepackage{hyperref}  % Must be last
-```
+`lltpaperstyle` loads `hyperref` before `cleveref` automatically (the required order). If you encounter conflicts from other packages, load those packages before `\usepackage{lltpaperstyle}` to ensure hyperref and cleveref load last.
 
 ## Testing and Validation
 
