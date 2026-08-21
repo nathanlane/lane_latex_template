@@ -217,10 +217,12 @@
 
 % FIRST LINE SMALL CAPS
 %% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+%% FIX(#39): explicit \fontsize{11} matches no named-size sc list, so the {30}
+%% WAS effective; \textls[30] preserves it (bare \lsstyle -> microtype fallback
+%% 50). Mirrors the twin \firstlinesc definition in lltpaperstyle.sty.
 \providecommand{\firstlinesc}[1]{%
   {\fontsize{11}{13.2}\selectfont%
-   \SetTracking{encoding={T1,OT1}}{30}\lsstyle%
-   \textsc{#1}}%
+   \textls[30]{\textsc{#1}}}%
 }
 
 % SECTION OPENING WITH SMALL CAPS

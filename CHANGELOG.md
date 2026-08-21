@@ -4,6 +4,30 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Stopped the microtype tracking-list churn (branch `fix/tracking-lists-39`, issue #39):
+
+- `main.log` tracking-override messages: 40 -> 0. Every per-invocation
+  `\SetTracking` in an executable macro body is now `\textls`, which states the
+  amount at the point of use instead of declaring a global list. The nine
+  package-load declarations in `lltmicrotype.sty` are intentional and unchanged.
+- The original plan for this issue — declaring named lists at load and selecting
+  them per macro — is not possible: microtype provides `name` and `load` for
+  declaring and inheriting lists, but no point-of-use selection.
+- Most per-site amounts turned out to be inert, clobbered by `\SetTracking`'s
+  global scope, and were dropped. Four contexts where the amount really did
+  apply keep it explicitly: `\firstlinesc` and `lltparagraphs`' opening (exact
+  11pt matches no named-size list), and the three OT1 sites in
+  `lltfontfeatures.sty` (every tracking list declares `T1` only).
+- Fixed a tracking leak in `\articletitlefootnote`: `\lsstyle` ran unscoped and
+  bled past the title into its `\footnote`. It is now `{\lsstyle #1}\footnote{#2}`.
+  This is the one intended rendering change.
+
+Verified by per-page raster comparison at 150dpi rather than text extraction,
+which cannot see reflow: 39 of 40 pages of `main.pdf` are byte-identical, and
+page 1 differs only in the title and thanks-footnote bands. Because `main.tex`
+does not exercise `\firstlinesc`, `tests/fixtures/opening-test.tex` was rendered
+and compared as well — all 5 pages identical.
+
 Documentation pass over the entry docs (branch `docs/entry-docs-pass`, issue #41):
 
 - Cut `paper/README.md` from 1115 to roughly 690 lines, mostly duplication with
