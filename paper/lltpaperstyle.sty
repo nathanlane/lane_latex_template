@@ -1058,10 +1058,10 @@
 
 % ACADEMIC ABSTRACT OPENING
 % Professional treatment for abstract sections
-%% FIX(#39): explicit \fontsize{12} matches no named-size sc list, so {80} was
-%% effective; \textls[80] reproduces the original byte-for-byte (verified: the
-%% centered word's x-position is identical to the parent's, whereas bare \lsstyle
-%% re-centers it by 1.1pt). Bare would fall back to microtype's 50.
+%% FIX(#39): \fontsize{12} is exactly \large in this 11pt class, so it DOES match
+%% the display sc list at lltmicrotype.sty:90, which also specifies 80. The explicit
+%% \textls[80] is therefore render-identical either way; it is kept because it
+%% states the amount at the point of use and does not declare a global list.
 \newcommand{\abstractopening}{%
   \begin{center}
     {\fontsize{12}{13.2}\selectfont%

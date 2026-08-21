@@ -212,11 +212,14 @@
 % Optical adjustments for paragraph openings
 
 % First line with extra letter spacing
-%% FIX(#39): roman body text matches no tracking list, so the {20} WAS effective;
-%% \textls[20] preserves it (bare \lsstyle -> microtype fallback 50), no message.
+%% FIX(#39): the parent ordered \lsstyle BEFORE \SetTracking{...}{20}. \lsstyle
+%% selects the tracked font immediately, while \SetTracking only registers a list
+%% for later selections, so the {20} never reached this text -- it rendered at
+%% microtype's fallback. Bare \textls reproduces that; \textls[20] would force 20
+%% and change typography.
 \newcommand{\spacedfirsline}[1]{%
   \begingroup
-  \textls[20]{#1}\par
+  \textls{#1}\par
   \endgroup
 }
 
