@@ -4,6 +4,29 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Added LPPL 1.3c headers to all 16 package files (issue #53):
+
+- Every file in `lanepaper/` now carries the license, the `maintained`
+  maintenance status, and the Current Maintainer. Previously 0 of 16 did, which
+  is a CTAN review blocker: `LICENSE` at the repository root is not sufficient.
+- The header text comes from `licenses/LICENSE.txt`, which already named
+  Nathan Lane as copyright holder and Current Maintainer. Two things changed
+  there: the year is now 2025-2026, and "This work consists of the file .sty
+  files and content of this repo" became "the files in `lanepaper/`". After
+  #47 that line matters — it defines the licensed Work, and `demo/`, `docs/`
+  and `tests/` are not part of what ships.
+- `tests/test_infrastructure.py` asserts every `lanepaper/*.sty` carries the
+  header, so a new module cannot skip it. Confirmed the guard fails when a
+  header is removed.
+- Fixed the banner comment in all 16 files: each named a pre-2025 filename
+  (`PAPERSTYLE.STY`, `COLORS.STY`, `MICROTYPE-CONFIG.STY`). These are
+  uppercase, so the #46 rename sweep did not reach them.
+- Replaced three `% Author: Academic Paper Template Project` placeholders,
+  which contradicted the project's own license file.
+
+Headers are comments: `main.pdf` is unchanged, byte for byte, against the
+pre-rename baseline. `pytest -q` 32 passed; `tests/run-tests.sh` 115 passed.
+
 Moved to the package-first layout (branch `refactor/rename-lanepaper-46`,
 issue #47, ADR-0001):
 

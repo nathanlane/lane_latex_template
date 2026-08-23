@@ -152,3 +152,21 @@ def test_math_spacing_check_ignores_unspaced_subscripts():
         "\n"
     )
     assert not run_math_spacing_check(body)
+
+
+def test_every_package_sty_carries_an_lppl_header():
+    # CTAN review requires a per-file license statement; LICENSE at the repo
+    # root is not sufficient. A new module must not be able to skip this.
+    required = (
+        "LaTeX Project Public License",
+        "maintenance status `maintained'",
+        "The Current Maintainer of this work is Nathan Lane.",
+    )
+    sty_files = sorted((ROOT / "lanepaper").glob("*.sty"))
+    assert sty_files, "no .sty files found in lanepaper/"
+    offenders = []
+    for path in sty_files:
+        head = path.read_text(encoding="utf-8")[:1200]
+        if not all(phrase in head for phrase in required):
+            offenders.append(path.name)
+    assert offenders == [], f"missing or incomplete LPPL header: {offenders}"
