@@ -4,6 +4,24 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Deleted the stale `.dtx`/`.ins` scaffold (branch `chore/delete-dtx-scaffold-49`,
+issue #49):
+
+- Removed `paper/lltpaperstyle.dtx`, `paper/lltpaperstyle.ins`, and
+  `paper/README-DTX.md`. The `.ins` declared
+  `\generate{\file{lltpaperstyle.sty}{\from{lltpaperstyle.dtx}{package}}}`, but the
+  `.dtx` was a 252-line v1.6 scaffold from 2025-07-09 against a shipping `.sty`
+  of 3206 lines at v2.0, and it ended with "the rest of the implementation would
+  continue here". Running the documented docstrip workflow would have replaced
+  the package with a stub.
+- Nothing built from them: no reference in `Makefile`, `.latexmkrc`,
+  `compile.sh`, the shell harnesses, the pytest suite, or CI.
+- CTAN accepts plain `.sty` plus README and documentation; per ADR-0002 the
+  release path is `l3build ctan`, not docstrip.
+- Surviving `.dtx` mentions are deliberate: LPPL boilerplate in `LICENSE`,
+  history in this file, and the dated review records under `docs/`. The
+  contradictions in `docs/PACKAGE_ROADMAP.md` belong to issue #52.
+
 Stopped the microtype tracking-list churn (branch `fix/tracking-lists-39`, issue #39):
 
 - `main.log` tracking-override messages: 40 -> 0. Every per-invocation
