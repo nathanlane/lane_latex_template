@@ -1,43 +1,45 @@
-# LLT Style Modules
+# lanepaper Style Modules
 
-This directory contains the modular components of the lltpaperstyle LaTeX package. Each module provides specific functionality; standalone use is supported where documented dependencies are present.
+This directory contains the modular components of the lanepaper LaTeX package. Each module provides specific functionality; standalone use is supported where documented dependencies are present.
 
 As of this compatibility lane, the modules that declare standalone entry points are
 supported as independent loads; each module in this list now states required local
 dependencies and compatibility mode is validated through harness probes.
 
-> **Note**: As of July 2025, all modules have been renamed following the Lane LaTeX Template (LLT) naming convention. Module files now use the `llt` prefix (e.g., `lltcolors.sty` instead of `colors.sty`).
+> **Note**: Modules are named `lnp` + role (e.g. `lnpcolors.sty`) and are loaded
+> by package name, never by path. See
+> [`docs/PACKAGE_NAMING_CONVENTION.md`](../../docs/PACKAGE_NAMING_CONVENTION.md).
 
 ## Module Overview
 (The Lists module is now fully active as of v1.6-alpha.)
 
 | Module | Purpose | Dependencies |
 |--------|---------|--------------|
-| `lltfonts.sty` | Font configuration and math typography | fontenc, tgpagella, zi4, newpxmath |
-| `lltcolors.sty` | Professional color system | xcolor |
-| `lltdimensions.sty` | Page geometry and grid system | geometry |
-| `lltheadings.sty` | Section and heading formatting | titlesec, lltcolors, lltdimensions |
-| `lltlists.sty` | List typography and environments | enumitem, etoolbox, graphicx, lltcolors, lltdimensions |
-| `lltmathgridlocked.sty` | Grid-aware display-math hooks | etoolbox, lltdimensions |
-| `lltparagraphs.sty` | Paragraph and quote behavior | lettrine, etoolbox, lltcolors, lltdimensions |
-| `lltfontfallbacks.sty` | Font availability fallback diagnostics | amssymb |
-| `lltfontfeatures.sty` | Font feature helpers | textcomp |
+| `lnpfonts.sty` | Font configuration and math typography | fontenc, tgpagella, zi4, newpxmath |
+| `lnpcolors.sty` | Professional color system | xcolor |
+| `lnpdimensions.sty` | Page geometry and grid system | geometry |
+| `lnpheadings.sty` | Section and heading formatting | titlesec, lnpcolors, lnpdimensions |
+| `lnplists.sty` | List typography and environments | enumitem, etoolbox, graphicx, lnpcolors, lnpdimensions |
+| `lnpmathgridlocked.sty` | Grid-aware display-math hooks | etoolbox, lnpdimensions |
+| `lnpparagraphs.sty` | Paragraph and quote behavior | lettrine, etoolbox, lnpcolors, lnpdimensions |
+| `lnpfontfallbacks.sty` | Font availability fallback diagnostics | amssymb |
+| `lnpfontfeatures.sty` | Font feature helpers | textcomp |
 
 ## Quick Start
 
 ### Using All Modules (Recommended)
 
 ```latex
-\usepackage{lltpaperstyle}
+\usepackage{lanepaper}
 ```
 
 ### Using Individual Modules
 
 ```latex
 % Just the color system
-\RequirePackage{lltcolors}
+\RequirePackage{lnpcolors}
 % Just the list styles
-\RequirePackage{lltlists}
+\RequirePackage{lnplists}
 
 % Change first-level bullet to an en-dash
 \setlist[itemize,1]{label=\dashmark}
@@ -45,11 +47,11 @@ dependencies and compatibility mode is validated through harness probes.
 
 ## Module Documentation
 
-- [Fonts Module](fonts.md) - Typography and font configuration (`lltfonts.sty`)
-- [Colors Module](colors.md) - Color definitions and usage (`lltcolors.sty`)
-- [Dimensions Module](dimensions.md) - Page layout and spacing (`lltdimensions.sty`)
-- [Headings Module](headings.md) - Section formatting (`lltheadings.sty`)
-- [Lists Module](lists.md) - List environments and styles (`lltlists.sty`)
+- [Fonts Module](fonts.md) - Typography and font configuration (`lnpfonts.sty`)
+- [Colors Module](colors.md) - Color definitions and usage (`lnpcolors.sty`)
+- [Dimensions Module](dimensions.md) - Page layout and spacing (`lnpdimensions.sty`)
+- [Headings Module](headings.md) - Section formatting (`lnpheadings.sty`)
+- [Lists Module](lists.md) - List environments and styles (`lnplists.sty`)
 
 ## Design Principles
 

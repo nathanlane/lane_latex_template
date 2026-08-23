@@ -5,7 +5,7 @@
 % Provides graceful degradation with appropriate warnings
 % ==============================================================================
 
-\ProvidesPackage{lltfontfallbacks}[2026/08/12 v1.1 Font Fallback System]
+\ProvidesPackage{lnpfontfallbacks}[2026/08/12 v1.1 Font Fallback System]
 
 % Track which fonts are successfully loaded
 \newif\ifpagellaloaded
@@ -23,7 +23,6 @@
 % ==============================================================================
 
 % Check if a font family is available
-\makeatletter
 \newcommand{\checkfontfamily}[1]{%
   \begingroup
     \font\testfont="#1" at 10pt
@@ -34,14 +33,12 @@
     \fi
   \endgroup
 }
-\makeatother
 
 % ==============================================================================
 % MAIN SERIF FONT FALLBACK CHAIN
 % ==============================================================================
 % Pagella → Palatino → Times → Computer Modern
 
-\makeatletter
 \@ifpackageloaded{tgpagella}{%
   % Pagella loaded successfully
   \typeout{Font system: TeX Gyre Pagella loaded successfully}%
@@ -72,14 +69,12 @@
     }%
   }%
 }
-\makeatother
 
 % ==============================================================================
 % MONOSPACE FONT FALLBACK CHAIN
 % ==============================================================================
 % Inconsolata → Courier → Computer Modern Typewriter
 
-\makeatletter
 \@ifpackageloaded{zi4}{%
   % Inconsolata loaded successfully
   \typeout{Font system: Inconsolata loaded successfully}%
@@ -103,14 +98,12 @@
     }%
   }%
 }
-\makeatother
 
 % ==============================================================================
 % MATH FONT FALLBACK
 % ==============================================================================
 % newpxmath → mathpazo → default
 
-\makeatletter
 \@ifpackageloaded{newpxmath}{%
   % newpxmath loaded successfully
   \typeout{Font system: newpxmath loaded successfully}%
@@ -134,7 +127,6 @@
     }%
   }%
 }
-\makeatother
 
 % ==============================================================================
 % SYMBOL FONT FALLBACKS
@@ -159,7 +151,6 @@
 % ==============================================================================
 % If true small caps aren't available, provide fake small caps
 
-\makeatletter
 \newcommand{\checksmallcaps}{%
   \ifpagellaloaded
     % Pagella has true small caps
@@ -174,7 +165,6 @@
     }%
   \fi
 }
-\makeatother
 
 % Check at begin document
 \AtBeginDocument{\checksmallcaps}

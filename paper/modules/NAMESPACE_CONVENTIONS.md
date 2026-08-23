@@ -4,23 +4,23 @@ This document outlines the namespace conventions used in the paper template modu
 
 ## Overview
 
-All internal package variables and commands should use the `\paper@` prefix to create a protected namespace. This follows standard LaTeX package development best practices.
+All internal package variables and commands should use the `\lnp@` prefix to create a protected namespace. This follows standard LaTeX package development best practices.
 
 ## Naming Conventions
 
-### Internal Variables (Use `\paper@` prefix)
+### Internal Variables (Use `\lnp@` prefix)
 
 ```latex
 % Lengths
-\newlength{\paper@listhalfbaseline}    % Good: namespaced
+\newlength{\lnp@listhalfbaseline}    % Good: namespaced
 \newlength{\listhalfbaseline}           % Bad: could conflict
 
 % Commands  
-\newcommand{\paper@internalhelper}{}    % Good: namespaced
+\newcommand{\lnp@internalhelper}{}    % Good: namespaced
 \newcommand{\internalhelper}{}          % Bad: too generic
 
 % Counters
-\newcounter{paper@tempcount}            % Good: namespaced
+\newcounter{lnp@tempcount}            % Good: namespaced
 \newcounter{tempcount}                  % Bad: could conflict
 ```
 
@@ -39,48 +39,48 @@ When updating existing packages, provide temporary aliases:
 
 ```latex
 % Internal definition
-\newlength{\paper@listhalfbaseline}
+\newlength{\lnp@listhalfbaseline}
 
 % Compatibility alias (mark as deprecated)
-\let\listhalfbaseline\paper@listhalfbaseline  % Will be removed in v2.0
+\let\listhalfbaseline\lnp@listhalfbaseline  % Will be removed in v2.0
 ```
 
-## Current Status
+## Why `\lnp@`
 
-### ✅ Completed
-- **lists.sty**: All internal lengths now use `\paper@` prefix
-  - `\paper@listhalfbaseline`, `\paper@listquarterbaseline`, etc.
-  - Compatibility aliases provided for backward compatibility
+`lnp` abbreviates `lanepaper`, and the same abbreviation names both the internal
+macros and the module files (`lnpcolors.sty`, `lnpfonts.sty`). It is deliberately
+short because that is how CTAN packages do it: `\MT@` for microtype, `\Hy@` for
+hyperref, `\Gm@` for geometry, `\ttl@` for titlesec. `biblatex` is the closest
+match to this package's layout — CTAN name `biblatex`, shipped files `blx-*.sty`,
+internal macros `\blx@`.
 
-### 🔄 To Be Updated
+`\lanepaper@` was rejected as too long for something that appears on every
+internal identifier. `\lane@` was rejected because it drops half the package
+name. `lnp` is less immediately readable than either, and that cost was accepted
+deliberately in exchange for matching the convention a CTAN reviewer expects.
+See ADR-0001.
 
-The following files contain variables that could benefit from namespacing:
+## Current state
 
-#### dimensions.sty
-- Current: `\gridunit`, `\halfgridunit`, `\quartergridunit`, etc.
-- Proposed: `\paper@gridunit`, `\paper@halfgridunit`, etc.
-- Reason: While relatively specific, "gridunit" could be used by other grid-based packages
+Every internal identifier uses `\lnp@`. The prefixes it replaced — `\paper@`,
+`\llt@`, `\lltpaperstyle@`, `\lltfontfeatures@`, `\paperstyle@` — are retired,
+and `tests/test_infrastructure.py` fails if any reappears in an active source
+file.
 
-#### colors.sty  
-- Current: Direct color definitions are fine (they use xcolor's namespace)
-- Commands like `\maincolor`, `\secondarycolor` could potentially conflict
-- Proposed: Keep as-is (low risk, descriptive names)
+Public commands stay prefix-free per the rule above: `\tightlists`,
+`\spacioussections`, `\centeredpar`, `\textapprox`. The exception is the
+package's own diagnostic entry points, `\lanepaperdiagnostics` and
+`\lanepaperinfo`, which carry the package name because that is what a user types.
 
-#### paragraphs.sty
-- Current: `\noindentpar`, `\forceindent`, `\centeredpar`, `\dialogue`
-- Assessment: These are user-facing commands with descriptive names, low conflict risk
-- Recommendation: Keep as-is
-
-#### headings.sty
-- Current: Style commands like `\spacioussections`, `\moderatesections`
-- Assessment: User-facing commands with specific names
-- Recommendation: Keep as-is
+Known gap: prefix-free public names are safe inside one repository but weaker in
+a shared texmf tree, where `\centeredpar` or `\dialogue` could collide with
+another package. Worth revisiting before CTAN submission.
 
 ## Implementation Guidelines
 
 ### When to Use Namespacing
 
-Use the `\paper@` prefix for:
+Use the `\lnp@` prefix for:
 1. **Internal lengths and dimensions** that control layout
 2. **Temporary variables** used in calculations
 3. **Helper commands** not intended for user access
@@ -100,28 +100,28 @@ Don't use prefixes for:
 1. **Always use `\makeatletter`/`\makeatother`** when defining `@` commands:
    ```latex
    \makeatletter
-   \newlength{\paper@internallength}
+   \newlength{\lnp@internallength}
    \makeatother
    ```
 
 2. **Document deprecated aliases**:
    ```latex
    % Compatibility alias - DEPRECATED, will be removed in v2.0
-   \let\oldname\paper@newname
+   \let\oldname\lnp@newname
    ```
 
 3. **Use descriptive names** even with namespacing:
    ```latex
-   \newlength{\paper@listitemspacing}    % Good: clear purpose
-   \newlength{\paper@temp}                % Bad: too generic
+   \newlength{\lnp@listitemspacing}    % Good: clear purpose
+   \newlength{\lnp@temp}                % Bad: too generic
    ```
 
 4. **Group related definitions**:
    ```latex
    % List spacing parameters
-   \newlength{\paper@listhalfbaseline}
-   \newlength{\paper@listquarterbaseline}
-   \newlength{\paper@listbaselineskip}
+   \newlength{\lnp@listhalfbaseline}
+   \newlength{\lnp@listquarterbaseline}
+   \newlength{\lnp@listbaselineskip}
    ```
 
 ## Migration Strategy

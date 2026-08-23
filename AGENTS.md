@@ -55,7 +55,7 @@ If **any** command fails, fix the cause instead of suppressing it.
 
 ```text
 /                 – root; this file, README.md, main.tex
-/paper/           – LaTeX style + modules (lltpaperstyle.sty, etc.)
+/paper/           – LaTeX style + modules (lanepaper.sty, etc.)
 /src/             – code (python/, sh/)
 /data/            – datasets (raw/, processed/)
 /figures/         – generated graphics
@@ -70,7 +70,7 @@ Keep extra folders to an absolute minimum.  Empty dirs should contain a `.gitkee
 1. In your document preamble load the template style, then register the bibliography:
 
    ```latex
-   \usepackage{lltpaperstyle} % master template; auto-loads default biblatex
+   \usepackage{lanepaper} % master template; auto-loads default biblatex
    \addbibresource{references.bib}
    ```
 
@@ -80,7 +80,7 @@ Keep extra folders to an absolute minimum.  Empty dirs should contain a `.gitkee
    ```latex
    \usepackage[backend=biber,style=authoryear]{biblatex}
    \addbibresource{references.bib}
-   \usepackage[nobiblatex]{lltpaperstyle}
+   \usepackage[nobiblatex]{lanepaper}
    ```
 2. Compile with `latexmk -pdf -synctex=1 main.tex`.
 3. Obey Chicago author-date citation style (`\textcite`, `\autocite`).

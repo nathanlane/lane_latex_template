@@ -1,6 +1,6 @@
 # Lane LaTeX Template API Reference
 
-Complete reference for all commands, environments, and options provided by the `lltpaperstyle` package.
+Complete reference for all commands, environments, and options provided by the `lanepaper` package.
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ Complete reference for all commands, environments, and options provided by the `
 ### Loading the Package
 
 ```latex
-\usepackage[options]{lltpaperstyle}
+\usepackage[options]{lanepaper}
 ```
 
 ### Available Options
@@ -45,16 +45,16 @@ Complete reference for all commands, environments, and options provided by the `
 
 ```latex
 % Standard usage
-\usepackage{lltpaperstyle}
+\usepackage{lanepaper}
 
 % Show grid for debugging
-\usepackage[grid]{lltpaperstyle}
+\usepackage[grid]{lanepaper}
 
 % Minimal mode for compatibility
-\usepackage[minimal]{lltpaperstyle}
+\usepackage[minimal]{lanepaper}
 
 % Multiple options
-\usepackage[draft,grid]{lltpaperstyle}
+\usepackage[draft,grid]{lanepaper}
 ```
 
 ## Title Page Commands
@@ -737,11 +737,11 @@ documents.
 Adds 3.3pt before the following paragraph (one `\quartergridunit`). Retained
 for backward compatibility only; use `\vspace` directly in new documents.
 
-#### `\quoteparagraph{text}` *(requires llthochuli module)*
+#### `\quoteparagraph{text}` *(requires lnphochuli module)*
 Paragraph with hanging opening quote.
 
 ```latex
-% Requires: \usepackage{paper/modules/llthochuli}
+% Requires: \usepackage{paper/modules/lnphochuli}
 \quoteparagraph{"When we examine the evidence..."}
 ```
 
@@ -872,4 +872,4 @@ Important point.\sidenote{This appears in the margin.}
 
 ---
 
-This API reference covers all major commands and environments provided by the `lltpaperstyle` package. For additional details, see the package documentation and example files.
+This API reference covers all major commands and environments provided by the `lanepaper` package. For additional details, see the package documentation and example files.

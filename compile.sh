@@ -2,7 +2,7 @@
 # Simple compilation script for Lane LaTeX Template
 # This ensures proper TEXINPUTS setting for the new package structure
 
-# Set TEXINPUTS to find the llt* packages
+# Set TEXINPUTS to find the lnp* packages
 export TEXINPUTS=".:./paper:./paper/modules:$TEXINPUTS"
 
 # Check if pdflatex is available
@@ -12,7 +12,7 @@ if ! command -v pdflatex &> /dev/null; then
 fi
 
 # Compile the document
-echo "Compiling main.tex with TEXINPUTS set for llt packages..."
+echo "Compiling main.tex with TEXINPUTS set for lnp packages..."
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 
 # Check if compilation was successful

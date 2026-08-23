@@ -5,25 +5,21 @@
 % and special paragraph treatments following classical typography principles
 % ==============================================================================
 
-\ProvidesPackage{lltparagraphs}[2026/08/12 v1.1 Paragraph Typography]
+\ProvidesPackage{lnpparagraphs}[2026/08/12 v1.1 Paragraph Typography]
 
 % Dependencies
 \RequirePackage{lettrine}  % For drop caps
 \RequirePackage{etoolbox}  % For environment hooks
 
 % Ensure dimensions are loaded for grid units
-\makeatletter
-\@ifpackageloaded{lltdimensions}{}{%
-  \RequirePackage{lltdimensions}%
+\@ifpackageloaded{lnpdimensions}{}{%
+  \RequirePackage{lnpdimensions}%
 }
-\makeatother
 
 % Ensure colors are loaded
-\makeatletter
-\@ifpackageloaded{lltcolors}{}{%
-  \RequirePackage{lltcolors}%
+\@ifpackageloaded{lnpcolors}{}{%
+  \RequirePackage{lnpcolors}%
 }
-\makeatother
 
 % ==============================================================================
 % CLASSICAL PARAGRAPH INDENTATION SYSTEM
@@ -32,19 +28,17 @@
 % First paragraphs after headings, lists, and breaks remain flush left
 
 % Classical typography: first paragraphs after headings are flush left
-\makeatletter
 \let\@afterindentfalse\@afterindenttrue
 \@afterindentfalse  % Flush left first paragraphs after headings
-\makeatother
 
 % Custom commands for controlling indentation
-%% FIX: Use providecommand so preload order with \texttt{lltpaperstyle} stays
+%% FIX: Use providecommand so preload order with \texttt{lanepaper} stays
 %% compatible when the package redefines these commands.
 \providecommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left
 \providecommand{\forceindent}{\hspace{\parindent}}        % Force indentation
 
 % Centered paragraph
-%% FIX: Use providecommand so documented preloading into lltpaperstyle does not
+%% FIX: Use providecommand so documented preloading into lanepaper does not
 %% fail on duplicate helper definitions.
 \providecommand{\centeredpar}[1]{%
   {\centering\noindent#1\par}%
@@ -58,7 +52,6 @@
 % ==============================================================================
 % For quotations at chapter/section beginnings
 
-\makeatletter
 \newenvironment{epigraph}{%
   \vspace{\gridunit}%                       % 1 grid unit before
   \begin{flushright}%
@@ -72,7 +65,6 @@
   \vspace{\gridunit}%                       % 1 grid unit after
   \@afterindentfalse%                       % No indent after epigraph
 }
-\makeatother
 
 % ==============================================================================
 % PROFESSIONAL BLOCK QUOTATION SYSTEM
@@ -86,7 +78,6 @@
 \definecolor{quotegray}{gray}{0.15}  % 15% gray matches paragraph headings
 
 % STANDARD BLOCK QUOTE
-\makeatletter
 %% FIX: Use \list with \endlist so quote environments close correctly.
 \renewenvironment{quote}{%
   \vspace{\gridunit}%                       % 1 grid unit before
@@ -107,10 +98,8 @@
   \vspace{\gridunit}%                      % 1 grid unit after
   \@afterindentfalse%                      % No indent after quote
 }
-\makeatother
 
 % EXTENDED QUOTATION
-\makeatletter
 \renewenvironment{quotation}{%
   \vspace{\gridunit}%
   \list{}{%
@@ -130,7 +119,6 @@
   \vspace{\gridunit}%
   \@afterindentfalse%
 }
-\makeatother
 
 % PROFESSIONAL ATTRIBUTION
 \newcommand{\quoteattribution}[1]{%
@@ -140,7 +128,6 @@
 }
 
 % EMPHASIS QUOTE
-\makeatletter
 \newenvironment{emphasisquote}{%
   \vspace{1.5\gridunit}%                   % 1.5 units before
   \list{}{%
@@ -159,7 +146,6 @@
   \vspace{1.5\gridunit}%                   % 1.5 units after
   \@afterindentfalse%
 }
-\makeatother
 
 % ==============================================================================
 % ENVIRONMENT INDENTATION CONTROL
@@ -167,17 +153,14 @@
 
 % Note: List environment hooks (itemize, enumerate, description) are handled by lists.sty
 % to avoid conflicts that can cause "missing \item" errors with \paragraph commands
-\makeatletter
 \AtBeginEnvironment{quote}{\parindent=0pt}
 \AtBeginEnvironment{quotation}{\parindent=\parindent}  % Quotation keeps indent
 \AtBeginEnvironment{emphasisquote}{\parindent=0pt}
 \AtBeginEnvironment{verbatim}{\parindent=0pt}
 \AtBeginEnvironment{figure}{\parindent=0pt}
 \AtBeginEnvironment{table}{\parindent=0pt}
-\makeatother
 
 % First paragraph after environments is flush left
-\makeatletter
 % Note: List environment end hooks (itemize, enumerate, description) are handled by lists.sty
 \AtEndEnvironment{quote}{\@afterindentfalse}
 \AtEndEnvironment{emphasisquote}{\@afterindentfalse}
@@ -186,14 +169,12 @@
 \AtEndEnvironment{table}{\@afterindentfalse}
 \AtEndEnvironment{quotation}{\@afterindentfalse}
 \AtEndEnvironment{epigraph}{\@afterindentfalse}
-\makeatother
 
 % ==============================================================================
 % SECTION OPENING ENHANCEMENTS
 % ==============================================================================
 
 % Configure lettrine for drop caps
-\makeatletter
 \@ifpackageloaded{lettrine}{%
   \renewcommand{\LettrineFontHook}{\color{sectioncolor}}
   \setcounter{DefaultLines}{3}
@@ -202,7 +183,6 @@
   \setlength{\DefaultNindent}{0em}
   \setlength{\DefaultSlope}{0em}
 }{}
-\makeatother
 
 % MINIMAL DROP CAP FOR ACADEMIC USE
 \newcommand{\academicdropcap}[2]{%
@@ -216,10 +196,10 @@
 }
 
 % FIRST LINE SMALL CAPS
-%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+%% FIX: Use providecommand so preload order with lanepaper stays compatible.
 %% FIX(#39): explicit \fontsize{11} matches no named-size sc list, so the {30}
 %% WAS effective; \textls[30] preserves it (bare \lsstyle -> microtype fallback
-%% 50). Mirrors the twin \firstlinesc definition in lltpaperstyle.sty.
+%% 50). Mirrors the twin \firstlinesc definition in lanepaper.sty.
 \providecommand{\firstlinesc}[1]{%
   {\fontsize{11}{13.2}\selectfont%
    \textls[30]{\textsc{#1}}}%
@@ -244,9 +224,8 @@
 \renewcommand{\spacebreak}{\sectionsep}
 
 % OPENING PARAGRAPH ENVIRONMENT
-%% FIX: Avoid duplicate environment definitions when lltpaperstyle was loaded
+%% FIX: Avoid duplicate environment definitions when lanepaper was loaded
 %% before this module.
-\makeatletter
 \@ifundefined{openingparagraph}{%
 \newenvironment{openingparagraph}{%
   \noindent%
@@ -255,7 +234,6 @@
   \par%
 }
 }{}
-\makeatother
 
 % ==============================================================================
 % SPECIAL PARAGRAPH COMMANDS
@@ -271,7 +249,7 @@
 }
 
 % Inline sidenote command for margin annotations
-%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+%% FIX: Use providecommand so preload order with lanepaper stays compatible.
 \providecommand{\sidenote}[1]{%
   \marginpar{%
     \footnotesize\raggedright%
@@ -284,9 +262,9 @@
 % Legacy support commands
 %% FIX: Use providecommand so this legacy helper remains preload-safe.
 \providecommand{\compactpar}{\vspace{-\quartergridunit}}
-%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+%% FIX: Use providecommand so preload order with lanepaper stays compatible.
 \providecommand{\loosepars}{\vspace{\quartergridunit}}
-%% FIX: Use providecommand so preload order with lltpaperstyle stays compatible.
+%% FIX: Use providecommand so preload order with lanepaper stays compatible.
 \providecommand{\majorsectionspace}{\vspace{\gridunit}}
 
 \endinput

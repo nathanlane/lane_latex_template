@@ -4,7 +4,7 @@
 % Simplified version with fewer hooks to avoid conflicts
 % ==============================================================================
 
-\ProvidesPackage{lltcompilationfixes}[2026/08/12 v1.1 Simple Compilation Fixes]
+\ProvidesPackage{lnpcompilationfixes}[2026/08/12 v1.1 Simple Compilation Fixes]
 
 % ==============================================================================
 % OVERFULL HBOX FIXES
@@ -25,14 +25,12 @@
 
 % Fix for "conflicting options" warning
 % This needs to be done BEFORE biblatex is loaded
-\makeatletter
 \@ifpackageloaded{biblatex}{%
   % Too late to fix
 }{%
   % Pre-configure biblatex to avoid conflicts
   \PassOptionsToPackage{uniquename=init}{biblatex}%
 }
-\makeatother
 
 % ==============================================================================
 % OVERFULL VBOX FIXES
@@ -40,7 +38,7 @@
 
 % Increase flexibility for page breaking
 %% FIX: these 9999 values are for STANDALONE use of this module; under the
-%% full package the canonical 10000 block in lltpaperstyle.sty loads later
+%% full package the canonical 10000 block in lanepaper.sty loads later
 %% and wins. Removing them silently dropped widow/orphan protection and
 %% \raggedbottom for the documented standalone-module pattern.
 \widowpenalty=9999      % Almost forbid widows (standalone fallback)

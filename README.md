@@ -12,7 +12,7 @@ This template applies classic typographic principles to create scholarly article
 <!-- %% FIX: Keep active feature claims limited to locally verified support. -->
 - **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
 - **Spacing Quantum System** – most vertical spacing in multiples of a 13.2pt quantum; body leading measures 16.32pt (see `docs/typography/BASELINE-GRID-DECISION.md`)
-- **Optical Refinements** – Optional `llthochuli` module; when loaded, automatically applies custom Pagella kerning pairs and last-line length control (`\parfillskip`); also provides opt-in commands for selective ligature suppression and hanging punctuation at paragraph openings
+- **Optical Refinements** – Optional `lnphochuli` module; when loaded, automatically applies custom Pagella kerning pairs and last-line length control (`\parfillskip`); also provides opt-in commands for selective ligature suppression and hanging punctuation at paragraph openings
 - **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
 - **Smart Citations** – biblatex with author-year style, DOI/URL linking, and native natbib mode
@@ -189,11 +189,11 @@ Create a professional title page with mathematical spacing:
 ### Citations and Bibliography
 
 The template uses biblatex with Chicago author-date style. The standard preamble
-loads `lltpaperstyle`, which auto-loads the default biblatex configuration; then
+loads `lanepaper`, which auto-loads the default biblatex configuration; then
 it registers `references.bib`:
 
 ```latex
-\usepackage{lltpaperstyle}
+\usepackage{lanepaper}
 \addbibresource{references.bib}
 ```
 
@@ -204,7 +204,7 @@ loading:
 \usepackage[utf8]{inputenc} % load before manual biblatex on pdfTeX
 \usepackage[backend=biber,style=authoryear]{biblatex}
 \addbibresource{references.bib}
-\usepackage[nobiblatex]{lltpaperstyle}
+\usepackage[nobiblatex]{lanepaper}
 ```
 
 With `nobiblatex`, the template does not load `biblatex` or `inputenc`.
@@ -216,7 +216,7 @@ For legacy natbib-based documents, use the dedicated preamble:
 \input{paper/preamble-natbib.tex}
 ```
 
-It loads `lltpaperstyle` with the `natbib` option and provides the `\textcite`
+It loads `lanepaper` with the `natbib` option and provides the `\textcite`
 and `\autocite` compatibility aliases expected by older documents (`\citeauthor`
 and `\citeyear` come natively from natbib).
 
@@ -293,7 +293,7 @@ your-paper/
 ├── references.bib        # Bibliography
 ├── paper/
 │   ├── preamble.tex      # Document setup
-│   ├── lltpaperstyle.sty # Main style (don't edit)
+│   ├── lanepaper.sty # Main style (don't edit)
 │   └── modules/          # Modular components
 ├── appendices/           # Supplementary material
 │   ├── main_appendix.tex
@@ -307,10 +307,10 @@ your-paper/
 Load the style with options:
 
 ```latex
-\usepackage{lltpaperstyle}           % Standard (all features)
-\usepackage[grid]{lltpaperstyle}     % Show grid overlay (baseline + quantum lines)
-\usepackage[minimal]{lltpaperstyle}  % Essential features only
-\usepackage[draft]{lltpaperstyle}    % Draft mode
+\usepackage{lanepaper}           % Standard (all features)
+\usepackage[grid]{lanepaper}     % Show grid overlay (baseline + quantum lines)
+\usepackage[minimal]{lanepaper}  % Essential features only
+\usepackage[draft]{lanepaper}    % Draft mode
 ```
 
 Available options:
@@ -323,8 +323,8 @@ Available options:
 - `mathredefs` – Opt in to variant math glyphs (`\le`→`\leqslant`, `\ge`→`\geqslant`, `\epsilon`→`\varepsilon`, `\phi`→`\varphi`, `\vec`→bold). Off by default: the redefinitions change mathematical meaning, so standard LaTeX semantics ship unless requested. Assumes full (non-`minimal`) mode, where the symbol fonts are loaded
 - `nocolor` – Disable all custom colors
 
-Note: `\usepackage[minimal]{lltpaperstyle}` and
-`\usepackage{lltpaperstyleminimal}` are distinct surfaces.
+Note: `\usepackage[minimal]{lanepaper}` and
+`\usepackage{lnpminimal}` are distinct surfaces.
 The former uses the main package with reduced module loading; the latter loads the
 separate lightweight package.
 
@@ -333,20 +333,20 @@ separate lightweight package.
 The style system is fully modularized:
 
 **Core modules** (automatically loaded):
-- `lltcolors` – Professional color palette
-- `lltdimensions` – Grid system and spacing
-- `lltfonts` – Font configuration
-- `lltheadings` – Section heading styles
-- `lltlists` – List typography
-- `lltmicrotype` – Enhanced character protrusion, expansion, and spacing
+- `lnpcolors` – Professional color palette
+- `lnpdimensions` – Grid system and spacing
+- `lnpfonts` – Font configuration
+- `lnpheadings` – Section heading styles
+- `lnplists` – List typography
+- `lnpmicrotype` – Enhanced character protrusion, expansion, and spacing
 
 **Optional modules**:
-- `lltmathgridlocked` – Grid-locked equation spacing hooks
-- `lltparagraphs` – Advanced paragraph formatting
-- `llthochuli` – Advanced optical adjustments
+- `lnpmathgridlocked` – Grid-locked equation spacing hooks
+- `lnpparagraphs` – Advanced paragraph formatting
+- `lnphochuli` – Advanced optical adjustments
 
-Load optional modules such as `lltparagraphs` before `lltpaperstyle`.
-Loading `lltparagraphs` after `lltpaperstyle` is unsupported unless the reverse
+Load optional modules such as `lnpparagraphs` before `lanepaper`.
+Loading `lnpparagraphs` after `lanepaper` is unsupported unless the reverse
 order is fully guarded.
 
 ---
@@ -471,7 +471,7 @@ Override colors before loading the style:
 ```latex
 \definecolor{linknavy}{RGB}{0,0,255}      % Custom link color
 \definecolor{sectioncolor}{RGB}{0,0,0}    % Black headings
-\usepackage{lltpaperstyle}
+\usepackage{lanepaper}
 ```
 
 ### Layout Modifications
@@ -481,7 +481,7 @@ Adjust margins and spacing:
 ```latex
 \geometry{margin=2in}                      % Wider margins
 \setlength{\parindent}{2em}               % Larger indent
-\usepackage{lltpaperstyle}
+\usepackage{lanepaper}
 ```
 
 ### Creating Extensions
@@ -489,7 +489,7 @@ Adjust margins and spacing:
 Add custom commands in your preamble:
 
 ```latex
-% After loading lltpaperstyle
+% After loading lanepaper
 \newcommand{\mycommand}[1]{\textcolor{linknavy}{\textbf{#1}}}
 \newenvironment{myenv}{\begin{quote}}{\end{quote}}
 ```
@@ -499,8 +499,8 @@ Add custom commands in your preamble:
 For strict baseline adherence:
 
 ```latex
-\usepackage{paper/modules/lltheadingsgridlocked}
-\usepackage{paper/modules/lltmathgridlocked}
+\usepackage{paper/modules/lnpheadingsgridlocked}
+\usepackage{paper/modules/lnpmathgridlocked}
 ```
 
 ---
@@ -527,7 +527,7 @@ make              # Full rebuild
 **Font issues**:
 ```latex
 % Use minimal mode for compatibility
-\usepackage[minimal]{lltpaperstyle}
+\usepackage[minimal]{lanepaper}
 ```
 
 ### Platform-Specific Notes
@@ -553,7 +553,7 @@ export TEXINPUTS=".:./paper//:"
 
 ## Contributing
 
-See **[CONTRIBUTING.md](CONTRIBUTING.md)** for build instructions, test commands, and the `llt` namespace convention.
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for build instructions, test commands, and the `\lnp@` namespace convention.
 
 ### Development Guidelines
 
@@ -630,8 +630,8 @@ Core packages:
 <!-- %% FIX: Separate repository release status from the bundled package version. -->
 Repository release: `v2.1.0`.
 
-Bundled package version: `lltpaperstyle` reports `v2.0` in
-`paper/lltpaperstyle.sty`.
+Bundled package version: `lanepaper` reports `v2.0` in
+`paper/lanepaper.sty`.
 
 v2.0.0 was the breaking-change release following the adopter defect report
 (previously repo `v0.1.0-beta` vs package `v1.7`). Repository and package
@@ -651,8 +651,8 @@ Historical package-development versions are alpha snapshots:
 ### Migration Notes
 
 If upgrading from an older version:
-- `\usepackage{paper/paperstyle}` → `\usepackage{lltpaperstyle}`
-- All module names now have `llt` prefix
+- `\usepackage{paper/paperstyle}` → `\usepackage{lanepaper}`
+- All module names now have the `lnp` prefix
 - See [MIGRATION.md](paper/MIGRATION.md) for details
 
 ### Full Changelog

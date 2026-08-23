@@ -1,8 +1,8 @@
-# paperstyle.sty Style Guide
+# lanepaper Style Guide
 
 **Typography Standards and Best Practices**
 
-This document provides comprehensive guidelines for using the paperstyle.sty package effectively, ensuring consistent, professional academic typography.
+This document provides comprehensive guidelines for using the lanepaper package effectively, ensuring consistent, professional academic typography.
 
 ## Typography Principles
 

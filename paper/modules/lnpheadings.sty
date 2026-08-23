@@ -1,31 +1,27 @@
 % ==============================================================================
 % HEADINGS.STY - Section and Heading Typography Module
 % ==============================================================================
-% Extracted from lltpaperstyle.sty for modular customization
+% Extracted from lanepaper.sty for modular customization
 % Implements sophisticated heading hierarchy with quantum-multiple spacing
 % ==============================================================================
 
-\ProvidesPackage{lltheadings}[2026/08/12 v1.1 Heading Typography System]
+\ProvidesPackage{lnpheadings}[2026/08/12 v1.1 Heading Typography System]
 
 % Dependencies
 \RequirePackage{titlesec}         % Custom section formatting
 \RequirePackage{etoolbox}         % For \AtBeginEnvironment
 
 % Ensure colors are loaded
-\makeatletter
-\@ifpackageloaded{lltcolors}{}{%
+\@ifpackageloaded{lnpcolors}{}{%
   % Silently load colors module if not already loaded
-  \RequirePackage{lltcolors}%
+  \RequirePackage{lnpcolors}%
 }
-\makeatother
 
 % Ensure dimensions are loaded for grid units
-\makeatletter
-\@ifpackageloaded{lltdimensions}{}{%
+\@ifpackageloaded{lnpdimensions}{}{%
   % Silently load dimensions module if not already loaded
-  \RequirePackage{lltdimensions}%
+  \RequirePackage{lnpdimensions}%
 }
-\makeatother
 
 % ==============================================================================
 % SECTION HIERARCHY DESIGN
@@ -88,7 +84,7 @@
 
 % Sections: Bold with sophisticated color and tracking
 % OPTIMIZED: Perfect grid alignment without optical adjustments
-%% FIX: \SetTracking is global and lltmicrotype's series=b rule annuls it on bold
+%% FIX: \SetTracking is global and lnpmicrotype's series=b rule annuls it on bold
 %% headings, so the +80 was dead code that also churned the tracking list
 %% document-wide on every heading (122 override messages per build).
 \titleformat{\section}
@@ -151,7 +147,7 @@
 \newcommand{\paragraphsc}{
   \titleformat{\paragraph}[runin]
     %% FIX(#39): drop dead \SetTracking{encoding=*}{120}; bold text resolves via
-    %% the T1 series=b list (lltmicrotype.sty:140 -> -10), which annuls the {120}
+    %% the T1 series=b list (lnpmicrotype.sty:140 -> -10), which annuls the {120}
     %% (measured: orig == bare), so \lsstyle alone is render-neutral, no message.
     {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\scshape\color{paragraphcolor}%
      \lsstyle}  % 11pt bold small caps
@@ -216,12 +212,10 @@
 % ==============================================================================
 
 % Prevent isolated section headings
-\makeatletter
 \@secpenalty=-1000           % Encourage breaks before sections
-\makeatother
 %% FIX: \clubpenalty/\widowpenalty restatements removed — the canonical
-%% widow/orphan penalties (10000) live in lltpaperstyle.sty. Note: standalone
-%% use of this module gets LaTeX's defaults (150); load lltcompilationfixes
+%% widow/orphan penalties (10000) live in lanepaper.sty. Note: standalone
+%% use of this module gets LaTeX's defaults (150); load lnpcompilationfixes
 %% for protection outside the full package.
 
 % Note: Environment hooks moved to individual modules to avoid conflicts
@@ -234,7 +228,6 @@
 % ==============================================================================
 
 % Drop cap configuration for section openings
-\makeatletter
 \@ifpackageloaded{lettrine}{%
   \renewcommand{\LettrineFontHook}{\color{sectioncolor}}  % Match section color
   \setcounter{DefaultLines}{3}         % Three-line drop caps
@@ -243,7 +236,6 @@
   \setlength{\DefaultNindent}{0em}     % No additional indent
   \setlength{\DefaultSlope}{0em}       % No slope for italics
 }{}
-\makeatother
 
 % First line treatment for section openings
 \newcommand{\firstline}[1]{%

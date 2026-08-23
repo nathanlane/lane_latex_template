@@ -40,12 +40,12 @@
 %   Advanced: appendix, cleveref, hyperref
 %
 % USAGE:
-%   \usepackage{lltpaperstyle}                   % Full features
-%   \usepackage[grid]{lltpaperstyle}             % Show grid overlay
-%   \usepackage[minimal]{lltpaperstyle}          % Minimal features only
-%   \usepackage[natbib]{lltpaperstyle}           % Use native natbib support
-%   \usepackage[nocolor]{lltpaperstyle}          % Use black/grayscale colors
-%   \usepackage[draft]{lltpaperstyle}            % Draft mode with visible boxes
+%   \usepackage{lanepaper}                   % Full features
+%   \usepackage[grid]{lanepaper}             % Show grid overlay
+%   \usepackage[minimal]{lanepaper}          % Minimal features only
+%   \usepackage[natbib]{lanepaper}           % Use native natbib support
+%   \usepackage[nocolor]{lanepaper}          % Use black/grayscale colors
+%   \usepackage[draft]{lanepaper}            % Draft mode with visible boxes
 %   or
 %   \input{paper/preamble.tex}  % Recommended with bibliography
 %
@@ -65,128 +65,125 @@
 %
 % ==============================================================================
 
-\ProvidesPackage{lltpaperstyle}[2026/08/12 v2.0 Academic Typography - Package Options]
+\ProvidesPackage{lanepaper}[2026/08/12 v2.0 Academic Typography - Package Options]
 
 % ==============================================================================
 % PACKAGE OPTIONS
 % ==============================================================================
 %
-% The lltpaperstyle package supports the following options:
+% The lanepaper package supports the following options:
 %
 % grid/nogrid (default: nogrid)
 %   - grid: Display the grid overlay (true-baseline and quantum lines) for typography debugging
 %   - nogrid: Hide the grid overlay (normal production mode)
-%   - Usage: \usepackage[grid]{lltpaperstyle}
+%   - Usage: \usepackage[grid]{lanepaper}
 %   - Effect: Loads gridoverlay module and automatically calls \showgrid
 %
 % minimal (default: off)  
 %   - Load only essential features: dimensions and compilation fixes
 %   - Skips: fonts, headings, lists, and most typography enhancements
-%   - Usage: \usepackage[minimal]{lltpaperstyle}
+%   - Usage: \usepackage[minimal]{lanepaper}
 %   - Use case: Compatibility mode or when custom typography is needed
 %
 % natbib (default: off)
 %   - Load native natbib author-year citation support
-%   - Usage: \usepackage[natbib]{lltpaperstyle}
+%   - Usage: \usepackage[natbib]{lanepaper}
 %   - Note: Provides natbib commands, not biblatex command emulation
 %
 % nocolor (default: off)
 %   - Map semantic template colors to black/grayscale values
 %   - Affects: headings, links, bullets, and all colored elements
-%   - Usage: \usepackage[nocolor]{lltpaperstyle}
+%   - Usage: \usepackage[nocolor]{lanepaper}
 %   - Use case: Accessibility, printing, or journal requirements
 %
 % draft (default: off)
 %   - Enable draft mode with visible overfull boxes
 %   - Shows colored borders around hyperlinks instead of colored text
 %   - Passes draft option to microtype package
-%   - Usage: \usepackage[draft]{lltpaperstyle}
+%   - Usage: \usepackage[draft]{lanepaper}
 %   - Use case: Debugging layout issues and overfull boxes
 %
 % nobiblatex (default: off)
 %   - Disable automatic biblatex loading
 %   - Use when you need to load biblatex manually with custom options
-%   - Usage: \usepackage[nobiblatex]{lltpaperstyle}
+%   - Usage: \usepackage[nobiblatex]{lanepaper}
 %   - Use case: Custom bibliography configuration or using natbib
 %
 % subsectionbarriers/nosubsectionbarriers (default: subsectionbarriers)
 %   - Enable or disable automatic \FloatBarrier insertion before subsections
-%   - Usage: \usepackage[nosubsectionbarriers]{lltpaperstyle}
+%   - Usage: \usepackage[nosubsectionbarriers]{lanepaper}
 %   - Use case: Documents that need freer float movement across subsections
 %
 % Multiple options can be combined:
-%   \usepackage[draft,grid]{lltpaperstyle}
-%   \usepackage[minimal,nocolor]{lltpaperstyle}
+%   \usepackage[draft,grid]{lanepaper}
+%   \usepackage[minimal,nocolor]{lanepaper}
 %
 % ------------------------------------------------------------------------------
 
 % Define boolean flags for package options
-\newif\ifllt@grid
-\newif\ifllt@minimal
-\newif\ifllt@natbib
-\newif\ifllt@nocolor
-\newif\ifllt@draft
-\newif\ifllt@nobiblatex
-\newif\ifllt@subsectionbarriers
-\llt@subsectionbarrierstrue
+\newif\iflnp@grid
+\newif\iflnp@minimal
+\newif\iflnp@natbib
+\newif\iflnp@nocolor
+\newif\iflnp@draft
+\newif\iflnp@nobiblatex
+\newif\iflnp@subsectionbarriers
+\lnp@subsectionbarrierstrue
 %% FIX: opt-in flag for math redefinitions (they change mathematical meaning,
 %% not just appearance, so they must not be unconditional).
-\newif\ifllt@mathredefs
+\newif\iflnp@mathredefs
 
 % Declare package options
-\DeclareOption{grid}{\llt@gridtrue}
-\DeclareOption{nogrid}{\llt@gridfalse}
-\DeclareOption{minimal}{\llt@minimaltrue}
-\DeclareOption{natbib}{\llt@natbibtrue}
-\DeclareOption{nocolor}{\llt@nocolortrue}
-%% FIX: Let lltmicrotype apply draft mode after package options are processed.
-\DeclareOption{draft}{\llt@drafttrue}
-\DeclareOption{nobiblatex}{\llt@nobiblatextrue}
+\DeclareOption{grid}{\lnp@gridtrue}
+\DeclareOption{nogrid}{\lnp@gridfalse}
+\DeclareOption{minimal}{\lnp@minimaltrue}
+\DeclareOption{natbib}{\lnp@natbibtrue}
+\DeclareOption{nocolor}{\lnp@nocolortrue}
+%% FIX: Let lnpmicrotype apply draft mode after package options are processed.
+\DeclareOption{draft}{\lnp@drafttrue}
+\DeclareOption{nobiblatex}{\lnp@nobiblatextrue}
 %% FIX: Expose subsection float-barrier behavior as a documented package option.
-\DeclareOption{subsectionbarriers}{\llt@subsectionbarrierstrue}
-\DeclareOption{nosubsectionbarriers}{\llt@subsectionbarriersfalse}
+\DeclareOption{subsectionbarriers}{\lnp@subsectionbarrierstrue}
+\DeclareOption{nosubsectionbarriers}{\lnp@subsectionbarriersfalse}
 %% FIX: [mathredefs] opts into the \le/\ge/\epsilon/\phi/\vec redefinitions;
 %% default is standard LaTeX semantics.
-\DeclareOption{mathredefs}{\llt@mathredefstrue}
+\DeclareOption{mathredefs}{\lnp@mathredefstrue}
 
 % Process options
 \ProcessOptions\relax
 
 %% FIX: Load inputenc only when needed and never after a user-loaded biblatex
 %% contract to avoid load-order warnings.
-\makeatletter
-\newcommand{\lltpaperstyle@maybe@load@inputenc}{%
+\newcommand{\lnp@maybe@load@inputenc}{%
   \@ifpackageloaded{inputenc}{}{%
     \@ifpackageloaded{biblatex}{}{%
       \RequirePackage[utf8]{inputenc}%
     }%
   }%
 }
-\makeatother
 
 % Biblatex compatibility - detect if biblatex is already loaded
-\makeatletter
 \@ifpackageloaded{biblatex}{%
-  % biblatex already loaded - good, user loaded it before paperstyle
-  \PackageInfo{lltpaperstyle}{biblatex detected - using existing configuration}%
+  % biblatex already loaded - good, user loaded it before lanepaper
+  \PackageInfo{lanepaper}{biblatex detected - using existing configuration}%
 }{%
   % biblatex not loaded - check if we should load it
-  \ifllt@nobiblatex
+  \iflnp@nobiblatex
     % User explicitly disabled biblatex
-    \PackageInfo{lltpaperstyle}{biblatex loading disabled by nobiblatex option}%
+    \PackageInfo{lanepaper}{biblatex loading disabled by nobiblatex option}%
   \else
-    \lltpaperstyle@maybe@load@inputenc
-    \ifllt@natbib
+    \lnp@maybe@load@inputenc
+    \iflnp@natbib
       %% FIX: Implement documented natbib mode instead of silently skipping bibliography support.
       \@ifpackageloaded{natbib}{%
-        \PackageInfo{lltpaperstyle}{natbib detected - using existing configuration}%
+        \PackageInfo{lanepaper}{natbib detected - using existing configuration}%
       }{%
-        \PackageInfo{lltpaperstyle}{Loading natbib compatibility mode}%
+        \PackageInfo{lanepaper}{Loading natbib compatibility mode}%
         \RequirePackage[authoryear,round]{natbib}%
       }%
     \else
       % Load biblatex with sensible defaults
-      \PackageInfo{lltpaperstyle}{Loading biblatex with default settings}%
+      \PackageInfo{lanepaper}{Loading biblatex with default settings}%
       \RequirePackage[
         backend=biber,
         style=authoryear,
@@ -203,7 +200,6 @@
     \fi
   \fi
 }
-\makeatother
 
 % ==============================================================================
 % I. FONT SYSTEM CONFIGURATION
@@ -227,7 +223,7 @@
 % 
 % ------------------------------------------------------------------------------
 
-% Font configuration has been moved to lltfonts.sty
+% Font configuration has been moved to lnpfonts.sty
 % This includes: tgpagella, zi4 (Inconsolata), newpxmath, mathalfa
 \RequirePackage{etoolbox} % For \AtBeginEnvironment and hooks
 
@@ -235,37 +231,35 @@
 % MODULAR COMPONENT LOADING
 % ==============================================================================
 % Load modular components if not already loaded
-% This allows users to override modules before loading lltpaperstyle
-\makeatletter
+% This allows users to override modules before loading lanepaper
 
 % Always load core modules
 %% FIX: Load local modules by package name to match their \ProvidesPackage names.
-\@ifpackageloaded{lltcompilationfixes}{}{\RequirePackage{lltcompilationfixes}}
-\@ifpackageloaded{lltdimensions}{}{\RequirePackage{lltdimensions}}
+\@ifpackageloaded{lnpcompilationfixes}{}{\RequirePackage{lnpcompilationfixes}}
+\@ifpackageloaded{lnpdimensions}{}{\RequirePackage{lnpdimensions}}
 %% FIX: Always load semantic colors so nocolor and minimal mode share definitions.
-\@ifpackageloaded{lltcolors}{}{\RequirePackage{lltcolors}}
+\@ifpackageloaded{lnpcolors}{}{\RequirePackage{lnpcolors}}
 
 % Load essential packages for minimal mode
-\ifllt@minimal
+\iflnp@minimal
   % Minimal mode still needs these essential packages
-  \lltpaperstyle@maybe@load@inputenc
+  \lnp@maybe@load@inputenc
   \RequirePackage{amsmath}
   \RequirePackage{textcomp}
   \RequirePackage{xcolor}
 \else
   % Full mode loads all modules
-  \@ifpackageloaded{lltfonts}{}{\RequirePackage{lltfonts}}
-  \@ifpackageloaded{lltheadings}{}{\RequirePackage{lltheadings}}
-  \@ifpackageloaded{lltlists}{}{\RequirePackage{lltlists}}
+  \@ifpackageloaded{lnpfonts}{}{\RequirePackage{lnpfonts}}
+  \@ifpackageloaded{lnpheadings}{}{\RequirePackage{lnpheadings}}
+  \@ifpackageloaded{lnplists}{}{\RequirePackage{lnplists}}
 \fi
 
 % Load grid overlay if requested
-\ifllt@grid
-  \@ifpackageloaded{lltgridoverlay}{}{\RequirePackage{lltgridoverlay}}
+\iflnp@grid
+  \@ifpackageloaded{lnpgridoverlay}{}{\RequirePackage{lnpgridoverlay}}
   \showgrid
 \fi
 
-\makeatother
 
 % ==============================================================================
 % II. PROFESSIONAL COLOR SYSTEM
@@ -287,23 +281,23 @@
 %
 % ------------------------------------------------------------------------------
 
-% Color definitions have been moved to lltcolors.sty
+% Color definitions have been moved to lnpcolors.sty
 % This allows easy customization without editing the main package
-% Users can override colors before loading paperstyle:
+% Users can override colors before loading lanepaper:
 %   \definecolor{linknavy}{RGB}{0,0,255}  % Custom blue
 %   %% FIX: Document the renamed public package entry point.
-%   \usepackage{lltpaperstyle}
+%   \usepackage{lanepaper}
 
 % ELEGANT SMALL CAPS COMMAND
 % Enhanced small caps with superior visibility and elegance
 %% FIX(#39): drop dead global \SetTracking{...}{80}; the T1 sc list at
-%% lltmicrotype.sty:74 already sets the amount at normalsize, so bare \lsstyle
+%% lnpmicrotype.sty:74 already sets the amount at normalsize, so bare \lsstyle
 %% preserves current rendering (and outer kerning) with no override message.
 \newcommand{\refinedsc}[1]{%
   {\scshape\lsstyle #1}%
 }
 %% FIX(#39): drop dead \SetTracking{...}{100}; bold sc resolves via the T1
-%% bold-sc list (lltmicrotype.sty:82), so \lsstyle is render-neutral.
+%% bold-sc list (lnpmicrotype.sty:82), so \lsstyle is render-neutral.
 \newcommand{\refinedscbold}[1]{%
   {\bfseries\scshape\lsstyle #1}%
 }
@@ -316,7 +310,6 @@
 
 % Compatibility aliases for backward compatibility
 %% FIX: Define compatibility aliases lazily so modules can load in either order.
-\makeatletter
 \newcommand{\elegantsc}[1]{\refinedsc{#1}}
 \newcommand{\elegantscbold}[1]{\refinedscbold{#1}}
 \newcommand{\elegantbullet}{%
@@ -327,7 +320,6 @@
   \@ifundefined{refineddash}{\textcolor{subtlegray}{\kern0.05em\textendash\kern0.05em}}{\refineddash}%
 }
 \newcommand{\elegantcircle}{\textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.55}{$\circ$}}}}
-\makeatother
 
 % ==============================================================================
 % SPECIAL CHARACTERS AND SYMBOL OPTIMIZATION
@@ -360,25 +352,21 @@
 %% FIX: Restore documented dash aliases used by existing fixtures and documents.
 \newcommand{\emdashclassic}{---}                      % Traditional (no spaces)
 \newcommand{\emdashopen}{ --- }                       % Open em dash with word spaces
-\makeatletter
 \@ifundefined{endash}{\def\endash{\kern0.06em--\kern0.06em}}{} % Standard en dash
-\makeatother
 \newcommand{\dashrange}[2]{#1--#2}                    % Range en dash
 \newcommand{\dashcompound}[2]{#1-#2}                  % Standard hyphen
 \newcommand{\dashparen}{\emdash}                      % Standard em dash
 
 % Simplified ellipsis system (backward compatible, minimal visual change)
-\makeatletter
 %% FIX: Preserve math-mode ellipses while keeping text-mode spacing refinement.
-\let\llt@origldots\ldots
-\let\llt@origcdots\cdots
-\renewcommand{\ldots}{\ifmmode\llt@origldots\else\textellipsis\kern0.16em\fi}
+\let\lnp@origldots\ldots
+\let\lnp@origcdots\cdots
+\renewcommand{\ldots}{\ifmmode\lnp@origldots\else\textellipsis\kern0.16em\fi}
 %% FIX: Restore documented ellipsis aliases used by existing fixtures and documents.
 \newcommand{\tdots}{\ldots}                           % Alias: adequate for dialogue
-\renewcommand{\cdots}{\ensuremath{\llt@origcdots}}    % Standard math dots
+\renewcommand{\cdots}{\ensuremath{\lnp@origcdots}}    % Standard math dots
 \newcommand{\fdots}{\ldots}                           % Alias: standard is fine
 \newcommand{\edots}{\ldots}                           % Alias: standard is fine
-\makeatother
 
 % DEGREE, PRIME, AND TECHNICAL SYMBOLS
 % Properly aligned and spaced for Pagella
@@ -403,13 +391,11 @@
 
 \newcommand{\euro}{\kern0.05em\texteuro\kern0.05em}
 \newcommand{\pound}{\kern0.05em\textsterling\kern0.05em}
-\makeatletter
-\ifllt@minimal
+\iflnp@minimal
   \providecommand{\yen}{\kern0.05em\textyen\kern0.05em}
 \else
   \renewcommand{\yen}{\kern0.05em\textyen\kern0.05em}  % Use renewcommand as newpxmath defines \yen
 \fi
-\makeatother
 \newcommand{\cent}{\kern0.03em\textcent\kern0.03em}
 \newcommand{\currency}{\kern0.05em\textcurrency\kern0.05em}
 
@@ -426,12 +412,12 @@
 \providecommand{\texttimes}{\kern0.08em\ensuremath{\times}\kern0.08em}
 \providecommand{\textdiv}{\kern0.08em\ensuremath{\div}\kern0.08em}
 %% FIX: Register text-symbol commands for T1 using math wrappers.
-\DeclareRobustCommand{\llttextapprox}{\kern0.08em\ensuremath{\approx}\kern0.08em}
-\DeclareRobustCommand{\llttextinfty}{\kern0.08em\ensuremath{\infty}\kern0.08em}
-\DeclareTextCommandDefault{\textapprox}{\llttextapprox}
-\DeclareTextCommand{\textapprox}{T1}{\llttextapprox}
-\DeclareTextCommandDefault{\textinfty}{\llttextinfty}
-\DeclareTextCommand{\textinfty}{T1}{\llttextinfty}
+\DeclareRobustCommand{\lnp@textapprox}{\kern0.08em\ensuremath{\approx}\kern0.08em}
+\DeclareRobustCommand{\lnp@textinfty}{\kern0.08em\ensuremath{\infty}\kern0.08em}
+\DeclareTextCommandDefault{\textapprox}{\lnp@textapprox}
+\DeclareTextCommand{\textapprox}{T1}{\lnp@textapprox}
+\DeclareTextCommandDefault{\textinfty}{\lnp@textinfty}
+\DeclareTextCommand{\textinfty}{T1}{\lnp@textinfty}
 
 % ARROWS WITH SPACING
 \newcommand{\larrow}{\kern0.08em\ensuremath{\leftarrow}\kern0.08em}
@@ -471,12 +457,10 @@
 % SPECIAL CASES
 \newcommand{\apos}{'}                                  % Smart apostrophe
 %% FIX: Preserve original dagger commands before adding spacing wrappers.
-\makeatletter
-\let\llt@origdag\dag
-\let\llt@origddag\ddag
-\renewcommand{\dag}{\kern0.05em\llt@origdag\kern0.05em}       % Dagger
-\renewcommand{\ddag}{\kern0.05em\llt@origddag\kern0.05em}     % Double dagger
-\makeatother
+\let\lnp@origdag\dag
+\let\lnp@origddag\ddag
+\renewcommand{\dag}{\kern0.05em\lnp@origdag\kern0.05em}       % Dagger
+\renewcommand{\ddag}{\kern0.05em\lnp@origddag\kern0.05em}     % Double dagger
 
 % ------------------------------------------------------------------------------
 
@@ -500,21 +484,19 @@
 
 % --- Level 1: Smart Emphasis with Nesting Support ---
 % Create internal command to check italic state
-\makeatletter
-\newcommand{\paperstyle@ifitalic}{%
+\newcommand{\lnp@ifitalic}{%
   \ifx\f@shape\itdefault
     \expandafter\@firstoftwo
   \else
     \expandafter\@secondoftwo
   \fi
 }
-% Keep makeatletter active for commands that need @ symbols
+% `@` is a letter throughout this package file, as LaTeX sets it for packages.
 
 % Redefines \emph to handle nested emphasis correctly
 \renewcommand{\emph}[1]{%
-  \paperstyle@ifitalic{\textnormal{#1}}{\textit{#1}}%
+  \lnp@ifitalic{\textnormal{#1}}{\textit{#1}}%
 }
-\makeatother  % Close the emphasis section properly
 
 % --- Level 2: Strong Emphasis ---
 % For critical terms requiring immediate attention
@@ -525,7 +507,7 @@
 % --- Level 3: Metadata Emphasis ---
 % For structured information: names, acronyms, technical terms
 %% FIX(#39): drop dead \SetTracking{...}{30}; {30} equals the T1 sc list
-%% (lltmicrotype.sty:74) at normalsize, so \lsstyle is render-neutral.
+%% (lnpmicrotype.sty:74) at normalsize, so \lsstyle is render-neutral.
 \newcommand{\meta}[1]{%
   {\scshape\lsstyle #1}%
 }
@@ -533,7 +515,7 @@
 % --- Level 4: Critical Emphasis ---
 % Reserved for warnings, critical instructions (use very rarely)
 %% FIX(#39): drop dead \SetTracking{...}{45}; {45} equals the T1 bold-sc list
-%% (lltmicrotype.sty:82) at normalsize, so \lsstyle is render-neutral.
+%% (lnpmicrotype.sty:82) at normalsize, so \lsstyle is render-neutral.
 \newcommand{\critical}[1]{%
   {\bfseries\scshape\lsstyle #1}%
 }
@@ -543,7 +525,7 @@
 % Single semantic emphasis command with style parameter
 % Usage: \semantic{style}{text} where style = term, person, acro, work
 %% FIX(#39): person/acro drop dead \SetTracking{...}{25}/{40}; both resolve via
-%% the T1 sc list (lltmicrotype.sty:74) at normalsize/\small, so \lsstyle is
+%% the T1 sc list (lnpmicrotype.sty:74) at normalsize/\small, so \lsstyle is
 %% render-neutral (the {25}/{40} never took effect).
 \newcommand{\semantic}[2]{%
   \ifstrequal{#1}{term}{\textit{#2}}{%
@@ -606,7 +588,7 @@
 
 % Author formatting with tracked small caps (using microtype)
 %% FIX(#39): drop dead \SetTracking{...}{60}; \large sc resolves via the T1
-%% display sc list (lltmicrotype.sty:90 -> 80), so \lsstyle is render-neutral.
+%% display sc list (lnpmicrotype.sty:90 -> 80), so \lsstyle is render-neutral.
 \newcommand{\authorname}[1]{%
   {\large\scshape\lsstyle #1}%
 }
@@ -618,7 +600,7 @@
 
 % Keywords with controlled spacing (using microtype)
 %% FIX(#39): the bold-roman label drops dead \SetTracking{...}{10} -- bold text
-%% resolves via the T1 series=b list (lltmicrotype.sty:140 -> -10), so \lsstyle
+%% resolves via the T1 series=b list (lnpmicrotype.sty:140 -> -10), so \lsstyle
 %% is neutral. The italic value matches NO list, so its {5} was effective and is
 %% preserved with \textls[5] (bare would fall back to microtype's 50).
 \newcommand{\keywords}[1]{%
@@ -678,12 +660,10 @@
 % ------------------------------------------------------------------------------
 
 %% FIX: Delegate microtype package loading and active tuning to the module.
-\makeatletter
-\@ifpackageloaded{lltmicrotype}{}{\RequirePackage{lltmicrotype}}
-\makeatother
+\@ifpackageloaded{lnpmicrotype}{}{\RequirePackage{lnpmicrotype}}
 
-%% FIX: Active microtype tracking and extra-kerning setup lives in lltmicrotype.
-% Small-caps, code, and emphasis commands rely on lltmicrotype for tracking/kerning.
+%% FIX: Active microtype tracking and extra-kerning setup lives in lnpmicrotype.
+% Small-caps, code, and emphasis commands rely on lnpmicrotype for tracking/kerning.
 
 %% FIX: duplicate \spaceskip/\xspaceskip assignments removed. The pair here
 %% (0.35em/0.5em) was silently overridden ~2100 lines later (0.33em/0.48em);
@@ -691,8 +671,8 @@
 % titlesec now loaded by headings module
 \RequirePackage{enumitem}         % List spacing control
 \RequirePackage{caption}          % Figure/table caption control
-% Mathematical packages are loaded in lltfonts.sty
-% Math fonts are loaded in lltfonts.sty
+% Mathematical packages are loaded in lnpfonts.sty
+% Math fonts are loaded in lnpfonts.sty
 
 % ==============================================================================
 % IV. PAGE LAYOUT AND GEOMETRY
@@ -709,7 +689,7 @@
 %
 % ------------------------------------------------------------------------------
 
-% Geometry configuration has been moved to lltdimensions.sty
+% Geometry configuration has been moved to lnpdimensions.sty
 % This allows easy customization of page layout
 
 % ==============================================================================
@@ -733,7 +713,7 @@
 %
 % ------------------------------------------------------------------------------
 
-% Spacing quantum configuration lives in lltdimensions.sty
+% Spacing quantum configuration lives in lnpdimensions.sty
 % The gridunit (13.2pt) and derived spacing values are defined there
 
 % Butterick's optimal line length: 45-90 characters (2-3 alphabets)
@@ -752,9 +732,7 @@
 \interlinepenalty=2500       % Discourage page breaks within paragraphs
 
 % Prevent isolated section headings
-\makeatletter
 \@secpenalty=-1000           % Encourage breaks before sections
-\makeatother
 \interfootnotelinepenalty=10000  % Prevent footnote splitting
 
 % CLASSICAL PARAGRAPH INDENTATION SYSTEM
@@ -762,10 +740,8 @@
 % First paragraphs after headings, lists, and breaks remain flush left
 
 % Classical typography: first paragraphs after headings are flush left
-\makeatletter
 \let\@afterindentfalse\@afterindenttrue
 \@afterindentfalse  % Changed: flush left first paragraphs after headings
-\makeatother
 
 % Custom commands for controlling indentation in special contexts
 %% FIX: Use providecommand to keep preload paths where this module was already
@@ -774,25 +750,24 @@
 \providecommand{\forceindent}{\hspace{\parindent}}        % Force indentation when needed
 
 % Flexible paragraph style commands for different document needs
-% Paragraph style commands are now in lltdimensions.sty
+% Paragraph style commands are now in lnpdimensions.sty
 
 % Deprecated spacing commands - use \vspace directly
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 \providecommand{\compactpar}{\vspace{-\quartergridunit}}  % Legacy support
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 \providecommand{\loosepars}{\vspace{\quartergridunit}}    % Legacy support
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 \providecommand{\centeredpar}[1]{%             % Centered paragraph
   {\centering\noindent#1\par}%
 }
 
 % Dialogue support for narrative text
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 \providecommand{\dialogue}[1]{\par\indent #1\par}              % Standard dialogue with full indent
 
 % Epigraph environment for quotations at chapter/section beginnings
-\makeatletter
-%% FIX: Avoid duplicate environment definitions when lltparagraphs is preloaded.
+%% FIX: Avoid duplicate environment definitions when lnpparagraphs is preloaded.
 \@ifundefined{epigraph}{%
 \newenvironment{epigraph}{%
   \vspace{\gridunit}%                  % 1 grid unit before
@@ -808,7 +783,6 @@
   \@afterindentfalse%               % No indent after epigraph
 }
 }{}
-\makeatother
 
 % ==============================================================================
 % PROFESSIONAL BLOCK QUOTATION SYSTEM
@@ -834,7 +808,6 @@
 
 % STANDARD BLOCK QUOTE
 % For quotations without paragraph breaks
-\makeatletter
 %% FIX: Use \list with \endlist so quote environments close correctly.
 \renewenvironment{quote}{%
   \vspace{\gridunit}%     % 1 grid unit before
@@ -855,11 +828,9 @@
   \vspace{\gridunit}%     % 1 grid unit after
   \@afterindentfalse%                       % No indent after quote
 }
-\makeatother
 
 % EXTENDED QUOTATION
 % For quotations with multiple paragraphs
-\makeatletter
 \renewenvironment{quotation}{%
   \vspace{\gridunit}%
   \list{}{%
@@ -879,11 +850,10 @@
   \vspace{\gridunit}%
   \@afterindentfalse%
 }
-\makeatother
 
 % PROFESSIONAL ATTRIBUTION SYSTEM
 % For quote attributions with em-dash and right alignment
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 \providecommand{\quoteattribution}[1]{%
   \par\vspace{0.5\gridunit}%                       % 0.5 grid units
   \hfill{\fontsize{10}{13.2}\selectfont\color{subsubcolor}--- #1}%
@@ -892,8 +862,7 @@
 
 % EMPHASIS QUOTE (renamed to avoid csquotes conflict)
 % Dramatic presentation for important quotations
-\makeatletter
-%% FIX: Avoid duplicate environment definitions when lltparagraphs is preloaded.
+%% FIX: Avoid duplicate environment definitions when lnpparagraphs is preloaded.
 \@ifundefined{emphasisquote}{%
 \newenvironment{emphasisquote}{%
   \vspace{1.5\gridunit}%     % 1.5 units before
@@ -914,7 +883,6 @@
   \@afterindentfalse%
 }
 }{}
-\makeatother
 
 % Special handling for environments that should not indent their first paragraph
 \AtBeginEnvironment{itemize}{\parindent=0pt}
@@ -929,22 +897,20 @@
 
 % Ensure first paragraph after environments is flush left
 % Create a command for no indent that works at document level
-\makeatletter
-\newcommand{\paperstylenoindent}{\@afterindentfalse}
-\makeatother
+\newcommand{\lnp@noindent}{\@afterindentfalse}
 
 % Display environments: flush left paragraph follows
-\AtEndEnvironment{itemize}{\paperstylenoindent}
-\AtEndEnvironment{enumerate}{\paperstylenoindent}
-\AtEndEnvironment{quote}{\paperstylenoindent}
-\AtEndEnvironment{emphasisquote}{\paperstylenoindent}
-\AtEndEnvironment{verbatim}{\paperstylenoindent}
-\AtEndEnvironment{figure}{\paperstylenoindent}
-\AtEndEnvironment{table}{\paperstylenoindent}
+\AtEndEnvironment{itemize}{\lnp@noindent}
+\AtEndEnvironment{enumerate}{\lnp@noindent}
+\AtEndEnvironment{quote}{\lnp@noindent}
+\AtEndEnvironment{emphasisquote}{\lnp@noindent}
+\AtEndEnvironment{verbatim}{\lnp@noindent}
+\AtEndEnvironment{figure}{\lnp@noindent}
+\AtEndEnvironment{table}{\lnp@noindent}
 % All display and list environments: flush left paragraph follows
-\AtEndEnvironment{description}{\paperstylenoindent}
-\AtEndEnvironment{quotation}{\paperstylenoindent}
-\AtEndEnvironment{epigraph}{\paperstylenoindent}
+\AtEndEnvironment{description}{\lnp@noindent}
+\AtEndEnvironment{quotation}{\lnp@noindent}
+\AtEndEnvironment{epigraph}{\lnp@noindent}
 
 % ==============================================================================
 % OPTICAL PARAGRAPH REFINEMENTS (Hochuli's Detail in Typography)
@@ -976,7 +942,7 @@
 
 % MINIMAL DROP CAP FOR ACADEMIC USE (USE SPARINGLY)
 % Ultra-conservative 2-line drop cap - same color as body text
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 \providecommand{\academicdropcap}[2]{%
   \lettrine[%
     lines=2,%               % Modest 2-line height
@@ -989,7 +955,7 @@
 
 % FIRST LINE SMALL CAPS
 % Elegant first line treatment for section openings
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 %% FIX(#39): \fontsize{11} is an explicit 11pt, which matches NO named-size sc
 %% list (normalsize resolves to 10.95pt in the 11pt class; microtype matches
 %% sizes exactly), so the {30} WAS effective. \textls[30] preserves it; bare
@@ -1030,7 +996,7 @@
 % Additional space after major sections for visual hierarchy
 
 % Deprecated - use \vspace{\gridunit} directly
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 \providecommand{\majorsectionspace}{\vspace{\gridunit}}
 %% FIX: Restore legacy section divider command used by existing fixtures.
 \newcommand{\thinrulebreak}{%
@@ -1041,8 +1007,7 @@
 
 % FIRST PARAGRAPH ENHANCEMENT
 % Special treatment for opening paragraph of sections
-%% FIX: Avoid duplicate environment definitions when lltparagraphs is preloaded.
-\makeatletter
+%% FIX: Avoid duplicate environment definitions when lnpparagraphs is preloaded.
 \@ifundefined{openingparagraph}{%
 \newenvironment{openingparagraph}{%
   \noindent%
@@ -1054,12 +1019,11 @@
   \setlength{\parindent}{\gridunit}% Restore standard indent
 }
 }{}
-\makeatother
 
 % ACADEMIC ABSTRACT OPENING
 % Professional treatment for abstract sections
 %% FIX(#39): \fontsize{12} is exactly \large in this 11pt class, so it DOES match
-%% the display sc list at lltmicrotype.sty:90, which also specifies 80. The explicit
+%% the display sc list at lnpmicrotype.sty:90, which also specifies 80. The explicit
 %% \textls[80] is therefore render-identical either way; it is kept because it
 %% states the amount at the point of use and does not declare a global list.
 \newcommand{\abstractopening}{%
@@ -1097,7 +1061,7 @@
 
 % Inline sidenote command for margin annotations
 % Aligns to outer margin with proper baseline positioning
-%% FIX: Use providecommand so lltparagraphs preload remains compatible.
+%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 \providecommand{\sidenote}[1]{%
   \marginpar{%
     \footnotesize\raggedright%
@@ -1107,7 +1071,6 @@
   }%
 }
 
-\makeatother
 
 % ==============================================================================
 % VI. MATHEMATICAL TYPOGRAPHY SYSTEM
@@ -1226,7 +1189,7 @@
 
 % TABLE CAPTIONS (Above content - QJE style)
 %% FIX: Apply type-specific caption settings when floats are used to avoid warnings in floatless fixtures.
-\newcommand{\llttablecaptionsetup}{%
+\newcommand{\lnp@tablecaptionsetup}{%
   \captionsetup{%
     position=above,              % Always above tables
     aboveskip=0.75\gridunit,     % Effective legacy value after landscape override
@@ -1236,10 +1199,10 @@
     textfont={}                  % Regular text, black
   }%
 }
-\AtBeginEnvironment{table}{\llttablecaptionsetup}
+\AtBeginEnvironment{table}{\lnp@tablecaptionsetup}
 
 % FIGURE CAPTIONS (Below content - QJE style)
-\newcommand{\lltfigurecaptionsetup}{%
+\newcommand{\lnp@figurecaptionsetup}{%
   \captionsetup{%
     position=below,              % Always below figures
     aboveskip=0.75\gridunit,     % 0.75 units before caption (more space)
@@ -1249,7 +1212,7 @@
     textfont={}                  % Regular text, black
   }%
 }
-\AtBeginEnvironment{figure}{\lltfigurecaptionsetup}
+\AtBeginEnvironment{figure}{\lnp@figurecaptionsetup}
 
 % ==============================================================================
 % ADVANCED FLOAT PLACEMENT SYSTEM
@@ -1283,11 +1246,9 @@
 
 % PENALTIES FOR FLOAT PLACEMENT
 % Discourage problematic float arrangements
-\makeatletter
 \setlength{\@fptop}{0pt plus 1fil}      % Flexible space at top of float pages
 \setlength{\@fpsep}{\gridunit}\addtolength{\@fpsep}{0pt plus 1fil}   % 1 baseline unit between floats
 \setlength{\@fpbot}{0pt plus 1fil}      % Flexible space at bottom
-\makeatother
 
 % REFINED FLOAT SPACING - Tighter for conservative scientific papers
 % All measurements in 13.2pt quantum multiples with minimal flexibility
@@ -1319,21 +1280,19 @@
 % Insert barriers only when the explicit package option enables them.
 \let\originalsubsection\subsection
 %% FIX: Make subsection float-barrier behavior explicit; topnumber is not a pending-float test.
-\makeatletter
 \renewcommand{\subsection}{%
-  \ifllt@subsectionbarriers
+  \iflnp@subsectionbarriers
     \FloatBarrier
   \fi
   \originalsubsection
 }
 \AtBeginDocument{%
-  \ifllt@subsectionbarriers
-    \PackageInfo{lltpaperstyle}{subsection float barriers enabled}%
+  \iflnp@subsectionbarriers
+    \PackageInfo{lanepaper}{subsection float barriers enabled}%
   \else
-    \PackageInfo{lltpaperstyle}{subsection float barriers disabled}%
+    \PackageInfo{lanepaper}{subsection float barriers disabled}%
   \fi
 }
-\makeatother
 
 % MANUAL BARRIER COMMANDS
 % For fine-grained control when automatic barriers aren't sufficient
@@ -1605,7 +1564,7 @@
 % All spacing derived from the quantum and mathematical ratios
 % Optimized for Pagella's larger x-height and character proportions
 
-% Grid unit is now defined in lltdimensions.sty
+% Grid unit is now defined in lnpdimensions.sty
 % \gridunit = 13.2pt (spacing quantum, not the baseline)
 
 \newlength{\titlespacemajor}
@@ -1625,7 +1584,7 @@
 
 % Main title command - elegant with refined tracking
 %% FIX(#39): drop dead \SetTracking{...}{20}; the bold title resolves via the T1
-%% series=b list (lltmicrotype.sty:140 -> -10), so \lsstyle is render-neutral.
+%% series=b list (lnpmicrotype.sty:140 -> -10), so \lsstyle is render-neutral.
 \newcommand{\articletitle}[1]{%
   {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{sectioncolor}%
    \lsstyle #1\par}%  % softened navy
@@ -1635,7 +1594,7 @@
 % Title with footnote for acknowledgments/thanks
 % Usage: \articletitlefootnote{Title}{Footnote text}
 %% FIX(#39): drop dead \SetTracking{...}{20} (title resolves via T1 series=b,
-%% lltmicrotype.sty:140 -> -10); scope letterspacing as {\lsstyle #1} so it no
+%% lnpmicrotype.sty:140 -> -10); scope letterspacing as {\lsstyle #1} so it no
 %% longer bleeds into \footnote{#2} -- the accepted page-1 thanks-footnote fix.
 \newcommand{\articletitlefootnote}[2]{%
   {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{sectioncolor}%
@@ -1712,7 +1671,6 @@
 % Title page footnote configuration
 % Saves and restores footnote settings for main document
 % Title pages require tighter spacing due to centered content and visual balance
-\makeatletter
 \newcommand{\titlefootnotesetup}{%
   \setcounter{footnote}{0}%
   \renewcommand{\thefootnote}{\fnsymbol{footnote}}%
@@ -1770,7 +1728,6 @@
     \vspace*{13.2pt}%
   }%
 }
-\makeatother
 
 % ==============================================================================
 % VIII. PROFESSIONAL FOOTNOTE SYSTEM
@@ -1804,7 +1761,7 @@
 %% below replaces footmisc's implementation wholesale, so the options and
 %% their comment described behavior the package cancels. To pass footmisc
 %% options (e.g. bottom), use \PassOptionsToPackage{bottom}{footmisc} BEFORE
-%% loading lltpaperstyle; loading footmisc directly afterwards causes an
+%% loading lanepaper; loading footmisc directly afterwards causes an
 %% option clash.
 \RequirePackage{footmisc} % Footnote layout hooks (\@footnotemark etc.)
 % fnpct package permanently removed due to fatal compilation conflicts
@@ -1815,7 +1772,6 @@
 % Leading: 11pt (aligns with 0.833 grid lines for recovery)
 
 % Butterick's size relationships with systematic proportions
-\makeatletter
 \renewcommand\@makefntext[1]{%
   %% FIX: marker box widened 7pt -> 11.5pt. Measured at the marker's 6pt/+50
   %% tracking, Pagella's tabular old-style digits are 3.6pt each:
@@ -1839,7 +1795,6 @@
   \spaceskip=0.35em plus 0.175em minus 0.14em
   #1%
 }
-\makeatother
 
 % Professional grid-aligned spacing per foundry standards
 % Space before footnote block calculated for optimal grid recovery
@@ -1931,7 +1886,7 @@
 %
 % ------------------------------------------------------------------------------
 
-% Section formatting has been moved to lltheadings.sty
+% Section formatting has been moved to lnpheadings.sty
 
 % ==============================================================================
 % IX. CHICAGO-COMPLIANT APPENDIX MANAGEMENT SYSTEM
@@ -1968,7 +1923,6 @@
 % Core package and counter setup
 \RequirePackage{appendix}  % Professional appendix handling
 
-\makeatletter
 
 % Internal counter for tracking appendices in current document
 \newcounter{appendixcount}
@@ -1979,61 +1933,55 @@
 \multipleappendicesfalse
 
 % Initialize appendix count variable
-\def\paperstyletotalappendices{0}
+\def\lnp@totalappendices{0}
 
 % Set up appendix count reading at begin document
 \AtBeginDocument{%
-  \makeatletter%
   % Read appendix count from aux file if available
-  \@ifundefined{paperstyletotalappendices}{\def\paperstyletotalappendices{0}}{}%
-  \makeatother%
+  \@ifundefined{lnp@totalappendices}{\def\lnp@totalappendices{0}}{}%
 }
 
 % Robust appendix system - Overleaf compatible
 % Uses simple commands that work in all TeX versions
 
 % Create internal flags without @ symbols
-\newif\ifpaperstyleappendixloaded
-\newif\ifpaperstylesectionsaved
+\newif\iflnp@appendixloaded
+\newif\iflnp@sectionsaved
 
 % Check for appendix package at load time
-\makeatletter
-\@ifpackageloaded{appendix}{\paperstyleappendixloadedtrue}{\paperstyleappendixloadedfalse}
-\makeatother
+\@ifpackageloaded{appendix}{\lnp@appendixloadedtrue}{\lnp@appendixloadedfalse}
 
 % Store original section command at package load time
-\let\paperstyleorigsection\section
+\let\lnp@origsection\section
 
 %% FIX: Preserve starred and optional \section forms inside appendix wrappers.
-\makeatletter
-\newcommand{\paperstyleappendixsection}{%
-  \@ifstar{\paperstyleappendixsectionstar}{\paperstyleappendixsectionnostar}%
+\newcommand{\lnp@appendixsection}{%
+  \@ifstar{\lnp@appendixsectionstar}{\lnp@appendixsectionnostar}%
 }
-\newcommand{\paperstyleappendixsectionstar}[1]{%
-  \paperstyleorigsection*{#1}%
+\newcommand{\lnp@appendixsectionstar}[1]{%
+  \lnp@origsection*{#1}%
 }
-\newcommand{\paperstyleappendixsectionnostar}{%
+\newcommand{\lnp@appendixsectionnostar}{%
   \@ifnextchar[{%
-    \paperstyleappendixsectionwithopt
+    \lnp@appendixsectionwithopt
   }{%
-    \paperstyleappendixsectionplain
+    \lnp@appendixsectionplain
   }%
 }
-\def\paperstyleappendixsectionwithopt[#1]#2{%
+\def\lnp@appendixsectionwithopt[#1]#2{%
   \stepcounter{appendixcount}%
-  \paperstyleorigsection[#1]{#2}%
+  \lnp@origsection[#1]{#2}%
 }
-\newcommand{\paperstyleappendixsectionplain}[1]{%
+\newcommand{\lnp@appendixsectionplain}[1]{%
   \stepcounter{appendixcount}%
-  \paperstyleorigsection{#1}%
+  \lnp@origsection{#1}%
 }
-\makeatother
 
 % Main appendix commands
 \newcommand{\startappendices}{%
   \clearpage%
   % Check if appendices package is loaded
-  \ifpaperstyleappendixloaded
+  \iflnp@appendixloaded
     % Use appendices environment if available
     \begin{appendices}%
     \addappheadtotoc%
@@ -2046,29 +1994,29 @@
   % Reset counter for tracking
   \setcounter{appendixcount}{0}%
   % Mark that we've saved the section command
-  \paperstylesectionsavedtrue
+  \lnp@sectionsavedtrue
   % Redefine section to count appendices
-  \renewcommand{\section}{\paperstyleappendixsection}%
+  \renewcommand{\section}{\lnp@appendixsection}%
 }
 
 % Helper to write appendix count
 % Fix: Avoid @ symbols completely by using standard LaTeX commands
-\newcommand{\paperstylewritecount}{%
-  \addtocontents{aux}{\string\gdef\string\paperstyletotalappendices{\theappendixcount}}%
+\newcommand{\lnp@writecount}{%
+  \addtocontents{aux}{\string\gdef\string\lnp@totalappendices{\theappendixcount}}%
 }
 
 \newcommand{\finishappendices}{%
   % Write count for next run
-  \paperstylewritecount
+  \lnp@writecount
   % Close appendices environment if used
-  \ifpaperstyleappendixloaded
+  \iflnp@appendixloaded
     \end{appendices}%
   \fi
   % Restore original section command
-  \ifpaperstylesectionsaved
-    \let\section\paperstyleorigsection
+  \iflnp@sectionsaved
+    \let\section\lnp@origsection
     %% FIX: Clear saved-section state after restoring \section.
-    \paperstylesectionsavedfalse
+    \lnp@sectionsavedfalse
   \fi
 }
 
@@ -2080,7 +2028,6 @@
 }
 
 % Enhanced cleveref configuration for appendices
-\makeatletter
 \AtBeginDocument{%
   % Configure cleveref names for better appendix references
   \crefname{section}{appendix}{appendices}%
@@ -2095,7 +2042,6 @@
   \crefname{table}{table}{tables}%
   \Crefname{table}{Table}{Tables}%
 }
-\makeatother
 
 % ==============================================================================
 % X. CORE FUNCTIONALITY AND INTEGRATION
@@ -2287,7 +2233,7 @@
 \setlength{\belowrulesep}{0pt}          % Remove space below booktabs rules
 \setlength{\extrarowheight}{2.2pt}       % Extra row height; standard row measures 21.8pt (\arraystretch 1.2 × 16.32pt baseline + 2.2pt), not 13.2pt
 \setlength{\LTcapwidth}{\textwidth}     % Full-width captions for longtables
-\AtBeginEnvironment{longtable}{\llttablecaptionsetup}
+\AtBeginEnvironment{longtable}{\lnp@tablecaptionsetup}
 
 % GRID-ALIGNED TABLE ENVIRONMENTS
 % Professional table environments with automatic grid alignment
@@ -2459,19 +2405,17 @@
 }
 
 % Update hyperref colors after loading colors module
-\makeatletter
 \AtBeginDocument{%
-  \ifllt@draft
+  \iflnp@draft
     \hypersetup{colorlinks=false,pdfborder={1 1 1}}
   \else
-    \ifllt@nocolor
+    \iflnp@nocolor
       \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
     \else
       \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
     \fi
   \fi
 }
-\makeatother
 
 % PDF STRING COMPATIBILITY
 % Provide text-only alternatives for PDF bookmarks and metadata
@@ -2634,7 +2578,7 @@
   \vspace{13.2pt}% One grid unit
 }
 
-% Landscape table caption spacing is included in \llttablecaptionsetup.
+% Landscape table caption spacing is included in \lnp@tablecaptionsetup.
 
 % ==============================================================================
 % XI. MATHEMATICAL TYPOGRAPHY OPTIMIZATION
@@ -2677,13 +2621,11 @@
 
 % INLINE EQUATION SIZING
 % Compensate for Pagella's larger x-height with subtle scaling
-\makeatletter
 \newcommand{\@inlinemath}[1]{%
   \ensuremath{\scalebox{0.98}{#1}}%  % 98% scaling for inline math
 }
 % Note: Direct \everymath modification can cause issues with amsmath
 % Instead, we provide semantic commands for controlled usage
-\makeatother
 
 % Optimized script sizes for Pagella readability
 %% FIX: the document body runs at 10.95pt (the class's 11pt option), so the
@@ -2694,10 +2636,8 @@
 
 % EQUATION NUMBERING ALIGNMENT
 % Grid-aligned with upright numbers matching Pagella's oldstyle figures
-\makeatletter
 \def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip\@@italiccorr)}}
 \renewcommand{\eqref}[1]{\textup{\tagform@{\ref{#1}}}}
-\makeatother
 
 %% FIX: applies to EVERY multi-line display (the addition is unconditional),
 %% despite the earlier "numbered equations" claim. In-force \jot = 9.9pt.
@@ -2772,8 +2712,7 @@
 %% paper distinguishing \epsilon from \varepsilon or \phi from \varphi loses
 %% the distinction silently, and \vec loses its arrow. Now opt-in via the
 %% [mathredefs] package option; default is standard LaTeX semantics.
-\makeatletter
-\ifllt@mathredefs
+\iflnp@mathredefs
 \renewcommand{\le}{\leqslant}        % Slanted inequality (more elegant)
 \renewcommand{\ge}{\geqslant}        % Slanted inequality
 \renewcommand{\epsilon}{\varepsilon} % Lunate epsilon (preferred)
@@ -2782,7 +2721,6 @@
 % Vector notation with consistent weight
 \renewcommand{\vec}[1]{\mathbf{#1}}  % Bold vectors (modern style)
 \fi
-\makeatother
 
 % Set notation with proper spacing
 \providecommand{\set}[1]{\{#1\}}         % Set notation
@@ -2791,14 +2729,12 @@
 
 % DISPLAY MATH CENTERING
 % Ensure equations respect the grid
-\makeatletter
 \g@addto@macro\normalsize{%
   \setlength{\abovedisplayskip}{19.8pt plus 3.3pt minus 3.3pt}%
   \setlength{\belowdisplayskip}{19.8pt plus 3.3pt minus 3.3pt}%
   \setlength{\abovedisplayshortskip}{13.2pt plus 3.3pt minus 3.3pt}%
   \setlength{\belowdisplayshortskip}{13.2pt plus 3.3pt minus 3.3pt}%
 }
-\makeatother
 
 % ==============================================================================
 % XII. FINAL TYPOGRAPHY REFINEMENTS
@@ -2866,7 +2802,7 @@
 % PARAGRAPH COMPOSITION
 \linepenalty=10            % Standard per-line penalty
 \parfillskip=0pt plus 1fil % Standard paragraph ending
-%% FIX: duplicate \parindent assignment removed; lltdimensions.sty sets the
+%% FIX: duplicate \parindent assignment removed; lnpdimensions.sty sets the
 %% identical \parindent=\gridunit (13.2pt) and always loads.
 
 % RIVER PREVENTION
@@ -2933,7 +2869,7 @@
 %
 % ------------------------------------------------------------------------------
 
-%% FIX: Active microtype setup moved to lltmicrotype to avoid duplicated owners.
+%% FIX: Active microtype setup moved to lnpmicrotype to avoid duplicated owners.
 
 % ==============================================================================
 % PDF STRING HANDLING FOR HYPERREF
@@ -2946,7 +2882,6 @@
 
 % Define PDF-safe commands - these will be available after hyperref loads
 % Using \providecommand to avoid errors if hyperref is not loaded
-\makeatletter
 \newcommand{\pdfcode}[1]{%
   \@ifundefined{texorpdfstring}{\code{#1}}{\texorpdfstring{\code{#1}}{#1}}%
 }
@@ -2968,7 +2903,6 @@
 \newcommand{\pdfvar}[1]{%
   \@ifundefined{texorpdfstring}{\var{#1}}{\texorpdfstring{\var{#1}}{#1}}%
 }
-\makeatother
 
 % ==============================================================================
 % PARAGRAPH OPTIMIZATION COMMANDS
@@ -3046,24 +2980,22 @@
 % MINIMAL PAGE NUMBER DESIGN
 % Oldstyle figures in regular weight for subtle presence
 % Fix: Keep \thepage simple for aux files, apply formatting in footer
-\makeatletter
 % Keep the original \thepage definition for aux files
 % \renewcommand{\thepage}{\arabic{page}}  % Don't redefine - keep LaTeX default
 
 % Define formatting command for display only
-\newcommand{\paperstylepagenumber}{%
+\newcommand{\lnp@pagenumber}{%
   \fontsize{10}{13.2}\selectfont% Slightly smaller than body (10pt vs 11pt)
   \textcolor{subtlegray}{% 45% gray for reduced visual weight
     \oldstylenums{\thepage}% Oldstyle figures from Pagella
   }%
 }
-\makeatother
 
 % PAGE STYLE DEFINITIONS
 % Plain style for normal pages (numbered)
 \fancypagestyle{plain}{%
   \fancyhf{}% Clear all headers and footers
-  \fancyfoot[C]{\paperstylepagenumber}% Centered page number with formatting
+  \fancyfoot[C]{\lnp@pagenumber}% Centered page number with formatting
   \renewcommand{\headrulewidth}{0pt}% No header rule
   \renewcommand{\footrulewidth}{0pt}% No footer rule
 }
@@ -3161,16 +3093,14 @@
 % For debugging and checking configuration
 
 % Create flags for package detection
-\newif\ifpaperstylemicrotypeloaded
-\newif\ifpaperstylebiblatexloaded
+\newif\iflnp@microtypeloaded
+\newif\iflnp@biblatexloaded
 
 % Check packages at load time
-\makeatletter
-\@ifpackageloaded{microtype}{\paperstylemicrotypeloadedtrue}{\paperstylemicrotypeloadedfalse}
-\@ifpackageloaded{biblatex}{\paperstylebiblatexloadedtrue}{\paperstylebiblatexloadedfalse}
-\makeatother
+\@ifpackageloaded{microtype}{\lnp@microtypeloadedtrue}{\lnp@microtypeloadedfalse}
+\@ifpackageloaded{biblatex}{\lnp@biblatexloadedtrue}{\lnp@biblatexloadedfalse}
 
-\newcommand{\paperstylediagnostics}{%
+\newcommand{\lanepaperdiagnostics}{%
   \typeout{=== Paperstyle Diagnostics ===}%
   \typeout{LaTeX Version: \fmtversion}%
   \typeout{Document Class: article}%
@@ -3179,12 +3109,12 @@
   \typeout{Font System: TeX Gyre Pagella}%
   \typeout{Math Font: newpxmath}%
   \typeout{Mono Font: Inconsolata (zi4)}%
-  \ifpaperstylemicrotypeloaded
+  \iflnp@microtypeloaded
     \typeout{Microtype: Loaded}%
   \else
     \typeout{Microtype: Not loaded}%
   \fi
-  \ifpaperstylebiblatexloaded
+  \iflnp@biblatexloaded
     \typeout{Biblatex: Loaded}%
   \else
     \typeout{Biblatex: Not loaded}%
@@ -3193,7 +3123,7 @@
 }
 
 % Show current configuration
-\newcommand{\paperstyleinfo}{%
+\newcommand{\lanepaperinfo}{%
   \begin{description}
     \item[Typography System] TeX Gyre Pagella with newpxmath
     \item[Grid Unit] \the\gridunit{} (baseline rhythm)

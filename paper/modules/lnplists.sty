@@ -1,11 +1,11 @@
 % ==============================================================================
 % LISTS.STY - List Typography Module
 % ==============================================================================
-% Extracted from lltpaperstyle.sty for modular customization
+% Extracted from lanepaper.sty for modular customization
 % Implements sophisticated list typography with quantum-multiple spacing
 % ==============================================================================
 
-\ProvidesPackage{lltlists}[2026/08/12 v1.1 List Typography System]
+\ProvidesPackage{lnplists}[2026/08/12 v1.1 List Typography System]
 
 % Dependencies
 %% FIX: Declare graphics support because standalone marker rendering uses
@@ -16,20 +16,16 @@
 \RequirePackage{enumitem}         % List spacing control
 
 % Ensure colors are loaded
-\makeatletter
-\@ifpackageloaded{lltcolors}{}{%
+\@ifpackageloaded{lnpcolors}{}{%
   % Silently load colors module if not already loaded
-  \RequirePackage{lltcolors}%
+  \RequirePackage{lnpcolors}%
 }
-\makeatother
 
 % Ensure dimensions are loaded for grid units
-\makeatletter
-\@ifpackageloaded{lltdimensions}{}{%
+\@ifpackageloaded{lnpdimensions}{}{%
   % Silently load dimensions module if not already loaded
-  \RequirePackage{lltdimensions}%
+  \RequirePackage{lnpdimensions}%
 }
-\makeatother
 
 % ==============================================================================
 % LIST DESIGN SYSTEM
@@ -48,30 +44,29 @@
 
 % LIST SPACING PARAMETERS
 % All in multiples of the 13.2pt spacing quantum (baseline measures 16.32pt)
-% Internal lengths now prefixed with \paper@ to avoid namespace collisions
-\makeatletter
-\newlength{\paper@listhalfbaseline}
-\newlength{\paper@listquarterbaseline}
-\newlength{\paper@listbaselineskip}
-\newlength{\paper@listhangindent}
-\newlength{\paper@listnestedindent}
-\newlength{\paper@listlabelsep}
+% Internal lengths now prefixed with \lnp@ to avoid namespace collisions
+\newlength{\lnp@listhalfbaseline}
+\newlength{\lnp@listquarterbaseline}
+\newlength{\lnp@listbaselineskip}
+\newlength{\lnp@listhangindent}
+\newlength{\lnp@listnestedindent}
+\newlength{\lnp@listlabelsep}
 
 % Initialise values
-\setlength{\paper@listhalfbaseline}{6.6pt}      % 0.5 grid units
-\setlength{\paper@listquarterbaseline}{3.3pt}   % 0.25 grid units  
-\setlength{\paper@listbaselineskip}{13.2pt}     % 1 full grid unit
-\setlength{\paper@listhangindent}{26.4pt}       % 2 grid units (optimized for Pagella)
-\setlength{\paper@listnestedindent}{13.2pt}     % 1 grid unit for nested lists
-\setlength{\paper@listlabelsep}{0.7em}          % Space between bullet and text
+\setlength{\lnp@listhalfbaseline}{6.6pt}      % 0.5 grid units
+\setlength{\lnp@listquarterbaseline}{3.3pt}   % 0.25 grid units  
+\setlength{\lnp@listbaselineskip}{13.2pt}     % 1 full grid unit
+\setlength{\lnp@listhangindent}{26.4pt}       % 2 grid units (optimized for Pagella)
+\setlength{\lnp@listnestedindent}{13.2pt}     % 1 grid unit for nested lists
+\setlength{\lnp@listlabelsep}{0.7em}          % Space between bullet and text
 
 % Compatibility aliases (deprecated; will be removed in v2.0)
-\let\listhalfbaseline\paper@listhalfbaseline
-\let\listquarterbaseline\paper@listquarterbaseline
-\let\listbaselineskip\paper@listbaselineskip
-\let\listhangindent\paper@listhangindent
-\let\listnestedindent\paper@listnestedindent
-\let\listlabelsep\paper@listlabelsep
+\let\listhalfbaseline\lnp@listhalfbaseline
+\let\listquarterbaseline\lnp@listquarterbaseline
+\let\listbaselineskip\lnp@listbaselineskip
+\let\listhangindent\lnp@listhangindent
+\let\listnestedindent\lnp@listnestedindent
+\let\listlabelsep\lnp@listlabelsep
 
 % ==============================================================================
 % BULLET AND MARKER DEFINITIONS
@@ -125,12 +120,12 @@
 \setlist[itemize,1]{
   label=\bulletmark,                            % Professional gray bullet
   align=left,
-  leftmargin=\paper@listhangindent,
+  leftmargin=\lnp@listhangindent,
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
-  itemsep=\paper@listquarterbaseline,
+  labelsep=\lnp@listlabelsep,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listhalfbaseline,
+  topsep=\lnp@listhalfbaseline,
   partopsep=0pt,
   itemindent=0pt,
   listparindent=\parindent,
@@ -141,24 +136,24 @@
 % Secondary level - refined bullet
 \setlist[itemize,2]{
   label=\refineddash,                           % En-dash for variety
-  leftmargin=\paper@listnestedindent,
+  leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
-  itemsep=\paper@listquarterbaseline,
+  labelsep=\lnp@listlabelsep,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listquarterbaseline,
+  topsep=\lnp@listquarterbaseline,
   partopsep=0pt
 }
 
 % Tertiary level - diamond
 \setlist[itemize,3]{
   label=\diamondmark,                           % Diamond for deep nesting
-  leftmargin=\paper@listnestedindent,
+  leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
-  itemsep=\paper@listquarterbaseline,
+  labelsep=\lnp@listlabelsep,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listquarterbaseline,
+  topsep=\lnp@listquarterbaseline,
   partopsep=0pt
 }
 
@@ -167,12 +162,12 @@
   label=\oldstylenums{\arabic*.},              % Oldstyle figures with period
   align=left,                                   % Left-align numbers
   widest=99,                                    % Reserve space for 2 digits
-  leftmargin=\paper@listhangindent,
+  leftmargin=\lnp@listhangindent,
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
-  itemsep=\paper@listquarterbaseline,
+  labelsep=\lnp@listlabelsep,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listhalfbaseline,
+  topsep=\lnp@listhalfbaseline,
   partopsep=0pt,
   itemindent=0pt,
   listparindent=\parindent,
@@ -183,24 +178,24 @@
 % Secondary enumeration with lowercase letters
 \setlist[enumerate,2]{
   label=\alph*),                                % Lowercase letter with paren
-  leftmargin=\paper@listnestedindent,
+  leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
-  itemsep=\paper@listquarterbaseline,
+  labelsep=\lnp@listlabelsep,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listquarterbaseline,
+  topsep=\lnp@listquarterbaseline,
   partopsep=0pt
 }
 
 % Tertiary enumeration with roman numerals
 \setlist[enumerate,3]{
   label=\roman*.,                               % Lowercase roman with period
-  leftmargin=\paper@listnestedindent,
+  leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
-  itemsep=\paper@listquarterbaseline,
+  labelsep=\lnp@listlabelsep,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listquarterbaseline,
+  topsep=\lnp@listquarterbaseline,
   partopsep=0pt
 }
 
@@ -209,11 +204,11 @@
 \setlist[description]{
   font=\normalfont\scshape\color{paragraphcolor}, % Small caps terms
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
-  leftmargin=\paper@listhangindent,
-  itemsep=\paper@listquarterbaseline,
+  labelsep=\lnp@listlabelsep,
+  leftmargin=\lnp@listhangindent,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listhalfbaseline,
+  topsep=\lnp@listhalfbaseline,
   partopsep=0pt,
   before={\vspace{-\parskip}},
   after={\vspace{-\parskip}}
@@ -224,18 +219,17 @@
 % ==============================================================================
 % Following Brown's systematic approach to different contexts
 
-\makeatletter  % Resume @ usage for list configurations
 
 % Compact list for tight spacing (references, brief points)
 \newlist{compactitem}{itemize}{3}
 \setlist[compactitem,1]{
   label=\subtlebullet,
-  leftmargin=\paper@listhangindent,
+  leftmargin=\lnp@listhangindent,
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
+  labelsep=\lnp@listlabelsep,
   itemsep=0pt,                                  % No item spacing
   parsep=0pt,
-  topsep=\paper@listquarterbaseline,                  % Minimal top/bottom
+  topsep=\lnp@listquarterbaseline,                  % Minimal top/bottom
   partopsep=0pt,
   nosep                                         % Remove all spacing
 }
@@ -244,12 +238,12 @@
 \newlist{displayitem}{itemize}{3}
 \setlist[displayitem,1]{
   label=\bulletmark,                            % Full black bullet
-  leftmargin=\paper@listhangindent,
+  leftmargin=\lnp@listhangindent,
   labelindent=0pt,
-  labelsep=\paper@listlabelsep,
-  itemsep=\paper@listhalfbaseline,                    % Generous spacing
+  labelsep=\lnp@listlabelsep,
+  itemsep=\lnp@listhalfbaseline,                    % Generous spacing
   parsep=0pt,
-  topsep=\paper@listbaselineskip,                     % Full baseline above/below
+  topsep=\lnp@listbaselineskip,                     % Full baseline above/below
   partopsep=0pt,
   font=\normalfont\bfseries\color{textblack}    % Bold items for emphasis
 }
@@ -258,12 +252,12 @@
 \newlist{academicitem}{itemize}{3}
 \setlist[academicitem,1]{
   label=\llap{\refineddash\hspace{0.1em}},    % Refined en-dash
-  leftmargin=\paper@listhangindent,
+  leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=0.5em,
-  itemsep=\paper@listquarterbaseline,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listhalfbaseline,
+  topsep=\lnp@listhalfbaseline,
   partopsep=0pt
 }
 
@@ -271,35 +265,35 @@
 \newlist{readableitem}{itemize}{3}
 \setlist[readableitem,1]{
   label=\llap{\refinedbullet\hspace{0.15em}}, % Refined bullet
-  leftmargin=\paper@listhangindent,
+  leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=0.55em,
-  itemsep=\paper@listhalfbaseline,                  % 0.5 units for readability
+  itemsep=\lnp@listhalfbaseline,                  % 0.5 units for readability
   parsep=0pt,
   topsep=9.9pt plus 1.65pt,                   % 0.75 units above/below
   partopsep=0pt,
-  before={\vspace{-\parskip}\vspace{\paper@listhalfbaseline}},
-  after={\vspace{-\parskip}\vspace{\paper@listhalfbaseline}}
+  before={\vspace{-\parskip}\vspace{\lnp@listhalfbaseline}},
+  after={\vspace{-\parskip}\vspace{\lnp@listhalfbaseline}}
 }
 %% FIX: Define nested readableitem labels so recursive readable lists compile.
 \setlist[readableitem,2]{
   label=\llap{\refineddash\hspace{0.15em}},
-  leftmargin=\paper@listhangindent,
+  leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=0.55em,
-  itemsep=\paper@listquarterbaseline,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listhalfbaseline,
+  topsep=\lnp@listhalfbaseline,
   partopsep=0pt
 }
 \setlist[readableitem,3]{
   label=\llap{\diamondmark\hspace{0.15em}},
-  leftmargin=\paper@listhangindent,
+  leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=0.55em,
-  itemsep=\paper@listquarterbaseline,
+  itemsep=\lnp@listquarterbaseline,
   parsep=0pt,
-  topsep=\paper@listhalfbaseline,
+  topsep=\lnp@listhalfbaseline,
   partopsep=0pt
 }
 
@@ -338,12 +332,12 @@
 % This gives us 6.6pt (0.5 grid units) before/after lists
 % Comment out these lines to restore the original minimal spacing
 %\setlist[itemize]{
-%  before*={\vspace{-\paper@listquarterbaseline}},
-%  after*={\vspace{-\paper@listquarterbaseline}}
+%  before*={\vspace{-\lnp@listquarterbaseline}},
+%  after*={\vspace{-\lnp@listquarterbaseline}}
 %}
 %\setlist[enumerate]{
-%  before*={\vspace{-\paper@listquarterbaseline}},
-%  after*={\vspace{-\paper@listquarterbaseline}}
+%  before*={\vspace{-\lnp@listquarterbaseline}},
+%  after*={\vspace{-\lnp@listquarterbaseline}}
 %}
 
 % ==============================================================================
@@ -353,20 +347,20 @@
 
 \newcommand{\tightlists}{%
   % Minimal spacing for dense information
-  \setlist[itemize,1]{itemsep=0pt, topsep=\paper@listquarterbaseline}
-  \setlist[enumerate,1]{itemsep=0pt, topsep=\paper@listquarterbaseline}
+  \setlist[itemize,1]{itemsep=0pt, topsep=\lnp@listquarterbaseline}
+  \setlist[enumerate,1]{itemsep=0pt, topsep=\lnp@listquarterbaseline}
 }
 
 \newcommand{\normallists}{%
   % Default spacing (current settings)
-  \setlist[itemize,1]{itemsep=\paper@listquarterbaseline, topsep=\paper@listhalfbaseline}
-  \setlist[enumerate,1]{itemsep=\paper@listquarterbaseline, topsep=\paper@listhalfbaseline}
+  \setlist[itemize,1]{itemsep=\lnp@listquarterbaseline, topsep=\lnp@listhalfbaseline}
+  \setlist[enumerate,1]{itemsep=\lnp@listquarterbaseline, topsep=\lnp@listhalfbaseline}
 }
 
 \newcommand{\spaciouslists}{%
   % Generous spacing for readability
-  \setlist[itemize,1]{itemsep=\paper@listhalfbaseline, topsep=\paper@listbaselineskip}
-  \setlist[enumerate,1]{itemsep=\paper@listhalfbaseline, topsep=\paper@listbaselineskip}
+  \setlist[itemize,1]{itemsep=\lnp@listhalfbaseline, topsep=\lnp@listbaselineskip}
+  \setlist[enumerate,1]{itemsep=\lnp@listhalfbaseline, topsep=\lnp@listbaselineskip}
 }
 
 % ==============================================================================
@@ -405,8 +399,6 @@
 \AtBeginEnvironment{description}{\parindent=0pt\@afterindentfalse}
 
 % First paragraph after lists is flush left
-\makeatother  % End @ usage from specialized lists
-\makeatletter
 \AtEndEnvironment{itemize}{\@afterindentfalse}
 \AtEndEnvironment{enumerate}{\@afterindentfalse}
 \AtEndEnvironment{description}{\@afterindentfalse}
@@ -414,4 +406,3 @@
 \AtEndEnvironment{displayitem}{\@afterindentfalse}
 \AtEndEnvironment{academicitem}{\@afterindentfalse}
 \AtEndEnvironment{readableitem}{\@afterindentfalse}
-\makeatother

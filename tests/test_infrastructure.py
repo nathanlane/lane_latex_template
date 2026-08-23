@@ -65,10 +65,20 @@ def test_root_changelog_exists():
     assert (ROOT / "CHANGELOG.md").is_file()
 
 
-def test_active_build_inputs_do_not_use_removed_paperstyle_package():
+def test_active_build_inputs_do_not_use_removed_package_names():
+    # Two generations of retired names: the pre-2025 path-based layout, and
+    # the package names and the four competing macro prefixes retired by the
+    # lanepaper rename (#46). Spelling any of them literally here would make
+    # this file match its own pattern.
+    # Each fragment is built by concatenation so this file never contains a
+    # literal that matches its own pattern.
     legacy_path = "paper/" + "paperstyle"
-    legacy_file = r"(?<!llt)" + "paperstyle" + r"\.sty"
-    stale_re = re.compile(rf"{legacy_path}|{legacy_file}")
+    legacy_file = "paperstyle" + r"\.sty"
+    legacy_pkg = r"\b" + "llt" + r"[a-z]+"
+    legacy_prefix = r"\\(" + "llt" + r"|paper|paperstyle)@"
+    stale_re = re.compile(
+        "|".join([legacy_path, legacy_file, legacy_pkg, legacy_prefix])
+    )
     offenders = []
     for rel_path, path in tracked_active_source_files():
         if rel_path.startswith(("docs/", "archive/")):

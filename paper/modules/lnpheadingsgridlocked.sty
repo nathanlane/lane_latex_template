@@ -5,25 +5,21 @@
 % Balances orphan prevention with minimal grid drift
 % ==============================================================================
 
-\ProvidesPackage{lltheadingsgridlocked}[2026/08/12 v1.1 Grid-Locked Heading System]
+\ProvidesPackage{lnpheadingsgridlocked}[2026/08/12 v1.1 Grid-Locked Heading System]
 
 % Dependencies
 \RequirePackage{titlesec}         % Custom section formatting
 \RequirePackage{etoolbox}         % For \AtBeginEnvironment
 
 % Ensure colors are loaded
-\makeatletter
-\@ifpackageloaded{lltcolors}{}{%
-  \RequirePackage{lltcolors}%
+\@ifpackageloaded{lnpcolors}{}{%
+  \RequirePackage{lnpcolors}%
 }
-\makeatother
 
 % Ensure dimensions are loaded for grid units
-\makeatletter
-\@ifpackageloaded{lltdimensions}{}{%
-  \RequirePackage{lltdimensions}%
+\@ifpackageloaded{lnpdimensions}{}{%
+  \RequirePackage{lnpdimensions}%
 }
-\makeatother
 
 % ==============================================================================
 % GRID-LOCKED SECTION HIERARCHY
@@ -62,7 +58,7 @@
 % ==============================================================================
 
 % SECTIONS: Minimal flexibility for critical orphan prevention only
-%% FIX: \SetTracking is global and lltmicrotype's series=b rule annuls it on
+%% FIX: \SetTracking is global and lnpmicrotype's series=b rule annuls it on
 %% bold headings — dead code that churned the tracking list on every heading.
 \titleformat{\section}
   {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{sectioncolor}}  % 18pt bold, softened navy
@@ -166,9 +162,7 @@
 % default 10000: rigid grid spacing needs more break flexibility. This is an
 % intentional variant regime, not a restatement of the default values.
 % Less aggressive to work with tighter spacing
-\makeatletter
 \@secpenalty=-500            % Mild preference for breaks before sections
-\makeatother
 \clubpenalty=5000            % Prevent orphans (reduced from 10000)
 \widowpenalty=5000           % Prevent widows (reduced from 10000)
 

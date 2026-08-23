@@ -33,7 +33,7 @@ DATA_DIR = data
 # Source files
 TEX_SOURCES = $(MAIN).tex $(wildcard $(PAPER_DIR)/*.tex) $(wildcard $(APPENDICES_DIR)/*.tex)
 BIB_SOURCES = references.bib
-STYLE_SOURCES = $(PAPER_DIR)/lltpaperstyle.sty $(PAPER_DIR)/preamble.tex
+STYLE_SOURCES = $(PAPER_DIR)/lanepaper.sty $(PAPER_DIR)/preamble.tex
 
 # Python sources
 PY_SOURCES = $(wildcard $(SRC_DIR)/py/*.py)
@@ -130,8 +130,8 @@ watch:
 validate:
 	@echo "==> Validating template integrity..."
 	@# FIX: Validate the renamed package that is actually shipped.
-	@if ! test -f $(PAPER_DIR)/lltpaperstyle.sty; then \
-		echo "==> ERROR: lltpaperstyle.sty not found"; exit 1; \
+	@if ! test -f $(PAPER_DIR)/lanepaper.sty; then \
+		echo "==> ERROR: lanepaper.sty not found"; exit 1; \
 	fi
 	@if ! test -f references.bib; then \
 		echo "==> ERROR: references.bib not found"; exit 1; \
@@ -254,9 +254,9 @@ diagnose:
 	@echo "==> Running LaTeX diagnostics..."
 	@echo "\\documentclass{article}" > diagnose.tex
 	@echo "% FIX: Load the renamed package for diagnostics." >> diagnose.tex
-	@echo "\\usepackage{lltpaperstyle}" >> diagnose.tex
+	@echo "\\usepackage{lanepaper}" >> diagnose.tex
 	@echo "\\begin{document}" >> diagnose.tex
-	@echo "\\paperstylediagnostics" >> diagnose.tex
+	@echo "\\lanepaperdiagnostics" >> diagnose.tex
 	@echo "\\end{document}" >> diagnose.tex
 	@$(LATEX) -interaction=nonstopmode diagnose.tex > /dev/null 2>&1 || true
 	@rm -f diagnose.*

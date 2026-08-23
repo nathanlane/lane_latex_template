@@ -2,7 +2,7 @@
 
 ## Overview
 
-The dimensions module (`lltdimensions.sty`) manages page geometry and implements the 13.2pt spacing quantum system for consistent vertical rhythm (the body baseline measures 16.32pt).
+The dimensions module (`lnpdimensions.sty`) manages page geometry and implements the 13.2pt spacing quantum system for consistent vertical rhythm (the body baseline measures 16.32pt).
 
 ## Spacing Quantum System
 
@@ -44,7 +44,7 @@ The dimensions module (`lltdimensions.sty`) manages page geometry and implements
 
 ### Basic Usage
 ```latex
-\RequirePackage{lltdimensions}
+\RequirePackage{lnpdimensions}
 ```
 
 ### Spacing Commands
@@ -95,7 +95,7 @@ The module provides three paragraph formatting styles:
 ### Visualizing the Grid
 ```latex
 % In document preamble
-\usepackage{lltdimensions}
+\usepackage{lnpdimensions}
 \usepackage{paper/gridoverlay}
 
 % In document
@@ -120,13 +120,13 @@ The module provides three paragraph formatting styles:
 ```latex
 % Before loading module
 \PassOptionsToPackage{a4paper}{geometry}
-\RequirePackage{lltdimensions}
+\RequirePackage{lnpdimensions}
 ```
 
 ### Custom Margins
 ```latex
 % Load module first
-\RequirePackage{lltdimensions}
+\RequirePackage{lnpdimensions}
 
 % Then adjust
 \geometry{margin=1in}
@@ -135,7 +135,7 @@ The module provides three paragraph formatting styles:
 ### Two-Column Layout
 ```latex
 \documentclass[twocolumn]{article}
-\usepackage{lltdimensions}
+\usepackage{lnpdimensions}
 % Grid system adapts automatically
 ```
 
@@ -158,7 +158,7 @@ The module provides three paragraph formatting styles:
 % Must set before loading module
 \newlength{\gridunit}
 \setlength{\gridunit}{12pt}  % Custom grid
-\RequirePackage{lltdimensions}
+\RequirePackage{lnpdimensions}
 ```
 
 ## Best Practices

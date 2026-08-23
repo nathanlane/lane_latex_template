@@ -3,7 +3,7 @@
 % ==============================================================================
 % 
 % This file provides the essential package loading and configuration for
-% academic papers using the lltpaperstyle.sty typography system.
+% academic papers using the lanepaper.sty typography system.
 %
 % Version: 1.2-alpha
 % Author: Academic Paper Template Project
@@ -13,7 +13,7 @@
 %   \input{paper/preamble.tex}
 %
 % DEPENDENCIES:
-%   - lltpaperstyle.sty (core typography system)
+%   - lanepaper.sty (core typography system)
 %   - references.bib (bibliography database)
 %   - Modern LaTeX distribution with bibtex backend
 %
@@ -30,24 +30,24 @@
 % ------------------------------------------------------------------------------
 % CORE TYPOGRAPHY SYSTEM WITH INTEGRATED BIBLIOGRAPHY
 % ------------------------------------------------------------------------------
-% lltpaperstyle automatically loads biblatex with the template defaults.
+% lanepaper automatically loads biblatex with the template defaults.
 % Use the nobiblatex option only when you need custom biblatex options.
 %% FIX: Load the renamed package by package name to match \ProvidesPackage.
-\usepackage{lltpaperstyle}
+\usepackage{lanepaper}
 
 % Load the bibliography database
-% (biblatex is already loaded by lltpaperstyle with authoryear style and biber backend)
+% (biblatex is already loaded by lanepaper with authoryear style and biber backend)
 \addbibresource{references.bib}
 
 % ------------------------------------------------------------------------------
 % CUSTOM BIBLIOGRAPHY CONFIGURATION (Optional)
 % ------------------------------------------------------------------------------
-% If you need custom biblatex options, load biblatex BEFORE lltpaperstyle and
+% If you need custom biblatex options, load biblatex BEFORE lanepaper and
 % pass nobiblatex so the template does not load biblatex a second time:
 %
 % \usepackage[backend=bibtex,style=numeric]{biblatex}
 % \addbibresource{references.bib}
-% \usepackage[nobiblatex]{lltpaperstyle}
+% \usepackage[nobiblatex]{lanepaper}
 
 % No custom formatting - using vanilla biblatex for maximum compatibility
 

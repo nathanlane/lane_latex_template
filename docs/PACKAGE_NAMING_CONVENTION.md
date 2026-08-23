@@ -1,95 +1,71 @@
-# Lane LaTeX Template (LLT) Package Naming Convention
+# Package Naming Convention
 
-## Overview
+The package is **`lanepaper`**. Everything it ships is named from that one word.
 
-As of July 2025, the Lane LaTeX Template has adopted a systematic naming convention for all packages and modules. This change improves package identification and prevents naming conflicts with other LaTeX packages.
+## The rule
 
-## Naming Convention
+| What | Name | Why |
+|------|------|-----|
+| The package a document loads | `lanepaper` | The CTAN name; what `\usepackage` takes |
+| Every other `.sty` file | `lnp` + role | Short abbreviation of `lanepaper` |
+| Every internal macro | `\lnp@` + role | Same abbreviation, so files and macros agree |
+| Public commands | no prefix | See `paper/modules/NAMESPACE_CONVENTIONS.md` |
 
-All packages now use the `llt` prefix (Lane LaTeX Template):
+The short abbreviation follows CTAN practice rather than repeating the package
+name on every file. `biblatex` is the closest parallel: CTAN name `biblatex`,
+shipped files `blx-*.sty`, internal macros `\blx@`. Compare `\MT@` (microtype),
+`\Hy@` (hyperref), `\Gm@` (geometry), `\ttl@` (titlesec).
 
-| Old Name (Path-based) | New Name (Direct) |
-|-----------------------|-------------------|
-| `paper/paperstyle` | `lltpaperstyle` |
-| `paper/modules/colors` | `lltcolors` |
-| `paper/modules/fonts` | `lltfonts` |
-| `paper/modules/dimensions` | `lltdimensions` |
-| `paper/modules/headings` | `lltheadings` |
-| `paper/modules/lists` | `lltlists` |
-| `paper/modules/paragraphs` | `lltparagraphs` |
-| `paper/modules/compilation-fixes-simple` | `lltcompilationfixessimple` |
-| `paper/modules/microtype-config` | `lltmicrotypeconfig` |
-| `paper/modules/headings-gridlocked` | `lltheadingsgridlocked` |
-| `paper/modules/mathematics-gridlocked` | `lltmathematicsgridlocked` |
-| `paper/modules/hochuli-refinements` | `llthochulirefinements` |
-| `paper/modules/font-features` | `lltfontfeatures` |
-| `paper/modules/font-fallbacks` | `lltfontfallbacks` |
-| `paper/gridoverlay` | `lltgridoverlay` |
+## Entry points
 
-## Migration Guide
+Loaded directly by a document.
 
-### For Documents Using the Main Package
+| Package | File |
+|---------|------|
+| `lanepaper` | `paper/lanepaper.sty` |
+| `lnpgridoverlay` | `paper/lnpgridoverlay.sty` |
+| `lnpminimal` | `paper/lnpminimal.sty` |
 
-**Old usage:**
+## Modules
+
+Loaded by `lanepaper`, by name and never by path.
+
+| Package | File |
+|---------|------|
+| `lnpcolors` | `paper/modules/lnpcolors.sty` |
+| `lnpcompilationfixes` | `paper/modules/lnpcompilationfixes.sty` |
+| `lnpdimensions` | `paper/modules/lnpdimensions.sty` |
+| `lnpfontfallbacks` | `paper/modules/lnpfontfallbacks.sty` |
+| `lnpfontfeatures` | `paper/modules/lnpfontfeatures.sty` |
+| `lnpfonts` | `paper/modules/lnpfonts.sty` |
+| `lnpheadings` | `paper/modules/lnpheadings.sty` |
+| `lnpheadingsgridlocked` | `paper/modules/lnpheadingsgridlocked.sty` |
+| `lnphochuli` | `paper/modules/lnphochuli.sty` |
+| `lnplists` | `paper/modules/lnplists.sty` |
+| `lnpmathgridlocked` | `paper/modules/lnpmathgridlocked.sty` |
+| `lnpmicrotype` | `paper/modules/lnpmicrotype.sty` |
+| `lnpparagraphs` | `paper/modules/lnpparagraphs.sty` |
+
+## Loading
+
+Load by package name. Paths are not package names:
+
 ```latex
-\usepackage{paper/paperstyle}
+\usepackage{lanepaper}        % correct
+\usepackage{paper/paperstyle}  % wrong - removed, and never a package name
 ```
 
-**New usage:**
-```latex
-\usepackage{lltpaperstyle}
-```
+Module resolution depends on `TEXINPUTS` covering `./paper` and
+`./paper/modules`. That is set in `Makefile`, `.latexmkrc`, `compile.sh`,
+`tests/run-tests.sh`, and `tests/test-bibliography.sh`. Once the package is
+installed into a texmf tree via `l3build install`, that is no longer needed.
 
-### For Documents Using Individual Modules
+## Retired names
 
-**Old usage:**
-```latex
-\RequirePackage{paper/modules/colors}
-\RequirePackage{paper/modules/lists}
-```
+`tests/test_infrastructure.py` fails the build if any of these reappears in an
+active source file:
 
-**New usage:**
-```latex
-\RequirePackage{lltcolors}
-\RequirePackage{lltlists}
-```
-
-### For Custom Module Loading
-
-**Old usage:**
-```latex
-% Define custom settings
-\definecolor{mycolor}{RGB}{100,100,100}
-% Load module with path
-\RequirePackage{paper/modules/colors}
-```
-
-**New usage:**
-```latex
-% Define custom settings
-\definecolor{mycolor}{RGB}{100,100,100}
-% Load module directly
-\RequirePackage{lltcolors}
-```
-
-## Benefits
-
-1. **Cleaner Syntax**: No path separators needed
-2. **Standard Compliance**: Follows LaTeX package naming conventions
-3. **Namespace Protection**: `llt` prefix prevents conflicts
-4. **Easier Installation**: Can be installed in standard TeX directories
-5. **Better Portability**: Works consistently across different systems
-
-## Backward Compatibility
-
-For temporary backward compatibility during migration, you can create symbolic links or wrapper files, but it's recommended to update your documents to use the new naming convention directly.
-
-## Technical Details
-
-The renaming follows these principles:
-- Remove path separators (`/`)
-- Add `llt` prefix
-- Convert hyphens to camelCase where appropriate
-- Maintain lowercase convention
-
-All internal module dependencies have been updated to use the new names, so the system remains fully functional with the new naming convention.
+- `paper/paperstyle`, `paperstyle.sty` - the pre-2025 path-based layout
+- `llt*` - the 2025-2026 package names, retired by ADR-0001
+- `\paper@`, `\llt@`, `\lltpaperstyle@`, `\lltfontfeatures@`, `\paperstyle@` -
+  the four competing macro prefixes, collapsed into `\lnp@`

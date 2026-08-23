@@ -127,4 +127,4 @@ Use this comprehensive checklist to ensure your academic paper meets the highest
 
 5. **Accessibility Verification**: Test PDF with screen readers and color-blind simulation tools
 
-This checklist ensures your academic paper meets professional publication standards while maintaining the typography excellence of the paperstyle.sty system.
+This checklist ensures your academic paper meets professional publication standards while maintaining the typography excellence of the lanepaper system.

@@ -5,16 +5,15 @@
 % Implements optical margin alignment following Gutenberg's principles
 % ==============================================================================
 
-\ProvidesPackage{lltmicrotype}[2026/08/12 v1.2 Microtype Configuration]
+\ProvidesPackage{lnpmicrotype}[2026/08/12 v1.2 Microtype Configuration]
 
-\makeatletter
-%% FIX: Make lltmicrotype standalone-safe while honoring lltpaperstyle draft mode.
-\@ifundefined{ifllt@draft}{\newif\ifllt@draft}{}
+%% FIX: Make lnpmicrotype standalone-safe while honoring lanepaper draft mode.
+\@ifundefined{iflnp@draft}{\newif\iflnp@draft}{}
 \@ifpackageloaded{microtype}{%
-  \PackageInfo{lltmicrotype}{microtype already loaded - using existing package options}%
+  \PackageInfo{lnpmicrotype}{microtype already loaded - using existing package options}%
 }{%
-  \ifllt@draft
-    \PackageInfo{lltmicrotype}{microtype draft mode active}%
+  \iflnp@draft
+    \PackageInfo{lnpmicrotype}{microtype draft mode active}%
     \RequirePackage[
       activate={true,nocompatibility},
       draft,
@@ -28,7 +27,7 @@
       verbose=silent
     ]{microtype}%
   \else
-    \PackageInfo{lltmicrotype}{microtype final mode active}%
+    \PackageInfo{lnpmicrotype}{microtype final mode active}%
     \RequirePackage[
       activate={true,nocompatibility},
       final,
@@ -45,7 +44,7 @@
 }
 
 %% FIX: Keep all active microtype setup in this module as the single owner.
-\ifllt@draft
+\iflnp@draft
   \microtypesetup{
     protrusion=true,
     expansion=true,
@@ -66,7 +65,6 @@
     final
   }
 \fi
-\makeatother
 
 %% FIX: Keep active tracking and extra-kerning setup in the microtype module.
 % SMALL CAPS TRACKING OPTIMIZATION (Size & Context Responsive)

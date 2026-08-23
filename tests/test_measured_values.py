@@ -16,13 +16,13 @@ from test_option_contracts import assert_compiles, compile_latex
 
 def measure(tmp_path, name, probes, preamble_option=""):
     """Compile a fixture that typeouts the requested register values."""
-    lines = "\n".join(f"\\typeout{{LLT_MEASURE-{label}={cmd}}}" for label, cmd in probes)
+    lines = "\n".join(f"\\typeout{{LNP_MEASURE-{label}={cmd}}}" for label, cmd in probes)
     result, log_text = compile_latex(
         tmp_path,
         name,
         r"""
         \documentclass[11pt]{article}
-        \usepackage%s{lltpaperstyle}
+        \usepackage%s{lanepaper}
         \begin{document}
         %s
         Text.
@@ -33,7 +33,7 @@ def measure(tmp_path, name, probes, preamble_option=""):
     assert_compiles(result, log_text)
     out = {}
     for label, _ in probes:
-        match = re.search(rf"LLT_MEASURE-{label}=([^\s]+)", log_text)
+        match = re.search(rf"LNP_MEASURE-{label}=([^\s]+)", log_text)
         assert match, f"probe {label} missing from log"
         out[label] = match.group(1)
     return out
@@ -71,18 +71,18 @@ def test_measured_footnotesep_below_strut_floor(tmp_path):
         "measure-footnotesep",
         r"""
         \documentclass[11pt]{article}
-        \usepackage{lltpaperstyle}
+        \usepackage{lanepaper}
         \begin{document}
         Text.\footnote{%
-          \typeout{LLT_MEASURE-FNSEP=\the\footnotesep}
-          \typeout{LLT_MEASURE-FNSKIP=\the\baselineskip}
+          \typeout{LNP_MEASURE-FNSEP=\the\footnotesep}
+          \typeout{LNP_MEASURE-FNSKIP=\the\baselineskip}
           A note.}
         \end{document}
         """,
     )
     assert_compiles(result, log_text)
-    fnsep = pt(re.search(r"LLT_MEASURE-FNSEP=([0-9.]+)pt", log_text).group(1))
-    fnskip = pt(re.search(r"LLT_MEASURE-FNSKIP=([0-9.]+)pt", log_text).group(1))
+    fnsep = pt(re.search(r"LNP_MEASURE-FNSEP=([0-9.]+)pt", log_text).group(1))
+    fnskip = pt(re.search(r"LNP_MEASURE-FNSKIP=([0-9.]+)pt", log_text).group(1))
     assert abs(fnsep - 3.3) < 0.01
     assert abs(fnskip - 12.0) < 0.01
     assert fnsep < 8.4  # inert: below the footnote strut
@@ -115,16 +115,16 @@ def test_measured_scriptscript_size_fires(tmp_path):
         "measure-mathsizes",
         r"""
         \documentclass[11pt]{article}
-        \usepackage{lltpaperstyle}
+        \usepackage{lanepaper}
         \begin{document}
         $a_{b_{c}}$
         \makeatletter
-        \typeout{LLT_MEASURE-SSFONT=\the\scriptscriptfont0}
+        \typeout{LNP_MEASURE-SSFONT=\the\scriptscriptfont0}
         \makeatother
         \end{document}
         """,
     )
     assert_compiles(result, log_text)
-    match = re.search(r"LLT_MEASURE-SSFONT=.*n/(\d+(?:\.\d+)?)", log_text)
+    match = re.search(r"LNP_MEASURE-SSFONT=.*n/(\d+(?:\.\d+)?)", log_text)
     assert match, log_text
     assert abs(float(match.group(1)) - 6.0) < 0.001

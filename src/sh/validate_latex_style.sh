@@ -190,7 +190,7 @@ main() {
   # Check required files exist
   local required_files=(
     "main.tex"
-    "paper/lltpaperstyle.sty"
+    "paper/lanepaper.sty"
     "paper/preamble.tex"
     "references.bib"
     "AGENTS.md"

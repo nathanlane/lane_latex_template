@@ -101,7 +101,7 @@ Captions:        0.5 quanta above/below (6.6pt)
 ### Visual Grid Test
 Load the grid overlay to verify rhythm:
 ```latex
-\usepackage[grid]{lltpaperstyle}
+\usepackage[grid]{lanepaper}
 \showgrid
 ```
 The overlay's base lines step at the true body baseline (16.32pt); the

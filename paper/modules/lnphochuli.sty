@@ -5,18 +5,16 @@
 % These subtle refinements add the last 5-10% of typographic perfection
 % ==============================================================================
 
-\ProvidesPackage{llthochuli}[2026/08/12 v1.1 Hochuli Optical Refinements]
+\ProvidesPackage{lnphochuli}[2026/08/12 v1.1 Hochuli Optical Refinements]
 
 % Dependencies
 \RequirePackage{ragged2e}  % Better ragged right
 \RequirePackage{microtype} % Should already be loaded
 
 % Ensure dimensions are loaded
-\makeatletter
-\@ifpackageloaded{lltdimensions}{}{%
-  \RequirePackage{lltdimensions}%
+\@ifpackageloaded{lnpdimensions}{}{%
+  \RequirePackage{lnpdimensions}%
 }
-\makeatother
 
 % ==============================================================================
 % LIGATURE CONTROL
@@ -25,7 +23,6 @@
 % Note: selnolig requires LuaLaTeX, so we provide pdfLaTeX alternatives
 
 % Manual ligature breaking for problem words
-\makeatletter
 \newcommand{\nolig}[1]{%
   \def\@nolig##1##2{%
     \ifx##1f%
@@ -39,7 +36,6 @@
   }%
   \@nolig#1\relax%
 }
-\makeatother
 
 % Common problem words
 \newcommand{\offering}{of\kern0.05em fering}

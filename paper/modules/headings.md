@@ -2,7 +2,7 @@
 
 ## Overview
 
-The headings module (`lltheadings.sty`) provides sophisticated section and heading formatting with quantum-multiple spacing and professional typography.
+The headings module (`lnpheadings.sty`) provides sophisticated section and heading formatting with quantum-multiple spacing and professional typography.
 
 ## Heading Hierarchy
 
@@ -24,7 +24,7 @@ The headings module (`lltheadings.sty`) provides sophisticated section and headi
 
 ### Basic Usage
 ```latex
-\RequirePackage{lltheadings}
+\RequirePackage{lnpheadings}
 ```
 
 ### Standard Commands
@@ -199,8 +199,8 @@ Use `\safeparagraph{Title}` instead of `\paragraph{Title}`
 ### Color Not Applying
 Ensure colors module is loaded:
 ```latex
-\RequirePackage{lltcolors}
-\RequirePackage{lltheadings}
+\RequirePackage{lnpcolors}
+\RequirePackage{lnpheadings}
 ```
 
 ## Examples

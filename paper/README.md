@@ -1,4 +1,4 @@
-# lltpaperstyle Documentation
+# lanepaper Documentation
 
 **v2.0** | **Modular LaTeX Style Package for Academic Typography**
 
@@ -26,23 +26,23 @@ For quick start, basic usage, and compilation instructions, see [`../README.md`]
 ### Module Structure
 
 ```
-lltpaperstyle.sty (main package)
+lanepaper.sty (main package)
 ├── Core Modules (automatically loaded):
-│   ├── lltcompilationfixes.sty        - Common LaTeX warning fixes
-│   ├── lltfonts.sty                   - Font configuration (Pagella, Inconsolata, math)
-│   ├── lltcolors.sty                  - Professional color system
-│   ├── lltdimensions.sty              - Grid system and spacing definitions
-│   ├── lltheadings.sty                - Section heading styles with colors
-│   ├── lltlists.sty                   - List typography with refined bullets
-│   └── lltmicrotype.sty               - Enhanced character protrusion and expansion
+│   ├── lnpcompilationfixes.sty        - Common LaTeX warning fixes
+│   ├── lnpfonts.sty                   - Font configuration (Pagella, Inconsolata, math)
+│   ├── lnpcolors.sty                  - Professional color system
+│   ├── lnpdimensions.sty              - Grid system and spacing definitions
+│   ├── lnpheadings.sty                - Section heading styles with colors
+│   ├── lnplists.sty                   - List typography with refined bullets
+│   └── lnpmicrotype.sty               - Enhanced character protrusion and expansion
 │
 └── Optional Enhancement Modules:
-    ├── lltparagraphs.sty              - Advanced paragraph formatting
-    ├── lltheadingsgridlocked.sty      - Stricter grid alignment
-    ├── lltmathgridlocked.sty          - Minimal math flexibility
-    ├── llthochuli.sty                 - Optical adjustments; kerning pairs and last-line control apply on load; ligature suppression and hanging-quote commands are opt-in
-    ├── lltfontfeatures.sty            - Full Pagella feature access
-    └── lltfontfallbacks.sty           - Compatibility mode
+    ├── lnpparagraphs.sty              - Advanced paragraph formatting
+    ├── lnpheadingsgridlocked.sty      - Stricter grid alignment
+    ├── lnpmathgridlocked.sty          - Minimal math flexibility
+    ├── lnphochuli.sty                 - Optical adjustments; kerning pairs and last-line control apply on load; ligature suppression and hanging-quote commands are opt-in
+    ├── lnpfontfeatures.sty            - Full Pagella feature access
+    └── lnpfontfallbacks.sty           - Compatibility mode
 ```
 
 ### Using Individual Modules
@@ -51,10 +51,10 @@ Load only the features you need:
 
 ```latex
 % Just the professional color system
-\RequirePackage{lltcolors}
+\RequirePackage{lnpcolors}
 
 % Or just the heading styles
-\RequirePackage{lltheadings}
+\RequirePackage{lnpheadings}
 ```
 
 ### Custom Module Configuration
@@ -65,17 +65,17 @@ Load modules with custom settings before the main package:
 % Custom grid unit
 \newlength{\gridunit}
 \setlength{\gridunit}{12pt}
-\RequirePackage{lltdimensions}
+\RequirePackage{lnpdimensions}
 
 % Then load main package
-\usepackage{lltpaperstyle}
+\usepackage{lanepaper}
 ```
 
 For complete module documentation, see [modules/README.md](modules/README.md).
 
 #### List Typography Module
 
-`lltlists.sty` gives you carefully tuned list environments spaced in 13.2pt quantum multiples and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
+`lnplists.sty` gives you carefully tuned list environments spaced in 13.2pt quantum multiples and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
 
 * Level 1 • Professional grey bullet  
 * Level 2 – en-dash  
@@ -434,7 +434,7 @@ The system uses a two-pass auxiliary file mechanism:
 
 1. **First Pass**: Counts appendices and writes count to `.aux` file
 2. **Second Pass**: Reads count and formats accordingly
-3. **Detection Logic**: `\ifnum\paperstyle@totalappendices>1`
+3. **Detection Logic**: `\ifnum\lnp@totalappendices>1`
 
 ### Usage Patterns
 
@@ -586,9 +586,9 @@ The system uses a two-pass auxiliary file mechanism:
 
 ### Primary System (biblatex with biber)
 
-The canonical path is to load `lltpaperstyle`, which auto-loads the default
+The canonical path is to load `lanepaper`, which auto-loads the default
 biblatex configuration, then register `references.bib`. Use
-`\usepackage[nobiblatex]{lltpaperstyle}` only when loading biblatex manually with
+`\usepackage[nobiblatex]{lanepaper}` only when loading biblatex manually with
 custom options.
 
 ```latex
@@ -796,14 +796,14 @@ Quarter quantum (\quartergridunit): 3.3pt
 ```latex
 % Two-pass auxiliary file mechanism
 \newcounter{appendixcount}
-\newcommand{\paperstyle@writeappendixcount}{%
+\newcommand{\lnp@writeappendixcount}{%
   \immediate\write\@auxout{%
-    \string\gdef\string\paperstyle@totalappendices{\theappendixcount}%
+    \string\gdef\string\lnp@totalappendices{\theappendixcount}%
   }%
 }
 
 % Conditional formatting based on count
-\ifnum\paperstyle@totalappendices>1\relax
+\ifnum\lnp@totalappendices>1\relax
   \multipleappendicestrue
 \else
   \multipleappendicesfalse

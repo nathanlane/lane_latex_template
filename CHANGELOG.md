@@ -4,6 +4,46 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Renamed the package to `lanepaper` and unified the internal prefix to `\lnp@`
+(branch `refactor/rename-lanepaper-46`, issue #46, ADR-0001):
+
+- `\usepackage{lltpaperstyle}` is now `\usepackage{lanepaper}`. The 16 `.sty`
+  files were renamed: `paper/lanepaper.sty` is the package, `lnpminimal` and
+  `lnpgridoverlay` are the other entry points, and the 13 modules are `lnp` +
+  role. The short prefix follows CTAN practice — `biblatex` ships `blx-*.sty`
+  with `\blx@` macros; compare `\MT@`, `\Hy@`, `\Gm@`, `\ttl@`.
+- Five competing internal prefixes collapsed into `\lnp@`: `\paper@` (105),
+  `\ifllt@` (32), `\llt@` (27), `\paperstyle@` (6), `\lltpaperstyle@` (4) and
+  `\lltfontfeatures@` (5). LaTeX kernel macros (`\p@`, `\f@`, `\z@`,
+  `\tagform@`, `\maketag@`, `\g@`) are untouched — verified by count.
+- The undecorated `\paperstyle*` family (24 macros) went the same way. The 22
+  internal ones are now `\lnp@*`; the two entry points a user actually types
+  are `\lanepaperdiagnostics` and `\lanepaperinfo`. `\lanepaperinfo` is
+  defined but never called anywhere — left in place, worth revisiting.
+- Removed 137 `\makeatletter`/`\makeatother` lines from the package files.
+  `@` is a letter inside a `.sty` by construction, so each `\makeatother` was
+  revoking that for the rest of the file; the old macro names had no `@` so
+  nothing noticed. With `\lnp@` names this broke the build outright at 39
+  sites. `lnplists.sty` also had one unbalanced `\makeatletter`.
+- `tests/test_infrastructure.py` now guards both generations of retired names —
+  the pre-2025 `paper/paperstyle` layout and the `llt*` / prefix names — and
+  builds its pattern by concatenation so it cannot match its own source.
+- `docs/PACKAGE_NAMING_CONVENTION.md` was regenerated from the actual file
+  list; it had carried four modules that never existed
+  (`lltcompilationfixessimple`, `lltmicrotypeconfig`,
+  `lltmathematicsgridlocked`, `llthochulirefinements`) since July 2025.
+  `NAMESPACE_CONVENTIONS.md` records why `\lnp@` was chosen over `\lane@`.
+- Archival documents keep the old names on purpose: the ADRs, `CONTEXT.md`'s
+  glossary, dated reviews and audits under `docs/`, `docs/archive/`,
+  `paper/MIGRATION.md`, and this file's history.
+
+Verified by per-page raster comparison at 150dpi against the pre-rename build.
+`main.pdf`: 38 of 40 pages byte-identical; pages 4 and 39 differ only where the
+demo prints `\usepackage{lltpaperstyle}` in its own code listing, which the
+rename is supposed to change. `tests/fixtures/opening-test.tex`, the only
+document exercising `\firstlinesc`, is identical on all 5 pages. `pytest -q`
+31 passed; `tests/run-tests.sh` 115 passed, 0 failed.
+
 Deleted the stale `.dtx`/`.ins` scaffold (branch `chore/delete-dtx-scaffold-49`,
 issue #49):
 

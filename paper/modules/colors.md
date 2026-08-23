@@ -2,7 +2,7 @@
 
 ## Overview
 
-The colors module (`lltcolors.sty`) provides a sophisticated color system with semantic naming, professional aesthetics, and accessibility compliance.
+The colors module (`lnpcolors.sty`) provides a sophisticated color system with semantic naming, professional aesthetics, and accessibility compliance.
 
 ## Color Philosophy
 
@@ -42,7 +42,7 @@ subtlegray      % gray!85         - Very dark gray
 
 ### Basic Usage
 ```latex
-\RequirePackage{lltcolors}
+\RequirePackage{lnpcolors}
 ```
 
 ### Applying Colors
@@ -80,7 +80,7 @@ All color combinations meet WCAG AA standards:
 ### Redefining Colors
 ```latex
 % Load module first
-\RequirePackage{lltcolors}
+\RequirePackage{lnpcolors}
 
 % Then redefine
 \definecolor{sectioncolor}{RGB}{0,100,0}  % Green sections
@@ -134,7 +134,7 @@ The module provides semantic commands for common uses:
 ### Package Options
 ```latex
 % Load with xcolor options
-\RequirePackage[dvipsnames]{lltcolors}
+\RequirePackage[dvipsnames]{lnpcolors}
 ```
 
 ## Compatibility

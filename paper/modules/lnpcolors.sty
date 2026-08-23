@@ -1,11 +1,11 @@
 % ==============================================================================
 % COLORS.STY - Professional Color System Module
 % ==============================================================================
-% Extracted from lltpaperstyle.sty for modular customization
+% Extracted from lanepaper.sty for modular customization
 % Maintains full compatibility with existing documents
 % ==============================================================================
 
-\ProvidesPackage{lltcolors}[2026/08/12 v1.1 Professional Color System]
+\ProvidesPackage{lnpcolors}[2026/08/12 v1.1 Professional Color System]
 
 \RequirePackage{xcolor}
 
@@ -13,10 +13,9 @@
 % Systematic grayscale progression for document structure
 
 % Bold Color System: Softened palette for bold typography
-\makeatletter
-%% FIX: Allow standalone module loading while honoring lltpaperstyle's nocolor flag.
-\@ifundefined{ifllt@nocolor}{\newif\ifllt@nocolor}{}
-\ifllt@nocolor
+%% FIX: Allow standalone module loading while honoring lanepaper's nocolor flag.
+\@ifundefined{iflnp@nocolor}{\newif\iflnp@nocolor}{}
+\iflnp@nocolor
   \definecolor{textblack}{gray}{0}
   \definecolor{sectioncolor}{gray}{0}
   \definecolor{subsectioncolor}{gray}{0}
@@ -57,7 +56,6 @@
   \definecolor{emphasisblue}{RGB}{0,34,68}  % Deeper blue matching Pagella's gravitas
   \definecolor{warningred}{RGB}{140,30,30}  % Conservative red for important notes (minimal use)
 \fi
-\makeatother
 
 % SEMANTIC COLOR COMMANDS
 % Use these in documents for consistency

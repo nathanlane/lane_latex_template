@@ -30,21 +30,21 @@ skips those assertions cleanly when `pdftotext` is unavailable.
 
 ## Package Namespace Convention
 
-All packages use the `llt` prefix (Lane LaTeX Template):
+The package is `lanepaper`; its modules use the `lnp` prefix:
 
-- Main style: `lltpaperstyle` (`paper/lltpaperstyle.sty`)
-- Modules: `lltcolors`, `lltfonts`, `lltdimensions`, `lltheadings`,
-  `lltlists`, `lltmicrotype`, `lltparagraphs`, `llthochuli`, etc.
+- Main style: `lanepaper` (`paper/lanepaper.sty`)
+- Modules: `lnpcolors`, `lnpfonts`, `lnpdimensions`, `lnpheadings`,
+  `lnplists`, `lnpmicrotype`, `lnpparagraphs`, `lnphochuli`, etc.
 
 Load packages by name, not by path:
 
 ```latex
-\usepackage{lltpaperstyle}   % correct
+\usepackage{lanepaper}   % correct
 \usepackage{paper/paperstyle} % wrong — legacy path, do not use
 ```
 
 Internal LaTeX identifiers (lengths, counters, private commands) use the
-`\paper@` prefix to avoid conflicts. See
+`\lnp@` prefix to avoid conflicts. See
 [`docs/PACKAGE_NAMING_CONVENTION.md`](docs/PACKAGE_NAMING_CONVENTION.md) and
 [`paper/modules/NAMESPACE_CONVENTIONS.md`](paper/modules/NAMESPACE_CONVENTIONS.md)
 for the full convention.

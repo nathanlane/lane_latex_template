@@ -5,16 +5,14 @@
 % Balances optimal math layout with quantum rhythm maintenance
 % ==============================================================================
 
-\ProvidesPackage{lltmathgridlocked}[2026/08/12 v1.1 Grid-Locked Mathematics]
+\ProvidesPackage{lnpmathgridlocked}[2026/08/12 v1.1 Grid-Locked Mathematics]
 
 % Ensure dimensions are loaded for grid units
 %% FIX: Declare environment-hook support so this module can run standalone.
 \RequirePackage{etoolbox}        % For environment hooks used by this standalone module
-\makeatletter
-\@ifpackageloaded{lltdimensions}{}{%
-  \RequirePackage{lltdimensions}%
+\@ifpackageloaded{lnpdimensions}{}{%
+  \RequirePackage{lnpdimensions}%
 }
-\makeatother
 
 % ==============================================================================
 % GRID-LOCKED DISPLAY MATH SPACING

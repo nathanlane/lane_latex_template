@@ -1,6 +1,6 @@
 # Custom Commands Reference
 
-This document provides a comprehensive reference for all custom commands defined in `paperstyle.sty` and the template system.
+This document provides a comprehensive reference for all custom commands defined in `lanepaper` and the template system.
 
 ## Typography Commands
 

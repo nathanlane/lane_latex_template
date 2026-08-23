@@ -5,7 +5,7 @@
 % Maximizes use of TeX Gyre Pagella's professional typography features
 % ==============================================================================
 
-\ProvidesPackage{lltfontfeatures}[2026/08/12 v1.1 Font Features Module]
+\ProvidesPackage{lnpfontfeatures}[2026/08/12 v1.1 Font Features Module]
 
 % Dependencies
 \RequirePackage{textcomp}  % Additional symbols and features
@@ -63,7 +63,7 @@
 
 % Title case small caps (maximum tracking for display)
 %% FIX(#39): this module deliberately exposes OT1 (\liningfigs/\tabularfigs at
-%% :23/:30). Every tracking list in lltmicrotype.sty:74-161 is encoding={T1}, so
+%% :23/:30). Every tracking list in lnpmicrotype.sty:74-161 is encoding={T1}, so
 %% under OT1 no list matches and the {120} WAS effective; \textls[120] preserves
 %% it (bare \lsstyle would fall back to microtype's 50). Drops the override msg.
 \providecommand{\titlesc}{}% In case already defined
@@ -157,16 +157,16 @@
 \newcommand{\textapostrophe}{\textquoteright}
 
 % Professional dashes with proper spacing
-\ifcsname lltfontfeatures@origtextendash\endcsname\else
-  \let\lltfontfeatures@origtextendash\textendash
+\ifcsname lnpfontfeatures@origtextendash\endcsname\else
+  \let\lnp@origtextendash\textendash
 \fi
-\ifcsname lltfontfeatures@origtextemdash\endcsname\else
-  \let\lltfontfeatures@origtextemdash\textemdash
+\ifcsname lnpfontfeatures@origtextemdash\endcsname\else
+  \let\lnp@origtextemdash\textemdash
 \fi
 
 %% FIX: Preserve existing dash glyphs while avoiding self-referential redefinitions.
-\renewcommand{\textendash}{\kern0.1em\lltfontfeatures@origtextendash\kern0.1em}
-\renewcommand{\textemdash}{\kern0.1em\lltfontfeatures@origtextemdash\kern0.1em}
+\renewcommand{\textendash}{\kern0.1em\lnp@origtextendash\kern0.1em}
+\renewcommand{\textemdash}{\kern0.1em\lnp@origtextemdash\kern0.1em}
 
 % Degree symbol with proper spacing
 \newcommand{\degree}{\ensuremath{^\circ}}

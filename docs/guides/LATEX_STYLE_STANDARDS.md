@@ -171,15 +171,15 @@ Maintain systematic order in preamble:
 
 ### LaTeX Source Files
 - **Main document**: `main.tex`
-- **Style definitions**: `lltpaperstyle.sty` (formerly the legacy path-prefixed style file)
+- **Style definitions**: `lanepaper.sty` (formerly the legacy path-prefixed style file)
 - **Preamble**: `paper/preamble.tex`
 - **Title page**: `paper/titlepage.tex`
 - **Appendices**: `appendices/*.tex`
 
 ### Package Loading Convention
 As of July 2025, the Lane LaTeX Template uses a new naming convention:
-- Main package: `\usepackage{lltpaperstyle}` (not the legacy path-prefixed package name)
-- Modules: `\RequirePackage{lltcolors}`, `\RequirePackage{lltfonts}`, etc.
+- Main package: `\usepackage{lanepaper}` (not the legacy path-prefixed package name)
+- Modules: `\RequirePackage{lnpcolors}`, `\RequirePackage{lnpfonts}`, etc.
 - No path prefixes needed with the new naming system
 
 ### Naming Conventions

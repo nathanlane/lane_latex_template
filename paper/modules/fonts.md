@@ -2,7 +2,7 @@
 
 ## Overview
 
-The fonts module (`lltfonts.sty`) configures a professional three-font typography system optimized for academic documents.
+The fonts module (`lnpfonts.sty`) configures a professional three-font typography system optimized for academic documents.
 
 ## Font Stack
 
@@ -44,7 +44,7 @@ Enhanced symbol sets from mathalfa:
 
 ### Basic Usage
 ```latex
-\RequirePackage{lltfonts}
+\RequirePackage{lnpfonts}
 ```
 
 ### Font Commands

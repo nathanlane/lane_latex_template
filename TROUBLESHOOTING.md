@@ -48,15 +48,15 @@ rebuild. Always clean when switching between TeX Live years.
 **Symptoms**: Commands like `\articletitle` or `\gridunit` not recognized
 
 **Solutions**:
-1. Ensure paperstyle is loaded:
+1. Ensure lanepaper is loaded:
    ```latex
    \input{paper/preamble.tex}  % or
-   \usepackage{lltpaperstyle}
+   \usepackage{lanepaper}
    ```
 
 2. Check module loading order - some commands require specific modules:
    ```latex
-   \usepackage{lltdimensions}  % For \gridunit
+   \usepackage{lnpdimensions}  % For \gridunit
    ```
 
 ### Compilation Warnings
@@ -85,14 +85,14 @@ rebuild. Always clean when switching between TeX Live years.
 
 2. Use font fallback module:
    ```latex
-   \usepackage{lltfontfallbacks}
+   \usepackage{lnpfontfallbacks}
    \enablecompatibilitymode
    ```
 
 3. Manual fallback to Palatino:
    ```latex
-   \usepackage{palatino}  % Before lltpaperstyle
-   \usepackage{lltpaperstyle}
+   \usepackage{palatino}  % Before lanepaper
+   \usepackage{lanepaper}
    ```
 
 ### Small Caps Not Working
@@ -115,7 +115,7 @@ rebuild. Always clean when switching between TeX Live years.
 
 **Symptoms**: Math looks different from text
 
-**Solution**: Ensure newpxmath is loaded (automatic with paperstyle)
+**Solution**: Ensure newpxmath is loaded (automatic with lanepaper)
 
 ## Bibliography Problems
 
@@ -166,15 +166,15 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
 
 1. Use grid visualization:
    ```latex
-   \usepackage{lltgridoverlay}
+   \usepackage{lnpgridoverlay}
    \showgrid
    ```
-   Or load the style with `[grid]`: `\usepackage[grid]{lltpaperstyle}`.
+   Or load the style with `[grid]`: `\usepackage[grid]{lanepaper}`.
 
 2. Use grid-locked modules for stricter alignment:
    ```latex
-   \usepackage{lltheadingsgridlocked}
-   \usepackage{lltmathgridlocked}
+   \usepackage{lnpheadingsgridlocked}
+   \usepackage{lnpmathgridlocked}
    ```
 
 3. Manual adjustment with grid units:
@@ -323,7 +323,7 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
 
 ### Cleveref Conflicts
 
-`lltpaperstyle` loads `hyperref` before `cleveref` automatically (the required order). If you encounter conflicts from other packages, load those packages before `\usepackage{lltpaperstyle}` to ensure hyperref and cleveref load last.
+`lanepaper` loads `hyperref` before `cleveref` automatically (the required order). If you encounter conflicts from other packages, load those packages before `\usepackage{lanepaper}` to ensure hyperref and cleveref load last.
 
 ## Testing and Validation
 
@@ -396,7 +396,7 @@ make diagnose
 If nothing else works:
 ```latex
 \documentclass{article}
-\usepackage{lltpaperstyleminimal}
+\usepackage{lnpminimal}
 \begin{document}
 Your content here
 \end{document}

@@ -14,7 +14,7 @@
 %   \input{paper/preamble-natbib.tex}  % Instead of preamble.tex
 %
 % DEPENDENCIES:
-%   - lltpaperstyle.sty (core typography system)
+%   - lanepaper.sty (core typography system)
 %   - references.bib (bibliography database - may need format adjustments)
 %   - Standard LaTeX distribution with natbib and chicago.bst
 %
@@ -35,13 +35,13 @@
 % ------------------------------------------------------------------------------
 % CORE TYPOGRAPHY SYSTEM
 % ------------------------------------------------------------------------------
-% Load the comprehensive lltpaperstyle.sty package in natbib mode so we use the
+% Load the comprehensive lanepaper.sty package in natbib mode so we use the
 % native citation stack and avoid mixed-package side effects.
 %% FIX: Load once with the documented natbib option to prevent duplicate bibliography
 %% backends.
 %% FIX: Preserve historic natbib punctuation/ordering defaults while delegating load.
 \PassOptionsToPackage{semicolon,sort&compress}{natbib}
-\usepackage[natbib]{lltpaperstyle}
+\usepackage[natbib]{lanepaper}
 
 % ------------------------------------------------------------------------------
 % NATBIB BIBLIOGRAPHY CONFIGURATION
@@ -104,7 +104,7 @@
 % This natbib-based preamble provides:
 %
 % 1. TYPOGRAPHY EXCELLENCE (same as biblatex version)
-%    - Complete lltpaperstyle.sty implementation
+%    - Complete lanepaper.sty implementation
 %    - Bembo revival typography system
 %    - Mathematical and monospace integration
 %    - Professional color system
