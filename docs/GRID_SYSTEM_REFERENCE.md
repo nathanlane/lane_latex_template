@@ -85,7 +85,7 @@ This allows ±0.25 grid units of flexibility while maintaining the baseline grid
 
 ## Implementation Notes
 
-- Grid units are defined in `paper/modules/dimensions.sty`
+- Grid units are defined in `lanepaper/dimensions.sty`
 - All conversions maintain backward compatibility
 - Font sizes still use explicit point values (as required by `\fontsize`)
 - Em-based spacing (0.08em, etc.) remains unchanged as it's relative to font size

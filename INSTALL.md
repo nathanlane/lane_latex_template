@@ -40,10 +40,10 @@ This guide will help you set up the LaTeX template on your system with all requi
    ```
 
 > **Overleaf note (unverified):** the template resolves its modules via
-> `TEXINPUTS` set in `.latexmkrc` (`./paper:./paper/modules`). We could not
+> `TEXINPUTS` set in `.latexmkrc` (`./lanepaper`). We could not
 > verify whether Overleaf honours `ensure_path('TEXINPUTS', ...)` from
 > `.latexmkrc`. If `\usepackage{lanepaper}` fails to find `lnpfonts` and
-> friends there, copy `paper/*.sty` and `paper/modules/*.sty` into the project
+> friends there, copy `lanepaper/*.sty` into the project
 > root as a workaround. Local `latexmk` is the verified path.
 
 3. **Install missing packages** (if any):
@@ -303,7 +303,7 @@ make diagnose
 
 ## Typography System Architecture
 
-The template uses a modular typography system organized in `paper/modules/`:
+The template uses a modular typography system organized in `lanepaper/`:
 
 ### Core Modules (Automatically Loaded)
 - `lnpcompilationfixes.sty` - Fixes common LaTeX warnings
@@ -344,7 +344,7 @@ Example customization:
 ## Next Steps
 
 - Read `README.md` for usage instructions
-- See `paper/STYLE_GUIDE.md` for typography guidelines
+- See `docs/package/STYLE_GUIDE.md` for typography guidelines
 - Check `TROUBLESHOOTING.md` for common issues
 
 ---

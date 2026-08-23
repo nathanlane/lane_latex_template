@@ -9,7 +9,7 @@
 
 ### 2. ✅ Heading Grid Alignment
 - **Issue**: Flexible spacing (±3.3pt) causes cumulative grid drift
-- **Solution**: Created `paper/modules/headings-gridlocked.sty`
+- **Solution**: Created `lanepaper/headings-gridlocked.sty`
 - **Key improvements**:
   - Reduced flexibility to ±1.65pt (0.125 units) for sections/subsections only
   - Fixed spacing for subsubsection/paragraph levels
@@ -18,7 +18,7 @@
 
 ### 3. ✅ Mathematical Display Spacing
 - **Issue**: Math displays allow ±3.3pt flexibility causing grid drift
-- **Solution**: Created `paper/modules/mathematics-gridlocked.sty`
+- **Solution**: Created `lanepaper/mathematics-gridlocked.sty`
 - **Key improvements**:
   - Reduced flexibility to ±0.825pt (0.0625 units)
   - Asymmetric spacing (positive bias) to maintain grid floor
@@ -31,7 +31,7 @@
 ### To Use Grid-Locked Headings:
 ```latex
 % Replace in paperstyle.sty or preamble:
-\usepackage{paper/modules/headings-gridlocked}
+\usepackage{lanepaper/headings-gridlocked}
 
 % Choose mode:
 \strictgridsections      % No flexibility
@@ -42,7 +42,7 @@
 ### To Use Grid-Locked Mathematics:
 ```latex
 % Add after loading paperstyle:
-\usepackage{paper/modules/mathematics-gridlocked}
+\usepackage{lanepaper/mathematics-gridlocked}
 
 % Choose mode:
 \strictmathdisplay       % No flexibility

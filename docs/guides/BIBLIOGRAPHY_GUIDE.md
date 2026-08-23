@@ -145,13 +145,13 @@ pdflatex main
 
 ### Switching from natbib?
 The project supports legacy natbib with `preamble-natbib.tex`. To use biblatex (recommended):
-1. Ensure `main.tex` includes `paper/preamble.tex`
+1. Ensure `main.tex` includes `demo/preamble.tex`
 2. Replace `\citet` → `\textcite`
 3. Replace `\citep` → `\autocite`
 
 ## Style Customization
 
-The bibliography style is configured in `paper/preamble.tex`:
+The bibliography style is configured in `demo/preamble.tex`:
 ```latex
 \usepackage[
   backend=biber,

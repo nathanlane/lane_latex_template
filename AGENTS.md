@@ -14,7 +14,7 @@
 ## 🛠 Tools you must run before proposing a commit
 | Command | Purpose | Acceptable exit code |
 |---------|---------|----------------------|
-| `chktex -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48 *.tex paper/*.tex appendices/*.tex` | Catch obvious bad constructs while ignoring intentional template/prose warnings that require visual-output changes. `-n48` requires ChkTeX ≥ 1.7.7; older binaries (TeX Live 2022's 1.7.6) reject it — the Makefile probes support and drops it. | 0 |
+| `chktex -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48 demo/*.tex demo/appendices/*.tex` | Catch obvious bad constructs while ignoring intentional template/prose warnings that require visual-output changes. `-n48` requires ChkTeX ≥ 1.7.7; older binaries (TeX Live 2022's 1.7.6) reject it — the Makefile probes support and drops it. | 0 |
 | `latexmk -pdf -interaction=nonstopmode main.tex` | Full compile; output PDF must be produced. | 0 |
 | `pytest -q` | Runs regression tests over fixtures, package-option contracts, and PDF-text assertions where Poppler is available. | 0 |
 
@@ -129,7 +129,7 @@ Always prefer **clarity**, **minimalism**, and **reversibility**.
 
 ## 7  Resources
 
-* Full style spec → `paper/STYLE_GUIDE.md`; typography deep-dive → `docs/typography/`.  
+* Full style spec → `docs/package/STYLE_GUIDE.md`; typography deep-dive → `docs/typography/`.  
 * OpenAI API docs → <https://platform.openai.com/docs>.  
 * Chicago Manual of Style (author-date).  
 * Butterick’s *Practical Typography* (for quick reference).

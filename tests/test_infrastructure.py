@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ACTIVE_SOURCE_SUFFIXES = (".tex", ".sty", ".sh", ".py")
-ACTIVE_SCAN_ROOTS = ("main.tex", "appendices/", "paper/", "src/", "tests/", "Makefile")
+ACTIVE_SCAN_ROOTS = ("demo/", "lanepaper/", "src/", "tests/", "Makefile")
 
 
 def run_git(args):

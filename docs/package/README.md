@@ -71,7 +71,7 @@ Load modules with custom settings before the main package:
 \usepackage{lanepaper}
 ```
 
-For complete module documentation, see [modules/README.md](modules/README.md).
+For complete module documentation, see [modules/README.md](modules.md).
 
 #### List Typography Module
 
@@ -736,7 +736,7 @@ custom options.
 \dag, \ddag                  % †, ‡ with spacing
 ```
 
-For the complete command reference, see [`../API_REFERENCE.md`](../API_REFERENCE.md).
+For the complete command reference, see [`../API_REFERENCE.md`](../../API_REFERENCE.md).
 
 ## Compatibility
 
@@ -757,7 +757,7 @@ latexmk -C main.tex  # or: rm *.aux *.out *.toc && pdflatex main.tex && pdflatex
 
 `Package fontaxes Warning: Axis 'shape' not supported` is harmless and expected.
 
-For troubleshooting, see [`../TROUBLESHOOTING.md`](../TROUBLESHOOTING.md).
+For troubleshooting, see [`../TROUBLESHOOTING.md`](../../TROUBLESHOOTING.md).
 
 ## Technical Implementation
 
@@ -818,4 +818,4 @@ Quarter quantum (\quartergridunit): 3.3pt
 
 ---
 
-For version history, see [`../CHANGELOG.md`](../CHANGELOG.md) and the `Version History` section of [`../README.md`](../README.md).
+For version history, see [`../CHANGELOG.md`](../../CHANGELOG.md) and the `Version History` section of [`../README.md`](../README.md).

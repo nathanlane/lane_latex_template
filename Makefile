@@ -20,20 +20,22 @@ CHKTEXFLAGS += $(CHKTEX_N48)
 PYTHON = python3
 BLACK = black
 
-# Set TEXINPUTS to find new package names
-export TEXINPUTS := ./paper:./paper/modules:$(TEXINPUTS)
+# Set TEXINPUTS to find the lanepaper package files
+export TEXINPUTS := ./lanepaper:./demo:$(TEXINPUTS)
+export BIBINPUTS := .:./demo:$(BIBINPUTS)
 
 # Directories
-PAPER_DIR = paper
-APPENDICES_DIR = appendices
-FIGURES_DIR = figures
+PKG_DIR = lanepaper
+DEMO_DIR = demo
+APPENDICES_DIR = demo/appendices
+FIGURES_DIR = demo/figures
 SRC_DIR = src
 DATA_DIR = data
 
 # Source files
-TEX_SOURCES = $(MAIN).tex $(wildcard $(PAPER_DIR)/*.tex) $(wildcard $(APPENDICES_DIR)/*.tex)
-BIB_SOURCES = references.bib
-STYLE_SOURCES = $(PAPER_DIR)/lanepaper.sty $(PAPER_DIR)/preamble.tex
+TEX_SOURCES = $(wildcard $(DEMO_DIR)/*.tex) $(wildcard $(APPENDICES_DIR)/*.tex)
+BIB_SOURCES = $(DEMO_DIR)/references.bib
+STYLE_SOURCES = $(wildcard $(PKG_DIR)/*.sty)
 
 # Python sources
 PY_SOURCES = $(wildcard $(SRC_DIR)/py/*.py)
@@ -45,19 +47,18 @@ all: pdf
 # FIX: Mirror AGENTS.md verification commands without changing legacy targets.
 .PHONY: build
 build:
-	$(LATEXMK) -pdf -interaction=nonstopmode $(MAIN).tex
+	$(LATEXMK) -pdf -interaction=nonstopmode $(DEMO_DIR)/$(MAIN).tex
 
 # FIX: Keep the lint gate identical to AGENTS.md.
-# FIX: glob the .tex sources that actually exist — root, paper/, and
-# appendices/ — instead of root only.
+# FIX: glob the .tex sources that actually exist under demo/.
 .PHONY: lint
 lint:
-	$(CHKTEX) $(CHKTEXFLAGS) *.tex $(PAPER_DIR)/*.tex $(APPENDICES_DIR)/*.tex
+	$(CHKTEX) $(CHKTEXFLAGS) $(DEMO_DIR)/*.tex $(APPENDICES_DIR)/*.tex
 
 # FIX: Provide the documented indentation-only formatting target.
 .PHONY: fmt
 fmt:
-	$(LATEXINDENT) -l -w $(MAIN).tex $(PAPER_DIR)/*.tex $(APPENDICES_DIR)/*.tex
+	$(LATEXINDENT) -l -w $(DEMO_DIR)/*.tex $(APPENDICES_DIR)/*.tex
 
 # Main PDF compilation with full bibliography processing
 .PHONY: pdf
@@ -92,7 +93,7 @@ clean:
 	rm -f $(MAIN).aux $(MAIN).bbl $(MAIN).bcf $(MAIN).blg
 	rm -f $(MAIN).log $(MAIN).out $(MAIN).run.xml $(MAIN).toc
 	rm -f $(MAIN).nav $(MAIN).snm $(MAIN).vrb
-	rm -f $(PAPER_DIR)/*.aux $(APPENDICES_DIR)/*.aux
+	rm -f $(DEMO_DIR)/*.aux $(APPENDICES_DIR)/*.aux
 	rm -f texput.log
 	@echo "==> Clean complete (PDF preserved)"
 
@@ -114,7 +115,7 @@ watch:
 			$(MAKE) quick; \
 		done; \
 	elif command -v inotifywait >/dev/null 2>&1; then \
-		while inotifywait -r -e modify $(PAPER_DIR) $(APPENDICES_DIR) >/dev/null 2>&1; do \
+		while inotifywait -r -e modify $(DEMO_DIR) $(PKG_DIR) >/dev/null 2>&1; do \
 			echo "==> File changed, recompiling..."; \
 			$(MAKE) quick; \
 		done; \
@@ -130,11 +131,11 @@ watch:
 validate:
 	@echo "==> Validating template integrity..."
 	@# FIX: Validate the renamed package that is actually shipped.
-	@if ! test -f $(PAPER_DIR)/lanepaper.sty; then \
+	@if ! test -f $(PKG_DIR)/lanepaper.sty; then \
 		echo "==> ERROR: lanepaper.sty not found"; exit 1; \
 	fi
-	@if ! test -f references.bib; then \
-		echo "==> ERROR: references.bib not found"; exit 1; \
+	@if ! test -f $(BIB_SOURCES); then \
+		echo "==> ERROR: $(BIB_SOURCES) not found"; exit 1; \
 	fi
 	@echo "==> Checking for required LaTeX packages..."
 	@if ! kpsewhich biblatex.sty >/dev/null 2>&1; then \

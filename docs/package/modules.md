@@ -8,7 +8,7 @@ dependencies and compatibility mode is validated through harness probes.
 
 > **Note**: Modules are named `lnp` + role (e.g. `lnpcolors.sty`) and are loaded
 > by package name, never by path. See
-> [`docs/PACKAGE_NAMING_CONVENTION.md`](../../docs/PACKAGE_NAMING_CONVENTION.md).
+> [`docs/PACKAGE_NAMING_CONVENTION.md`](../PACKAGE_NAMING_CONVENTION.md).
 
 ## Module Overview
 (The Lists module is now fully active as of v1.6-alpha.)

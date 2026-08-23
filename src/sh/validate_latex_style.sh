@@ -157,7 +157,7 @@ check_python_style() {
 # Check bibliography entries
 check_bibliography() {
   # FIX: main() already cd'd to the repo root; ../references.bib escaped it.
-  local bib_file="references.bib"
+  local bib_file="demo/references.bib"
   
   if [[ ! -f "$bib_file" ]]; then
     print_warning "Bibliography file not found: $bib_file"
@@ -189,10 +189,10 @@ main() {
   
   # Check required files exist
   local required_files=(
-    "main.tex"
-    "paper/lanepaper.sty"
-    "paper/preamble.tex"
-    "references.bib"
+    "demo/main.tex"
+    "lanepaper/lanepaper.sty"
+    "demo/preamble.tex"
+    "demo/references.bib"
     "AGENTS.md"
   )
   

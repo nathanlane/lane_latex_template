@@ -172,8 +172,8 @@ Maintain systematic order in preamble:
 ### LaTeX Source Files
 - **Main document**: `main.tex`
 - **Style definitions**: `lanepaper.sty` (formerly the legacy path-prefixed style file)
-- **Preamble**: `paper/preamble.tex`
-- **Title page**: `paper/titlepage.tex`
+- **Preamble**: `demo/preamble.tex`
+- **Title page**: `demo/titlepage.tex`
 - **Appendices**: `appendices/*.tex`
 
 ### Package Loading Convention

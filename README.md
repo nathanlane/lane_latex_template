@@ -114,14 +114,14 @@ pytest -q
    my-paper/
    ├── main.tex          # Your document
    ├── references.bib    # Your citations
-   ├── paper/            # Style files (don't edit)
+   ├── lanepaper/        # Style files (don't edit)
    └── figures/          # Your images
    ```
 
 2. **Edit main.tex**:
    ```latex
    \documentclass[11pt]{article}
-   \input{paper/preamble.tex}
+   \input{demo/preamble.tex}
    
    \begin{document}
    % Your content here
@@ -213,7 +213,7 @@ On pdfTeX with manual `biblatex`, load `inputenc` before `biblatex`, as shown.
 For legacy natbib-based documents, use the dedicated preamble:
 
 ```latex
-\input{paper/preamble-natbib.tex}
+\input{demo/preamble-natbib.tex}
 ```
 
 It loads `lanepaper` with the `natbib` option and provides the `\textcite`
@@ -291,7 +291,7 @@ See \cref{fig:results}...        % see figure 1...
 your-paper/
 ├── main.tex              # Main document
 ├── references.bib        # Bibliography
-├── paper/
+├── lanepaper/
 │   ├── preamble.tex      # Document setup
 │   ├── lanepaper.sty # Main style (don't edit)
 │   └── modules/          # Modular components
@@ -499,8 +499,8 @@ Add custom commands in your preamble:
 For strict baseline adherence:
 
 ```latex
-\usepackage{paper/modules/lnpheadingsgridlocked}
-\usepackage{paper/modules/lnpmathgridlocked}
+\usepackage{lnpheadingsgridlocked}
+\usepackage{lnpmathgridlocked}
 ```
 
 ---
@@ -539,7 +539,7 @@ make              # Full rebuild
 **Local installation**:
 ```bash
 # Set TEXINPUTS if needed
-export TEXINPUTS=".:./paper//:"
+export TEXINPUTS=".:./lanepaper//:"
 ```
 
 ### Getting Help
@@ -584,7 +584,7 @@ make validate     # Style validation
 ### Documentation
 
 - **[API Reference](API_REFERENCE.md)** – Complete command reference
-- **[Style Guide](paper/STYLE_GUIDE.md)** – Typography standards
+- **[Style Guide](docs/package/STYLE_GUIDE.md)** – Typography standards
 - **[Code Review Report](docs/technical/LATEX_CODE_REVIEW_2026-05-28.md)** – Maintainability and package API findings
 - **[Testing Guide](tests/README.md)** – Test framework documentation
 
@@ -653,7 +653,7 @@ Historical package-development versions are alpha snapshots:
 If upgrading from an older version:
 - `\usepackage{paper/paperstyle}` → `\usepackage{lanepaper}`
 - All module names now have the `lnp` prefix
-- See [MIGRATION.md](paper/MIGRATION.md) for details
+- See [MIGRATION.md](docs/archive/MIGRATION.md) for details
 
 ### Full Changelog
 

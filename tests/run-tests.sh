@@ -68,7 +68,8 @@ test_latex_file() {
     cd "$PROJECT_ROOT"
     
     # FIX: Keep direct script runs working when TEXINPUTS is unset.
-    export TEXINPUTS=".:./paper:./paper/modules:${TEXINPUTS:-}"
+    export TEXINPUTS=".:./lanepaper:./demo:${TEXINPUTS:-}"
+    export BIBINPUTS=".:./demo:${BIBINPUTS:-}"
     
     # Test 1: Basic compilation
     if pdflatex -interaction=nonstopmode -halt-on-error "$tex_file" > "$log_file" 2>&1; then
@@ -153,7 +154,7 @@ run_compatibility_probes() {
 
     if ! run_compatibility_probe "prelude-natbib-preamble" <<'EOF'
 \documentclass[11pt]{article}
-\input{paper/preamble-natbib.tex}
+\input{preamble-natbib.tex}
 
 \begin{document}
 \section{Natbib Preamble Contract}

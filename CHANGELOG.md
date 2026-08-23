@@ -4,6 +4,40 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Moved to the package-first layout (branch `refactor/rename-lanepaper-46`,
+issue #47, ADR-0001):
+
+- `lanepaper/` holds the 16 `.sty` files and nothing else, flattened — the
+  `modules/` subdirectory is gone, so `TEXINPUTS` is one entry instead of two
+  and the directory is exactly what `l3build install` installs and what a
+  `git subtree` pull carries.
+- `demo/` holds the CI fixture document: `main.tex`, `preamble.tex`,
+  `preamble-natbib.tex`, `titlepage.tex`, `appendices/`, `figures/`, and
+  `references.bib`. It is not a starting point for papers.
+- `paper/` no longer exists. Its eleven Markdown files moved to
+  `docs/package/`, except `MIGRATION.md` and `MODULARIZATION_ACTION_PLAN.md`
+  which are historical and moved to `docs/archive/`. `paper/modules/README.md`
+  became `docs/package/modules.md` to avoid colliding with `paper/README.md`.
+- `TEXINPUTS` now covers `./lanepaper:./demo` and `BIBINPUTS` covers `.:./demo`,
+  so `main` and `references.bib` still resolve from the repository root and
+  `main.pdf` is still written there. CI needed no path changes as a result,
+  including the `upload-artifact` path and the `safe.directory` step.
+- `.gitignore`'s figure negation is now `!demo/figures/*.pdf`; verified that a
+  PDF there is tracked while other PDFs stay ignored.
+- Fixed 16 test fixtures and development documents that loaded
+  `\input{paper/preamble.tex}` by path, plus the `prelude-natbib-preamble`
+  compatibility probe in `tests/run-tests.sh`.
+- Regenerated `docs/PACKAGE_NAMING_CONVENTION.md` from the actual file list and
+  repaired five documentation links that the move had broken or silently
+  repointed.
+
+Verified by 150dpi raster comparison against the pre-rename baseline. Four of
+40 pages differ, each for a stated reason: the title page's `\today` line
+(the baseline was built two days earlier), two pages where the demo prints its
+own `\usepackage` line, and one where it cites the style guide's new path.
+`pytest -q` 31 passed; `tests/run-tests.sh` 115 passed, 0 failed;
+`make lint`, `make build`, and the style validator all clean.
+
 Renamed the package to `lanepaper` and unified the internal prefix to `\lnp@`
 (branch `refactor/rename-lanepaper-46`, issue #46, ADR-0001):
 

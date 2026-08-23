@@ -13,7 +13,7 @@ def compile_latex(tmp_path, name, source):
     tex_file.write_text(textwrap.dedent(source), encoding="utf-8")
     env = os.environ.copy()
     env["TEXINPUTS"] = (
-        f".:{ROOT / 'paper'}:{ROOT / 'paper/modules'}:"
+        f".:{ROOT / 'lanepaper'}:"
         f"{env.get('TEXINPUTS', '')}"
     )
     result = subprocess.run(
@@ -293,7 +293,7 @@ def test_footnote_marker_box_fits_three_digits(tmp_path):
     assert match, log_text
     # Compare against the actual \@makefntext box width in the package, not a
     # hardcoded number, so the test fails if the box is shrunk again.
-    sty = (ROOT / "paper" / "lanepaper.sty").read_text(encoding="utf-8")
+    sty = (ROOT / "lanepaper" / "lanepaper.sty").read_text(encoding="utf-8")
     boxes = re.findall(r"\\makebox\[([0-9.]+)pt\]", sty)
     assert boxes, "no footnote marker box found in lanepaper.sty"
     assert float(match.group(1)) <= min(float(b) for b in boxes)

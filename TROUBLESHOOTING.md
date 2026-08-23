@@ -50,7 +50,7 @@ rebuild. Always clean when switching between TeX Live years.
 **Solutions**:
 1. Ensure lanepaper is loaded:
    ```latex
-   \input{paper/preamble.tex}  % or
+   \input{demo/preamble.tex}  % or
    \usepackage{lanepaper}
    ```
 

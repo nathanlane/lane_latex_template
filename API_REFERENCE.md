@@ -741,7 +741,7 @@ for backward compatibility only; use `\vspace` directly in new documents.
 Paragraph with hanging opening quote.
 
 ```latex
-% Requires: \usepackage{paper/modules/lnphochuli}
+% Requires: \usepackage{lnphochuli}
 \quoteparagraph{"When we examine the evidence..."}
 ```
 

@@ -9,7 +9,7 @@ The package is **`lanepaper`**. Everything it ships is named from that one word.
 | The package a document loads | `lanepaper` | The CTAN name; what `\usepackage` takes |
 | Every other `.sty` file | `lnp` + role | Short abbreviation of `lanepaper` |
 | Every internal macro | `\lnp@` + role | Same abbreviation, so files and macros agree |
-| Public commands | no prefix | See `paper/modules/NAMESPACE_CONVENTIONS.md` |
+| Public commands | no prefix | See `docs/package/NAMESPACE_CONVENTIONS.md` |
 
 The short abbreviation follows CTAN practice rather than repeating the package
 name on every file. `biblatex` is the closest parallel: CTAN name `biblatex`,
@@ -22,9 +22,9 @@ Loaded directly by a document.
 
 | Package | File |
 |---------|------|
-| `lanepaper` | `paper/lanepaper.sty` |
-| `lnpgridoverlay` | `paper/lnpgridoverlay.sty` |
-| `lnpminimal` | `paper/lnpminimal.sty` |
+| `lanepaper` | `lanepaper/lanepaper.sty` |
+| `lnpgridoverlay` | `lanepaper/lnpgridoverlay.sty` |
+| `lnpminimal` | `lanepaper/lnpminimal.sty` |
 
 ## Modules
 
@@ -32,19 +32,19 @@ Loaded by `lanepaper`, by name and never by path.
 
 | Package | File |
 |---------|------|
-| `lnpcolors` | `paper/modules/lnpcolors.sty` |
-| `lnpcompilationfixes` | `paper/modules/lnpcompilationfixes.sty` |
-| `lnpdimensions` | `paper/modules/lnpdimensions.sty` |
-| `lnpfontfallbacks` | `paper/modules/lnpfontfallbacks.sty` |
-| `lnpfontfeatures` | `paper/modules/lnpfontfeatures.sty` |
-| `lnpfonts` | `paper/modules/lnpfonts.sty` |
-| `lnpheadings` | `paper/modules/lnpheadings.sty` |
-| `lnpheadingsgridlocked` | `paper/modules/lnpheadingsgridlocked.sty` |
-| `lnphochuli` | `paper/modules/lnphochuli.sty` |
-| `lnplists` | `paper/modules/lnplists.sty` |
-| `lnpmathgridlocked` | `paper/modules/lnpmathgridlocked.sty` |
-| `lnpmicrotype` | `paper/modules/lnpmicrotype.sty` |
-| `lnpparagraphs` | `paper/modules/lnpparagraphs.sty` |
+| `lnpcolors` | `lanepaper/lnpcolors.sty` |
+| `lnpcompilationfixes` | `lanepaper/lnpcompilationfixes.sty` |
+| `lnpdimensions` | `lanepaper/lnpdimensions.sty` |
+| `lnpfontfallbacks` | `lanepaper/lnpfontfallbacks.sty` |
+| `lnpfontfeatures` | `lanepaper/lnpfontfeatures.sty` |
+| `lnpfonts` | `lanepaper/lnpfonts.sty` |
+| `lnpheadings` | `lanepaper/lnpheadings.sty` |
+| `lnpheadingsgridlocked` | `lanepaper/lnpheadingsgridlocked.sty` |
+| `lnphochuli` | `lanepaper/lnphochuli.sty` |
+| `lnplists` | `lanepaper/lnplists.sty` |
+| `lnpmathgridlocked` | `lanepaper/lnpmathgridlocked.sty` |
+| `lnpmicrotype` | `lanepaper/lnpmicrotype.sty` |
+| `lnpparagraphs` | `lanepaper/lnpparagraphs.sty` |
 
 ## Loading
 
@@ -55,10 +55,10 @@ Load by package name. Paths are not package names:
 \usepackage{paper/paperstyle}  % wrong - removed, and never a package name
 ```
 
-Module resolution depends on `TEXINPUTS` covering `./paper` and
-`./paper/modules`. That is set in `Makefile`, `.latexmkrc`, `compile.sh`,
-`tests/run-tests.sh`, and `tests/test-bibliography.sh`. Once the package is
-installed into a texmf tree via `l3build install`, that is no longer needed.
+Module resolution depends on `TEXINPUTS` covering `./lanepaper`. That is set in
+`Makefile`, `.latexmkrc`, `compile.sh`, `tests/run-tests.sh`, and
+`tests/test-bibliography.sh`. Once the package is installed into a texmf tree
+via `l3build install`, that is no longer needed.
 
 ## Retired names
 
