@@ -1,6 +1,29 @@
 # Lane LaTeX Template Package - Comprehensive Roadmap
 
-> This document expands upon the high-level action plan outlined previously.  It is **the single source of truth** for the package’s near-term direction, milestones, and decision-making history.  Update this file whenever scope or sequencing changes.
+> **SUPERSEDED - do not follow this document.** It is kept only because
+> [ADR-0002](adr/0002-l3build-for-packaging-pytest-for-tests.md) cites its T-402
+> item in order to withdraw it. Deleting it is issue #52's decision, not this
+> file's.
+>
+> It is not a description of this package. Much of it was imported from a
+> different project: the Vision below describes East-Asian typesetting, which
+> this package does not do, and the refactor checklist proposes an `\east@`
+> namespace. It contradicts the current decisions on at least four points:
+>
+> - It proposes migrating to `expl3` (`\ProvidesExplPackage`, `l3keys`,
+>   `\cs_new:Npn`, `\msg_new:nnn`). This is a **classic LaTeX2e package** and
+>   stays one - see [`CONVENTIONS.md`](../CONVENTIONS.md) section 1, and ADR-0002.
+> - It says to remove `\makeatletter` / `\makeatother` pairs "by switching to
+>   `expl3`". They were removed in #46 for an unrelated and more important
+>   reason: a `.sty` has `@` as a letter already, so a stray `\makeatother`
+>   revokes it for the rest of the file. See `CONVENTIONS.md` section 6.
+> - Its T-402 l3build migration is **withdrawn** by ADR-0002, which keeps
+>   l3build for packaging only.
+> - Its module-specific tasks name `colors.sty` and `dimensions.sty`, which have
+>   not existed since July 2025.
+>
+> The authoritative documents are `CONVENTIONS.md`, `docs/adr/`, and the issue
+> tracker. This file is history.
 
 ---
 

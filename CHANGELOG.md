@@ -4,6 +4,28 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Neutralised two documents that contradicted the settled decisions:
+
+- `docs/PACKAGE_ROADMAP.md` carries a SUPERSEDED banner. It called itself "the
+  single source of truth" while proposing an `expl3` migration
+  (`\ProvidesExplPackage`, `l3keys`, `\cs_new:Npn`), an `\east@` namespace, and
+  removal of `\makeatletter` pairs "by switching to `expl3`" - all of which
+  contradict `CONVENTIONS.md` and ADR-0002. Its Vision describes East-Asian
+  typesetting, which this package does not do; much of the file was imported
+  from a different project. Its module tasks name `colors.sty` and
+  `dimensions.sty`, gone since July 2025.
+- It is **not** deleted, because ADR-0002 cites its T-402 item in order to
+  withdraw it, and deleting a file an accepted ADR references would break the
+  record. Deletion belongs to #52, whose target document set does not include
+  it. `docs/README.md` now marks the pointer superseded rather than
+  "historical".
+- ADR-0001 says "the four competing internal prefixes" and names four.
+  Implementing it in #46 found a fifth, `\paperstyle@` (6 occurrences). The ADR
+  now carries a dated erratum; the original sentence is left as written, because
+  an accepted ADR records what was decided rather than describing the current
+  code. `CONVENTIONS.md`, `docs/package/NAMESPACE_CONVENTIONS.md` and the guard
+  in `tests/test_infrastructure.py` all say five.
+
 Added `CONVENTIONS.md` (issue #45):
 
 - States how package code in `lanepaper/` is written: LaTeX2e baseline (no

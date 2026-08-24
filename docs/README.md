@@ -22,7 +22,7 @@ and archived implementation plans for the Lane LaTeX Template.
 
 ## Roadmaps And Workflow Notes
 
-- [Package Roadmap](PACKAGE_ROADMAP.md) - Historical package roadmap and future packaging ideas.
+- [Package Roadmap](PACKAGE_ROADMAP.md) - **Superseded.** Kept only because ADR-0002 cites it. Do not follow it; see `CONVENTIONS.md` and `docs/adr/`.
 - [Style Changelog](style/CHANGELOG.md) - Legacy style-package changelog.
 
 ## Typography And Grid Notes
