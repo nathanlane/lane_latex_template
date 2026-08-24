@@ -35,7 +35,6 @@ required_packages=(
   footmisc
   geometry
   graphicx
-  hyperref
   iftex
   inputenc
   letterspace

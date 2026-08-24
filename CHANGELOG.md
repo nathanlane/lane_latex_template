@@ -8,7 +8,12 @@ Applied the configure-if-loaded dependency policy (issue #48, ADR-0003).
 **This is a breaking change for documents that relied on the package to supply
 their bibliography, links, or cross-references.**
 
-Third-party loads went from **45 to 32**. ADR-0003 estimated ~37 down to ~25;
+`lnpminimal.sty` loaded hyperref at end of preamble if the document had not.
+That is the same load-order imposition the policy removes, so it goes too:
+applying the rule to one of the two entry points would leave the package
+incoherent. lnpminimal calls no hyperref command, so nothing needed guarding.
+
+Third-party loads went from **45 to 33**. ADR-0003 estimated ~37 down to ~25;
 both numbers were low, measured before the count was checked.
 
 - **Configure if loaded, never load:** `hyperref`, `cleveref`, `biblatex`,
