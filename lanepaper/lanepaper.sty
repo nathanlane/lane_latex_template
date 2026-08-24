@@ -1963,7 +1963,10 @@
 
 % APPENDIX SYSTEM INITIALIZATION
 % Core package and counter setup
-\RequirePackage{appendix}  % Professional appendix handling
+%% Issue #48 (ADR-0003 rule 2): appendix is detected, not loaded. The
+%% detection below already existed; loading the package here made it
+%% always true. \startappendices falls back to plain \appendix when the
+%% document has not loaded it.
 
 
 % Internal counter for tracking appendices in current document
@@ -1991,7 +1994,11 @@
 \newif\iflnp@sectionsaved
 
 % Check for appendix package at load time
-\@ifpackageloaded{appendix}{\lnp@appendixloadedtrue}{\lnp@appendixloadedfalse}
+%% Deferred: the document may load appendix after this package, and the
+%% flag is not read until \startappendices runs in the document body.
+\AtBeginDocument{%
+  \@ifpackageloaded{appendix}{\lnp@appendixloadedtrue}{\lnp@appendixloadedfalse}%
+}
 
 % Store original section command at package load time
 \let\lnp@origsection\section
@@ -2748,9 +2755,10 @@
 \spaceskip=0.33em plus 0.17em minus 0.12em  % Reduced from defaults
 \xspaceskip=0.48em plus 0.25em minus 0.15em % End-of-sentence spacing
 
-% Language setup - Load babel with english language
-% Fix for TeX Live 2025 compatibility
-\RequirePackage[english]{babel}
+%% Issue #48 (ADR-0003 rule 2): babel is the document's to load and its
+%% language its own to choose. Nothing here configures babel, so the
+%% policy leaves only the removal. The \hyphenation list below is a TeX
+%% primitive and does not need babel.
 
 % COMPREHENSIVE HYPHENATION DICTIONARY
 % Academic and technical terms with proper break points

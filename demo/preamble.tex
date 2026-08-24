@@ -37,6 +37,8 @@
 
 %% Issue #48 (ADR-0003): the package configures these but no longer loads them.
 %% The Template owns them. Order matters: hyperref before cleveref.
+\usepackage[english]{babel}  % language and hyphenation patterns
+\usepackage{appendix}    % appendices environment used by \startappendices
 \usepackage{hyperref}    % PDF links and metadata; load late, before cleveref
 \usepackage{cleveref}    % cross-references; must follow hyperref
 \usepackage{tabularx}    % full-width tables
