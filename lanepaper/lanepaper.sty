@@ -2069,21 +2069,14 @@
   \finishappendices%
 }
 
-% Enhanced cleveref configuration for appendices
-\AtBeginDocument{%
-  % Configure cleveref names for better appendix references
-  \crefname{section}{appendix}{appendices}%
-  \Crefname{section}{Appendix}{Appendices}%
-  \@ifundefined{chapter}{}{%
-    \crefname{chapter}{appendix}{appendices}%
-    \Crefname{chapter}{Appendix}{Appendices}%
-  }%
-  % Special handling for appendix figures and tables
-  \crefname{figure}{figure}{figures}%
-  \Crefname{figure}{Figure}{Figures}%
-  \crefname{table}{table}{tables}%
-  \Crefname{table}{Table}{Tables}%
-}
+%% Issue #48: these cleveref names moved into the guarded cleveref block
+%% below. They must be applied AFTER the general \crefname settings, which
+%% is what the original ordering achieved: the general names ran at package
+%% load and this block overrode them at \begin{document}. Once both are
+%% deferred, \AtBeginDocument runs them in registration order and this block
+%% -- being earlier in the file -- would have lost. Verified by the appendix
+%% range reference on page 38 of the demo rendering "appendices 1-2", not
+%% "SS 1-2".
 
 % ==============================================================================
 % X. CORE FUNCTIONALITY AND INTEGRATION
@@ -2123,8 +2116,9 @@
 \RequirePackage{placeins}        % Float barriers for sectional control
 \RequirePackage{csquotes}        % Context-sensitive quotation commands
 \RequirePackage{fancyhdr}        % Custom headers and footers
-\RequirePackage{hyperref}        % PDF hyperlinks and metadata
-\RequirePackage{cleveref}        % Enhanced cross-referencing (must load after hyperref)
+%% Issue #48 (ADR-0003 rule 2): hyperref and cleveref are configured, never
+%% loaded. Loading hyperref here would dictate load order to every document
+%% using this package -- the single most likely thing to break an adopter.
 
 % ==============================================================================
 % QUANTUM-SPACED TABLE ROW SYSTEM
@@ -2177,73 +2171,94 @@
 %
 % ------------------------------------------------------------------------------
 
-% CLEVEREF FORMAT DEFINITIONS
-% Define reference formats for all document elements
+%% Issue #48 (ADR-0003 rule 2): cleveref is configured here, never loaded.
+%% Deferred like the hyperref block: cleveref must follow hyperref, so a
+%% document loads it late and an inline check would miss it.
+\AtBeginDocument{%
+  \@ifpackageloaded{cleveref}{%
+    % CLEVEREF FORMAT DEFINITIONS
+    % Define reference formats for all document elements
 
-% Figures - abbreviated with non-breaking space
-\crefformat{figure}{fig.~#2#1#3}
-\Crefformat{figure}{Figure~#2#1#3}
-\crefrangeformat{figure}{figs.~#3#1#4--#5#2#6}
-\Crefrangeformat{figure}{Figures~#3#1#4--#5#2#6}
-\crefmultiformat{figure}{figs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-\Crefmultiformat{figure}{Figures~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+    % Figures - abbreviated with non-breaking space
+    \crefformat{figure}{fig.~#2#1#3}
+    \Crefformat{figure}{Figure~#2#1#3}
+    \crefrangeformat{figure}{figs.~#3#1#4--#5#2#6}
+    \Crefrangeformat{figure}{Figures~#3#1#4--#5#2#6}
+    \crefmultiformat{figure}{figs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+    \Crefmultiformat{figure}{Figures~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
 
-% Tables - lowercase with non-breaking space
-\crefformat{table}{table~#2#1#3}
-\Crefformat{table}{Table~#2#1#3}
-\crefrangeformat{table}{tables~#3#1#4--#5#2#6}
-\Crefrangeformat{table}{Tables~#3#1#4--#5#2#6}
-\crefmultiformat{table}{tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-\Crefmultiformat{table}{Tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+    % Tables - lowercase with non-breaking space
+    \crefformat{table}{table~#2#1#3}
+    \Crefformat{table}{Table~#2#1#3}
+    \crefrangeformat{table}{tables~#3#1#4--#5#2#6}
+    \Crefrangeformat{table}{Tables~#3#1#4--#5#2#6}
+    \crefmultiformat{table}{tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+    \Crefmultiformat{table}{Tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
 
-% Sections - using § symbol for compactness
-\crefformat{section}{§#2#1#3}
-\Crefformat{section}{Section~#2#1#3}
-\crefformat{subsection}{§#2#1#3}
-\Crefformat{subsection}{Section~#2#1#3}
-\crefformat{subsubsection}{§#2#1#3}
-\Crefformat{subsubsection}{Section~#2#1#3}
+    % Sections - using § symbol for compactness
+    \crefformat{section}{§#2#1#3}
+    \Crefformat{section}{Section~#2#1#3}
+    \crefformat{subsection}{§#2#1#3}
+    \Crefformat{subsection}{Section~#2#1#3}
+    \crefformat{subsubsection}{§#2#1#3}
+    \Crefformat{subsubsection}{Section~#2#1#3}
 
-% Equations - parentheses style (Chicago standard)
-\crefformat{equation}{(#2#1#3)}
-\Crefformat{equation}{Equation~(#2#1#3)}
-\crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
-\Crefrangeformat{equation}{Equations~(#3#1#4)--(#5#2#6)}
-\crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
-\Crefmultiformat{equation}{Equations~(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+    % Equations - parentheses style (Chicago standard)
+    \crefformat{equation}{(#2#1#3)}
+    \Crefformat{equation}{Equation~(#2#1#3)}
+    \crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
+    \Crefrangeformat{equation}{Equations~(#3#1#4)--(#5#2#6)}
+    \crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+    \Crefmultiformat{equation}{Equations~(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
 
-% Appendices - capital letter format
-\crefformat{appendix}{appendix~#2#1#3}
-\Crefformat{appendix}{Appendix~#2#1#3}
+    % Appendices - capital letter format
+    \crefformat{appendix}{appendix~#2#1#3}
+    \Crefformat{appendix}{Appendix~#2#1#3}
 
-% Footnotes
-\crefformat{footnote}{footnote~#2#1#3}
-\Crefformat{footnote}{Footnote~#2#1#3}
+    % Footnotes
+    \crefformat{footnote}{footnote~#2#1#3}
+    \Crefformat{footnote}{Footnote~#2#1#3}
 
-% Page references
-\crefformat{page}{page~#2#1#3}
-\Crefformat{page}{Page~#2#1#3}
-\crefrangeformat{page}{pages~#3#1#4--#5#2#6}
-\Crefrangeformat{page}{Pages~#3#1#4--#5#2#6}
+    % Page references
+    \crefformat{page}{page~#2#1#3}
+    \Crefformat{page}{Page~#2#1#3}
+    \crefrangeformat{page}{pages~#3#1#4--#5#2#6}
+    \Crefrangeformat{page}{Pages~#3#1#4--#5#2#6}
 
-% CLEVEREF NAME CONFIGURATION
-\crefname{figure}{fig.}{figs.}
-\Crefname{figure}{Figure}{Figures}
-\crefname{table}{table}{tables}
-\Crefname{table}{Table}{Tables}
-\crefname{section}{§}{§§}
-\Crefname{section}{Section}{Sections}
-\crefname{appendix}{appendix}{appendices}
-\Crefname{appendix}{Appendix}{Appendices}
+    % CLEVEREF NAME CONFIGURATION
+    \crefname{figure}{fig.}{figs.}
+    \Crefname{figure}{Figure}{Figures}
+    \crefname{table}{table}{tables}
+    \Crefname{table}{Table}{Tables}
+    \crefname{section}{§}{§§}
+    \Crefname{section}{Section}{Sections}
+    \crefname{appendix}{appendix}{appendices}
+    \Crefname{appendix}{Appendix}{Appendices}
 
-% Conjunction configuration - use 'and' not '&'
-\newcommand{\crefpairconjunction}{ and }
-\newcommand{\crefmiddleconjunction}{, }
-\newcommand{\creflastconjunction}{, and }
-\newcommand{\crefrangeconjunction}{--}
+    % Conjunction configuration - use 'and' not '&'
+    \newcommand{\crefpairconjunction}{ and }
+    \newcommand{\crefmiddleconjunction}{, }
+    \newcommand{\creflastconjunction}{, and }
+    \newcommand{\crefrangeconjunction}{--}
 
-% Equation label format
-\creflabelformat{equation}{(#2#1#3)}
+    % Equation label format
+    \creflabelformat{equation}{(#2#1#3)}
+
+    % Appendix-aware names, moved here by #48 (see the note above).
+    % Configure cleveref names for better appendix references
+    \crefname{section}{appendix}{appendices}%
+    \Crefname{section}{Appendix}{Appendices}%
+    \@ifundefined{chapter}{}{%
+    \crefname{chapter}{appendix}{appendices}%
+    \Crefname{chapter}{Appendix}{Appendices}%
+    }%
+    % Special handling for appendix figures and tables
+    \crefname{figure}{figure}{figures}%
+    \Crefname{figure}{Figure}{Figures}%
+    \crefname{table}{table}{tables}%
+    \Crefname{table}{Table}{Tables}%
+  }{}%
+}
 
 % CONVENIENCE COMMANDS FOR COMMON PATTERNS
 
@@ -2436,55 +2451,63 @@
 % 15 units: 198pt (6.99cm)
 % 20 units: 264pt (9.32cm)
 
-% HYPERREF CONFIGURATION
-% Professional PDF links with accessibility and print compatibility
-% All links use enhanced navy blue for consistent visual treatment
-\hypersetup{
-  colorlinks=true,
-  linkcolor=black,
-  citecolor=black,
-  urlcolor=black,
-  filecolor=black,
-  bookmarksnumbered=true,
-  pdfborder={0 0 0},
-  pdfencoding=auto
-}
-
-% Update hyperref colors after loading colors module
+%% Issue #48 (ADR-0003 rule 2): hyperref is configured here, never loaded.
+%% Deferred to \AtBeginDocument because hyperref is conventionally loaded
+%% late -- typically after this package -- so an inline \@ifpackageloaded
+%% would run first and silently configure nothing.
 \AtBeginDocument{%
-  \iflnp@draft
-    \hypersetup{colorlinks=false,pdfborder={1 1 1}}
-  \else
-    \iflnp@nocolor
-      \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
-    \else
-      \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
-    \fi
-  \fi
-}
+  \@ifpackageloaded{hyperref}{%
+    % HYPERREF CONFIGURATION
+    % Professional PDF links with accessibility and print compatibility
+    % All links use enhanced navy blue for consistent visual treatment
+    \hypersetup{
+      colorlinks=true,
+      linkcolor=black,
+      citecolor=black,
+      urlcolor=black,
+      filecolor=black,
+      bookmarksnumbered=true,
+      pdfborder={0 0 0},
+      pdfencoding=auto
+    }
 
-% PDF STRING COMPATIBILITY
-% Provide text-only alternatives for PDF bookmarks and metadata
-\pdfstringdefDisableCommands{%
-  \def\textsc#1{#1}%           % Small caps -> plain text
-  \def\textbf#1{#1}%           % Bold -> plain text
-  \def\textit#1{#1}%           % Italic -> plain text
-  \def\emph#1{#1}%             % Emphasis -> plain text
-  \def\code#1{#1}%             % Code -> plain text
-  \def\var#1{#1}%              % Variable -> plain text
-  \def\filepath#1{#1}%         % Filepath -> plain text
-  \def\refinedsc#1{#1}%        % Refined small caps -> plain text
-  \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
-  \def\titlesc#1{#1}%          % Title small caps -> plain text
-  %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
-  %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
-  \def\SetTracking#1#2{}%      % Remove tracking commands
-  \def\lsstyle{}%              % Remove letterspacing style
-  \let\\\space%                % Line break -> space
-  \def\hspace#1{ }%            % Horizontal space -> space
-  \def\vspace#1{}%             % Vertical space -> nothing
-  \def\kern#1{}%               % Kern -> nothing
-\def~{ }%                    % Non-breaking space – space
+    % Update hyperref colors after loading colors module
+    % draft / nocolor overrides (was a nested \AtBeginDocument,
+    % redundant now that the whole block is deferred)
+      \iflnp@draft
+        \hypersetup{colorlinks=false,pdfborder={1 1 1}}
+      \else
+        \iflnp@nocolor
+          \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
+        \else
+          \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
+        \fi
+      \fi
+
+    % PDF STRING COMPATIBILITY
+    % Provide text-only alternatives for PDF bookmarks and metadata
+    \pdfstringdefDisableCommands{%
+      \def\textsc#1{#1}%           % Small caps -> plain text
+      \def\textbf#1{#1}%           % Bold -> plain text
+      \def\textit#1{#1}%           % Italic -> plain text
+      \def\emph#1{#1}%             % Emphasis -> plain text
+      \def\code#1{#1}%             % Code -> plain text
+      \def\var#1{#1}%              % Variable -> plain text
+      \def\filepath#1{#1}%         % Filepath -> plain text
+      \def\refinedsc#1{#1}%        % Refined small caps -> plain text
+      \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
+      \def\titlesc#1{#1}%          % Title small caps -> plain text
+      %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
+      %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
+      \def\SetTracking#1#2{}%      % Remove tracking commands
+      \def\lsstyle{}%              % Remove letterspacing style
+      \let\\\space%                % Line break -> space
+      \def\hspace#1{ }%            % Horizontal space -> space
+      \def\vspace#1{}%             % Vertical space -> nothing
+      \def\kern#1{}%               % Kern -> nothing
+    \def~{ }%                    % Non-breaking space – space
+    }
+  }{}%
 }
 
 % Butterick's final polish: Ensure proper page breaking
