@@ -2117,8 +2117,8 @@
 \RequirePackage{graphicx}        % Graphics inclusion and manipulation
 \RequirePackage{array}           % Enhanced array and tabular environments
 \RequirePackage{booktabs}        % Professional table design (no vertical rules)
-\RequirePackage{tabularx}        % Tables that stretch to text width
-\RequirePackage{longtable}       % Multi-page tables support
+%% Issue #48 (ADR-0003 rule 2): tabularx and longtable are configured if the
+%% document loads them, never loaded here. See the guarded block below.
 % ltcaption removed - modern longtable handles captions natively
 \RequirePackage{placeins}        % Float barriers for sectional control
 \RequirePackage{csquotes}        % Context-sensitive quotation commands
@@ -2271,8 +2271,15 @@
 \setlength{\aboverulesep}{0pt}          % Remove space above booktabs rules
 \setlength{\belowrulesep}{0pt}          % Remove space below booktabs rules
 \setlength{\extrarowheight}{2.2pt}       % Extra row height; standard row measures 21.8pt (\arraystretch 1.2 × 16.32pt baseline + 2.2pt), not 13.2pt
-\setlength{\LTcapwidth}{\textwidth}     % Full-width captions for longtables
-\AtBeginEnvironment{longtable}{\lnp@tablecaptionsetup}
+%% Issue #48: longtable typography, applied only if the document loaded it.
+%% \LTcapwidth is longtable's own length, so setting it unguarded is an
+%% undefined control sequence for any document that does not load longtable.
+\AtBeginDocument{%
+  \@ifpackageloaded{longtable}{%
+    \setlength{\LTcapwidth}{\textwidth}%
+    \AtBeginEnvironment{longtable}{\lnp@tablecaptionsetup}%
+  }{}%
+}
 
 % GRID-ALIGNED TABLE ENVIRONMENTS
 % Professional table environments with automatic grid alignment
