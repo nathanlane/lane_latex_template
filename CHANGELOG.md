@@ -4,6 +4,42 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Migrated to the LaTeX2e hook system (issue #56).
+
+All **11** `\AtBeginDocument` registrations are gone - the issue said seven,
+counted before #48 added several while deferring the configure-if-loaded checks.
+Six became `\AddToHook{begindocument}`; the five configure-if-loaded checks
+became **package hooks**, which is the better instrument:
+
+```latex
+\AddToHook{package/hyperref/after}{...}
+```
+
+fires exactly when hyperref loads, whether that is before or after this package,
+and never fires at all if the document does not load it. All three cases were
+verified against a probe rather than assumed, and against `latexrelease`
+rollbacks at 2020-10-01, 2021-06-01 and 2021-11-15.
+
+That removes the class of bug #48 hit rather than working around it.
+`\AtBeginDocument` runs callbacks in registration order, so precedence was an
+accident of file layout: deferring the cleveref block inverted a `\crefname`
+precedence that had held for a year, changing rendered output with no test
+noticing. Nothing in the package depends on registration order now, so there is
+**no `\DeclareHookRule`** - rules for hooks touching disjoint state would be
+noise, not safety.
+
+`\NeedsTeXFormat` rises from `2018/01/01` to **`2020/10/01`** on both entry
+points, the release that made `\AddToHook` format-native. README and INSTALL
+state the requirement.
+
+Three guards in `tests/test_infrastructure.py`: no `\AtBeginDocument` may
+return, the five packages must stay on their load hooks, and the declared floor
+must match. Two were confirmed to fail when a hook is reverted.
+
+`main.tex` renders identically (0 of 40 pages differ) and `opening-test.tex`
+0 of 5, both built from clean the same day - the earlier run showed a one-page
+diff that was only the `\today` line after the date rolled over.
+
 Applied the configure-if-loaded dependency policy (issue #48, ADR-0003).
 **This is a breaking change for documents that relied on the package to supply
 their bibliography, links, or cross-references.**

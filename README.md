@@ -67,7 +67,9 @@ That's it! You now have a professionally typeset academic paper.
   (T1 `fontenc`, `utf8` `inputenc`, `newpxmath`, `mathalfa`, `zi4`, Type1
   `tgpagella`), there is no `fontspec` path, and `microtype` font expansion
   is unsupported on XeTeX.
-- **LaTeX Distribution**: TeX Live 2020+, MiKTeX, or MacTeX
+- **LaTeX Distribution**: TeX Live 2020+, MiKTeX, or MacTeX. The LaTeX format
+  must be **2020-10-01 or newer** — the package uses the format-native hook
+  system (`\AddToHook`), and both entry points declare that floor.
 - **Bibliography Backend**: Biber (included with modern distributions)
 - **Build Tool**: Make (optional but recommended)
 - **Regression Test Helper**: `pdftotext` from Poppler for PDF text assertions in the pytest regression harness

@@ -19,6 +19,9 @@ fixes it. Nothing here should be read as a description of compliance.
 `\ExplSyntaxOn`, `l3keys`, `l3msg`, or `xparse` appears anywhere in
 `lanepaper/*.sty` — measured at 0 occurrences. Do not introduce them.
 
+The format floor is **2020/10/01**, the release that made `\AddToHook`
+format-native; both entry points declare it.
+
 Options are `\newif` + `\DeclareOption` + `\ProcessOptions`: the 8 option
 flags are declared at `lanepaper/lanepaper.sty:166-176` and the options
 themselves at `179-195`. (The file holds 13 `\newif` in total; the other 5 are
@@ -160,13 +163,19 @@ practice.
 
 ## 9. Hooks and load order
 
-The 2e-native hook is `\AddToHook`, which makes ordering explicit. The package
-uses `\AtBeginDocument` at **10** sites and `\AddToHook` at **0**. Migrating
-them is issue #56; until then, **registration order decides who wins**, and
-that is not a detail. Deferring the cleveref block in #48 silently inverted a
-precedence that had held for a year, because two `\AtBeginDocument` hooks set
-the same `\crefname` and the later registration won. It changed rendered output
-and no test caught it — only raster comparison did.
+**Use the LaTeX2e hook system. `\AtBeginDocument` is banned** and
+`tests/test_infrastructure.py` fails if one returns.
+
+`\AtBeginDocument` runs its callbacks in registration order, which makes
+precedence an accident of file layout. That bit for real: deferring the cleveref
+block in #48 inverted a `\crefname` precedence that had held for a year, because
+two `\AtBeginDocument` hooks set the same name and the later registration won.
+It changed rendered output and no test caught it — only raster comparison did.
+
+The package uses `\AddToHook{begindocument}` at **6** sites and package hooks at
+**5**. Nothing depends on registration order any more, so there is no
+`\DeclareHookRule` anywhere; adding rules for hooks that touch disjoint state
+would be noise, not safety.
 
 ### The package configures; it does not load
 
@@ -187,9 +196,13 @@ using it. That is gone: **the package no longer imposes any load order.**
 Consequences that are not merely "less styling", and that a new configure-if-loaded
 rule must respect:
 
-- **Check for the package at `\AtBeginDocument`, not inline.** `hyperref` is
-  conventionally loaded late, usually after this package, so an inline
-  `\@ifpackageloaded` runs first and configures nothing.
+- **Use the package's own load hook, not a check.** `\AddToHook{package/hyperref/after}{...}`
+  fires exactly when hyperref loads — before or after this package — and never
+  fires if it is absent. It replaced an `\AtBeginDocument` + `\@ifpackageloaded`
+  pair that worked but put the timing back in the author's hands. An inline
+  `\@ifpackageloaded` is simply wrong here: `hyperref` is conventionally loaded
+  late, usually after this package, so the check runs first and configures
+  nothing.
 - **Never call a command the optional package owns without a guard.**
   `\startappendices` called `\phantomsection`, which is hyperref's; it was
   always defined while the package loaded hyperref, and became a fatal

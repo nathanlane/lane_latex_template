@@ -170,3 +170,47 @@ def test_every_package_sty_carries_an_lppl_header():
         if not all(phrase in head for phrase in required):
             offenders.append(path.name)
     assert offenders == [], f"missing or incomplete LPPL header: {offenders}"
+
+
+def test_package_uses_the_latex2e_hook_system_not_atbegindocument():
+    """#56: hooks, not \\AtBeginDocument.
+
+    \\AtBeginDocument runs its callbacks in registration order, which made
+    precedence an accident of file layout. That bit once for real: deferring the
+    cleveref block in #48 inverted a \\crefname precedence that had held for a
+    year, and only raster comparison caught it. Package hooks remove the class
+    of bug -- they fire when the package loads, in either order, and never fire
+    if it is absent.
+    """
+    offenders = []
+    for path in sorted((ROOT / "lanepaper").glob("*.sty")):
+        for number, line in enumerate(
+            path.read_text(encoding="utf-8").splitlines(), start=1
+        ):
+            stripped = line.lstrip()
+            if stripped.startswith("%"):
+                continue
+            if "\\AtBegin" + "Document{" in stripped:
+                offenders.append(f"{path.name}:{number}")
+    assert offenders == [], (
+        "use \\AddToHook{begindocument} or a package hook instead: " f"{offenders}"
+    )
+
+
+def test_configure_if_loaded_uses_package_hooks():
+    """The five configure-if-loaded packages are wired to their load hooks.
+
+    A package hook fires whether the document loads the package before or after
+    this one, and not at all when it is absent -- which is exactly the
+    configure-if-loaded contract from ADR-0003.
+    """
+    source = (ROOT / "lanepaper" / "lanepaper.sty").read_text(encoding="utf-8")
+    for package in ("hyperref", "cleveref", "longtable", "appendix", "biblatex"):
+        assert f"\\AddToHook{{package/{package}/after}}" in source, package
+
+
+def test_entry_points_require_a_format_new_enough_for_hooks():
+    """\\AddToHook is format-native from 2020-10-01; the floor must say so."""
+    for name in ("lanepaper", "lnpminimal"):
+        source = (ROOT / "lanepaper" / f"{name}.sty").read_text(encoding="utf-8")
+        assert "\\NeedsTeXFormat{LaTeX2e}[2020/10/01]" in source, name
