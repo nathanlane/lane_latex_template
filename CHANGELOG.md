@@ -9,7 +9,9 @@ the Poppler gates (issue #35):
 
 - `BACKLOG.md` is deleted and its `.gitignore` entry removed. It was gitignored,
   so its contents were invisible to CI and to collaborators while the issue
-  tracker was live. Nothing in the repository referenced it.
+  tracker was live. No build, CI or code path referenced it; the only mentions
+  were prose, in this file and in the release-prep handoff, which is updated
+  here.
 - Its seven lines were a ChkTeX lint policy, not a backlog: the suppressed
   warning classes (W01, W03, W08, W11, W13, W18, W24, W36, W39, W42, W46, W48)
   and the rule that they are revisited only in a pass where rendered output may
