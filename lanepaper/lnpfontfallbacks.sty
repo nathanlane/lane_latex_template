@@ -183,7 +183,7 @@
 }
 
 % Check at begin document
-\AtBeginDocument{\checksmallcaps}
+\AddToHook{begindocument}{\checksmallcaps}
 
 % ==============================================================================
 % ENCODING FALLBACKS
@@ -217,7 +217,7 @@
   \fi
 }
 
-\AtBeginDocument{\checkfontfeatures}
+\AddToHook{begindocument}{\checkfontfeatures}
 
 % ==============================================================================
 % DIAGNOSTIC COMMANDS

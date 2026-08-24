@@ -81,7 +81,7 @@
 %
 % ==============================================================================
 
-\NeedsTeXFormat{LaTeX2e}[2018/01/01]
+\NeedsTeXFormat{LaTeX2e}[2020/10/01]
 \ProvidesPackage{lanepaper}[2026/08/12 v2.0 Academic Typography - Package Options]
 
 % ==============================================================================
@@ -1324,7 +1324,7 @@
   \fi
   \originalsubsection
 }
-\AtBeginDocument{%
+\AddToHook{begindocument}{%
   \iflnp@subsectionbarriers
     \PackageInfo{lanepaper}{subsection float barriers enabled}%
   \else
@@ -1875,7 +1875,7 @@
 
 % Additional footnote optimizations for professional typography
 % Ensure consistent measurements throughout document
-\AtBeginDocument{%
+\AddToHook{begindocument}{%
   %% FIX: \footnotemargin setting removed — it only takes effect through
   %% footmisc's hang/flushmargin options, which this package does not pass
   %% (footmisc itself is still loaded, and this package's own \@makefntext
@@ -1978,7 +1978,7 @@
 \def\lnp@totalappendices{0}
 
 % Set up appendix count reading at begin document
-\AtBeginDocument{%
+\AddToHook{begindocument}{%
   % Read appendix count from aux file if available
   \@ifundefined{lnp@totalappendices}{\def\lnp@totalappendices{0}}{}%
 }
@@ -1991,11 +1991,10 @@
 \newif\iflnp@sectionsaved
 
 % Check for appendix package at load time
-%% Deferred: the document may load appendix after this package, and the
-%% flag is not read until \startappendices runs in the document body.
-\AtBeginDocument{%
-  \@ifpackageloaded{appendix}{\lnp@appendixloadedtrue}{\lnp@appendixloadedfalse}%
-}
+%% Issue #56: a package hook fires exactly when appendix loads, whether that
+%% is before or after this package, and never fires if it is absent -- so the
+%% \newif default (false) is the correct "not loaded" state.
+\AddToHook{package/appendix/after}{\lnp@appendixloadedtrue}
 
 % Store original section command at package load time
 \let\lnp@origsection\section
@@ -2183,90 +2182,88 @@
 %% Issue #48 (ADR-0003 rule 2): cleveref is configured here, never loaded.
 %% Deferred like the hyperref block: cleveref must follow hyperref, so a
 %% document loads it late and an inline check would miss it.
-\AtBeginDocument{%
-  \@ifpackageloaded{cleveref}{%
-    % CLEVEREF FORMAT DEFINITIONS
-    % Define reference formats for all document elements
+\AddToHook{package/cleveref/after}{%
+  % CLEVEREF FORMAT DEFINITIONS
+  % Define reference formats for all document elements
 
-    % Figures - abbreviated with non-breaking space
-    \crefformat{figure}{fig.~#2#1#3}
-    \Crefformat{figure}{Figure~#2#1#3}
-    \crefrangeformat{figure}{figs.~#3#1#4--#5#2#6}
-    \Crefrangeformat{figure}{Figures~#3#1#4--#5#2#6}
-    \crefmultiformat{figure}{figs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-    \Crefmultiformat{figure}{Figures~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+  % Figures - abbreviated with non-breaking space
+  \crefformat{figure}{fig.~#2#1#3}
+  \Crefformat{figure}{Figure~#2#1#3}
+  \crefrangeformat{figure}{figs.~#3#1#4--#5#2#6}
+  \Crefrangeformat{figure}{Figures~#3#1#4--#5#2#6}
+  \crefmultiformat{figure}{figs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+  \Crefmultiformat{figure}{Figures~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
 
-    % Tables - lowercase with non-breaking space
-    \crefformat{table}{table~#2#1#3}
-    \Crefformat{table}{Table~#2#1#3}
-    \crefrangeformat{table}{tables~#3#1#4--#5#2#6}
-    \Crefrangeformat{table}{Tables~#3#1#4--#5#2#6}
-    \crefmultiformat{table}{tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-    \Crefmultiformat{table}{Tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+  % Tables - lowercase with non-breaking space
+  \crefformat{table}{table~#2#1#3}
+  \Crefformat{table}{Table~#2#1#3}
+  \crefrangeformat{table}{tables~#3#1#4--#5#2#6}
+  \Crefrangeformat{table}{Tables~#3#1#4--#5#2#6}
+  \crefmultiformat{table}{tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+  \Crefmultiformat{table}{Tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
 
-    % Sections - using § symbol for compactness
-    \crefformat{section}{§#2#1#3}
-    \Crefformat{section}{Section~#2#1#3}
-    \crefformat{subsection}{§#2#1#3}
-    \Crefformat{subsection}{Section~#2#1#3}
-    \crefformat{subsubsection}{§#2#1#3}
-    \Crefformat{subsubsection}{Section~#2#1#3}
+  % Sections - using § symbol for compactness
+  \crefformat{section}{§#2#1#3}
+  \Crefformat{section}{Section~#2#1#3}
+  \crefformat{subsection}{§#2#1#3}
+  \Crefformat{subsection}{Section~#2#1#3}
+  \crefformat{subsubsection}{§#2#1#3}
+  \Crefformat{subsubsection}{Section~#2#1#3}
 
-    % Equations - parentheses style (Chicago standard)
-    \crefformat{equation}{(#2#1#3)}
-    \Crefformat{equation}{Equation~(#2#1#3)}
-    \crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
-    \Crefrangeformat{equation}{Equations~(#3#1#4)--(#5#2#6)}
-    \crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
-    \Crefmultiformat{equation}{Equations~(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+  % Equations - parentheses style (Chicago standard)
+  \crefformat{equation}{(#2#1#3)}
+  \Crefformat{equation}{Equation~(#2#1#3)}
+  \crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
+  \Crefrangeformat{equation}{Equations~(#3#1#4)--(#5#2#6)}
+  \crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+  \Crefmultiformat{equation}{Equations~(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
 
-    % Appendices - capital letter format
-    \crefformat{appendix}{appendix~#2#1#3}
-    \Crefformat{appendix}{Appendix~#2#1#3}
+  % Appendices - capital letter format
+  \crefformat{appendix}{appendix~#2#1#3}
+  \Crefformat{appendix}{Appendix~#2#1#3}
 
-    % Footnotes
-    \crefformat{footnote}{footnote~#2#1#3}
-    \Crefformat{footnote}{Footnote~#2#1#3}
+  % Footnotes
+  \crefformat{footnote}{footnote~#2#1#3}
+  \Crefformat{footnote}{Footnote~#2#1#3}
 
-    % Page references
-    \crefformat{page}{page~#2#1#3}
-    \Crefformat{page}{Page~#2#1#3}
-    \crefrangeformat{page}{pages~#3#1#4--#5#2#6}
-    \Crefrangeformat{page}{Pages~#3#1#4--#5#2#6}
+  % Page references
+  \crefformat{page}{page~#2#1#3}
+  \Crefformat{page}{Page~#2#1#3}
+  \crefrangeformat{page}{pages~#3#1#4--#5#2#6}
+  \Crefrangeformat{page}{Pages~#3#1#4--#5#2#6}
 
-    % CLEVEREF NAME CONFIGURATION
-    \crefname{figure}{fig.}{figs.}
-    \Crefname{figure}{Figure}{Figures}
-    \crefname{table}{table}{tables}
-    \Crefname{table}{Table}{Tables}
-    \crefname{section}{§}{§§}
-    \Crefname{section}{Section}{Sections}
-    \crefname{appendix}{appendix}{appendices}
-    \Crefname{appendix}{Appendix}{Appendices}
+  % CLEVEREF NAME CONFIGURATION
+  \crefname{figure}{fig.}{figs.}
+  \Crefname{figure}{Figure}{Figures}
+  \crefname{table}{table}{tables}
+  \Crefname{table}{Table}{Tables}
+  \crefname{section}{§}{§§}
+  \Crefname{section}{Section}{Sections}
+  \crefname{appendix}{appendix}{appendices}
+  \Crefname{appendix}{Appendix}{Appendices}
 
-    % Conjunction configuration - use 'and' not '&'
-    \newcommand{\crefpairconjunction}{ and }
-    \newcommand{\crefmiddleconjunction}{, }
-    \newcommand{\creflastconjunction}{, and }
-    \newcommand{\crefrangeconjunction}{--}
+  % Conjunction configuration - use 'and' not '&'
+  \newcommand{\crefpairconjunction}{ and }
+  \newcommand{\crefmiddleconjunction}{, }
+  \newcommand{\creflastconjunction}{, and }
+  \newcommand{\crefrangeconjunction}{--}
 
-    % Equation label format
-    \creflabelformat{equation}{(#2#1#3)}
+  % Equation label format
+  \creflabelformat{equation}{(#2#1#3)}
 
-    % Appendix-aware names, moved here by #48 (see the note above).
-    % Configure cleveref names for better appendix references
-    \crefname{section}{appendix}{appendices}%
-    \Crefname{section}{Appendix}{Appendices}%
-    \@ifundefined{chapter}{}{%
-    \crefname{chapter}{appendix}{appendices}%
-    \Crefname{chapter}{Appendix}{Appendices}%
-    }%
-    % Special handling for appendix figures and tables
-    \crefname{figure}{figure}{figures}%
-    \Crefname{figure}{Figure}{Figures}%
-    \crefname{table}{table}{tables}%
-    \Crefname{table}{Table}{Tables}%
-  }{}%
+  % Appendix-aware names, moved here by #48 (see the note above).
+  % Configure cleveref names for better appendix references
+  \crefname{section}{appendix}{appendices}%
+  \Crefname{section}{Appendix}{Appendices}%
+  \@ifundefined{chapter}{}{%
+  \crefname{chapter}{appendix}{appendices}%
+  \Crefname{chapter}{Appendix}{Appendices}%
+  }%
+  % Special handling for appendix figures and tables
+  \crefname{figure}{figure}{figures}%
+  \Crefname{figure}{Figure}{Figures}%
+  \crefname{table}{table}{tables}%
+  \Crefname{table}{Table}{Tables}%
 }
 
 % CONVENIENCE COMMANDS FOR COMMON PATTERNS
@@ -2298,11 +2295,9 @@
 %% Issue #48: longtable typography, applied only if the document loaded it.
 %% \LTcapwidth is longtable's own length, so setting it unguarded is an
 %% undefined control sequence for any document that does not load longtable.
-\AtBeginDocument{%
-  \@ifpackageloaded{longtable}{%
-    \setlength{\LTcapwidth}{\textwidth}%
-    \AtBeginEnvironment{longtable}{\lnp@tablecaptionsetup}%
-  }{}%
+\AddToHook{package/longtable/after}{%
+  \setlength{\LTcapwidth}{\textwidth}%
+  \AtBeginEnvironment{longtable}{\lnp@tablecaptionsetup}%
 }
 
 % GRID-ALIGNED TABLE ENVIRONMENTS
@@ -2464,59 +2459,57 @@
 %% Deferred to \AtBeginDocument because hyperref is conventionally loaded
 %% late -- typically after this package -- so an inline \@ifpackageloaded
 %% would run first and silently configure nothing.
-\AtBeginDocument{%
-  \@ifpackageloaded{hyperref}{%
-    % HYPERREF CONFIGURATION
-    % Professional PDF links with accessibility and print compatibility
-    % All links use enhanced navy blue for consistent visual treatment
-    \hypersetup{
-      colorlinks=true,
-      linkcolor=black,
-      citecolor=black,
-      urlcolor=black,
-      filecolor=black,
-      bookmarksnumbered=true,
-      pdfborder={0 0 0},
-      pdfencoding=auto
-    }
+\AddToHook{package/hyperref/after}{%
+  % HYPERREF CONFIGURATION
+  % Professional PDF links with accessibility and print compatibility
+  % All links use enhanced navy blue for consistent visual treatment
+  \hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=black,
+    filecolor=black,
+    bookmarksnumbered=true,
+    pdfborder={0 0 0},
+    pdfencoding=auto
+  }
 
-    % Update hyperref colors after loading colors module
-    % draft / nocolor overrides (was a nested \AtBeginDocument,
-    % redundant now that the whole block is deferred)
-      \iflnp@draft
-        \hypersetup{colorlinks=false,pdfborder={1 1 1}}
+  % Update hyperref colors after loading colors module
+  % draft / nocolor overrides (was a nested \AtBeginDocument, flattened
+  % in #48 once the whole block became conditional)
+    \iflnp@draft
+      \hypersetup{colorlinks=false,pdfborder={1 1 1}}
+    \else
+      \iflnp@nocolor
+        \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
       \else
-        \iflnp@nocolor
-          \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
-        \else
-          \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
-        \fi
+        \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
       \fi
+    \fi
 
-    % PDF STRING COMPATIBILITY
-    % Provide text-only alternatives for PDF bookmarks and metadata
-    \pdfstringdefDisableCommands{%
-      \def\textsc#1{#1}%           % Small caps -> plain text
-      \def\textbf#1{#1}%           % Bold -> plain text
-      \def\textit#1{#1}%           % Italic -> plain text
-      \def\emph#1{#1}%             % Emphasis -> plain text
-      \def\code#1{#1}%             % Code -> plain text
-      \def\var#1{#1}%              % Variable -> plain text
-      \def\filepath#1{#1}%         % Filepath -> plain text
-      \def\refinedsc#1{#1}%        % Refined small caps -> plain text
-      \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
-      \def\titlesc#1{#1}%          % Title small caps -> plain text
-      %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
-      %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
-      \def\SetTracking#1#2{}%      % Remove tracking commands
-      \def\lsstyle{}%              % Remove letterspacing style
-      \let\\\space%                % Line break -> space
-      \def\hspace#1{ }%            % Horizontal space -> space
-      \def\vspace#1{}%             % Vertical space -> nothing
-      \def\kern#1{}%               % Kern -> nothing
-    \def~{ }%                    % Non-breaking space – space
-    }
-  }{}%
+  % PDF STRING COMPATIBILITY
+  % Provide text-only alternatives for PDF bookmarks and metadata
+  \pdfstringdefDisableCommands{%
+    \def\textsc#1{#1}%           % Small caps -> plain text
+    \def\textbf#1{#1}%           % Bold -> plain text
+    \def\textit#1{#1}%           % Italic -> plain text
+    \def\emph#1{#1}%             % Emphasis -> plain text
+    \def\code#1{#1}%             % Code -> plain text
+    \def\var#1{#1}%              % Variable -> plain text
+    \def\filepath#1{#1}%         % Filepath -> plain text
+    \def\refinedsc#1{#1}%        % Refined small caps -> plain text
+    \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
+    \def\titlesc#1{#1}%          % Title small caps -> plain text
+    %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
+    %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
+    \def\SetTracking#1#2{}%      % Remove tracking commands
+    \def\lsstyle{}%              % Remove letterspacing style
+    \let\\\space%                % Line break -> space
+    \def\hspace#1{ }%            % Horizontal space -> space
+    \def\vspace#1{}%             % Vertical space -> nothing
+    \def\kern#1{}%               % Kern -> nothing
+  \def~{ }%                    % Non-breaking space – space
+  }
 }
 
 % Butterick's final polish: Ensure proper page breaking
@@ -2560,7 +2553,7 @@
 %% FIX: the unconditional \AtBeginDocument \addtolength below adds another
 %% 0.25\gridunit, so \jot ships as 9.9pt (measured), not 6.6pt. Value kept;
 %% the claim is corrected here and there.
-\jot=6.6pt  % 0.5 quanta before the \AtBeginDocument addition (ships as 9.9pt)
+\jot=6.6pt  % 0.5 quanta before the begindocument-hook addition (ships as 9.9pt)
 
 % INLINE EQUATION SIZING
 % Compensate for Pagella's larger x-height with subtle scaling
@@ -2584,7 +2577,7 @@
 
 %% FIX: applies to EVERY multi-line display (the addition is unconditional),
 %% despite the earlier "numbered equations" claim. In-force \jot = 9.9pt.
-\AtBeginDocument{%
+\AddToHook{begindocument}{%
   \addtolength{\jot}{0.25\gridunit}  % +0.25 quanta: total \jot = 9.9pt
 }
 
@@ -3042,13 +3035,10 @@
 
 % Check packages at load time
 \@ifpackageloaded{microtype}{\lnp@microtypeloadedtrue}{\lnp@microtypeloadedfalse}
-%% Deferred (#48 review): the document owns biblatex now and usually loads
-%% it after this package, so an inline check would report "Not loaded" in
-%% \lanepaperdiagnostics for a document that did load it. microtype above
-%% stays inline -- this package loads it, so it is always already there.
-\AtBeginDocument{%
-  \@ifpackageloaded{biblatex}{\lnp@biblatexloadedtrue}{\lnp@biblatexloadedfalse}%
-}
+%% Issue #56: a package hook reports biblatex correctly in
+%% \lanepaperdiagnostics whichever order the document loads it in. microtype
+%% above stays inline -- this package loads it, so it is always already there.
+\AddToHook{package/biblatex/after}{\lnp@biblatexloadedtrue}
 
 \newcommand{\lanepaperdiagnostics}{%
   \typeout{=== Paperstyle Diagnostics ===}%
