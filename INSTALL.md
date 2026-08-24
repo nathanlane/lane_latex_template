@@ -20,7 +20,9 @@ font expansion is unsupported on XeTeX. Loading `lanepaper` or `lnpminimal`
 under either engine stops the run with an explicit error rather than a cascade
 of font failures.
 
-1. **TeX Distribution** (one of the following):
+1. **TeX Distribution** (one of the following). The LaTeX format must be
+   **2020-10-01 or newer**; the package uses `\AddToHook` and declares that
+   floor with `\NeedsTeXFormat`:
    - TeX Live 2020 or newer (recommended)
    - MiKTeX 2020 or newer
    - MacTeX 2020 or newer (macOS)
