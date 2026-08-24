@@ -271,8 +271,8 @@ and rewriting dated review records. The exclusion is documented in `CHANGELOG.md
 - `README.md` features list — carries a guardrail comment limiting claims to verified
   support. Two separate sessions have now violated it; check claims against the `.sty`
   files, never against existing prose.
-- `.gitignore` — the two negations are asymmetric on purpose. #57 removes its
-  `BACKLOG.md` entry.
+- `.gitignore` — the two negations are asymmetric on purpose. Its `BACKLOG.md`
+  entry is gone (#57).
 
 ## Suggested Skills
 

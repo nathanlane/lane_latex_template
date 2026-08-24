@@ -125,7 +125,6 @@ __pycache__/
 
 # Context files
 context/
-BACKLOG.md
 
 # AI Assistant Instructions (local only)
 CLAUDE.md

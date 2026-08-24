@@ -84,6 +84,12 @@ Verified locally on August 12, 2026 (all gates: `make lint`, `make build`,
   Biber 2.17, ChkTeX 1.7.6 (the `make lint` gate probes `-n48` support and
   drops it on binaries older than ChkTeX 1.7.7).
 
+Poppler is part of the verified local setup (August 24, 2026): `pdftotext`
+26.08.0 and `pdfinfo` on PATH, so the PDF-text assertions in
+`tests/test_regression_harness.py` run rather than skip, and
+`tests/check-spacing-integrity.sh` runs instead of exiting 1. Verified with
+`pytest -q` reporting 0 skipped.
+
 Earlier verification (July 4, 2026): TeX Live 2025, pdfTeX 1.40.28,
 `latexmk` 4.86a, Biber 2.20.
 
