@@ -62,6 +62,11 @@ That's it! You now have a professionally typeset academic paper.
 
 ### Prerequisites
 
+- **Engine**: pdfLaTeX only. XeLaTeX and LuaLaTeX are not supported and the
+  package stops with an explicit error on them - the font stack is 8-bit
+  (T1 `fontenc`, `utf8` `inputenc`, `newpxmath`, `mathalfa`, `zi4`, Type1
+  `tgpagella`), there is no `fontspec` path, and `microtype` font expansion
+  is unsupported on XeTeX.
 - **LaTeX Distribution**: TeX Live 2020+, MiKTeX, or MacTeX
 - **Bibliography Backend**: Biber (included with modern distributions)
 - **Build Tool**: Make (optional but recommended)

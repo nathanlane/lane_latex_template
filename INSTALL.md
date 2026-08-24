@@ -13,6 +13,13 @@ This guide will help you set up the LaTeX template on your system with all requi
 ## Prerequisites
 
 ### Required Software
+
+**The engine is pdfLaTeX only.** XeLaTeX and LuaLaTeX are not supported: the
+font stack is 8-bit and pdfTeX-shaped, with no `fontspec` path, and `microtype`
+font expansion is unsupported on XeTeX. Loading `lanepaper` or `lnpminimal`
+under either engine stops the run with an explicit error rather than a cascade
+of font failures.
+
 1. **TeX Distribution** (one of the following):
    - TeX Live 2020 or newer (recommended)
    - MiKTeX 2020 or newer

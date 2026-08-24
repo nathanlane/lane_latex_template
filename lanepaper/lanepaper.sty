@@ -46,8 +46,8 @@
 %   v1.0 (2025-06-25): Initial release with typography synthesis
 %
 % TECHNICAL REQUIREMENTS:
-%   - LaTeX 2e (2020+)
-%   - pdfTeX or LuaTeX
+%   - LaTeX 2e (2018/01/01 or later)
+%   - pdfTeX only (pdfLaTeX); see the engine guard below
 %   - Modern TeX distribution (TeX Live 2023+, MiKTeX current)
 %
 % DEPENDENCIES:
@@ -81,7 +81,33 @@
 %
 % ==============================================================================
 
+\NeedsTeXFormat{LaTeX2e}[2018/01/01]
 \ProvidesPackage{lanepaper}[2026/08/12 v2.0 Academic Typography - Package Options]
+
+% ==============================================================================
+% ENGINE GUARD
+% ==============================================================================
+% This package is pdfLaTeX-only. The font stack is 8-bit and pdfTeX-shaped --
+% T1 fontenc, utf8 inputenc, newpxmath, mathalfa, zi4 and Type1 tgpagella --
+% with no fontspec path, and microtype font expansion is unsupported on XeTeX.
+% Without this guard a XeLaTeX or LuaLaTeX user gets a cascade of font errors
+% instead of one message saying what is wrong.
+\RequirePackage{iftex}
+\ifpdftex\else
+  \PackageError{lanepaper}{%
+    pdfTeX is required, but this document is being compiled with another engine%
+  }{%
+    lanepaper is pdfLaTeX-only.\MessageBreak
+    Its font stack (T1 fontenc, utf8 inputenc, newpxmath, mathalfa, zi4,\MessageBreak
+    Type1 tgpagella) has no fontspec path, and microtype font expansion\MessageBreak
+    is unsupported on XeTeX.\MessageBreak
+    Compile with pdflatex.%
+  }%
+  %% Stop the run. Without this the error is recoverable, so a nonstopmode
+  %% build continues into exactly the font cascade this guard exists to
+  %% prevent -- microtype alone adds two more errors on XeTeX.
+  \batchmode\@@end
+\fi
 
 % ==============================================================================
 % PACKAGE OPTIONS
