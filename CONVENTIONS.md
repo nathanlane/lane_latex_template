@@ -158,31 +158,50 @@ times.
 Issue #55 is the fix. Until it lands, this section states the rule, not the
 practice.
 
-## 9. Hooks and load order — **not met**
+## 9. Hooks and load order
 
 The 2e-native hook is `\AddToHook`, which makes ordering explicit. The package
-uses `\AtBeginDocument` at **8** sites and `\AddToHook` at **0**. (A plain grep
-reports 11 — three of those are comments, not registrations.) Issue #56 is the
-migration.
+uses `\AtBeginDocument` at **10** sites and `\AddToHook` at **0**. Migrating
+them is issue #56; until then, **registration order decides who wins**, and
+that is not a detail. Deferring the cleveref block in #48 silently inverted a
+precedence that had held for a year, because two `\AtBeginDocument` hooks set
+the same `\crefname` and the later registration won. It changed rendered output
+and no test caught it — only raster comparison did.
 
-**The load-order contract is currently only a source comment.** The package
-loads `hyperref` and then `cleveref` at `lanepaper/lanepaper.sty:2129-2130`
-(`cleveref` must follow `hyperref`). A document wanting its own `hyperref`
-options must therefore load it first or use `\PassOptionsToPackage`.
+### The package configures; it does not load
 
-That contract is scheduled to disappear. [ADR-0003](docs/adr/0003-configure-if-loaded-dependency-policy.md)
-rules that the package **configures third-party packages and does not load
-them**: `hyperref`, `cleveref`, `biblatex`, `babel`, and `appendix` become
-configure-if-loaded via `\@ifpackageloaded`, never `\RequirePackage`. A style
-package that loads `hyperref` itself dictates load order to every document that
-uses it, which is the single most likely thing to break an adopter. Issue #48
-implements it.
-
-Three rules from that ADR govern any new dependency:
+[ADR-0003](docs/adr/0003-configure-if-loaded-dependency-policy.md) governs, and
+#48 implemented it. Three rules for any dependency:
 
 1. **Load** what implementing the typography requires.
-2. **Configure if loaded**, never load, anything the document is entitled to own.
-3. **Neither** — delete it, or move it to the demo.
+2. **Configure if loaded**, never load, anything the document is entitled to
+   own: `hyperref`, `cleveref`, `biblatex`, `babel`, `appendix`, `longtable`,
+   `tabularx`.
+3. **Neither** — delete it, or move it to the document. The landscape and
+   rotation conveniences went this way, taking `pdflscape`, `rotating` and
+   `adjustbox` with them.
+
+A style package that loads `hyperref` dictates load order to every document
+using it. That is gone: **the package no longer imposes any load order.**
+
+Consequences that are not merely "less styling", and that a new configure-if-loaded
+rule must respect:
+
+- **Check for the package at `\AtBeginDocument`, not inline.** `hyperref` is
+  conventionally loaded late, usually after this package, so an inline
+  `\@ifpackageloaded` runs first and configures nothing.
+- **Never call a command the optional package owns without a guard.**
+  `\startappendices` called `\phantomsection`, which is hyperref's; it was
+  always defined while the package loaded hyperref, and became a fatal
+  undefined control sequence for a bare document. `\providecommand` it.
+- **Dropping a package can change line breaking.** The measured `\spaceskip`
+  values in this package were tuned with `babel` loaded. Without it, every
+  line of `tests/fixtures/opening-test.tex` re-breaks. Documents wanting the
+  measured typography should load `babel`.
+
+`[natbib]` and `[nobiblatex]` are **deprecated** and inert: with no bibliography
+package loaded there is nothing for them to switch. They remain declared so
+existing documents get a warning rather than an "Unknown option" error.
 
 ## 10. Lint policy
 

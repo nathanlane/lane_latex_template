@@ -4,6 +4,63 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Applied the configure-if-loaded dependency policy (issue #48, ADR-0003).
+**This is a breaking change for documents that relied on the package to supply
+their bibliography, links, or cross-references.**
+
+Third-party loads went from **45 to 32**. ADR-0003 estimated ~37 down to ~25;
+both numbers were low, measured before the count was checked.
+
+- **Configure if loaded, never load:** `hyperref`, `cleveref`, `biblatex`,
+  `babel`, `appendix`, `longtable`, `tabularx`. The package styles each one
+  when the document loads it. A style package that loads `hyperref` dictates
+  load order to every document using it, which ADR-0003 calls the single most
+  likely thing to break an adopter. **The package now imposes no load order.**
+- **Moved to the document:** the landscape and rotation conveniences
+  (`landscapetable`, `landscapefigure`, `rotatedtable`, `wideregressiontable`,
+  `fittable`, `landscapelongtable` and the rotation helpers) are in
+  `demo/landscape.tex`, taking `pdflscape`, `rotating` and `adjustbox` with
+  them. They belong to the Template once ADR-0001's separate repository exists.
+- `longtable` and `tabularx` were **not** deleted, as ADR-0003 and the issue
+  both specified. Their premise - "used zero times" - was wrong: the package
+  sets `\LTcapwidth` and hooks `\lnp@tablecaptionsetup` onto the longtable
+  environment, and `\LTcapwidth` is longtable's own length, so an unguarded
+  `\setlength` is an undefined control sequence for any document without it.
+  Treated under rule 2 instead, so the typography survives.
+- `[natbib]` and `[nobiblatex]` are **deprecated and inert**: with no
+  bibliography package loaded there is nothing to switch. Both stay declared
+  and warn, so existing documents get a notice rather than an "Unknown option"
+  error.
+- Checks are deferred to `\AtBeginDocument` rather than done inline, because
+  `hyperref` is conventionally loaded late - typically after this package - so
+  an inline `\@ifpackageloaded` would run first and configure nothing.
+
+Three consequences that raster comparison caught and no test did:
+
+- Deferring the cleveref block **inverted a precedence that had held for a
+  year**. Two `\AtBeginDocument` hooks set the same `\crefname`; once both were
+  deferred, registration order decided, and an appendix range on demo page 38
+  rendered "§§ 1-2" instead of "appendices 1-2". All cleveref naming now lives
+  in one guarded block in the original effective order.
+- `\startappendices` called `\phantomsection`, which is `hyperref`'s. It was
+  always defined while the package loaded hyperref; a bare document reached it
+  undefined and died. Now `\providecommand`-guarded - a fatal error, not the
+  "less styling" ADR-0003 anticipated.
+- **Dropping `babel` changes line breaking.** The package's measured
+  `\spaceskip` values were tuned with babel present, so without it every one of
+  the five pages of `tests/fixtures/opening-test.tex` re-breaks. The fixture
+  loads babel and is byte-identical again: the package change is neutral given
+  the same package set, but a bare document's line breaking does change.
+
+`src/sh/check-packages.sh` is regenerated from the source and now lists `zi4`
+and `mathalfa`, which it had omitted - that was issue #42. Font fallbacks
+loaded inside `\IfFileExists` are deliberately excluded, and `biber` is kept as
+a binary check.
+
+`demo/preamble.tex` now loads what the document owns, with the exact biblatex
+option set the package used to impose. `main.tex` renders identically: 0 of 40
+pages differ; `opening-test.tex` 0 of 5.
+
 Neutralised two documents that contradicted the settled decisions:
 
 - `docs/PACKAGE_ROADMAP.md` carries a SUPERSEDED banner. It called itself "the
