@@ -29,6 +29,15 @@ installed once and upgraded in place. Only the second has an upgrade path.
 `\lnp@`, matching how CTAN packages actually do it — `\MT@` for microtype, `\Hy@`
 for hyperref, `\Gm@` for geometry.
 
+> **Erratum (2026-08-24).** The count above is one short. Implementing this in
+> #46 found a fifth prefix, `\paperstyle@` (6 occurrences), which was retired
+> with the other four. The decision is unchanged — all of them collapse to
+> `\lnp@` — but anything citing "four" is citing this sentence, not the code.
+> `CONVENTIONS.md` and `docs/package/NAMESPACE_CONVENTIONS.md` say five, and
+> the guard in `tests/test_infrastructure.py` covers all five. The original
+> sentence is left as written because an accepted ADR is a record of what was
+> decided, not a live description.
+
 `paper` was the obvious name and is unavailable: `paper.sty` already ships in
 TeX Live. `-latex` and `-style` suffixes were rejected as redundant inside a
 LaTeX style package, and the `-latex` suffix additionally reads on CTAN as
