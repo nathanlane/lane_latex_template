@@ -121,7 +121,8 @@ pytest -q
 2. **Edit main.tex**:
    ```latex
    \documentclass[11pt]{article}
-   \input{demo/preamble.tex}
+   \usepackage{lanepaper}
+   \addbibresource{references.bib}
    
    \begin{document}
    % Your content here
@@ -291,10 +292,9 @@ See \cref{fig:results}...        % see figure 1...
 your-paper/
 ├── main.tex              # Main document
 ├── references.bib        # Bibliography
-├── lanepaper/
-│   ├── preamble.tex      # Document setup
-│   ├── lanepaper.sty # Main style (don't edit)
-│   └── modules/          # Modular components
+├── lanepaper/            # The package - don't edit
+│   ├── lanepaper.sty     # Main style
+│   └── lnp*.sty          # Feature modules
 ├── appendices/           # Supplementary material
 │   ├── main_appendix.tex
 │   └── tech_appendix.tex
@@ -631,7 +631,7 @@ Core packages:
 Repository release: `v2.1.0`.
 
 Bundled package version: `lanepaper` reports `v2.0` in
-`paper/lanepaper.sty`.
+`lanepaper/lanepaper.sty`.
 
 v2.0.0 was the breaking-change release following the adopter defect report
 (previously repo `v0.1.0-beta` vs package `v1.7`). Repository and package

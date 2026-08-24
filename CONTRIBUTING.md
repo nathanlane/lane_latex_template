@@ -32,7 +32,7 @@ skips those assertions cleanly when `pdftotext` is unavailable.
 
 The package is `lanepaper`; its modules use the `lnp` prefix:
 
-- Main style: `lanepaper` (`paper/lanepaper.sty`)
+- Main style: `lanepaper` (`lanepaper/lanepaper.sty`)
 - Modules: `lnpcolors`, `lnpfonts`, `lnpdimensions`, `lnpheadings`,
   `lnplists`, `lnpmicrotype`, `lnpparagraphs`, `lnphochuli`, etc.
 

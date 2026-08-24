@@ -4,6 +4,20 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Corrected package paths in the adopter-facing docs that #47 left stale:
+
+- `README.md`'s directory diagram still showed `lanepaper/preamble.tex` and a
+  `lanepaper/modules/` subdirectory. Neither exists: `preamble.tex` lives with
+  the document in `demo/`, and #47 flattened the modules into `lanepaper/`.
+- `README.md`'s first-document instructions told adopters to
+  `\input{demo/preamble.tex}` — a path inside this repository, not theirs.
+  Replaced with the two lines that file actually contains.
+- `README.md`'s version history and `CONTRIBUTING.md`'s namespace section both
+  cited `paper/lanepaper.sty`, a path removed by #47.
+
+The stale-name guard in `tests/test_infrastructure.py` scans `.tex`, `.sty`,
+`.sh` and `.py` only, so none of these were caught automatically.
+
 Added LPPL 1.3c headers to all 16 package files (issue #53):
 
 - Every file in `lanepaper/` now carries the license, the `maintained`
