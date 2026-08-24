@@ -28,12 +28,14 @@ required_packages=(
   caption
   csquotes
   enumitem
+  eso-pic
   etoolbox
   fancyhdr
   fontenc
   footmisc
   geometry
   graphicx
+  hyperref
   iftex
   inputenc
   letterspace
@@ -51,8 +53,7 @@ required_packages=(
   titlesec
   xcolor
   zi4
-  # Not a .sty: the loop below checks it as a binary. The demo's
-  # bibliography needs it even though the package no longer loads biblatex.
+  # Not a .sty: the loop below checks it as a binary.
   biber
 )
 

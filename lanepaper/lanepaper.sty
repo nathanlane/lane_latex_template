@@ -1877,9 +1877,10 @@
 % Ensure consistent measurements throughout document
 \AtBeginDocument{%
   %% FIX: \footnotemargin setting removed — it only takes effect through
-  %% footmisc's hang/flushmargin options, which this package no longer loads
-  %% (and its own \@makefntext replaces anyway). It was dead code
-  %% contradicting the dead flushmargin option.
+  %% footmisc's hang/flushmargin options, which this package does not pass
+  %% (footmisc itself is still loaded, and this package's own \@makefntext
+  %% replaces the layout anyway). It was dead code contradicting the dead
+  %% flushmargin option.
   % Enable hyphenation in footnotes with constraints
   \hyphenpenalty=1000  % Tighter constraints for footnotes
   \exhyphenpenalty=2000  % Maximum 2 consecutive hyphens
@@ -3041,7 +3042,13 @@
 
 % Check packages at load time
 \@ifpackageloaded{microtype}{\lnp@microtypeloadedtrue}{\lnp@microtypeloadedfalse}
-\@ifpackageloaded{biblatex}{\lnp@biblatexloadedtrue}{\lnp@biblatexloadedfalse}
+%% Deferred (#48 review): the document owns biblatex now and usually loads
+%% it after this package, so an inline check would report "Not loaded" in
+%% \lanepaperdiagnostics for a document that did load it. microtype above
+%% stays inline -- this package loads it, so it is always already there.
+\AtBeginDocument{%
+  \@ifpackageloaded{biblatex}{\lnp@biblatexloadedtrue}{\lnp@biblatexloadedfalse}%
+}
 
 \newcommand{\lanepaperdiagnostics}{%
   \typeout{=== Paperstyle Diagnostics ===}%

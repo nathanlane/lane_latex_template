@@ -52,10 +52,12 @@ Three consequences that raster comparison caught and no test did:
   loads babel and is byte-identical again: the package change is neutral given
   the same package set, but a bare document's line breaking does change.
 
-`src/sh/check-packages.sh` is regenerated from the source and now lists `zi4`
-and `mathalfa`, which it had omitted - that was issue #42. Font fallbacks
-loaded inside `\IfFileExists` are deliberately excluded, and `biber` is kept as
-a binary check.
+`src/sh/check-packages.sh` is regenerated from the source and now lists `zi4`,
+`mathalfa` and `eso-pic`, which it had omitted - the first two were issue #42.
+Font fallbacks loaded inside `\IfFileExists` are deliberately excluded, and
+`biber` is kept as a binary check. Review caught that the first regeneration
+used a name pattern that could not match a hyphen or a comma-separated group,
+silently dropping `eso-pic` and splitting `amsmath,amssymb`.
 
 `demo/preamble.tex` now loads what the document owns, with the exact biblatex
 option set the package used to impose. `main.tex` renders identically: 0 of 40

@@ -194,6 +194,14 @@ rule must respect:
   `\startappendices` called `\phantomsection`, which is hyperref's; it was
   always defined while the package loaded hyperref, and became a fatal
   undefined control sequence for a bare document. `\providecommand` it.
+- **Distinguish a path the document chose from one it did not.**
+  `\phantomsection` sat on `\startappendices`' fallback branch, which a bare
+  document reaches without asking, so it is guarded. The cleveref wrappers
+  (`\refpage`, `\pref`, `\seeref`, `\seealso` and friends) call `\cref`
+  unguarded, and that is deliberate: they are wrappers over cleveref and calling
+  one without cleveref loaded is a usage error, not a trap. A `\providecommand`
+  fallback there would silently emit a reference that points nowhere, which is
+  worse than the error. **Using them requires cleveref.**
 - **Dropping a package can change line breaking.** The measured `\spaceskip`
   values in this package were tuned with `babel` loaded. Without it, every
   line of `tests/fixtures/opening-test.tex` re-breaks. Documents wanting the
