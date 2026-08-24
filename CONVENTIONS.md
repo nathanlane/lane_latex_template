@@ -19,9 +19,11 @@ fixes it. Nothing here should be read as a description of compliance.
 `\ExplSyntaxOn`, `l3keys`, `l3msg`, or `xparse` appears anywhere in
 `lanepaper/*.sty` — measured at 0 occurrences. Do not introduce them.
 
-Options are `\newif` + `\DeclareOption` + `\ProcessOptions`
-(`lanepaper/lanepaper.sty:179-195`, 13 `\newif` declarations). Guards are
-`\@ifpackageloaded` and `\@ifundefined`.
+Options are `\newif` + `\DeclareOption` + `\ProcessOptions`: the 8 option
+flags are declared at `lanepaper/lanepaper.sty:166-176` and the options
+themselves at `179-195`. (The file holds 13 `\newif` in total; the other 5 are
+internal state, not options.) Guards are `\@ifpackageloaded` and
+`\@ifundefined`.
 
 The l3build question is settled and is not reopened here: see
 [ADR-0002](docs/adr/0002-l3build-for-packaging-pytest-for-tests.md). l3build is
@@ -159,8 +161,9 @@ practice.
 ## 9. Hooks and load order — **not met**
 
 The 2e-native hook is `\AddToHook`, which makes ordering explicit. The package
-uses `\AtBeginDocument` at **11** sites and `\AddToHook` at **0**. Issue #56 is
-the migration.
+uses `\AtBeginDocument` at **8** sites and `\AddToHook` at **0**. (A plain grep
+reports 11 — three of those are comments, not registrations.) Issue #56 is the
+migration.
 
 **The load-order contract is currently only a source comment.** The package
 loads `hyperref` and then `cleveref` at `lanepaper/lanepaper.sty:2129-2130`

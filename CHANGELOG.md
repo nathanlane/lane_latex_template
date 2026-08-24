@@ -11,9 +11,10 @@ Added `CONVENTIONS.md` (issue #45):
   package-code style, the `%% FIX:` convention, robustness, hooks and load
   order, lint policy, versioning and licensing.
 - Every count and anchor in it was measured at writing time rather than carried
-  over from the issue, and several of the issue's figures were wrong:
-  `\AtBeginDocument` is at 11 sites not 7, and `%% FIX:` appears 116 times not
-  112.
+  over from the issue, and one of the issue's figures was wrong: `%% FIX:`
+  appears 116 times, not 112. `\AtBeginDocument` is at 8 sites, not the 7 the
+  issue claimed and not the 11 a plain grep reports - three matches are
+  comments rather than registrations.
 - Sections that state a rule the code does not follow say so and name the issue
   that fixes it: robustness (#55), hooks (#56), and the configure-if-loaded
   dependency policy (#48). Nothing in the document implies compliance it does
