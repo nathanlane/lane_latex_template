@@ -35,6 +35,15 @@
 %% FIX: Load the renamed package by package name to match \ProvidesPackage.
 \usepackage{lanepaper}
 
+%% Issue #48 (ADR-0003): the package configures these but no longer loads them.
+%% The Template owns them. Order matters: hyperref before cleveref.
+\usepackage{tabularx}    % full-width tables
+\usepackage{longtable}   % multi-page tables
+\usepackage{pdflscape}   % landscape pages
+\usepackage{rotating}    % sideways tables and figures
+\usepackage{adjustbox}   % fittable
+\input{landscape.tex}    % landscapetable, rotatedtable, fittable, ...
+
 % Load the bibliography database
 % (biblatex is already loaded by lanepaper with authoryear style and biber backend)
 \addbibresource{references.bib}
