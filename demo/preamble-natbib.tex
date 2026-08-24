@@ -40,8 +40,9 @@
 %% FIX: Load once with the documented natbib option to prevent duplicate bibliography
 %% backends.
 %% FIX: Preserve historic natbib punctuation/ordering defaults while delegating load.
-\PassOptionsToPackage{semicolon,sort&compress}{natbib}
-\usepackage[natbib]{lanepaper}
+%% Since #48 lanepaper does not load a bibliography package; load natbib here.
+\usepackage[authoryear,round,semicolon,sort&compress]{natbib}
+\usepackage{lanepaper}
 
 % ------------------------------------------------------------------------------
 % NATBIB BIBLIOGRAPHY CONFIGURATION

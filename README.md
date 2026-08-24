@@ -15,7 +15,7 @@ This template applies classic typographic principles to create scholarly article
 - **Optical Refinements** – Optional `lnphochuli` module; when loaded, automatically applies custom Pagella kerning pairs and last-line length control (`\parfillskip`); also provides opt-in commands for selective ligature suppression and hanging punctuation at paragraph openings
 - **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
-- **Smart Citations** – biblatex with author-year style, DOI/URL linking, and native natbib mode
+- **Smart Citations** – styles `biblatex` or `natbib` when your document loads one; it never loads one for you
 - **Floats** – Comprehensive figure/table system with booktabs, tabularx, and smart placement
 - **Lists** – Multiple environments with refined bullets and optimal spacing
 - **Accessibility** – WCAG 2.1 AA compliant colors with semantic emphasis commands
@@ -200,27 +200,30 @@ Create a professional title page with mathematical spacing:
 
 ### Citations and Bibliography
 
-The template uses biblatex with Chicago author-date style. The standard preamble
-loads `lanepaper`, which auto-loads the default biblatex configuration; then
-it registers `references.bib`:
+**The document owns its bibliography.** Since issue #48 the package does not
+load `biblatex`, `natbib`, `hyperref`, `cleveref`, `babel` or `appendix` — it
+styles them if you load them (ADR-0003). Nothing here dictates your load order
+or your citation style.
+
+Load biblatex with whatever options you want:
 
 ```latex
+\usepackage[
+  backend=biber, style=authoryear, natbib=true, sorting=nyt,
+  maxcitenames=2, maxbibnames=99, giveninits=true, uniquename=init,
+  doi=true, url=true, isbn=false
+]{biblatex}
 \usepackage{lanepaper}
 \addbibresource{references.bib}
 ```
 
-For custom biblatex options, load biblatex manually and disable automatic
-loading:
+Those are the options the package used to impose on every document; `demo/preamble.tex`
+carries them so the demo renders as before. Change any of them freely — that is
+the point of the change.
 
-```latex
-\usepackage[utf8]{inputenc} % load before manual biblatex on pdfTeX
-\usepackage[backend=biber,style=authoryear]{biblatex}
-\addbibresource{references.bib}
-\usepackage[nobiblatex]{lanepaper}
-```
-
-With `nobiblatex`, the template does not load `biblatex` or `inputenc`.
-On pdfTeX with manual `biblatex`, load `inputenc` before `biblatex`, as shown.
+The `nobiblatex` and `natbib` options are **deprecated and do nothing**: there is
+no automatic loading left to disable. They are still accepted, with a warning,
+so existing documents do not fail on an unknown option.
 
 For legacy natbib-based documents, use the dedicated preamble:
 
@@ -228,8 +231,8 @@ For legacy natbib-based documents, use the dedicated preamble:
 \input{demo/preamble-natbib.tex}
 ```
 
-It loads `lanepaper` with the `natbib` option and provides the `\textcite`
-and `\autocite` compatibility aliases expected by older documents (`\citeauthor`
+It loads `natbib` itself, then `lanepaper`, and provides the `\textcite` and
+`\autocite` compatibility aliases expected by older documents (`\citeauthor`
 and `\citeyear` come natively from natbib).
 
 ```latex
@@ -327,9 +330,9 @@ Load the style with options:
 Available options:
 - `grid` / `nogrid` – Show/hide the grid overlay (true-baseline and quantum lines)
 - `minimal` – Load only essential features
-- `natbib` – Load native `natbib` author-year citation support instead of automatic `biblatex`
+- `natbib` – **Deprecated, inert.** The package no longer loads a bibliography package; load `natbib` yourself
 - `draft` – Enable draft-mode diagnostics, including draft-mode `microtype`
-- `nobiblatex` – Disable automatic biblatex loading
+- `nobiblatex` – **Deprecated, inert.** There is no automatic biblatex loading left to disable
 - `subsectionbarriers` / `nosubsectionbarriers` – Enable/disable automatic float barriers before subsections
 - `mathredefs` – Opt in to variant math glyphs (`\le`→`\leqslant`, `\ge`→`\geqslant`, `\epsilon`→`\varepsilon`, `\phi`→`\varphi`, `\vec`→bold). Off by default: the redefinitions change mathematical meaning, so standard LaTeX semantics ship unless requested. Assumes full (non-`minimal`) mode, where the symbol fonts are loaded
 - `nocolor` – Disable all custom colors

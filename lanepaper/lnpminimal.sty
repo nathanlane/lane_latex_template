@@ -117,20 +117,16 @@
 \RequirePackage{array}
 
 % ==============================================================================
-% HYPERREF (LOAD LAST)
+% HYPERREF -- NOT LOADED
 % ==============================================================================
-
-\AtEndPreamble{%
-  \@ifpackageloaded{hyperref}{}{%
-    \RequirePackage[
-      colorlinks=true,
-      linkcolor=linkcolor,
-      citecolor=linkcolor,
-      urlcolor=linkcolor,
-      bookmarks=true
-    ]{hyperref}
-  }%
-}
+%
+% Issue #48 (ADR-0003 rule 2): this entry point used to load hyperref at end
+% of preamble if the document had not. That is the same load-order imposition
+% the policy removed from lanepaper.sty, and applying it to only one of the
+% two entry points would leave the package incoherent.
+%
+% lnpminimal calls no hyperref command, so there is nothing to configure and
+% nothing to guard. Load hyperref in your document if you want links.
 
 % ==============================================================================
 % SIMPLE COMMANDS

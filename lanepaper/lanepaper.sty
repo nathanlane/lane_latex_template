@@ -179,6 +179,9 @@
 \DeclareOption{grid}{\lnp@gridtrue}
 \DeclareOption{nogrid}{\lnp@gridfalse}
 \DeclareOption{minimal}{\lnp@minimaltrue}
+%% Deprecated by #48: this package no longer loads a bibliography package,
+%% so there is nothing for [natbib] or [nobiblatex] to switch. Both are
+%% still accepted so existing documents do not fail on an unknown option.
 \DeclareOption{natbib}{\lnp@natbibtrue}
 \DeclareOption{nocolor}{\lnp@nocolortrue}
 %% FIX: Let lnpmicrotype apply draft mode after package options are processed.
@@ -194,6 +197,18 @@
 % Process options
 \ProcessOptions\relax
 
+%% Deprecation notice for the two bibliography options (#48).
+\iflnp@natbib
+  \PackageWarning{lanepaper}{The [natbib] option is deprecated and does
+    nothing: this package no longer loads a bibliography package. Load natbib
+    in your document instead. See CONVENTIONS.md}%
+\fi
+\iflnp@nobiblatex
+  \PackageWarning{lanepaper}{The [nobiblatex] option is deprecated and does
+    nothing: this package no longer loads biblatex, so there is nothing to
+    disable. See CONVENTIONS.md}%
+\fi
+
 %% FIX: Load inputenc only when needed and never after a user-loaded biblatex
 %% contract to avoid load-order warnings.
 \newcommand{\lnp@maybe@load@inputenc}{%
@@ -204,43 +219,24 @@
   }%
 }
 
-% Biblatex compatibility - detect if biblatex is already loaded
+%% Issue #48 (ADR-0003 rule 2): the bibliography belongs to the document.
+%% This package loaded biblatex with its own option set, which fixed the
+%% backend, style and sorting for every document using it and forced anyone
+%% wanting different options to pass [nobiblatex] and load it themselves.
+%%
+%% It configures nothing about biblatex -- there is no \DeclareFieldFormat,
+%% \ExecuteBibliographyOptions or bibmacro anywhere in lanepaper/ -- so rule 2
+%% leaves only the removal. Load biblatex (or natbib) in the document.
+%% demo/preamble.tex shows the option set this package used to apply.
 \@ifpackageloaded{biblatex}{%
-  % biblatex already loaded - good, user loaded it before lanepaper
-  \PackageInfo{lanepaper}{biblatex detected - using existing configuration}%
+  \PackageInfo{lanepaper}{biblatex detected}%
 }{%
-  % biblatex not loaded - check if we should load it
-  \iflnp@nobiblatex
-    % User explicitly disabled biblatex
-    \PackageInfo{lanepaper}{biblatex loading disabled by nobiblatex option}%
-  \else
-    \lnp@maybe@load@inputenc
-    \iflnp@natbib
-      %% FIX: Implement documented natbib mode instead of silently skipping bibliography support.
-      \@ifpackageloaded{natbib}{%
-        \PackageInfo{lanepaper}{natbib detected - using existing configuration}%
-      }{%
-        \PackageInfo{lanepaper}{Loading natbib compatibility mode}%
-        \RequirePackage[authoryear,round]{natbib}%
-      }%
-    \else
-      % Load biblatex with sensible defaults
-      \PackageInfo{lanepaper}{Loading biblatex with default settings}%
-      \RequirePackage[
-        backend=biber,
-        style=authoryear,
-        natbib=true,
-        sorting=nyt,
-        maxcitenames=2,
-        maxbibnames=99,
-        giveninits=true,
-        uniquename=init,
-        doi=true,
-        url=true,
-        isbn=false
-      ]{biblatex}
-    \fi
-  \fi
+  \@ifpackageloaded{natbib}{%
+    \PackageInfo{lanepaper}{natbib detected}%
+  }{%
+    \PackageInfo{lanepaper}{No bibliography package loaded; the document owns
+      its bibliography since issue #48}%
+  }%
 }
 
 % ==============================================================================
@@ -1881,9 +1877,10 @@
 % Ensure consistent measurements throughout document
 \AtBeginDocument{%
   %% FIX: \footnotemargin setting removed — it only takes effect through
-  %% footmisc's hang/flushmargin options, which this package no longer loads
-  %% (and its own \@makefntext replaces anyway). It was dead code
-  %% contradicting the dead flushmargin option.
+  %% footmisc's hang/flushmargin options, which this package does not pass
+  %% (footmisc itself is still loaded, and this package's own \@makefntext
+  %% replaces the layout anyway). It was dead code contradicting the dead
+  %% flushmargin option.
   % Enable hyphenation in footnotes with constraints
   \hyphenpenalty=1000  % Tighter constraints for footnotes
   \exhyphenpenalty=2000  % Maximum 2 consecutive hyphens
@@ -1963,7 +1960,10 @@
 
 % APPENDIX SYSTEM INITIALIZATION
 % Core package and counter setup
-\RequirePackage{appendix}  % Professional appendix handling
+%% Issue #48 (ADR-0003 rule 2): appendix is detected, not loaded. The
+%% detection below already existed; loading the package here made it
+%% always true. \startappendices falls back to plain \appendix when the
+%% document has not loaded it.
 
 
 % Internal counter for tracking appendices in current document
@@ -1991,7 +1991,11 @@
 \newif\iflnp@sectionsaved
 
 % Check for appendix package at load time
-\@ifpackageloaded{appendix}{\lnp@appendixloadedtrue}{\lnp@appendixloadedfalse}
+%% Deferred: the document may load appendix after this package, and the
+%% flag is not read until \startappendices runs in the document body.
+\AtBeginDocument{%
+  \@ifpackageloaded{appendix}{\lnp@appendixloadedtrue}{\lnp@appendixloadedfalse}%
+}
 
 % Store original section command at package load time
 \let\lnp@origsection\section
@@ -2030,6 +2034,11 @@
   \else
     % Fallback to basic appendix command
     \appendix%
+    %% \phantomsection is hyperref's. #48 stopped loading hyperref, so a
+    %% document that does not load it reaches this branch with the command
+    %% undefined -- a fatal error, not merely less styling. Degrade to a
+    %% no-op, which is what hyperref's own documentation recommends.
+    \providecommand{\phantomsection}{}%
     \phantomsection%
     \addcontentsline{toc}{section}{Appendices}%
   \fi
@@ -2069,21 +2078,14 @@
   \finishappendices%
 }
 
-% Enhanced cleveref configuration for appendices
-\AtBeginDocument{%
-  % Configure cleveref names for better appendix references
-  \crefname{section}{appendix}{appendices}%
-  \Crefname{section}{Appendix}{Appendices}%
-  \@ifundefined{chapter}{}{%
-    \crefname{chapter}{appendix}{appendices}%
-    \Crefname{chapter}{Appendix}{Appendices}%
-  }%
-  % Special handling for appendix figures and tables
-  \crefname{figure}{figure}{figures}%
-  \Crefname{figure}{Figure}{Figures}%
-  \crefname{table}{table}{tables}%
-  \Crefname{table}{Table}{Tables}%
-}
+%% Issue #48: these cleveref names moved into the guarded cleveref block
+%% below. They must be applied AFTER the general \crefname settings, which
+%% is what the original ordering achieved: the general names ran at package
+%% load and this block overrode them at \begin{document}. Once both are
+%% deferred, \AtBeginDocument runs them in registration order and this block
+%% -- being earlier in the file -- would have lost. Verified by the appendix
+%% range reference on page 38 of the demo rendering "appendices 1-2", not
+%% "SS 1-2".
 
 % ==============================================================================
 % X. CORE FUNCTIONALITY AND INTEGRATION
@@ -2117,17 +2119,15 @@
 \RequirePackage{graphicx}        % Graphics inclusion and manipulation
 \RequirePackage{array}           % Enhanced array and tabular environments
 \RequirePackage{booktabs}        % Professional table design (no vertical rules)
-\RequirePackage{tabularx}        % Tables that stretch to text width
-\RequirePackage{longtable}       % Multi-page tables support
+%% Issue #48 (ADR-0003 rule 2): tabularx and longtable are configured if the
+%% document loads them, never loaded here. See the guarded block below.
 % ltcaption removed - modern longtable handles captions natively
 \RequirePackage{placeins}        % Float barriers for sectional control
 \RequirePackage{csquotes}        % Context-sensitive quotation commands
-\RequirePackage{pdflscape}       % Landscape pages with PDF rotation
-\RequirePackage{rotating}        % Rotation of content (sideways tables/figures)
-\RequirePackage{adjustbox}       % Automatic scaling for wide content
 \RequirePackage{fancyhdr}        % Custom headers and footers
-\RequirePackage{hyperref}        % PDF hyperlinks and metadata
-\RequirePackage{cleveref}        % Enhanced cross-referencing (must load after hyperref)
+%% Issue #48 (ADR-0003 rule 2): hyperref and cleveref are configured, never
+%% loaded. Loading hyperref here would dictate load order to every document
+%% using this package -- the single most likely thing to break an adopter.
 
 % ==============================================================================
 % QUANTUM-SPACED TABLE ROW SYSTEM
@@ -2180,73 +2180,94 @@
 %
 % ------------------------------------------------------------------------------
 
-% CLEVEREF FORMAT DEFINITIONS
-% Define reference formats for all document elements
+%% Issue #48 (ADR-0003 rule 2): cleveref is configured here, never loaded.
+%% Deferred like the hyperref block: cleveref must follow hyperref, so a
+%% document loads it late and an inline check would miss it.
+\AtBeginDocument{%
+  \@ifpackageloaded{cleveref}{%
+    % CLEVEREF FORMAT DEFINITIONS
+    % Define reference formats for all document elements
 
-% Figures - abbreviated with non-breaking space
-\crefformat{figure}{fig.~#2#1#3}
-\Crefformat{figure}{Figure~#2#1#3}
-\crefrangeformat{figure}{figs.~#3#1#4--#5#2#6}
-\Crefrangeformat{figure}{Figures~#3#1#4--#5#2#6}
-\crefmultiformat{figure}{figs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-\Crefmultiformat{figure}{Figures~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+    % Figures - abbreviated with non-breaking space
+    \crefformat{figure}{fig.~#2#1#3}
+    \Crefformat{figure}{Figure~#2#1#3}
+    \crefrangeformat{figure}{figs.~#3#1#4--#5#2#6}
+    \Crefrangeformat{figure}{Figures~#3#1#4--#5#2#6}
+    \crefmultiformat{figure}{figs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+    \Crefmultiformat{figure}{Figures~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
 
-% Tables - lowercase with non-breaking space
-\crefformat{table}{table~#2#1#3}
-\Crefformat{table}{Table~#2#1#3}
-\crefrangeformat{table}{tables~#3#1#4--#5#2#6}
-\Crefrangeformat{table}{Tables~#3#1#4--#5#2#6}
-\crefmultiformat{table}{tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-\Crefmultiformat{table}{Tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+    % Tables - lowercase with non-breaking space
+    \crefformat{table}{table~#2#1#3}
+    \Crefformat{table}{Table~#2#1#3}
+    \crefrangeformat{table}{tables~#3#1#4--#5#2#6}
+    \Crefrangeformat{table}{Tables~#3#1#4--#5#2#6}
+    \crefmultiformat{table}{tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+    \Crefmultiformat{table}{Tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
 
-% Sections - using § symbol for compactness
-\crefformat{section}{§#2#1#3}
-\Crefformat{section}{Section~#2#1#3}
-\crefformat{subsection}{§#2#1#3}
-\Crefformat{subsection}{Section~#2#1#3}
-\crefformat{subsubsection}{§#2#1#3}
-\Crefformat{subsubsection}{Section~#2#1#3}
+    % Sections - using § symbol for compactness
+    \crefformat{section}{§#2#1#3}
+    \Crefformat{section}{Section~#2#1#3}
+    \crefformat{subsection}{§#2#1#3}
+    \Crefformat{subsection}{Section~#2#1#3}
+    \crefformat{subsubsection}{§#2#1#3}
+    \Crefformat{subsubsection}{Section~#2#1#3}
 
-% Equations - parentheses style (Chicago standard)
-\crefformat{equation}{(#2#1#3)}
-\Crefformat{equation}{Equation~(#2#1#3)}
-\crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
-\Crefrangeformat{equation}{Equations~(#3#1#4)--(#5#2#6)}
-\crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
-\Crefmultiformat{equation}{Equations~(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+    % Equations - parentheses style (Chicago standard)
+    \crefformat{equation}{(#2#1#3)}
+    \Crefformat{equation}{Equation~(#2#1#3)}
+    \crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
+    \Crefrangeformat{equation}{Equations~(#3#1#4)--(#5#2#6)}
+    \crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
+    \Crefmultiformat{equation}{Equations~(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
 
-% Appendices - capital letter format
-\crefformat{appendix}{appendix~#2#1#3}
-\Crefformat{appendix}{Appendix~#2#1#3}
+    % Appendices - capital letter format
+    \crefformat{appendix}{appendix~#2#1#3}
+    \Crefformat{appendix}{Appendix~#2#1#3}
 
-% Footnotes
-\crefformat{footnote}{footnote~#2#1#3}
-\Crefformat{footnote}{Footnote~#2#1#3}
+    % Footnotes
+    \crefformat{footnote}{footnote~#2#1#3}
+    \Crefformat{footnote}{Footnote~#2#1#3}
 
-% Page references
-\crefformat{page}{page~#2#1#3}
-\Crefformat{page}{Page~#2#1#3}
-\crefrangeformat{page}{pages~#3#1#4--#5#2#6}
-\Crefrangeformat{page}{Pages~#3#1#4--#5#2#6}
+    % Page references
+    \crefformat{page}{page~#2#1#3}
+    \Crefformat{page}{Page~#2#1#3}
+    \crefrangeformat{page}{pages~#3#1#4--#5#2#6}
+    \Crefrangeformat{page}{Pages~#3#1#4--#5#2#6}
 
-% CLEVEREF NAME CONFIGURATION
-\crefname{figure}{fig.}{figs.}
-\Crefname{figure}{Figure}{Figures}
-\crefname{table}{table}{tables}
-\Crefname{table}{Table}{Tables}
-\crefname{section}{§}{§§}
-\Crefname{section}{Section}{Sections}
-\crefname{appendix}{appendix}{appendices}
-\Crefname{appendix}{Appendix}{Appendices}
+    % CLEVEREF NAME CONFIGURATION
+    \crefname{figure}{fig.}{figs.}
+    \Crefname{figure}{Figure}{Figures}
+    \crefname{table}{table}{tables}
+    \Crefname{table}{Table}{Tables}
+    \crefname{section}{§}{§§}
+    \Crefname{section}{Section}{Sections}
+    \crefname{appendix}{appendix}{appendices}
+    \Crefname{appendix}{Appendix}{Appendices}
 
-% Conjunction configuration - use 'and' not '&'
-\newcommand{\crefpairconjunction}{ and }
-\newcommand{\crefmiddleconjunction}{, }
-\newcommand{\creflastconjunction}{, and }
-\newcommand{\crefrangeconjunction}{--}
+    % Conjunction configuration - use 'and' not '&'
+    \newcommand{\crefpairconjunction}{ and }
+    \newcommand{\crefmiddleconjunction}{, }
+    \newcommand{\creflastconjunction}{, and }
+    \newcommand{\crefrangeconjunction}{--}
 
-% Equation label format
-\creflabelformat{equation}{(#2#1#3)}
+    % Equation label format
+    \creflabelformat{equation}{(#2#1#3)}
+
+    % Appendix-aware names, moved here by #48 (see the note above).
+    % Configure cleveref names for better appendix references
+    \crefname{section}{appendix}{appendices}%
+    \Crefname{section}{Appendix}{Appendices}%
+    \@ifundefined{chapter}{}{%
+    \crefname{chapter}{appendix}{appendices}%
+    \Crefname{chapter}{Appendix}{Appendices}%
+    }%
+    % Special handling for appendix figures and tables
+    \crefname{figure}{figure}{figures}%
+    \Crefname{figure}{Figure}{Figures}%
+    \crefname{table}{table}{tables}%
+    \Crefname{table}{Table}{Tables}%
+  }{}%
+}
 
 % CONVENIENCE COMMANDS FOR COMMON PATTERNS
 
@@ -2274,8 +2295,15 @@
 \setlength{\aboverulesep}{0pt}          % Remove space above booktabs rules
 \setlength{\belowrulesep}{0pt}          % Remove space below booktabs rules
 \setlength{\extrarowheight}{2.2pt}       % Extra row height; standard row measures 21.8pt (\arraystretch 1.2 × 16.32pt baseline + 2.2pt), not 13.2pt
-\setlength{\LTcapwidth}{\textwidth}     % Full-width captions for longtables
-\AtBeginEnvironment{longtable}{\lnp@tablecaptionsetup}
+%% Issue #48: longtable typography, applied only if the document loaded it.
+%% \LTcapwidth is longtable's own length, so setting it unguarded is an
+%% undefined control sequence for any document that does not load longtable.
+\AtBeginDocument{%
+  \@ifpackageloaded{longtable}{%
+    \setlength{\LTcapwidth}{\textwidth}%
+    \AtBeginEnvironment{longtable}{\lnp@tablecaptionsetup}%
+  }{}%
+}
 
 % GRID-ALIGNED TABLE ENVIRONMENTS
 % Professional table environments with automatic grid alignment
@@ -2432,195 +2460,68 @@
 % 15 units: 198pt (6.99cm)
 % 20 units: 264pt (9.32cm)
 
-% HYPERREF CONFIGURATION
-% Professional PDF links with accessibility and print compatibility
-% All links use enhanced navy blue for consistent visual treatment
-\hypersetup{
-  colorlinks=true,
-  linkcolor=black,
-  citecolor=black,
-  urlcolor=black,
-  filecolor=black,
-  bookmarksnumbered=true,
-  pdfborder={0 0 0},
-  pdfencoding=auto
-}
-
-% Update hyperref colors after loading colors module
+%% Issue #48 (ADR-0003 rule 2): hyperref is configured here, never loaded.
+%% Deferred to \AtBeginDocument because hyperref is conventionally loaded
+%% late -- typically after this package -- so an inline \@ifpackageloaded
+%% would run first and silently configure nothing.
 \AtBeginDocument{%
-  \iflnp@draft
-    \hypersetup{colorlinks=false,pdfborder={1 1 1}}
-  \else
-    \iflnp@nocolor
-      \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
-    \else
-      \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
-    \fi
-  \fi
-}
+  \@ifpackageloaded{hyperref}{%
+    % HYPERREF CONFIGURATION
+    % Professional PDF links with accessibility and print compatibility
+    % All links use enhanced navy blue for consistent visual treatment
+    \hypersetup{
+      colorlinks=true,
+      linkcolor=black,
+      citecolor=black,
+      urlcolor=black,
+      filecolor=black,
+      bookmarksnumbered=true,
+      pdfborder={0 0 0},
+      pdfencoding=auto
+    }
 
-% PDF STRING COMPATIBILITY
-% Provide text-only alternatives for PDF bookmarks and metadata
-\pdfstringdefDisableCommands{%
-  \def\textsc#1{#1}%           % Small caps -> plain text
-  \def\textbf#1{#1}%           % Bold -> plain text
-  \def\textit#1{#1}%           % Italic -> plain text
-  \def\emph#1{#1}%             % Emphasis -> plain text
-  \def\code#1{#1}%             % Code -> plain text
-  \def\var#1{#1}%              % Variable -> plain text
-  \def\filepath#1{#1}%         % Filepath -> plain text
-  \def\refinedsc#1{#1}%        % Refined small caps -> plain text
-  \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
-  \def\titlesc#1{#1}%          % Title small caps -> plain text
-  %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
-  %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
-  \def\SetTracking#1#2{}%      % Remove tracking commands
-  \def\lsstyle{}%              % Remove letterspacing style
-  \let\\\space%                % Line break -> space
-  \def\hspace#1{ }%            % Horizontal space -> space
-  \def\vspace#1{}%             % Vertical space -> nothing
-  \def\kern#1{}%               % Kern -> nothing
-\def~{ }%                    % Non-breaking space – space
+    % Update hyperref colors after loading colors module
+    % draft / nocolor overrides (was a nested \AtBeginDocument,
+    % redundant now that the whole block is deferred)
+      \iflnp@draft
+        \hypersetup{colorlinks=false,pdfborder={1 1 1}}
+      \else
+        \iflnp@nocolor
+          \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
+        \else
+          \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
+        \fi
+      \fi
+
+    % PDF STRING COMPATIBILITY
+    % Provide text-only alternatives for PDF bookmarks and metadata
+    \pdfstringdefDisableCommands{%
+      \def\textsc#1{#1}%           % Small caps -> plain text
+      \def\textbf#1{#1}%           % Bold -> plain text
+      \def\textit#1{#1}%           % Italic -> plain text
+      \def\emph#1{#1}%             % Emphasis -> plain text
+      \def\code#1{#1}%             % Code -> plain text
+      \def\var#1{#1}%              % Variable -> plain text
+      \def\filepath#1{#1}%         % Filepath -> plain text
+      \def\refinedsc#1{#1}%        % Refined small caps -> plain text
+      \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
+      \def\titlesc#1{#1}%          % Title small caps -> plain text
+      %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
+      %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
+      \def\SetTracking#1#2{}%      % Remove tracking commands
+      \def\lsstyle{}%              % Remove letterspacing style
+      \let\\\space%                % Line break -> space
+      \def\hspace#1{ }%            % Horizontal space -> space
+      \def\vspace#1{}%             % Vertical space -> nothing
+      \def\kern#1{}%               % Kern -> nothing
+    \def~{ }%                    % Non-breaking space – space
+    }
+  }{}%
 }
 
 % Butterick's final polish: Ensure proper page breaking
 \raggedbottom              % Prevents awkward stretched spacing
 % Note: \sloppy removed for Overleaf compatibility
-
-% ==============================================================================
-% LANDSCAPE AND ROTATION SUPPORT FOR SOCIAL SCIENCE
-% ==============================================================================
-%
-% Comprehensive support for wide tables, large figures, and rotated content
-% commonly needed in empirical research papers.
-%
-% KEY FEATURES:
-%   - Full-page landscape with proper PDF rotation
-%   - Grid-aligned spacing in landscape mode
-%   - Automatic caption placement for rotated content
-%   - Support for multi-page landscape tables
-%
-% REFERENCES:
-%   - American Economic Review submission guidelines
-%   - Journal of Political Economy formatting standards
-%   - Best practices from empirical economics papers
-%
-% ------------------------------------------------------------------------------
-
-% LANDSCAPE TABLE ENVIRONMENT
-% For wide regression tables and correlation matrices
-\newenvironment{landscapetable}[1][tbp]{%
-  \begin{landscape}%
-  \begin{table}[#1]%
-    \centering%
-    \footnotesize% Reduce font for more columns
-    \renewcommand{\arraystretch}{1.1}% Tighter spacing
-    \setlength{\tabcolsep}{5pt}% Narrower columns
-}{%
-  \end{table}%
-  \end{landscape}%
-}
-
-% LANDSCAPE FIGURE ENVIRONMENT
-% For wide coefficient plots and data visualizations
-\newenvironment{landscapefigure}[1][tbp]{%
-  \begin{landscape}%
-  \begin{figure}[#1]%
-    \centering%
-}{%
-  \end{figure}%
-  \end{landscape}%
-}
-
-% ROTATED TABLE ENVIRONMENT
-% For single-column tables that need 90-degree rotation
-\newenvironment{rotatedtable}[1][tbp]{%
-  \begin{table}[#1]%
-    \centering%
-    \begin{sideways}%
-    \renewcommand{\arraystretch}{1.2}% Maintain grid
-}{%
-    \end{sideways}%
-  \end{table}%
-}
-
-% WIDE REGRESSION TABLE
-% Optimized for econometric results with many specifications
-\newenvironment{wideregressiontable}[1][tbp]{%
-  \begin{landscapetable}[#1]%
-    \scriptsize% Even smaller for many columns
-    \renewcommand{\arraystretch}{1.0}% Very tight
-    \setlength{\tabcolsep}{3pt}% Minimal column separation
-}{%
-  \end{landscapetable}%
-}
-
-% ADJUSTABLE TABLE ENVIRONMENT
-% Automatically scales table to fit page width
-\newenvironment{fittable}[2][tbp]{%
-  % #1 = placement, #2 = max width (e.g., 1.2\textwidth)
-  \begin{table}[#1]%
-    \centering%
-    \adjustbox{max width=#2}{%
-      \begin{minipage}{\textwidth}%
-      \centering%
-}{%
-      \end{minipage}%
-    }%
-  \end{table}%
-}
-
-% LANDSCAPE LONGTABLE
-% For multi-page landscape tables
-\newenvironment{landscapelongtable}{%
-  \begin{landscape}%
-  \footnotesize%
-  \renewcommand{\arraystretch}{1.1}%
-}{%
-  \end{landscape}%
-}
-
-% ROTATION COMMANDS FOR INLINE CONTENT
-% For headers and specialized content
-
-% Rotate text 90 degrees
-\newcommand{\rotateheader}[1]{%
-  \rotatebox{90}{\small #1}%
-}
-
-% Angled column headers (45 degrees)
-\newcommand{\angledheader}[1]{%
-  \rotatebox{45}{\small #1}%
-}
-
-% HELPER COMMANDS FOR LANDSCAPE PAGES
-
-% Force landscape orientation for current page
-\newcommand{\landscapepage}{%
-  \clearpage%
-  \landscape%
-}
-
-% Return to portrait orientation
-\newcommand{\portraitpage}{%
-  \clearpage%
-  \endlandscape%
-}
-
-% Add note about landscape orientation
-\newcommand{\landscapenote}{%
-  \footnotesize\textit{Note: This page is best viewed in landscape orientation.}%
-}
-
-% QUANTUM SPACING IN LANDSCAPE MODE
-% Keep quantum rhythm even in rotated content
-
-% Landscape grid spacing helper
-\newcommand{\landscapegridspace}{%
-  \vspace{13.2pt}% One grid unit
-}
-
-% Landscape table caption spacing is included in \lnp@tablecaptionsetup.
 
 % ==============================================================================
 % XI. MATHEMATICAL TYPOGRAPHY OPTIMIZATION
@@ -2856,9 +2757,10 @@
 \spaceskip=0.33em plus 0.17em minus 0.12em  % Reduced from defaults
 \xspaceskip=0.48em plus 0.25em minus 0.15em % End-of-sentence spacing
 
-% Language setup - Load babel with english language
-% Fix for TeX Live 2025 compatibility
-\RequirePackage[english]{babel}
+%% Issue #48 (ADR-0003 rule 2): babel is the document's to load and its
+%% language its own to choose. Nothing here configures babel, so the
+%% policy leaves only the removal. The \hyphenation list below is a TeX
+%% primitive and does not need babel.
 
 % COMPREHENSIVE HYPHENATION DICTIONARY
 % Academic and technical terms with proper break points
@@ -3140,7 +3042,13 @@
 
 % Check packages at load time
 \@ifpackageloaded{microtype}{\lnp@microtypeloadedtrue}{\lnp@microtypeloadedfalse}
-\@ifpackageloaded{biblatex}{\lnp@biblatexloadedtrue}{\lnp@biblatexloadedfalse}
+%% Deferred (#48 review): the document owns biblatex now and usually loads
+%% it after this package, so an inline check would report "Not loaded" in
+%% \lanepaperdiagnostics for a document that did load it. microtype above
+%% stays inline -- this package loads it, so it is always already there.
+\AtBeginDocument{%
+  \@ifpackageloaded{biblatex}{\lnp@biblatexloadedtrue}{\lnp@biblatexloadedfalse}%
+}
 
 \newcommand{\lanepaperdiagnostics}{%
   \typeout{=== Paperstyle Diagnostics ===}%

@@ -2,6 +2,8 @@ import os
 import re
 import subprocess
 import textwrap
+
+import pytest
 from pathlib import Path
 
 
@@ -97,40 +99,78 @@ def test_draft_option_reports_microtype_draft_mode(tmp_path):
     )
 
 
-def test_natbib_option_provides_native_natbib_commands(tmp_path):
+def test_no_bibliography_package_is_loaded(tmp_path):
+    """#48: the bibliography belongs to the document (ADR-0003 rule 2).
+
+    The package used to load biblatex with its own option set, which fixed the
+    backend, style and sorting for every document using it.
+    """
     result, log_text = compile_latex(
         tmp_path,
-        "natbib-contract",
+        "no-bibliography-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage[natbib]{lanepaper}
+        \usepackage{lanepaper}
         \begin{document}
-        Natbib cite commands compile:
-        \citet[chap.~2]{smith2020} and \citep[see][45]{smith2020}.
-        \begin{thebibliography}{9}
-        \bibitem[Smith(2020)]{smith2020} Smith, A. 2020. Title.
-        \end{thebibliography}
-        \end{document}
-        """,
-    )
-    assert_compiles(result, log_text)
-    assert "Undefined control sequence" not in log_text
-
-
-def test_nobiblatex_does_not_load_biblatex(tmp_path):
-    result, log_text = compile_latex(
-        tmp_path,
-        "nobiblatex-contract",
-        r"""
-        \documentclass[11pt]{article}
-        \usepackage[nobiblatex]{lanepaper}
-        \begin{document}
-        No automatic bibliography package.
+        The document owns its bibliography.
         \end{document}
         """,
     )
     assert_compiles(result, log_text)
     assert "biblatex.sty" not in log_text
+    assert "natbib.sty" not in log_text
+
+
+@pytest.mark.parametrize("option", ["natbib", "nobiblatex"])
+def test_deprecated_bibliography_options_are_accepted_and_inert(tmp_path, option):
+    """Both options are deprecated by #48 but must not break existing documents.
+
+    They stay declared so a document passing one gets a warning rather than
+    LaTeX's "Unknown option" error, and neither loads anything.
+    """
+    result, log_text = compile_latex(
+        tmp_path,
+        f"{option}-deprecated-contract",
+        rf"""
+        \documentclass[11pt]{{article}}
+        \usepackage[{option}]{{lanepaper}}
+        \begin{{document}}
+        Deprecated option accepted.
+        \end{{document}}
+        """,
+    )
+    assert_compiles(result, log_text)
+    assert "Unknown option" not in log_text
+    assert "deprecated" in log_text
+    assert "natbib.sty" not in log_text
+    assert "biblatex.sty" not in log_text
+
+
+def test_bare_package_survives_without_hyperref(tmp_path):
+    r"""#48 regression guard.
+
+    \startappendices' fallback branch calls \phantomsection, which is
+    hyperref's. While the package loaded hyperref unconditionally that was
+    always defined; once it stopped, a bare document hit a fatal undefined
+    control sequence rather than merely losing styling.
+    """
+    result, log_text = compile_latex(
+        tmp_path,
+        "bare-appendices-contract",
+        r"""
+        \documentclass[11pt]{article}
+        \usepackage{lanepaper}
+        \begin{document}
+        Body.
+        \startappendices
+        \section{An appendix}
+        Text.
+        \finishappendices
+        \end{document}
+        """,
+    )
+    assert_compiles(result, log_text)
+    assert "Undefined control sequence" not in log_text
 
 
 def test_text_symbol_commands_compile_in_t1_encoding(tmp_path):

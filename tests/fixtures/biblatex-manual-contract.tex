@@ -16,13 +16,16 @@
   isbn=false
 ]{biblatex}
 \addbibresource{references.bib}
-\usepackage[nobiblatex]{lanepaper}
+%% #48: [nobiblatex] is no longer needed -- the package does not load
+%% biblatex at all, so there is nothing to disable. The option is still
+%% accepted but warns, and this harness treats warnings as failures.
+\usepackage{lanepaper}
 
 \begin{document}
 
 \section{Manual Bibliography Contract}
 Manual bibliography loading should work when the style is loaded with
-\texttt{nobiblatex}.\autocite{butterick2019practical}
+the package no longer loading one.\autocite{butterick2019practical}
 
 \printbibliography
 

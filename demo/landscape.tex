@@ -1,0 +1,142 @@
+% ==============================================================================
+% LANDSCAPE AND ROTATION CONVENIENCES
+% ==============================================================================
+%
+% Moved out of the package by issue #48 (ADR-0003 rule 3): these are document
+% conveniences, not typography, and they are the only reason the package loaded
+% pdflscape, rotating and adjustbox.
+%
+% This file belongs to the Template, which ADR-0001 makes a separate repository.
+% Until that repository exists it lives here with the demo, which uses
+% landscapetable, landscapefigure, rotatedtable and fittable.
+%
+% Requires: pdflscape (landscape), rotating (sideways), adjustbox (fittable),
+% graphicx (\rotatebox). demo/preamble.tex loads them.
+% ==============================================================================
+
+%   - Grid-aligned spacing in landscape mode
+%   - Automatic caption placement for rotated content
+%   - Support for multi-page landscape tables
+%
+% REFERENCES:
+%   - American Economic Review submission guidelines
+%   - Journal of Political Economy formatting standards
+%   - Best practices from empirical economics papers
+%
+% ------------------------------------------------------------------------------
+
+% LANDSCAPE TABLE ENVIRONMENT
+% For wide regression tables and correlation matrices
+\newenvironment{landscapetable}[1][tbp]{%
+  \begin{landscape}%
+  \begin{table}[#1]%
+    \centering%
+    \footnotesize% Reduce font for more columns
+    \renewcommand{\arraystretch}{1.1}% Tighter spacing
+    \setlength{\tabcolsep}{5pt}% Narrower columns
+}{%
+  \end{table}%
+  \end{landscape}%
+}
+
+% LANDSCAPE FIGURE ENVIRONMENT
+% For wide coefficient plots and data visualizations
+\newenvironment{landscapefigure}[1][tbp]{%
+  \begin{landscape}%
+  \begin{figure}[#1]%
+    \centering%
+}{%
+  \end{figure}%
+  \end{landscape}%
+}
+
+% ROTATED TABLE ENVIRONMENT
+% For single-column tables that need 90-degree rotation
+\newenvironment{rotatedtable}[1][tbp]{%
+  \begin{table}[#1]%
+    \centering%
+    \begin{sideways}%
+    \renewcommand{\arraystretch}{1.2}% Maintain grid
+}{%
+    \end{sideways}%
+  \end{table}%
+}
+
+% WIDE REGRESSION TABLE
+% Optimized for econometric results with many specifications
+\newenvironment{wideregressiontable}[1][tbp]{%
+  \begin{landscapetable}[#1]%
+    \scriptsize% Even smaller for many columns
+    \renewcommand{\arraystretch}{1.0}% Very tight
+    \setlength{\tabcolsep}{3pt}% Minimal column separation
+}{%
+  \end{landscapetable}%
+}
+
+% ADJUSTABLE TABLE ENVIRONMENT
+% Automatically scales table to fit page width
+\newenvironment{fittable}[2][tbp]{%
+  % #1 = placement, #2 = max width (e.g., 1.2\textwidth)
+  \begin{table}[#1]%
+    \centering%
+    \adjustbox{max width=#2}{%
+      \begin{minipage}{\textwidth}%
+      \centering%
+}{%
+      \end{minipage}%
+    }%
+  \end{table}%
+}
+
+% LANDSCAPE LONGTABLE
+% For multi-page landscape tables
+\newenvironment{landscapelongtable}{%
+  \begin{landscape}%
+  \footnotesize%
+  \renewcommand{\arraystretch}{1.1}%
+}{%
+  \end{landscape}%
+}
+
+% ROTATION COMMANDS FOR INLINE CONTENT
+% For headers and specialized content
+
+% Rotate text 90 degrees
+\newcommand{\rotateheader}[1]{%
+  \rotatebox{90}{\small #1}%
+}
+
+% Angled column headers (45 degrees)
+\newcommand{\angledheader}[1]{%
+  \rotatebox{45}{\small #1}%
+}
+
+% HELPER COMMANDS FOR LANDSCAPE PAGES
+
+% Force landscape orientation for current page
+\newcommand{\landscapepage}{%
+  \clearpage%
+  \landscape%
+}
+
+% Return to portrait orientation
+\newcommand{\portraitpage}{%
+  \clearpage%
+  \endlandscape%
+}
+
+% Add note about landscape orientation
+\newcommand{\landscapenote}{%
+  \footnotesize\emph{Note: This page is best viewed in landscape orientation.}%
+}
+
+% QUANTUM SPACING IN LANDSCAPE MODE
+% Keep quantum rhythm even in rotated content
+
+% Landscape grid spacing helper
+\newcommand{\landscapegridspace}{%
+  \vspace{13.2pt}% One grid unit
+}
+
+% Landscape table caption spacing is included in \lnp@tablecaptionsetup.
+

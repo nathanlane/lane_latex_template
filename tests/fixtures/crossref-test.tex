@@ -1,6 +1,10 @@
 \documentclass[11pt,letterpaper]{article}
 %% FIX: Use the renamed package file; legacy package file is no longer shipped.
 \usepackage{lanepaper}
+%% #48: the package configures cleveref but no longer loads it, so a
+%% document using \cref must load hyperref and cleveref itself.
+\usepackage{hyperref}
+\usepackage{cleveref}
 
 \begin{document}
 

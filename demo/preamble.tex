@@ -30,24 +30,46 @@
 % ------------------------------------------------------------------------------
 % CORE TYPOGRAPHY SYSTEM WITH INTEGRATED BIBLIOGRAPHY
 % ------------------------------------------------------------------------------
-% lanepaper automatically loads biblatex with the template defaults.
-% Use the nobiblatex option only when you need custom biblatex options.
+% Since #48 lanepaper does not load biblatex; this file does, above.
 %% FIX: Load the renamed package by package name to match \ProvidesPackage.
 \usepackage{lanepaper}
 
+%% Issue #48 (ADR-0003): the package configures these but no longer loads them.
+%% The Template owns them. Order matters: hyperref before cleveref.
+%% The bibliography is the document's since #48. These are the options the
+%% package used to apply on its own; change them freely, that is the point.
+\usepackage[
+  backend=biber,
+  style=authoryear,
+  natbib=true,
+  sorting=nyt,
+  maxcitenames=2,
+  maxbibnames=99,
+  giveninits=true,
+  uniquename=init,
+  doi=true,
+  url=true,
+  isbn=false
+]{biblatex}
+\usepackage[english]{babel}  % language and hyphenation patterns
+\usepackage{appendix}    % appendices environment used by \startappendices
+\usepackage{hyperref}    % PDF links and metadata; load late, before cleveref
+\usepackage{cleveref}    % cross-references; must follow hyperref
+\usepackage{tabularx}    % full-width tables
+\usepackage{longtable}   % multi-page tables
+\usepackage{pdflscape}   % landscape pages
+\usepackage{rotating}    % sideways tables and figures
+\usepackage{adjustbox}   % fittable
+\input{landscape.tex}    % landscapetable, rotatedtable, fittable, ...
+
 % Load the bibliography database
-% (biblatex is already loaded by lanepaper with authoryear style and biber backend)
 \addbibresource{references.bib}
 
 % ------------------------------------------------------------------------------
 % CUSTOM BIBLIOGRAPHY CONFIGURATION (Optional)
 % ------------------------------------------------------------------------------
-% If you need custom biblatex options, load biblatex BEFORE lanepaper and
-% pass nobiblatex so the template does not load biblatex a second time:
-%
-% \usepackage[backend=bibtex,style=numeric]{biblatex}
-% \addbibresource{references.bib}
-% \usepackage[nobiblatex]{lanepaper}
+% Since #48 there is no escape hatch to need: this file loads biblatex with
+% whatever options it wants, above, and lanepaper never loads one.
 
 % No custom formatting - using vanilla biblatex for maximum compatibility
 
