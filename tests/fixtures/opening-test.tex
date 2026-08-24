@@ -1,6 +1,11 @@
 \documentclass[11pt]{article}
 %% FIX: Use the renamed package file; legacy package file is no longer shipped.
 \usepackage{lanepaper}
+%% #48: the package no longer loads babel, and this fixture was getting it
+%% for free. It matters here: the package's measured \spaceskip values were
+%% tuned with babel present, so without it every one of these five pages
+%% re-breaks. Loading it restores byte-identical output.
+\usepackage[english]{babel}
 \usepackage{lipsum}
 
 \begin{document}

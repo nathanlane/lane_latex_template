@@ -179,6 +179,9 @@
 \DeclareOption{grid}{\lnp@gridtrue}
 \DeclareOption{nogrid}{\lnp@gridfalse}
 \DeclareOption{minimal}{\lnp@minimaltrue}
+%% Deprecated by #48: this package no longer loads a bibliography package,
+%% so there is nothing for [natbib] or [nobiblatex] to switch. Both are
+%% still accepted so existing documents do not fail on an unknown option.
 \DeclareOption{natbib}{\lnp@natbibtrue}
 \DeclareOption{nocolor}{\lnp@nocolortrue}
 %% FIX: Let lnpmicrotype apply draft mode after package options are processed.
@@ -194,6 +197,18 @@
 % Process options
 \ProcessOptions\relax
 
+%% Deprecation notice for the two bibliography options (#48).
+\iflnp@natbib
+  \PackageWarning{lanepaper}{The [natbib] option is deprecated and does
+    nothing: this package no longer loads a bibliography package. Load natbib
+    in your document instead. See CONVENTIONS.md}%
+\fi
+\iflnp@nobiblatex
+  \PackageWarning{lanepaper}{The [nobiblatex] option is deprecated and does
+    nothing: this package no longer loads biblatex, so there is nothing to
+    disable. See CONVENTIONS.md}%
+\fi
+
 %% FIX: Load inputenc only when needed and never after a user-loaded biblatex
 %% contract to avoid load-order warnings.
 \newcommand{\lnp@maybe@load@inputenc}{%
@@ -204,43 +219,24 @@
   }%
 }
 
-% Biblatex compatibility - detect if biblatex is already loaded
+%% Issue #48 (ADR-0003 rule 2): the bibliography belongs to the document.
+%% This package loaded biblatex with its own option set, which fixed the
+%% backend, style and sorting for every document using it and forced anyone
+%% wanting different options to pass [nobiblatex] and load it themselves.
+%%
+%% It configures nothing about biblatex -- there is no \DeclareFieldFormat,
+%% \ExecuteBibliographyOptions or bibmacro anywhere in lanepaper/ -- so rule 2
+%% leaves only the removal. Load biblatex (or natbib) in the document.
+%% demo/preamble.tex shows the option set this package used to apply.
 \@ifpackageloaded{biblatex}{%
-  % biblatex already loaded - good, user loaded it before lanepaper
-  \PackageInfo{lanepaper}{biblatex detected - using existing configuration}%
+  \PackageInfo{lanepaper}{biblatex detected}%
 }{%
-  % biblatex not loaded - check if we should load it
-  \iflnp@nobiblatex
-    % User explicitly disabled biblatex
-    \PackageInfo{lanepaper}{biblatex loading disabled by nobiblatex option}%
-  \else
-    \lnp@maybe@load@inputenc
-    \iflnp@natbib
-      %% FIX: Implement documented natbib mode instead of silently skipping bibliography support.
-      \@ifpackageloaded{natbib}{%
-        \PackageInfo{lanepaper}{natbib detected - using existing configuration}%
-      }{%
-        \PackageInfo{lanepaper}{Loading natbib compatibility mode}%
-        \RequirePackage[authoryear,round]{natbib}%
-      }%
-    \else
-      % Load biblatex with sensible defaults
-      \PackageInfo{lanepaper}{Loading biblatex with default settings}%
-      \RequirePackage[
-        backend=biber,
-        style=authoryear,
-        natbib=true,
-        sorting=nyt,
-        maxcitenames=2,
-        maxbibnames=99,
-        giveninits=true,
-        uniquename=init,
-        doi=true,
-        url=true,
-        isbn=false
-      ]{biblatex}
-    \fi
-  \fi
+  \@ifpackageloaded{natbib}{%
+    \PackageInfo{lanepaper}{natbib detected}%
+  }{%
+    \PackageInfo{lanepaper}{No bibliography package loaded; the document owns
+      its bibliography since issue #48}%
+  }%
 }
 
 % ==============================================================================
@@ -2037,6 +2033,11 @@
   \else
     % Fallback to basic appendix command
     \appendix%
+    %% \phantomsection is hyperref's. #48 stopped loading hyperref, so a
+    %% document that does not load it reaches this branch with the command
+    %% undefined -- a fatal error, not merely less styling. Degrade to a
+    %% no-op, which is what hyperref's own documentation recommends.
+    \providecommand{\phantomsection}{}%
     \phantomsection%
     \addcontentsline{toc}{section}{Appendices}%
   \fi
