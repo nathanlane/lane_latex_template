@@ -67,7 +67,7 @@ def test_root_changelog_exists():
 
 def test_active_build_inputs_do_not_use_removed_package_names():
     # Two generations of retired names: the pre-2025 path-based layout, and
-    # the package names and the four competing macro prefixes retired by the
+    # the package names and the five competing macro prefixes retired by the
     # lanepaper rename (#46). Spelling any of them literally here would make
     # this file match its own pattern.
     # Each fragment is built by concatenation so this file never contains a

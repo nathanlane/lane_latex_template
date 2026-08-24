@@ -43,6 +43,11 @@ Load packages by name, not by path:
 \usepackage{paper/paperstyle} % wrong — legacy path, do not use
 ```
 
+How package code is written -- naming, message policy, robustness, hooks, lint
+policy, and the rule against `\makeatletter` in a `.sty` -- is in
+[`CONVENTIONS.md`](CONVENTIONS.md). Read it before changing anything in
+`lanepaper/`.
+
 Internal LaTeX identifiers (lengths, counters, private commands) use the
 `\lnp@` prefix to avoid conflicts. See
 [`docs/PACKAGE_NAMING_CONVENTION.md`](docs/PACKAGE_NAMING_CONVENTION.md) and

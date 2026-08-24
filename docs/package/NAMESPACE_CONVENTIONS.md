@@ -97,12 +97,15 @@ Don't use prefixes for:
 
 ### Best Practices
 
-1. **Always use `\makeatletter`/`\makeatother`** when defining `@` commands:
+1. **Never use `\makeatletter`/`\makeatother` inside a `.sty` file.** A `.sty`
+   already has `@` as a letter by construction, so a stray `\makeatother`
+   revokes it for the rest of the file. Just write the definition:
    ```latex
-   \makeatletter
    \newlength{\lnp@internallength}
-   \makeatother
    ```
+   This reverses the advice that stood here until #46, where 137 such lines
+   caused `Command \lnp already defined` the moment the prefix contained an
+   `@`. They are correct only in a `.tex` document. See `CONVENTIONS.md` §6.
 
 2. **Document deprecated aliases**:
    ```latex

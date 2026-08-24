@@ -4,6 +4,38 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Added `CONVENTIONS.md` (issue #45):
+
+- States how package code in `lanepaper/` is written: LaTeX2e baseline (no
+  expl3), engine support, naming, the public/private boundary, message policy,
+  package-code style, the `%% FIX:` convention, robustness, hooks and load
+  order, lint policy, versioning and licensing.
+- Every count and anchor in it was measured at writing time rather than carried
+  over from the issue, and one of the issue's figures was wrong: `%% FIX:`
+  appears 116 times, not 112. `\AtBeginDocument` is at 8 sites, not the 7 the
+  issue claimed and not the 11 a plain grep reports - three matches are
+  comments rather than registrations.
+- Sections that state a rule the code does not follow say so and name the issue
+  that fixes it: robustness (#55), hooks (#56), and the configure-if-loaded
+  dependency policy (#48). Nothing in the document implies compliance it does
+  not have.
+- Sharpened one claim in the process: #55 describes robustness as "2 of ~500",
+  but both `\DeclareRobustCommand` uses are on internal macros
+  (`\lnp@textapprox`, `\lnp@textinfty`), so **no public macro is robust at
+  all**.
+- `docs/package/NAMESPACE_CONVENTIONS.md` told contributors to "always use
+  `\makeatletter`/`\makeatother` when defining `@` commands". That is the rule
+  that broke the build in #46 - a `.sty` has `@` as a letter already, so a
+  stray `\makeatother` revokes it for the rest of the file. The advice is now
+  inverted at its source as well as stated in `CONVENTIONS.md`.
+- `CONTRIBUTING.md` and `AGENTS.md` point at the new document.
+- Naming content is absorbed rather than linked, because
+  `docs/PACKAGE_NAMING_CONVENTION.md` and
+  `docs/package/NAMESPACE_CONVENTIONS.md` are both slated for deletion in #52 -
+  a document cannot link to a file scheduled to disappear.
+
+#57's last open criterion, the ChkTeX suppression policy, lands here as §10.
+
 Consolidated work tracking on GitHub Issues (issue #57, partial) and closed out
 the Poppler gates (issue #35):
 
