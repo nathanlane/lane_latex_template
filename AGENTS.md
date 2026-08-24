@@ -9,7 +9,8 @@
 1. **Do not** alter margins, fonts, colours, spacing, numbering schemes, or figure placement defaults.  
 2. Prefer the **smallest possible change** that compiles cleanly on the verified local toolchain.
 3. Comment every fix with `%% FIX:` and a one‑line rationale.  
-4. Update `CHANGELOG.md` and relevant sections of `README.md` after any material change.
+4. Package code in `lanepaper/` follows [`CONVENTIONS.md`](CONVENTIONS.md) — naming, message policy, robustness, hooks, and the rule against `\makeatletter` in a `.sty`. Read it before editing a `.sty` file.  
+5. Update `CHANGELOG.md` and relevant sections of `README.md` after any material change.
 
 ## 🛠 Tools you must run before proposing a commit
 | Command | Purpose | Acceptable exit code |
