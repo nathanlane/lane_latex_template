@@ -25,6 +25,29 @@
 \ProvidesPackage{lnpminimal}[2026/08/12 v1.1 Minimal Typography]
 
 % ==============================================================================
+% ENGINE GUARD
+% ==============================================================================
+% This package is pdfLaTeX-only. The font stack is 8-bit and pdfTeX-shaped --
+% T1 fontenc, utf8 inputenc, Type1 tgpagella and zi4 -- with no fontspec path.
+% Without this guard a XeLaTeX or LuaLaTeX user gets a cascade of font errors
+% instead of one message saying what is wrong.
+\RequirePackage{iftex}
+\ifpdftex\else
+  \PackageError{lnpminimal}{%
+    pdfTeX is required, but this document is being compiled with another engine%
+  }{%
+    lnpminimal is pdfLaTeX-only.\MessageBreak
+    Its font stack (T1 fontenc, utf8 inputenc, Type1 tgpagella, zi4)\MessageBreak
+    has no fontspec path.\MessageBreak
+    Compile with pdflatex.%
+  }%
+  %% Stop the run. Without this the error is recoverable, so a nonstopmode
+  %% build continues into exactly the font cascade this guard exists to
+  %% prevent -- microtype alone adds two more errors on XeTeX.
+  \batchmode\@@end
+\fi
+
+% ==============================================================================
 % ESSENTIAL PACKAGES ONLY
 % ==============================================================================
 

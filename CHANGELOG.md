@@ -4,6 +4,30 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Added an engine guard (issue #54):
+
+- `lanepaper` and `lnpminimal` now load `iftex` and stop with a single
+  `\PackageError` naming the package when the engine is not pdfTeX. Both are
+  guarded because README documents them as distinct surfaces: `lnpminimal` is
+  not reached through `lanepaper.sty`, so guarding only the main package would
+  have left it exposed. The other 14 files are internal and reachable only
+  through a guarded entry point.
+- The guard stops the run (`\batchmode\@@end`). Without the stop the error is
+  recoverable, so a `nonstopmode` build continues into the font cascade the
+  guard exists to prevent - on XeTeX `microtype` alone adds two more errors.
+- `iftex`'s own `\RequirePDFTeX` was not used: it prints "pdfTeX is required to
+  compile this document" without naming the package that wanted it.
+- `\NeedsTeXFormat{LaTeX2e}[2018/01/01]` is now declared on the main package,
+  matching the floor `lnpminimal.sty` already declared. Nothing in the package
+  uses a post-2018 kernel feature, so no higher floor is claimed.
+- The header comment in `lanepaper.sty` claimed "pdfTeX or LuaTeX". LuaTeX was
+  never supported; the line now says pdfTeX only.
+- `tests/test_engine_guard.py` asserts the guard's presence, and runs XeLaTeX
+  and LuaLaTeX against both entry points to confirm each fails with exactly one
+  error naming the package, while pdfLaTeX still compiles. Confirmed the tests
+  fail when the hard stop is removed and when the guard is removed.
+- pdfLaTeX output is unchanged: the guard is inert on the supported engine.
+
 Corrected package paths in the adopter-facing docs that #47 left stale:
 
 - `README.md`'s directory diagram still showed `lanepaper/preamble.tex` and a
