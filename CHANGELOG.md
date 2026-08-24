@@ -4,6 +4,33 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Consolidated work tracking on GitHub Issues (issue #57, partial) and closed out
+the Poppler gates (issue #35):
+
+- `BACKLOG.md` is deleted and its `.gitignore` entry removed. It was gitignored,
+  so its contents were invisible to CI and to collaborators while the issue
+  tracker was live. Nothing in the repository referenced it.
+- Its seven lines were a ChkTeX lint policy, not a backlog: the suppressed
+  warning classes (W01, W03, W08, W11, W13, W18, W24, W36, W39, W42, W46, W48)
+  and the rule that they are revisited only in a pass where rendered output may
+  change. #57 requires that policy to land in `CONVENTIONS.md`, which does not
+  exist yet - it is #45. The text is recorded on #45 so deleting the file did
+  not lose it, and #57 stays open on that one criterion.
+- Added `.github/issue_template.md` with the house structure (What to build /
+  Acceptance criteria / Blocked by), as a single file matching the existing
+  `.github/pull_request_template.md` rather than an `ISSUE_TEMPLATE/` directory,
+  so no template is added for any other issue type.
+- `README.md` now records Poppler as part of the verified local setup:
+  `pdftotext` 26.08.0 and `pdfinfo` on PATH, so the PDF-text assertions in
+  `tests/test_regression_harness.py` run rather than skip and
+  `tests/check-spacing-integrity.sh` runs instead of exiting 1. Confirmed by
+  `pytest -q` reporting 41 passed and 0 skipped.
+- `tests/check-spacing-integrity.sh main.pdf` was run and reviewed. It is
+  advisory and flags two items on the demo document - 158 words per page and
+  37% page efficiency against an expected ~15 pages. Both are artifacts of
+  measuring a typography specimen full of headings, figures and short examples
+  against prose-shaped thresholds, not defects. No change made.
+
 Added an engine guard (issue #54):
 
 - `lanepaper` and `lnpminimal` now load `iftex` and stop with a single
