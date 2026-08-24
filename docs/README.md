@@ -9,7 +9,7 @@ and archived implementation plans for the Lane LaTeX Template.
 
 - [Bibliography Guide](guides/BIBLIOGRAPHY_GUIDE.md) - Citation and bibliography workflow.
 - [LaTeX Style Standards](guides/LATEX_STYLE_STANDARDS.md) - Source-formatting and typography conventions.
-- [Package Naming Convention](PACKAGE_NAMING_CONVENTION.md) - Current `llt` package naming rules.
+- [Package Naming Convention](PACKAGE_NAMING_CONVENTION.md) - Current `lanepaper` / `lnp` package naming rules.
 - [Grid System Reference](GRID_SYSTEM_REFERENCE.md) - Grid commands and layout concepts.
 
 ## Active Maintainer References
@@ -43,9 +43,9 @@ and archived implementation plans for the Lane LaTeX Template.
 
 ## Package Naming Convention
 
-The current main style package is `lltpaperstyle`.
-Module packages use the `llt` prefix, such as `lltcolors`, `lltfonts`, and
-`lltlists`.
+The current main style package is `lanepaper`.
+Module packages use the `lnp` prefix, such as `lnpcolors`, `lnpfonts`, and
+`lnplists`.
 Load packages by package name rather than path prefix.
 
 ## Documentation Standards

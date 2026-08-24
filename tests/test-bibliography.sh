@@ -26,7 +26,8 @@ LOG_DIR="$OUTPUT_DIR/logs"
 mkdir -p "$LOG_DIR"
 
 # FIX: Keep direct bibliography harness runs working when TEXINPUTS is unset.
-export TEXINPUTS=".:./paper:./paper/modules:${TEXINPUTS:-}"
+export TEXINPUTS=".:./lanepaper:./demo:${TEXINPUTS:-}"
+export BIBINPUTS=".:./demo:${BIBINPUTS:-}"
 
 echo -e "${YELLOW}Testing bibliography compilation for: $TEST_FILE${NC}"
 

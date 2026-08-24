@@ -4,6 +4,135 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Corrected package paths in the adopter-facing docs that #47 left stale:
+
+- `README.md`'s directory diagram still showed `lanepaper/preamble.tex` and a
+  `lanepaper/modules/` subdirectory. Neither exists: `preamble.tex` lives with
+  the document in `demo/`, and #47 flattened the modules into `lanepaper/`.
+- `README.md`'s first-document instructions told adopters to
+  `\input{demo/preamble.tex}` — a path inside this repository, not theirs.
+  Replaced with the two lines that file actually contains.
+- `README.md`'s version history and `CONTRIBUTING.md`'s namespace section both
+  cited `paper/lanepaper.sty`, a path removed by #47.
+
+The stale-name guard in `tests/test_infrastructure.py` scans `.tex`, `.sty`,
+`.sh` and `.py` only, so none of these were caught automatically.
+
+Added LPPL 1.3c headers to all 16 package files (issue #53):
+
+- Every file in `lanepaper/` now carries the license, the `maintained`
+  maintenance status, and the Current Maintainer. Previously 0 of 16 did, which
+  is a CTAN review blocker: `LICENSE` at the repository root is not sufficient.
+- The header text comes from `licenses/LICENSE.txt`, which already named
+  Nathan Lane as copyright holder and Current Maintainer. Two things changed
+  there: the year is now 2025-2026, and "This work consists of the file .sty
+  files and content of this repo" became "the files in `lanepaper/`". After
+  #47 that line matters — it defines the licensed Work, and `demo/`, `docs/`
+  and `tests/` are not part of what ships.
+- `tests/test_infrastructure.py` asserts every `lanepaper/*.sty` carries the
+  header, so a new module cannot skip it. Confirmed the guard fails when a
+  header is removed.
+- Fixed the banner comment in all 16 files: each named a pre-2025 filename
+  (`PAPERSTYLE.STY`, `COLORS.STY`, `MICROTYPE-CONFIG.STY`). These are
+  uppercase, so the #46 rename sweep did not reach them.
+- Replaced three `% Author: Academic Paper Template Project` placeholders,
+  which contradicted the project's own license file.
+
+Headers are comments: `main.pdf` is unchanged, byte for byte, against the
+pre-rename baseline. `pytest -q` 32 passed; `tests/run-tests.sh` 115 passed.
+
+Moved to the package-first layout (branch `refactor/rename-lanepaper-46`,
+issue #47, ADR-0001):
+
+- `lanepaper/` holds the 16 `.sty` files and nothing else, flattened — the
+  `modules/` subdirectory is gone, so `TEXINPUTS` is one entry instead of two
+  and the directory is exactly what `l3build install` installs and what a
+  `git subtree` pull carries.
+- `demo/` holds the CI fixture document: `main.tex`, `preamble.tex`,
+  `preamble-natbib.tex`, `titlepage.tex`, `appendices/`, `figures/`, and
+  `references.bib`. It is not a starting point for papers.
+- `paper/` no longer exists. Its eleven Markdown files moved to
+  `docs/package/`, except `MIGRATION.md` and `MODULARIZATION_ACTION_PLAN.md`
+  which are historical and moved to `docs/archive/`. `paper/modules/README.md`
+  became `docs/package/modules.md` to avoid colliding with `paper/README.md`.
+- `TEXINPUTS` now covers `./lanepaper:./demo` and `BIBINPUTS` covers `.:./demo`,
+  so `main` and `references.bib` still resolve from the repository root and
+  `main.pdf` is still written there. CI needed no path changes as a result,
+  including the `upload-artifact` path and the `safe.directory` step.
+- `.gitignore`'s figure negation is now `!demo/figures/*.pdf`; verified that a
+  PDF there is tracked while other PDFs stay ignored.
+- Fixed 16 test fixtures and development documents that loaded
+  `\input{paper/preamble.tex}` by path, plus the `prelude-natbib-preamble`
+  compatibility probe in `tests/run-tests.sh`.
+- Regenerated `docs/PACKAGE_NAMING_CONVENTION.md` from the actual file list and
+  repaired five documentation links that the move had broken or silently
+  repointed.
+
+Verified by 150dpi raster comparison against the pre-rename baseline. Four of
+40 pages differ, each for a stated reason: the title page's `\today` line
+(the baseline was built two days earlier), two pages where the demo prints its
+own `\usepackage` line, and one where it cites the style guide's new path.
+`pytest -q` 31 passed; `tests/run-tests.sh` 115 passed, 0 failed;
+`make lint`, `make build`, and the style validator all clean.
+
+Renamed the package to `lanepaper` and unified the internal prefix to `\lnp@`
+(branch `refactor/rename-lanepaper-46`, issue #46, ADR-0001):
+
+- `\usepackage{lltpaperstyle}` is now `\usepackage{lanepaper}`. The 16 `.sty`
+  files were renamed: `paper/lanepaper.sty` is the package, `lnpminimal` and
+  `lnpgridoverlay` are the other entry points, and the 13 modules are `lnp` +
+  role. The short prefix follows CTAN practice — `biblatex` ships `blx-*.sty`
+  with `\blx@` macros; compare `\MT@`, `\Hy@`, `\Gm@`, `\ttl@`.
+- Five competing internal prefixes collapsed into `\lnp@`: `\paper@` (105),
+  `\ifllt@` (32), `\llt@` (27), `\paperstyle@` (6), `\lltpaperstyle@` (4) and
+  `\lltfontfeatures@` (5). LaTeX kernel macros (`\p@`, `\f@`, `\z@`,
+  `\tagform@`, `\maketag@`, `\g@`) are untouched — verified by count.
+- The undecorated `\paperstyle*` family (24 macros) went the same way. The 22
+  internal ones are now `\lnp@*`; the two entry points a user actually types
+  are `\lanepaperdiagnostics` and `\lanepaperinfo`. `\lanepaperinfo` is
+  defined but never called anywhere — left in place, worth revisiting.
+- Removed 137 `\makeatletter`/`\makeatother` lines from the package files.
+  `@` is a letter inside a `.sty` by construction, so each `\makeatother` was
+  revoking that for the rest of the file; the old macro names had no `@` so
+  nothing noticed. With `\lnp@` names this broke the build outright at 39
+  sites. `lnplists.sty` also had one unbalanced `\makeatletter`.
+- `tests/test_infrastructure.py` now guards both generations of retired names —
+  the pre-2025 `paper/paperstyle` layout and the `llt*` / prefix names — and
+  builds its pattern by concatenation so it cannot match its own source.
+- `docs/PACKAGE_NAMING_CONVENTION.md` was regenerated from the actual file
+  list; it had carried four modules that never existed
+  (`lltcompilationfixessimple`, `lltmicrotypeconfig`,
+  `lltmathematicsgridlocked`, `llthochulirefinements`) since July 2025.
+  `NAMESPACE_CONVENTIONS.md` records why `\lnp@` was chosen over `\lane@`.
+- Archival documents keep the old names on purpose: the ADRs, `CONTEXT.md`'s
+  glossary, dated reviews and audits under `docs/`, `docs/archive/`,
+  `paper/MIGRATION.md`, and this file's history.
+
+Verified by per-page raster comparison at 150dpi against the pre-rename build.
+`main.pdf`: 38 of 40 pages byte-identical; pages 4 and 39 differ only where the
+demo prints `\usepackage{lltpaperstyle}` in its own code listing, which the
+rename is supposed to change. `tests/fixtures/opening-test.tex`, the only
+document exercising `\firstlinesc`, is identical on all 5 pages. `pytest -q`
+31 passed; `tests/run-tests.sh` 115 passed, 0 failed.
+
+Deleted the stale `.dtx`/`.ins` scaffold (branch `chore/delete-dtx-scaffold-49`,
+issue #49):
+
+- Removed `paper/lltpaperstyle.dtx`, `paper/lltpaperstyle.ins`, and
+  `paper/README-DTX.md`. The `.ins` declared
+  `\generate{\file{lltpaperstyle.sty}{\from{lltpaperstyle.dtx}{package}}}`, but the
+  `.dtx` was a 252-line v1.6 scaffold from 2025-07-09 against a shipping `.sty`
+  of 3206 lines at v2.0, and it ended with "the rest of the implementation would
+  continue here". Running the documented docstrip workflow would have replaced
+  the package with a stub.
+- Nothing built from them: no reference in `Makefile`, `.latexmkrc`,
+  `compile.sh`, the shell harnesses, the pytest suite, or CI.
+- CTAN accepts plain `.sty` plus README and documentation; per ADR-0002 the
+  release path is `l3build ctan`, not docstrip.
+- Surviving `.dtx` mentions are deliberate: LPPL boilerplate in `LICENSE`,
+  history in this file, and the dated review records under `docs/`. The
+  contradictions in `docs/PACKAGE_ROADMAP.md` belong to issue #52.
+
 Stopped the microtype tracking-list churn (branch `fix/tracking-lists-39`, issue #39):
 
 - `main.log` tracking-override messages: 40 -> 0. Every per-invocation

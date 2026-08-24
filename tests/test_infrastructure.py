@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ACTIVE_SOURCE_SUFFIXES = (".tex", ".sty", ".sh", ".py")
-ACTIVE_SCAN_ROOTS = ("main.tex", "appendices/", "paper/", "src/", "tests/", "Makefile")
+ACTIVE_SCAN_ROOTS = ("demo/", "lanepaper/", "src/", "tests/", "Makefile")
 
 
 def run_git(args):
@@ -65,10 +65,20 @@ def test_root_changelog_exists():
     assert (ROOT / "CHANGELOG.md").is_file()
 
 
-def test_active_build_inputs_do_not_use_removed_paperstyle_package():
+def test_active_build_inputs_do_not_use_removed_package_names():
+    # Two generations of retired names: the pre-2025 path-based layout, and
+    # the package names and the four competing macro prefixes retired by the
+    # lanepaper rename (#46). Spelling any of them literally here would make
+    # this file match its own pattern.
+    # Each fragment is built by concatenation so this file never contains a
+    # literal that matches its own pattern.
     legacy_path = "paper/" + "paperstyle"
-    legacy_file = r"(?<!llt)" + "paperstyle" + r"\.sty"
-    stale_re = re.compile(rf"{legacy_path}|{legacy_file}")
+    legacy_file = "paperstyle" + r"\.sty"
+    legacy_pkg = r"\b" + "llt" + r"[a-z]+"
+    legacy_prefix = r"\\(" + "llt" + r"|paper|paperstyle)@"
+    stale_re = re.compile(
+        "|".join([legacy_path, legacy_file, legacy_pkg, legacy_prefix])
+    )
     offenders = []
     for rel_path, path in tracked_active_source_files():
         if rel_path.startswith(("docs/", "archive/")):
@@ -142,3 +152,21 @@ def test_math_spacing_check_ignores_unspaced_subscripts():
         "\n"
     )
     assert not run_math_spacing_check(body)
+
+
+def test_every_package_sty_carries_an_lppl_header():
+    # CTAN review requires a per-file license statement; LICENSE at the repo
+    # root is not sufficient. A new module must not be able to skip this.
+    required = (
+        "LaTeX Project Public License",
+        "maintenance status `maintained'",
+        "The Current Maintainer of this work is Nathan Lane.",
+    )
+    sty_files = sorted((ROOT / "lanepaper").glob("*.sty"))
+    assert sty_files, "no .sty files found in lanepaper/"
+    offenders = []
+    for path in sty_files:
+        head = path.read_text(encoding="utf-8")[:1200]
+        if not all(phrase in head for phrase in required):
+            offenders.append(path.name)
+    assert offenders == [], f"missing or incomplete LPPL header: {offenders}"

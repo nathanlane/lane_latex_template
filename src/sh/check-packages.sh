@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# check-packages.sh - verify LaTeX package dependencies for lltpaperstyle
+# check-packages.sh - verify LaTeX package dependencies for lanepaper
 # Exits 0 when every required package resolves via kpsewhich, 1 otherwise.
 # Follows Google Shell Style Guide with strict mode.
 
@@ -7,7 +7,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-# External packages loaded by lltpaperstyle and its modules (llt* modules are
+# External packages loaded by lanepaper and its modules (lnp* modules are
 # resolved via TEXINPUTS and checked separately by the build).
 required_packages=(
   adjustbox

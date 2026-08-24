@@ -17,7 +17,7 @@ All four must pass before committing (`make lint`, `make build`, and
 documented in `docs/technical/TESTING.md`):
 
 ```bash
-make lint              # chktex on *.tex, paper/*.tex, appendices/*.tex
+make lint              # chktex on demo/*.tex, demo/appendices/*.tex
 make build             # latexmk full compile → main.pdf
 bash tests/run-tests.sh  # shell harness: LaTeX fixtures + compatibility probes
 python3 -m pytest -q   # regression tests: measured values, contract assertions
@@ -30,27 +30,27 @@ skips those assertions cleanly when `pdftotext` is unavailable.
 
 ## Package Namespace Convention
 
-All packages use the `llt` prefix (Lane LaTeX Template):
+The package is `lanepaper`; its modules use the `lnp` prefix:
 
-- Main style: `lltpaperstyle` (`paper/lltpaperstyle.sty`)
-- Modules: `lltcolors`, `lltfonts`, `lltdimensions`, `lltheadings`,
-  `lltlists`, `lltmicrotype`, `lltparagraphs`, `llthochuli`, etc.
+- Main style: `lanepaper` (`lanepaper/lanepaper.sty`)
+- Modules: `lnpcolors`, `lnpfonts`, `lnpdimensions`, `lnpheadings`,
+  `lnplists`, `lnpmicrotype`, `lnpparagraphs`, `lnphochuli`, etc.
 
 Load packages by name, not by path:
 
 ```latex
-\usepackage{lltpaperstyle}   % correct
+\usepackage{lanepaper}   % correct
 \usepackage{paper/paperstyle} % wrong — legacy path, do not use
 ```
 
 Internal LaTeX identifiers (lengths, counters, private commands) use the
-`\paper@` prefix to avoid conflicts. See
+`\lnp@` prefix to avoid conflicts. See
 [`docs/PACKAGE_NAMING_CONVENTION.md`](docs/PACKAGE_NAMING_CONVENTION.md) and
-[`paper/modules/NAMESPACE_CONVENTIONS.md`](paper/modules/NAMESPACE_CONVENTIONS.md)
+[`docs/package/NAMESPACE_CONVENTIONS.md`](docs/package/NAMESPACE_CONVENTIONS.md)
 for the full convention.
 
 ## Module Documentation
 
-- Per-module docs: `paper/modules/*.md` (colors, fonts, dimensions, headings, lists)
-- Module index: `paper/modules/README.md`
+- Per-module docs: `docs/package/*.md` (colors, fonts, dimensions, headings, lists)
+- Module index: `docs/package/modules.md`
 - Testing guide: `docs/technical/TESTING.md`

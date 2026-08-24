@@ -13,7 +13,7 @@ def compile_latex(tmp_path, name, source):
     tex_file.write_text(textwrap.dedent(source), encoding="utf-8")
     env = os.environ.copy()
     env["TEXINPUTS"] = (
-        f".:{ROOT / 'paper'}:{ROOT / 'paper/modules'}:"
+        f".:{ROOT / 'lanepaper'}:"
         f"{env.get('TEXINPUTS', '')}"
     )
     result = subprocess.run(
@@ -40,25 +40,25 @@ def test_nocolor_maps_semantic_colors_to_black(tmp_path):
         "nocolor-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage[nocolor]{lltpaperstyle}
+        \usepackage[nocolor]{lanepaper}
         \makeatletter
         \newcommand{\showcolorhex}[2]{%
           \convertcolorspec{named}{#1}{HTML}{#2}%
         }
         \makeatother
         \begin{document}
-        \showcolorhex{sectioncolor}{\lltsectionhex}
-        \showcolorhex{linknavy}{\lltlinkhex}
-        \typeout{LLT_SECTION_HEX=\lltsectionhex}
-        \typeout{LLT_LINK_HEX=\lltlinkhex}
+        \showcolorhex{sectioncolor}{\lnpsectionhex}
+        \showcolorhex{linknavy}{\lnplinkhex}
+        \typeout{LNP_SECTION_HEX=\lnpsectionhex}
+        \typeout{LNP_LINK_HEX=\lnplinkhex}
         \section{No Color}
         Body text.
         \end{document}
         """,
     )
     assert_compiles(result, log_text)
-    assert "LLT_SECTION_HEX=000000" in log_text
-    assert "LLT_LINK_HEX=000000" in log_text
+    assert "LNP_SECTION_HEX=000000" in log_text
+    assert "LNP_LINK_HEX=000000" in log_text
 
 
 def test_minimal_nocolor_compiles(tmp_path):
@@ -67,15 +67,15 @@ def test_minimal_nocolor_compiles(tmp_path):
         "minimal-nocolor-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage[minimal,nocolor]{lltpaperstyle}
+        \usepackage[minimal,nocolor]{lanepaper}
         \begin{document}
-        \typeout{LLT_MINIMAL_NOCOLOR_OK}
+        \typeout{LNP_MINIMAL_NOCOLOR_OK}
         Minimal no-color contract.
         \end{document}
         """,
     )
     assert_compiles(result, log_text)
-    assert "LLT_MINIMAL_NOCOLOR_OK" in log_text
+    assert "LNP_MINIMAL_NOCOLOR_OK" in log_text
 
 
 def test_draft_option_reports_microtype_draft_mode(tmp_path):
@@ -84,7 +84,7 @@ def test_draft_option_reports_microtype_draft_mode(tmp_path):
         "draft-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage[draft]{lltpaperstyle}
+        \usepackage[draft]{lanepaper}
         \begin{document}
         Draft mode contract.
         \end{document}
@@ -92,7 +92,7 @@ def test_draft_option_reports_microtype_draft_mode(tmp_path):
     )
     assert_compiles(result, log_text)
     assert re.search(
-        r"Package llt(paperstyle|microtype) Info: microtype draft mode active",
+        r"Package (lanepaper|lnpmicrotype) Info: microtype draft mode active",
         log_text,
     )
 
@@ -103,7 +103,7 @@ def test_natbib_option_provides_native_natbib_commands(tmp_path):
         "natbib-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage[natbib]{lltpaperstyle}
+        \usepackage[natbib]{lanepaper}
         \begin{document}
         Natbib cite commands compile:
         \citet[chap.~2]{smith2020} and \citep[see][45]{smith2020}.
@@ -123,7 +123,7 @@ def test_nobiblatex_does_not_load_biblatex(tmp_path):
         "nobiblatex-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage[nobiblatex]{lltpaperstyle}
+        \usepackage[nobiblatex]{lanepaper}
         \begin{document}
         No automatic bibliography package.
         \end{document}
@@ -139,7 +139,7 @@ def test_text_symbol_commands_compile_in_t1_encoding(tmp_path):
         "text-symbol-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage{lltpaperstyle}
+        \usepackage{lanepaper}
         \begin{document}
         The value is \textapprox 3.14159.
         The limit approaches \textinfty.
@@ -157,7 +157,7 @@ def test_plain_ref_does_not_emit_package_warning(tmp_path):
         "plain-ref-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage{lltpaperstyle}
+        \usepackage{lanepaper}
         \begin{document}
         \section{Target}\label{sec:target}
         Plain reference: \ref{sec:target}.
@@ -174,7 +174,7 @@ def test_subsection_barriers_are_explicitly_reported(tmp_path):
         "barrier-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage{lltpaperstyle}
+        \usepackage{lanepaper}
         \begin{document}
         \section{One}
         \subsection{Two}
@@ -184,7 +184,7 @@ def test_subsection_barriers_are_explicitly_reported(tmp_path):
     )
     assert_compiles(result, log_text)
     assert re.search(
-        r"Package lltpaperstyle Info: subsection float barriers (enabled|disabled)",
+        r"Package lanepaper Info: subsection float barriers (enabled|disabled)",
         log_text,
     )
 
@@ -195,7 +195,7 @@ def test_nosubsectionbarriers_reports_disabled_mode(tmp_path):
         "no-subsection-barrier-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage[nosubsectionbarriers]{lltpaperstyle}
+        \usepackage[nosubsectionbarriers]{lanepaper}
         \begin{document}
         \section{One}
         \subsection{Two}
@@ -204,7 +204,7 @@ def test_nosubsectionbarriers_reports_disabled_mode(tmp_path):
         """,
     )
     assert_compiles(result, log_text)
-    assert "Package lltpaperstyle Info: subsection float barriers disabled" in log_text
+    assert "Package lanepaper Info: subsection float barriers disabled" in log_text
 
 
 def test_math_redefs_default_off(tmp_path):
@@ -213,19 +213,19 @@ def test_math_redefs_default_off(tmp_path):
         "mathredefs-default-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage{lltpaperstyle}
+        \usepackage{lanepaper}
         \begin{document}
         \makeatletter
-        \typeout{LLT_LE=\meaning\le}
-        \typeout{LLT_PHI=\meaning\phi}
+        \typeout{LNP_LE=\meaning\le}
+        \typeout{LNP_PHI=\meaning\phi}
         \makeatother
         $a \le b$
         \end{document}
         """,
     )
     assert_compiles(result, log_text)
-    assert "LLT_LE=\\mathchar" in log_text
-    assert "LLT_PHI=\\mathchar" in log_text
+    assert "LNP_LE=\\mathchar" in log_text
+    assert "LNP_PHI=\\mathchar" in log_text
 
 
 def test_math_redefs_option_enables_variants(tmp_path):
@@ -234,11 +234,11 @@ def test_math_redefs_option_enables_variants(tmp_path):
         "mathredefs-optin-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage[mathredefs]{lltpaperstyle}
+        \usepackage[mathredefs]{lanepaper}
         \begin{document}
         \makeatletter
-        \typeout{LLT_LE=\meaning\le}
-        \typeout{LLT_PHI=\meaning\phi}
+        \typeout{LNP_LE=\meaning\le}
+        \typeout{LNP_PHI=\meaning\phi}
         \makeatother
         $a \le b$
         \end{document}
@@ -256,7 +256,7 @@ def test_footmisc_option_passthrough_no_clash(tmp_path):
         r"""
         \documentclass[11pt]{article}
         \PassOptionsToPackage{bottom}{footmisc}
-        \usepackage{lltpaperstyle}
+        \usepackage{lanepaper}
         \begin{document}
         Text with a note.\footnote{A footnote.}
         \end{document}
@@ -276,24 +276,24 @@ def test_footnote_marker_box_fits_three_digits(tmp_path):
         "footnote-marker-width-contract",
         r"""
         \documentclass[11pt]{article}
-        \usepackage{lltpaperstyle}
+        \usepackage{lanepaper}
         \newlength{\markwidth}
         \begin{document}
         \makeatletter
         \settowidth{\markwidth}{\fontsize{6}{7}\selectfont
           \SetTracking{encoding={T1,OT1}}{50}\lsstyle\oldstylenums{999}}
-        \typeout{LLT_MARK999=\the\markwidth}
+        \typeout{LNP_MARK999=\the\markwidth}
         \makeatother
         Text.\footnote{A footnote.}
         \end{document}
         """,
     )
     assert_compiles(result, log_text)
-    match = re.search(r"LLT_MARK999=([0-9.]+)pt", log_text)
+    match = re.search(r"LNP_MARK999=([0-9.]+)pt", log_text)
     assert match, log_text
     # Compare against the actual \@makefntext box width in the package, not a
     # hardcoded number, so the test fails if the box is shrunk again.
-    sty = (ROOT / "paper" / "lltpaperstyle.sty").read_text(encoding="utf-8")
+    sty = (ROOT / "lanepaper" / "lanepaper.sty").read_text(encoding="utf-8")
     boxes = re.findall(r"\\makebox\[([0-9.]+)pt\]", sty)
-    assert boxes, "no footnote marker box found in lltpaperstyle.sty"
+    assert boxes, "no footnote marker box found in lanepaper.sty"
     assert float(match.group(1)) <= min(float(b) for b in boxes)

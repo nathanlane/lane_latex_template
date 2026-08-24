@@ -40,10 +40,10 @@ This guide will help you set up the LaTeX template on your system with all requi
    ```
 
 > **Overleaf note (unverified):** the template resolves its modules via
-> `TEXINPUTS` set in `.latexmkrc` (`./paper:./paper/modules`). We could not
+> `TEXINPUTS` set in `.latexmkrc` (`./lanepaper`). We could not
 > verify whether Overleaf honours `ensure_path('TEXINPUTS', ...)` from
-> `.latexmkrc`. If `\usepackage{lltpaperstyle}` fails to find `lltfonts` and
-> friends there, copy `paper/*.sty` and `paper/modules/*.sty` into the project
+> `.latexmkrc`. If `\usepackage{lanepaper}` fails to find `lnpfonts` and
+> friends there, copy `lanepaper/*.sty` into the project
 > root as a workaround. Local `latexmk` is the verified path.
 
 3. **Install missing packages** (if any):
@@ -248,7 +248,7 @@ mpm --install=tgpagella
 
 Run the diagnostic command:
 ```bash
-pdflatex -interaction=nonstopmode "\RequirePackage{lltpaperstyle}\paperstylediagnostics\stop"
+pdflatex -interaction=nonstopmode "\RequirePackage{lanepaper}\lanepaperdiagnostics\stop"
 ```
 
 ### Getting Help
@@ -272,7 +272,7 @@ If you're having trouble with the full installation, try the minimal setup:
    Create a file `minimal.tex`:
    ```latex
    \documentclass{article}
-   \usepackage[minimal]{lltpaperstyle}
+   \usepackage[minimal]{lanepaper}
    \begin{document}
    Your content here
    \end{document}
@@ -303,28 +303,28 @@ make diagnose
 
 ## Typography System Architecture
 
-The template uses a modular typography system organized in `paper/modules/`:
+The template uses a modular typography system organized in `lanepaper/`:
 
 ### Core Modules (Automatically Loaded)
-- `lltcompilationfixes.sty` - Fixes common LaTeX warnings
-- `lltcolors.sty` - Professional color definitions (linknavy, sectioncolor, bulletgray)
-- `lltdimensions.sty` - Spacing quantum system (13.2pt quantum) and spacing commands
-- `lltfonts.sty` - Font configuration (Pagella, Inconsolata, newpxmath, mathalfa)
-- `lltheadings.sty` - Section heading styles with color hierarchy
-- `lltlists.sty` - List typography with refined bullets (6.6pt item spacing)
-- `lltmicrotype.sty` - Enhanced character protrusion (factor 1050, stretch/shrink 15)
+- `lnpcompilationfixes.sty` - Fixes common LaTeX warnings
+- `lnpcolors.sty` - Professional color definitions (linknavy, sectioncolor, bulletgray)
+- `lnpdimensions.sty` - Spacing quantum system (13.2pt quantum) and spacing commands
+- `lnpfonts.sty` - Font configuration (Pagella, Inconsolata, newpxmath, mathalfa)
+- `lnpheadings.sty` - Section heading styles with color hierarchy
+- `lnplists.sty` - List typography with refined bullets (6.6pt item spacing)
+- `lnpmicrotype.sty` - Enhanced character protrusion (factor 1050, stretch/shrink 15)
 
 ### Optional Enhancement Modules
-- `lltparagraphs.sty` - Advanced paragraph formatting, quotations, dialogue
-- `lltheadingsgridlocked.sty` - Stricter grid alignment (±0.125 vs ±0.25 units)
-- `lltmathgridlocked.sty` - Minimal math flexibility (±0.0625 units)
-- `llthochuli.sty` - Advanced optical adjustments
-- `lltfontfeatures.sty` - Full Pagella feature access
-- `lltfontfallbacks.sty` - Compatibility mode with fallback chains
+- `lnpparagraphs.sty` - Advanced paragraph formatting, quotations, dialogue
+- `lnpheadingsgridlocked.sty` - Stricter grid alignment (±0.125 vs ±0.25 units)
+- `lnpmathgridlocked.sty` - Minimal math flexibility (±0.0625 units)
+- `lnphochuli.sty` - Advanced optical adjustments
+- `lnpfontfeatures.sty` - Full Pagella feature access
+- `lnpfontfallbacks.sty` - Compatibility mode with fallback chains
 
 ### Module Features
 - **Modular loading**: Load only what you need
-- **Override capability**: Customize before loading paperstyle
+- **Override capability**: Customize before loading lanepaper
 - **Dependency management**: Automatic loading of required modules
 - **Graceful degradation**: Fallbacks for missing packages
 
@@ -335,16 +335,16 @@ Example customization:
 \definecolor{sectioncolor}{RGB}{0,0,0}
 
 % Load main package
-\usepackage{lltpaperstyle}
+\usepackage{lanepaper}
 
 % Add optional enhancements
-\usepackage{llthochuli}
+\usepackage{lnphochuli}
 ```
 
 ## Next Steps
 
 - Read `README.md` for usage instructions
-- See `paper/STYLE_GUIDE.md` for typography guidelines
+- See `docs/package/STYLE_GUIDE.md` for typography guidelines
 - Check `TROUBLESHOOTING.md` for common issues
 
 ---

@@ -1,0 +1,62 @@
+%% Copyright 2025-2026 Nathan Lane
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   https://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2008 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Nathan Lane.
+%%
+%% This work consists of the files in lanepaper/.
+%%
+% ==============================================================================
+% LNPFONTS.STY - Font System Configuration Module
+% ==============================================================================
+% Extracted from lanepaper.sty for modular customization
+% Maintains full compatibility with existing documents
+% ==============================================================================
+
+\ProvidesPackage{lnpfonts}[2026/08/12 v1.1 Font System Configuration]
+
+% FONT ENCODING AND BASE CONFIGURATION
+% UTF-8 support with T1 encoding for proper character handling
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+
+% PRIMARY TEXT FONT
+% TeX Gyre Pagella - Enhanced Palatino with superior small caps
+\RequirePackage{tgpagella}
+
+% MONOSPACE FONT
+% Inconsolata scaled for optimal weight balance with Pagella
+\RequirePackage[varqu,varl,scaled=0.96]{zi4}
+
+% MATHEMATICAL FONT SYSTEM
+% Load amsmath and amssymb before newpxmath to avoid conflicts
+\RequirePackage{amsmath,amssymb}
+% newpxmath perfectly harmonized with Pagella
+\RequirePackage{newpxmath}
+\RequirePackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
+
+% SUPPORTING PACKAGES
+\RequirePackage{scalefnt}     % For precise bold small caps scaling
+\RequirePackage{letterspace}  % For \lsstyle letterspacing
+\RequirePackage{textcase}     % For \MakeTextUppercase
+\RequirePackage{textcomp}     % For improved monospace characters
+
+% FONT CHARACTERISTICS (for reference)
+% Pagella characteristics:
+% - Larger x-height than original Palatino
+% - Wider character width
+% - Superior small caps design
+% - Excellent oldstyle figures
+
+% SCALING FACTORS
+% These can be customized before loading lanepaper
+\providecommand{\monospacescale}{0.96}   % Inconsolata scaling
+\providecommand{\mathscale}{1.0}         % Math font scaling

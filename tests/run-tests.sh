@@ -68,7 +68,8 @@ test_latex_file() {
     cd "$PROJECT_ROOT"
     
     # FIX: Keep direct script runs working when TEXINPUTS is unset.
-    export TEXINPUTS=".:./paper:./paper/modules:${TEXINPUTS:-}"
+    export TEXINPUTS=".:./lanepaper:./demo:${TEXINPUTS:-}"
+    export BIBINPUTS=".:./demo:${BIBINPUTS:-}"
     
     # Test 1: Basic compilation
     if pdflatex -interaction=nonstopmode -halt-on-error "$tex_file" > "$log_file" 2>&1; then
@@ -153,7 +154,7 @@ run_compatibility_probes() {
 
     if ! run_compatibility_probe "prelude-natbib-preamble" <<'EOF'
 \documentclass[11pt]{article}
-\input{paper/preamble-natbib.tex}
+\input{preamble-natbib.tex}
 
 \begin{document}
 \section{Natbib Preamble Contract}
@@ -171,7 +172,7 @@ EOF
 
     if ! run_compatibility_probe "main-package-minimal-option" <<'EOF'
 \documentclass[11pt]{article}
-\usepackage[minimal]{lltpaperstyle}
+\usepackage[minimal]{lanepaper}
 \begin{document}
 Main package minimal option contract is stable.
 \end{document}
@@ -180,9 +181,9 @@ EOF
         probe_failures=$((probe_failures + 1))
     fi
 
-    if ! run_compatibility_probe "standalone-lltpaperstyleminimal" <<'EOF'
+    if ! run_compatibility_probe "standalone-lnpminimal" <<'EOF'
 \documentclass[11pt]{article}
-\usepackage{lltpaperstyleminimal}
+\usepackage{lnpminimal}
 \begin{document}
 Minimal style surface compiles standalone.
 \end{document}
@@ -191,9 +192,9 @@ EOF
         probe_failures=$((probe_failures + 1))
     fi
 
-    if ! run_compatibility_probe "standalone-lltlists" <<'EOF'
+    if ! run_compatibility_probe "standalone-lnplists" <<'EOF'
 \documentclass[11pt]{article}
-\usepackage{lltlists}
+\usepackage{lnplists}
 \begin{document}
 \begin{itemize}
   \item List entry one.
@@ -206,9 +207,9 @@ EOF
         probe_failures=$((probe_failures + 1))
     fi
 
-    if ! run_compatibility_probe "standalone-lltmathgridlocked" <<'EOF'
+    if ! run_compatibility_probe "standalone-lnpmathgridlocked" <<'EOF'
 \documentclass[11pt]{article}
-\usepackage{lltmathgridlocked}
+\usepackage{lnpmathgridlocked}
 \begin{document}
 \[
   E = mc^2
@@ -219,9 +220,9 @@ EOF
         probe_failures=$((probe_failures + 1))
     fi
 
-    if ! run_compatibility_probe "standalone-lltfontfeatures" <<'EOF'
+    if ! run_compatibility_probe "standalone-lnpfontfeatures" <<'EOF'
 \documentclass[11pt]{article}
-\usepackage{lltfontfeatures}
+\usepackage{lnpfontfeatures}
 \begin{document}
 \textfigs{123}
 \chemform{E=mc^2}
@@ -232,10 +233,10 @@ EOF
         probe_failures=$((probe_failures + 1))
     fi
 
-    if ! run_compatibility_probe "preload-lltparagraphs-into-paperstyle" <<'EOF'
+    if ! run_compatibility_probe "preload-lnpparagraphs-into-lanepaper" <<'EOF'
 \documentclass[11pt]{article}
-\usepackage{lltparagraphs}
-\usepackage{lltpaperstyle}
+\usepackage{lnpparagraphs}
+\usepackage{lanepaper}
 \begin{document}
 \paragraph{Preload contract}
 This verifies paragraph module preloading compatibility.
@@ -248,9 +249,9 @@ EOF
         probe_failures=$((probe_failures + 1))
     fi
 
-    if ! run_compatibility_probe "standalone-lltfontfallbacks" <<'EOF'
+    if ! run_compatibility_probe "standalone-lnpfontfallbacks" <<'EOF'
 \documentclass[11pt]{article}
-\usepackage{lltfontfallbacks}
+\usepackage{lnpfontfallbacks}
 \begin{document}
 \showfontconfig
 Font fallback standalone surface compiles.
