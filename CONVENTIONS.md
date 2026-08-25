@@ -164,6 +164,14 @@ any rename.
 **Trailing `%`.** End a line inside a macro definition with `%` wherever a line
 break would otherwise emit a space.
 
+**Glue values start with a coefficient, never a bare register.** In
+`\abovedisplayskip=\gridunit plus 3.3pt`, TeX copies the register and ends
+the assignment — `plus 3.3pt` leaks into the document as text. Write
+`1\gridunit plus 0.25\gridunit`; the coefficient form is scanned as a
+dimension, after which `plus`/`minus` parse. Point literals never had this
+trap, so it appeared only when spacing moved to `\gridunit` terms
+(ADR-0005).
+
 Document source style — as opposed to package code — is covered by
 [`CONTRIBUTING.md`](CONTRIBUTING.md) and enforced by
 `src/sh/validate_latex_style.sh`. Do not restate it here, and
