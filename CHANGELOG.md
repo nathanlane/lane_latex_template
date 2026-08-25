@@ -17,6 +17,19 @@ not the 23.1pt the module would set. Their references in README,
 INSTALL, TROUBLESHOOTING, API_REFERENCE, the CONVENTIONS module table, and
 the `run-tests.sh` standalone probe are gone with them.
 
+The `[grid]` overlay now draws only the real baseline grid (lines every
+`\baselineskip`); the 13.2pt quantum lines are gone — a spacing unit is not
+a set of positions. The unused debug helpers (`\checkgrid`,
+`\markposition`, `\showbaseline`) went with them, and `\showgrid[color]`
+now actually honours its color argument.
+
+Spacing values are now stated in `\gridunit` multiples instead of 45
+scattered point literals; derived lengths (`\halfgridunit` …
+`\triplegridunit`) single-source from the quantum. `\parindent` is
+deliberately a `13.2pt` literal — a horizontal indent must not follow the
+vertical quantum. Proven rendering-neutral: all 40 demo pages byte-identical
+at 150dpi.
+
 Consolidated the documentation (issue #52).
 
 **69 markdown files and 16,249 lines down to 18 files and 7,313 lines.** Ten at
