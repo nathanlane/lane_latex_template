@@ -151,7 +151,7 @@ This document demonstrates a comprehensive academic typography system synthesizi
 
 \subsection{Baseline Grid System}
 
-The foundation of this document is a rigorously implemented 13.2pt spacing quantum system, established July 2, 2025. All vertical spacing derives from the quantum, giving professional vertical rhythm throughout the document. (The body baseline measures 16.32pt; see \texttt{docs/adr/0004-baseline-grid-is-a-spacing-quantum.md}.)
+Vertical space in this document is stated in a 13.2pt spacing quantum: spaces are whole or fractional quanta rather than ad-hoc point values. The quantum is a unit of measure, not a grid --- the body baseline is 16.32pt, and text does not land on quantum multiples (see \texttt{docs/adr/0005-what-the-spacing-quantum-is.md}).
 
 \safeparagraph{Master Grid Definition}
 \begin{itemize}
@@ -176,7 +176,7 @@ This document demonstrates several grid-aware features:
 \item \emph{Text Font:} 11pt TeX Gyre Pagella with superior small caps design  
 \item \emph{Mathematical Font:} newpxmath harmonized with Pagella
 \item \emph{Monospace Font:} Inconsolata scaled to 96\% for optimal weight balance
-\item \emph{Spacing Quantum:} 13.2pt rhythm optimized for Pagella
+\item \emph{Spacing Quantum:} 13.2pt unit for stated spaces
 \item \emph{Typography:} Professional footnotes, advanced hyphenation, flexible spacing
 \end{itemize}
 
@@ -450,7 +450,7 @@ Professional figure inclusion follows this pattern:
 
 \subsection{Professional Table Design}
 
-Tables demonstrate the power of \code{booktabs} package with no vertical rules, creating clean, readable presentations of data. The framework now provides grid-aligned table environments that maintain vertical rhythm.
+Tables demonstrate the power of \code{booktabs} package with no vertical rules, creating clean, readable presentations of data. The framework provides table environments with quantum-derived spacing.
 
 \begin{table}[tbp]
   \caption{Sample Data Table Using Booktabs Design Principles}
@@ -606,7 +606,7 @@ Our default itemize environment uses subtle gray bullets with optimal hanging in
 \begin{itemize}
 \item \emph{Professional bullets:} The framework uses 20\% gray bullets for optimal visibility while maintaining professional appearance
 \item \emph{Precise hanging indent:} 1.8em indentation optimized for Pagella's wider characters ensures clean alignment
-\item \emph{Quantum integration:} All vertical spacing derives from the 13.2pt quantum for consistent rhythm
+\item \emph{Quantum integration:} Vertical space values derive from the 13.2pt quantum
 \item \emph{Nested list progression:} Secondary levels use en-dash, tertiary use diamond symbols
   \begin{itemize}
   \item En-dash at second level follows Butterick's recommendation for professional documents
@@ -614,7 +614,7 @@ Our default itemize environment uses subtle gray bullets with optimal hanging in
   \item Professional gray coloring continues throughout hierarchy
     \begin{itemize}
     \item Diamond symbols at third level provide clear visual distinction
-    \item Maintains consistent rhythm through all nesting levels
+    \item Maintains consistent spacing through all nesting levels
     \item Maximum three levels recommended for optimal comprehension
     \end{itemize}
   \end{itemize}
@@ -649,7 +649,7 @@ Numbered lists use oldstyle figures for classical typography:
     \item Preserves readability through systematic progression
     \end{enumerate}
   \end{enumerate}
-\item \emph{Baseline preservation:} Consistent spacing maintains vertical rhythm throughout
+\item \emph{Baseline preservation:} Spacing stays on the quantum scale throughout
 \end{enumerate}
 
 \subsection{Compact Lists for Dense Information}
@@ -684,7 +684,7 @@ Professional term definitions using hanging format:
 
 \begin{description}
 \item[Modular Scale] A sequence of numbers that relate to one another in a meaningful way, used to create harmonious size relationships in typography
-\item[Spacing Quantum] A fixed vertical unit (here 13.2pt) from which all template spacing derives, ensuring consistent vertical rhythm
+\item[Spacing Quantum] A fixed vertical unit (here 13.2pt) in which template spacing values are stated
 \item[Hanging Indent] A formatting style where the first line starts at the margin while subsequent lines are indented, creating clear visual hierarchy
 \item[Tracking] The uniform adjustment of spacing between letters, measured in thousandths of an em, used here for small caps optimization
 \end{description}
@@ -793,7 +793,7 @@ The bibliography uses our quantum spacing system:
 \item \emph{Entry spacing:} 6.6pt between entries (0.5 quanta)
 \item \emph{Hanging indent:} 1.5em for optimal readability
 \item \emph{Name grouping:} 3.16pt spacing between author name groups
-\item \emph{Quantum rhythm:} All spacing derives from the 13.2pt quantum
+\item \emph{Quantum scale:} Spacing values derive from the 13.2pt quantum
 \end{itemize}
 
 \subsection{Natbib Compatibility}

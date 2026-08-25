@@ -4,6 +4,14 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Cleared the remaining spacing-quantum defects (issue #73): renamed the
+`\lnp@list*baseline*` lengths to `\lnp@list*quantum` (they hold quantum
+fractions used as topsep/itemsep; the measured list baselineskip is 16.32pt),
+deleted `lnpminimal.sty`'s dead `\gridunit` fallbacks, and rewrote the
+demo's nine printed rhythm claims to match ADR-0005. The prose edits change
+the PDF: raster-diffed at 150dpi, seven pages differ, each read and confined
+to the edited sentences plus a one-line reflow on pages 22–23.
+
 Accepted ADR-0005: `\gridunit` (13.2pt) is a plain spacing quantum with no
 relationship to where text lands; all rhythm and grid-locking claims are
 being removed (issue #73, ADR-0005).
