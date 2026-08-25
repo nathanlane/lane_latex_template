@@ -61,25 +61,25 @@
 % LIST SPACING PARAMETERS
 % All in multiples of the 13.2pt spacing quantum (baseline measures 16.32pt)
 % Internal lengths now prefixed with \lnp@ to avoid namespace collisions
-\newlength{\lnp@listhalfbaseline}
-\newlength{\lnp@listquarterbaseline}
-\newlength{\lnp@listbaselineskip}
+\newlength{\lnp@listhalfquantum}
+\newlength{\lnp@listquarterquantum}
+\newlength{\lnp@listquantum}
 \newlength{\lnp@listhangindent}
 \newlength{\lnp@listnestedindent}
 \newlength{\lnp@listlabelsep}
 
 % Initialise values
-\setlength{\lnp@listhalfbaseline}{0.5\gridunit}      % 6.6pt
-\setlength{\lnp@listquarterbaseline}{0.25\gridunit}   % 3.3pt  
-\setlength{\lnp@listbaselineskip}{\gridunit}     % 13.2pt; used as a topsep, not a baselineskip (#73)
+\setlength{\lnp@listhalfquantum}{0.5\gridunit}      % 6.6pt
+\setlength{\lnp@listquarterquantum}{0.25\gridunit}   % 3.3pt  
+\setlength{\lnp@listquantum}{\gridunit}     % 13.2pt; the full-quantum list space (topsep)
 \setlength{\lnp@listhangindent}{26.4pt}       % 2 grid units (optimized for Pagella)
 \setlength{\lnp@listnestedindent}{13.2pt}     % 1 grid unit for nested lists
 \setlength{\lnp@listlabelsep}{0.7em}          % Space between bullet and text
 
 % Compatibility aliases (deprecated; will be removed in v2.0)
-\let\listhalfbaseline\lnp@listhalfbaseline
-\let\listquarterbaseline\lnp@listquarterbaseline
-\let\listbaselineskip\lnp@listbaselineskip
+\let\listhalfquantum\lnp@listhalfquantum
+\let\listquarterquantum\lnp@listquarterquantum
+\let\listquantum\lnp@listquantum
 \let\listhangindent\lnp@listhangindent
 \let\listnestedindent\lnp@listnestedindent
 \let\listlabelsep\lnp@listlabelsep
@@ -139,9 +139,9 @@
   leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listhalfbaseline,
+  topsep=\lnp@listhalfquantum,
   partopsep=0pt,
   itemindent=0pt,
   listparindent=\parindent,
@@ -155,9 +155,9 @@
   leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listquarterbaseline,
+  topsep=\lnp@listquarterquantum,
   partopsep=0pt
 }
 
@@ -167,9 +167,9 @@
   leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listquarterbaseline,
+  topsep=\lnp@listquarterquantum,
   partopsep=0pt
 }
 
@@ -181,9 +181,9 @@
   leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listhalfbaseline,
+  topsep=\lnp@listhalfquantum,
   partopsep=0pt,
   itemindent=0pt,
   listparindent=\parindent,
@@ -197,9 +197,9 @@
   leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listquarterbaseline,
+  topsep=\lnp@listquarterquantum,
   partopsep=0pt
 }
 
@@ -209,9 +209,9 @@
   leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listquarterbaseline,
+  topsep=\lnp@listquarterquantum,
   partopsep=0pt
 }
 
@@ -222,9 +222,9 @@
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
   leftmargin=\lnp@listhangindent,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listhalfbaseline,
+  topsep=\lnp@listhalfquantum,
   partopsep=0pt,
   before={\vspace{-\parskip}},
   after={\vspace{-\parskip}}
@@ -245,7 +245,7 @@
   labelsep=\lnp@listlabelsep,
   itemsep=0pt,                                  % No item spacing
   parsep=0pt,
-  topsep=\lnp@listquarterbaseline,                  % Minimal top/bottom
+  topsep=\lnp@listquarterquantum,                  % Minimal top/bottom
   partopsep=0pt,
   nosep                                         % Remove all spacing
 }
@@ -257,9 +257,9 @@
   leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
-  itemsep=\lnp@listhalfbaseline,                    % Generous spacing
+  itemsep=\lnp@listhalfquantum,                    % Generous spacing
   parsep=0pt,
-  topsep=\lnp@listbaselineskip,                     % Full baseline above/below
+  topsep=\lnp@listquantum,                     % Full baseline above/below
   partopsep=0pt,
   font=\normalfont\bfseries\color{textblack}    % Bold items for emphasis
 }
@@ -271,9 +271,9 @@
   leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=0.5em,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listhalfbaseline,
+  topsep=\lnp@listhalfquantum,
   partopsep=0pt
 }
 
@@ -284,12 +284,12 @@
   leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=0.55em,
-  itemsep=\lnp@listhalfbaseline,                  % 0.5 units for readability
+  itemsep=\lnp@listhalfquantum,                  % 0.5 units for readability
   parsep=0pt,
   topsep=0.75\gridunit plus 0.125\gridunit,     % 9.9pt +1.65pt
   partopsep=0pt,
-  before={\vspace{-\parskip}\vspace{\lnp@listhalfbaseline}},
-  after={\vspace{-\parskip}\vspace{\lnp@listhalfbaseline}}
+  before={\vspace{-\parskip}\vspace{\lnp@listhalfquantum}},
+  after={\vspace{-\parskip}\vspace{\lnp@listhalfquantum}}
 }
 %% FIX: Define nested readableitem labels so recursive readable lists compile.
 \setlist[readableitem,2]{
@@ -297,9 +297,9 @@
   leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=0.55em,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listhalfbaseline,
+  topsep=\lnp@listhalfquantum,
   partopsep=0pt
 }
 \setlist[readableitem,3]{
@@ -307,9 +307,9 @@
   leftmargin=\lnp@listhangindent,
   labelindent=0pt,
   labelsep=0.55em,
-  itemsep=\lnp@listquarterbaseline,
+  itemsep=\lnp@listquarterquantum,
   parsep=0pt,
-  topsep=\lnp@listhalfbaseline,
+  topsep=\lnp@listhalfquantum,
   partopsep=0pt
 }
 
@@ -348,12 +348,12 @@
 % This gives us 6.6pt (0.5 grid units) before/after lists
 % Comment out these lines to restore the original minimal spacing
 %\setlist[itemize]{
-%  before*={\vspace{-\lnp@listquarterbaseline}},
-%  after*={\vspace{-\lnp@listquarterbaseline}}
+%  before*={\vspace{-\lnp@listquarterquantum}},
+%  after*={\vspace{-\lnp@listquarterquantum}}
 %}
 %\setlist[enumerate]{
-%  before*={\vspace{-\lnp@listquarterbaseline}},
-%  after*={\vspace{-\lnp@listquarterbaseline}}
+%  before*={\vspace{-\lnp@listquarterquantum}},
+%  after*={\vspace{-\lnp@listquarterquantum}}
 %}
 
 % ==============================================================================
@@ -363,20 +363,20 @@
 
 \newcommand{\tightlists}{%
   % Minimal spacing for dense information
-  \setlist[itemize,1]{itemsep=0pt, topsep=\lnp@listquarterbaseline}
-  \setlist[enumerate,1]{itemsep=0pt, topsep=\lnp@listquarterbaseline}
+  \setlist[itemize,1]{itemsep=0pt, topsep=\lnp@listquarterquantum}
+  \setlist[enumerate,1]{itemsep=0pt, topsep=\lnp@listquarterquantum}
 }
 
 \newcommand{\normallists}{%
   % Default spacing (current settings)
-  \setlist[itemize,1]{itemsep=\lnp@listquarterbaseline, topsep=\lnp@listhalfbaseline}
-  \setlist[enumerate,1]{itemsep=\lnp@listquarterbaseline, topsep=\lnp@listhalfbaseline}
+  \setlist[itemize,1]{itemsep=\lnp@listquarterquantum, topsep=\lnp@listhalfquantum}
+  \setlist[enumerate,1]{itemsep=\lnp@listquarterquantum, topsep=\lnp@listhalfquantum}
 }
 
 \newcommand{\spaciouslists}{%
   % Generous spacing for readability
-  \setlist[itemize,1]{itemsep=\lnp@listhalfbaseline, topsep=\lnp@listbaselineskip}
-  \setlist[enumerate,1]{itemsep=\lnp@listhalfbaseline, topsep=\lnp@listbaselineskip}
+  \setlist[itemize,1]{itemsep=\lnp@listhalfquantum, topsep=\lnp@listquantum}
+  \setlist[enumerate,1]{itemsep=\lnp@listhalfquantum, topsep=\lnp@listquantum}
 }
 
 % ==============================================================================

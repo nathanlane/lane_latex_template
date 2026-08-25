@@ -173,9 +173,8 @@
 % ==============================================================================
 
 % Define commands that might be used but aren't available
-\providecommand{\gridunit}{13.2pt}
-\providecommand{\halfgridunit}{6.6pt}
-\providecommand{\quartergridunit}{3.3pt}
+%% FIX: the \gridunit family fallbacks were dead code — \newlength{\gridunit}
+%% earlier in this file always defines it first (#73).
 \providecommand{\FloatBarrier}{\clearpage}
 
 \endinput
