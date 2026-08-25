@@ -2673,7 +2673,7 @@ latexmk -C main.tex  # or: rm *.aux *.out *.toc && pdflatex main.tex && pdflatex
 
 `Package fontaxes Warning: Axis 'shape' not supported` is harmless and expected.
 
-For troubleshooting, see [`../TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
+For troubleshooting, see [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
 
 ### Technical Implementation
 
@@ -2698,7 +2698,7 @@ For troubleshooting, see [`../TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
 The body baseline is **16.32pt** (`\linespread{1.20}` scales the class's 13.6pt
 baseline: 13.6 × 1.20 = 16.32pt). The **13.2pt spacing quantum** (`\gridunit`) is
 a separate unit used for most vertical spacing — it is not the baseline pitch.
-See `../docs/typography/BASELINE-GRID-DECISION.md` for the derivation.
+See [ADR-0004](docs/adr/0004-baseline-grid-is-a-spacing-quantum.md) for the derivation.
 
 ```latex
 Body baseline: 16.32pt  (document leading)

@@ -9,7 +9,7 @@
 # heuristic density/efficiency warnings but never fails the build: it always
 # exits 0 except on genuine tooling errors (missing poppler utilities). Do not
 # use it as a hard pass/fail gate unless the heuristics are recalibrated for the
-# template PDF. See docs/technical/TESTING.md for the current warning policy.
+# template PDF. See tests/README.md for the current warning policy.
 #
 # Hard measured-value gates (the checks that would have caught the 2026-08
 # adopter defect report) live in tests/test_measured_values.py, not here.
