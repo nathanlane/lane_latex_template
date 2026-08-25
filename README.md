@@ -357,7 +357,6 @@ The style system is fully modularized:
 - `lnpmicrotype` – Enhanced character protrusion, expansion, and spacing
 
 **Optional modules**:
-- `lnpmathgridlocked` – Grid-locked equation spacing hooks
 - `lnpparagraphs` – Advanced paragraph formatting
 - `lnphochuli` – Advanced optical adjustments
 
@@ -508,15 +507,6 @@ Add custom commands in your preamble:
 % After loading lanepaper
 \newcommand{\mycommand}[1]{\textcolor{linknavy}{\textbf{#1}}}
 \newenvironment{myenv}{\begin{quote}}{\end{quote}}
-```
-
-### Grid-Locked Modules
-
-For strict baseline adherence:
-
-```latex
-\usepackage{lnpheadingsgridlocked}
-\usepackage{lnpmathgridlocked}
 ```
 
 ---

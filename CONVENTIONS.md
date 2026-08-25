@@ -95,10 +95,8 @@ package name, never by path**.
 | `lnpfonts.sty` | Font System Configuration | amsmath, amssymb, fontenc, inputenc, letterspace, mathalfa, newpxmath, scalefnt, textcase, textcomp, tgpagella, zi4 |
 | `lnpgridoverlay.sty` **(entry point)** | Visual Grid Overlay System | calc, eso-pic, tikz, xcolor |
 | `lnpheadings.sty` | Heading Typography System | etoolbox, lnpcolors, lnpdimensions, titlesec |
-| `lnpheadingsgridlocked.sty` | Grid-Locked Heading System | etoolbox, lnpcolors, lnpdimensions, titlesec |
 | `lnphochuli.sty` | Hochuli Optical Refinements | lnpdimensions, microtype, ragged2e |
 | `lnplists.sty` | List Typography System | enumitem, etoolbox, graphicx, lnpcolors, lnpdimensions |
-| `lnpmathgridlocked.sty` | Grid-Locked Mathematics | etoolbox, lnpdimensions |
 | `lnpmicrotype.sty` | Microtype Configuration | microtype |
 | `lnpminimal.sty` **(entry point)** | Minimal Typography | amsmath, amssymb, array, booktabs, caption, enumitem, etoolbox, fontenc, geometry, graphicx, iftex, inputenc, tgpagella, titlesec, xcolor, zi4 |
 | `lnpparagraphs.sty` | Paragraph Typography | etoolbox, lettrine, lnpcolors, lnpdimensions |

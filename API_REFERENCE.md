@@ -2245,8 +2245,6 @@ lanepaper.sty (main package)
 │
 └── Optional Enhancement Modules:
     ├── lnpparagraphs.sty              - Advanced paragraph formatting
-    ├── lnpheadingsgridlocked.sty      - Stricter grid alignment
-    ├── lnpmathgridlocked.sty          - Minimal math flexibility
     ├── lnphochuli.sty                 - Optical adjustments; kerning pairs and last-line control apply on load; ligature suppression and hanging-quote commands are opt-in
     ├── lnpfontfeatures.sty            - Full Pagella feature access
     └── lnpfontfallbacks.sty           - Compatibility mode

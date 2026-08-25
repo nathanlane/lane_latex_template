@@ -171,13 +171,7 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
    ```
    Or load the style with `[grid]`: `\usepackage[grid]{lanepaper}`.
 
-2. Use grid-locked modules for stricter alignment:
-   ```latex
-   \usepackage{lnpheadingsgridlocked}
-   \usepackage{lnpmathgridlocked}
-   ```
-
-3. Manual adjustment with grid units:
+2. Manual adjustment with grid units:
    ```latex
    \vspace{\gridunit}      % 13.2pt
    \vspace{\halfgridunit}  % 6.6pt
