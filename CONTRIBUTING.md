@@ -24,7 +24,7 @@ make test     # python3 -m pytest -q, then bash tests/run-tests.sh
 
 `make test` runs both harnesses because issue #51 removed the four separate
 test targets: what CI runs and what you run can no longer drift apart. The
-shell harness is documented in `docs/technical/TESTING.md`.
+shell harness is documented in [`tests/README.md`](tests/README.md).
 
 The pytest harness requires `pdftotext` (Poppler) for PDF text assertions; it
 skips those assertions cleanly when `pdftotext` is unavailable.
@@ -55,9 +55,9 @@ convention; there is no second naming document.
 
 ## Module Documentation
 
-- Per-module docs: `docs/package/*.md` (colors, fonts, dimensions, headings, lists)
-- Module index: `docs/package/modules.md`
-- Testing guide: `docs/technical/TESTING.md`
+- Commands, systems and typography standards: [`API_REFERENCE.md`](API_REFERENCE.md)
+- Module list and dependencies: [`CONVENTIONS.md`](CONVENTIONS.md) section 3
+- Testing guide: [`tests/README.md`](tests/README.md)
 
 ## Document source style
 

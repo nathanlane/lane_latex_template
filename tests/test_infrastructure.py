@@ -293,3 +293,50 @@ def test_every_relative_markdown_link_resolves():
                 if not (path.parent / target).resolve().exists():
                     broken.append(f"{rel}:{number} -> {target}")
     assert broken == []
+
+
+def test_every_referenced_documentation_path_exists():
+    """Any file that names a .md path must name one that exists.
+
+    The link guard above only sees markdown link syntax, and it strips inline
+    code first so that LaTeX like `\\mathcal{L}[f](s)` is not read as a link.
+    That leaves two blind spots, and issue #52's consolidation walked into
+    both: documentation paths written inside backticks rather than as links,
+    and paths named in `.sty`, `.py`, `.sh` and `.tex` comments. Eighteen dead
+    references survived the consolidation because nothing checked them.
+
+    `docs/adr/` is exempt for the same reason as `CHANGELOG.md`: an accepted
+    ADR is a record, and two of them deliberately cite files that issue #52
+    deleted, annotated as such.
+
+    A path resolves if it is found relative to the citing file or to the
+    repository root -- code comments use repo-relative paths, markdown mostly
+    uses file-relative ones.
+    """
+    # Bare word ending in .md, allowing directories. Excludes globs (*.md),
+    # URLs, and escaped LaTeX underscores.
+    reference = re.compile(r"(?<![\w*/.-])((?:[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+\.md)\b")
+    skip_suffixes = (".md",) + ACTIVE_SOURCE_SUFFIXES
+    missing = []
+    for rel in run_git(["ls-files"]).stdout.splitlines():
+        if not rel.endswith(skip_suffixes):
+            continue
+        # Historical records legitimately name files that were later deleted.
+        if rel == "CHANGELOG.md" or rel.startswith(("docs/handoff/", "docs/adr/")):
+            continue
+        path = ROOT / rel
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, FileNotFoundError):
+            continue
+        for number, line in enumerate(text.splitlines(), 1):
+            if "http://" in line or "https://" in line:
+                continue
+            # LaTeX escapes underscores, so API\_REFERENCE.md must be unescaped
+            # before it can be matched against a real filename.
+            line = line.replace("\\_", "_")
+            for target in reference.findall(line):
+                if (path.parent / target).exists() or (ROOT / target).exists():
+                    continue
+                missing.append(f"{rel}:{number} -> {target}")
+    assert missing == []

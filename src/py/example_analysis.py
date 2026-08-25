@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-example_analysis.py - Template for data analysis following CLAUDE.md guidelines
+example_analysis.py - Template for data analysis following CONTRIBUTING.md guidelines
 
 This script demonstrates:
 - PEP 8 compliant code (use black formatter)
