@@ -13,11 +13,16 @@
 5. Update `CHANGELOG.md` and relevant sections of `README.md` after any material change.
 
 ## 🛠 Tools you must run before proposing a commit
+
 | Command | Purpose | Acceptable exit code |
 |---------|---------|----------------------|
-| `chktex -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48 demo/*.tex demo/appendices/*.tex` | Catch obvious bad constructs while ignoring intentional template/prose warnings that require visual-output changes. `-n48` requires ChkTeX ≥ 1.7.7; older binaries (TeX Live 2022's 1.7.6) reject it — the Makefile probes support and drops it. | 0 |
-| `latexmk -pdf -interaction=nonstopmode demo/main.tex` | Full compile; output PDF must be produced. | 0 |
-| `make test` | `pytest -q` then `bash tests/run-tests.sh`: regression tests over fixtures, package-option contracts, and PDF-text assertions where Poppler is available, then the shell harness. | 0 |
+| `make lint` | chktex over the demo sources, then the math-spacing checker. | 0 |
+| `make build` | Full compile; `main.pdf` must be produced. | 0 |
+| `make test` | `pytest -q`, then the shell harness. | 0 |
+
+These are the three gates CI runs, in the same order. What each one covers, and
+the accepted warnings, are in [`CONTRIBUTING.md`](CONTRIBUTING.md) and
+[`tests/README.md`](tests/README.md) — this table does not restate them.
 
 If **any** command fails, fix the cause instead of suppressing it.
 

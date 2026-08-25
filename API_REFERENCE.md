@@ -19,6 +19,15 @@ Complete reference for all commands, environments, and options provided by the `
 13. [Color Commands](#color-commands)
 14. [Grid System Commands](#grid-system-commands)
 15. [Footnote Commands](#footnote-commands)
+16. [Quick Reference Card](#quick-reference-card)
+17. [Bibliography and citations](#bibliography-and-citations)
+18. [The font system](#the-font-system)
+19. [The colour system](#the-colour-system)
+20. [Page layout and dimensions](#page-layout-and-dimensions)
+21. [The heading system](#the-heading-system)
+22. [The list system](#the-list-system)
+23. [How the package is put together](#how-the-package-is-put-together)
+24. [Typography standards](#typography-standards)
 
 ## Package Options
 
