@@ -64,3 +64,35 @@ function update_tag(filename, content, tagname, tagdate)
     "%1" .. date .. " v" .. version .. " "
   ))
 end
+
+-- Metadata for `l3build upload`, so a CTAN submission cannot drift from the
+-- source. Three fields are deliberately absent:
+--
+--   email         supplied per upload: `l3build upload x.y.z --email <address>`
+--                 An uploader's address does not belong in a public repository.
+--   announcement  supplied per release: `--message "..."` or `-F notes.txt`
+--   topic         CTAN validates topic names against its own list and rejects
+--                 an unknown one; leaving it out lets CTAN assign.
+--
+-- `upload` is never run by CI. It is not reversible, so it stays manual.
+uploadconfig = {
+  author     = "Nathan Lane",
+  uploader   = "Nathan Lane",
+  license    = "lppl1.3c",
+  ctanPath   = "/macros/latex/contrib/lanepaper",
+  summary    = "Academic typography for LaTeX: baseline grid, Pagella fonts, refined headings, lists and spacing",
+  description = [[
+    lanepaper is a pdfLaTeX package for academic papers. It sets a baseline
+    grid with most vertical spacing in multiples of a single quantum, a TeX
+    Gyre Pagella text and newpx maths pairing, and a heading, list, float and
+    footnote system tuned to that grid. Optional modules add Hochuli-style
+    optical refinements and a visual grid overlay for proofing.
+
+    It styles what a document already loads rather than loading it: biblatex,
+    natbib, hyperref, cleveref, longtable and appendix are configured only if
+    present.
+  ]],
+  home       = "https://github.com/nathanlane/lane_latex_template",
+  repository = "https://github.com/nathanlane/lane_latex_template",
+  bugtracker = "https://github.com/nathanlane/lane_latex_template/issues",
+}
