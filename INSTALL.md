@@ -345,7 +345,7 @@ Example customization:
 ## Next Steps
 
 - Read `README.md` for usage instructions
-- See `docs/package/STYLE_GUIDE.md` for typography guidelines
+- See [`API_REFERENCE.md`](API_REFERENCE.md), section "Typography standards", for typography guidelines
 - Check `TROUBLESHOOTING.md` for common issues
 
 ---

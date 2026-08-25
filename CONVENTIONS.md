@@ -167,8 +167,8 @@ any rename.
 break would otherwise emit a space.
 
 Document source style — as opposed to package code — is covered by
-[`docs/guides/LATEX_STYLE_STANDARDS.md`](docs/guides/LATEX_STYLE_STANDARDS.md)
-and enforced by `src/sh/validate_latex_style.sh`. Do not restate it here, and
+[`CONTRIBUTING.md`](CONTRIBUTING.md) and enforced by
+`src/sh/validate_latex_style.sh`. Do not restate it here, and
 do not "simplify" that script's math-spacing check back to a bracket
 expression; it is a depth-tracking scan and `tests/test_infrastructure.py`
 covers it in four directions.
