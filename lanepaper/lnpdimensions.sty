@@ -46,27 +46,29 @@
 % CORE SPACING VALUES
 \linespread{1.20}              % Scales the class baseline: 13.6pt × 1.20 = 16.32pt actual leading
 \setlength{\parskip}{0pt}      % Zero paragraph spacing for grid alignment
-\setlength{\parindent}{\gridunit} % Exactly 1 quantum (~1.2em for 11pt Pagella)
+%% FIX: \parindent is a horizontal indent and must not follow the vertical
+%% spacing quantum; 13.2pt (~1.2em) is the one deliberate literal (ADR-0005).
+\setlength{\parindent}{13.2pt} % Standard indent (~1.2em); deliberate literal
 
 % DERIVED SPACING UNITS
 % These can be used throughout the document for consistent spacing
 \newlength{\halfgridunit}
-\setlength{\halfgridunit}{6.6pt}    % 0.5 × gridunit
+\setlength{\halfgridunit}{0.5\gridunit}    % 6.6pt
 
 \newlength{\quartergridunit}
-\setlength{\quartergridunit}{3.3pt} % 0.25 × gridunit
+\setlength{\quartergridunit}{0.25\gridunit} % 3.3pt
 
 \newlength{\threequartergridunit}
-\setlength{\threequartergridunit}{9.9pt} % 0.75 × gridunit
+\setlength{\threequartergridunit}{0.75\gridunit} % 9.9pt
 
 \newlength{\onehalfgridunit}
-\setlength{\onehalfgridunit}{19.8pt} % 1.5 × gridunit
+\setlength{\onehalfgridunit}{1.5\gridunit} % 19.8pt
 
 \newlength{\doublegridunit}
-\setlength{\doublegridunit}{26.4pt} % 2 × gridunit
+\setlength{\doublegridunit}{2\gridunit} % 26.4pt
 
 \newlength{\triplegridunit}
-\setlength{\triplegridunit}{39.6pt} % 3 × gridunit
+\setlength{\triplegridunit}{3\gridunit} % 39.6pt
 
 % GRID CALCULATION HELPERS
 % For arbitrary multiples and calculations

@@ -1092,7 +1092,7 @@
 %% titlesec's \<level>break hook and made run-in \paragraph fail with
 %% "perhaps a missing \item" (the hook executes the macro mid-heading).
 \providecommand{\paragraphsep}{%
-  \par\vspace{13.2pt}% % 1 grid unit of vertical space
+  \par\vspace{\gridunit}% % 1 grid unit of vertical space
   \noindent%
 }
 
@@ -1378,13 +1378,13 @@
 
 % Grid-aligned here float
 \newenvironment{herefloat}{%
-  \vspace*{\dimexpr\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
+  \vspace*{\dimexpr1\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
   \begin{center}%
   %% FIX: Disable hypcap for floatless captions to avoid ignored-option warnings.
   \captionsetup{hypcap=false}%
 }{%
   \end{center}%
-  \vspace*{\dimexpr\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
+  \vspace*{\dimexpr1\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
 }
 
 % FLOAT QUALITY METRICS
@@ -1762,7 +1762,7 @@
   \renewcommand{\footnoterule}{%
     \vspace*{-3pt}%
     \textcolor{textblack}{\hrule width 0.33\textwidth height 0.4pt}%
-    \vspace*{13.2pt}%
+    \vspace*{\gridunit}%
   }%
 }
 
@@ -2406,14 +2406,14 @@
   % #1 = dimension to round
   % #2 = result dimension register
   \setlength{#2}{#1}%
-  \setlength{\dimen0}{13.2pt}%
+  \setlength{\dimen0}{\gridunit}%
   \divide#2 by \dimen0
   \multiply#2 by \dimen0
   % Check if we need to round up
   \setlength{\dimen1}{#1}%
   \advance\dimen1 by -#2
   \ifdim\dimen1>0.5\gridunit% More than half a grid unit
-    \advance#2 by 13.2pt
+    \advance#2 by \gridunit
   \fi
 }
 
@@ -2541,18 +2541,22 @@
 %
 % ------------------------------------------------------------------------------
 
-% DISPLAY EQUATION SPACING (Grid-Perfect)
-% Context-aware spacing with flexibility for optimal page composition
-\abovedisplayskip=19.8pt plus 3.3pt minus 3.3pt        % 1.5 units ±0.25
-\belowdisplayskip=19.8pt plus 3.3pt minus 3.3pt        % 1.5 units ±0.25
-\abovedisplayshortskip=13.2pt plus 3.3pt minus 3.3pt   % 1 unit ±0.25
-\belowdisplayshortskip=13.2pt plus 3.3pt minus 3.3pt   % 1 unit ±0.25
+% DISPLAY EQUATION SPACING
+% Values in spacing quanta; flexibility lets TeX compose pages. Rationale
+% (ADR-0005): a multi-line display reads as one object, so compact internal
+% leading binds its rows while \abovedisplayskip separates the block from
+% prose; maths rows carry their own vertical bulk and \lineskip guards
+% collisions. Display rows land on no grid; nothing here aligns to one.
+\abovedisplayskip=1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit    % 19.8pt ±3.3pt
+\belowdisplayskip=1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit    % 19.8pt ±3.3pt
+\abovedisplayshortskip=1\gridunit plus 0.25\gridunit minus 0.25\gridunit  % 13.2pt ±3.3pt
+\belowdisplayshortskip=1\gridunit plus 0.25\gridunit minus 0.25\gridunit  % 13.2pt ±3.3pt
 
 % Multi-line equation spacing
 %% FIX: the unconditional \AtBeginDocument \addtolength below adds another
 %% 0.25\gridunit, so \jot ships as 9.9pt (measured), not 6.6pt. Value kept;
 %% the claim is corrected here and there.
-\jot=6.6pt  % 0.5 quanta before the begindocument-hook addition (ships as 9.9pt)
+\jot=0.5\gridunit  % 0.5 quanta (6.6pt) before the begindocument-hook addition (ships as 9.9pt)
 
 % INLINE EQUATION SIZING
 % Compensate for Pagella's larger x-height with subtle scaling
@@ -2665,10 +2669,10 @@
 % DISPLAY MATH CENTERING
 % Ensure equations respect the grid
 \g@addto@macro\normalsize{%
-  \setlength{\abovedisplayskip}{19.8pt plus 3.3pt minus 3.3pt}%
-  \setlength{\belowdisplayskip}{19.8pt plus 3.3pt minus 3.3pt}%
-  \setlength{\abovedisplayshortskip}{13.2pt plus 3.3pt minus 3.3pt}%
-  \setlength{\belowdisplayshortskip}{13.2pt plus 3.3pt minus 3.3pt}%
+  \setlength{\abovedisplayskip}{1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit}%
+  \setlength{\belowdisplayskip}{1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit}%
+  \setlength{\abovedisplayshortskip}{1\gridunit plus 0.25\gridunit minus 0.25\gridunit}%
+  \setlength{\belowdisplayshortskip}{1\gridunit plus 0.25\gridunit minus 0.25\gridunit}%
 }
 
 % ==============================================================================
@@ -2909,7 +2913,7 @@
 % GEOMETRY FOOTER CONFIGURATION
 % Ensures adequate space for page numbers without text collision
 \geometry{
-  footskip=39.6pt,  % 3 grid units from text to baseline of page number
+  footskip=3\gridunit,  % 3 quanta (39.6pt) from text to baseline of page number
   bottom=1.25in     % Maintains existing margin
 }
 
@@ -2958,7 +2962,7 @@
 
 % Add extra space before footer on specific pages
 \newcommand{\protectfooter}{%
-  \vspace{13.2pt}% Add 1 grid unit if content is too close
+  \vspace{\gridunit}% Add 1 grid unit if content is too close
 }
 
 % Force consistent footer position
