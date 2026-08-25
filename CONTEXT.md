@@ -44,16 +44,14 @@ _Avoid_: bundling, embedding
 ### Typography
 
 **Baseline grid**:
-The fixed vertical rhythm every element aligns to. The Package's organising
-constraint — spacing decisions are expressed as multiples of it, not in points.
+The 16.32pt line grid running text actually sits on (`\linespread{1.20}` on
+the class's 13.6pt baseline). Descriptive, not an organising constraint:
+nothing forces elements onto it (ADR-0004, ADR-0005).
 _Avoid_: leading grid, vertical grid, rhythm
 
 **Quantum**:
-The smallest unit of vertical space the grid admits. Spacing is stated in whole
-or half quanta.
-_Avoid_: unit, step, tick
-
-**Grid-locked**:
-Describes a Module that forces its output onto the baseline grid rather than
-merely respecting it — currently headings and mathematics.
-_Avoid_: aligned, snapped
+The 13.2pt unit vertical space values are drawn from (`\gridunit`). Spacing
+is stated in whole or fractional quanta. The quantum is not the baseline and
+does not divide it; spacing in quanta does not produce vertical rhythm
+(ADR-0005).
+_Avoid_: unit, step, tick, grid

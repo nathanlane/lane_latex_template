@@ -317,8 +317,6 @@ The template uses a modular typography system organized in `lanepaper/`:
 
 ### Optional Enhancement Modules
 - `lnpparagraphs.sty` - Advanced paragraph formatting, quotations, dialogue
-- `lnpheadingsgridlocked.sty` - Stricter grid alignment (±0.125 vs ±0.25 units)
-- `lnpmathgridlocked.sty` - Minimal math flexibility (±0.0625 units)
 - `lnphochuli.sty` - Advanced optical adjustments
 - `lnpfontfeatures.sty` - Full Pagella feature access
 - `lnpfontfallbacks.sty` - Compatibility mode with fallback chains

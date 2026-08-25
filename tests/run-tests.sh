@@ -207,19 +207,6 @@ EOF
         probe_failures=$((probe_failures + 1))
     fi
 
-    if ! run_compatibility_probe "standalone-lnpmathgridlocked" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage{lnpmathgridlocked}
-\begin{document}
-\[
-  E = mc^2
-\]
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
     if ! run_compatibility_probe "standalone-lnpfontfeatures" <<'EOF'
 \documentclass[11pt]{article}
 \usepackage{lnpfontfeatures}

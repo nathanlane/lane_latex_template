@@ -4,6 +4,19 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Accepted ADR-0005: `\gridunit` (13.2pt) is a plain spacing quantum with no
+relationship to where text lands; all rhythm and grid-locking claims are
+being removed (issue #73, ADR-0005).
+
+**Removed `lnpheadingsgridlocked.sty` and `lnpmathgridlocked.sty`.** Nothing
+loaded them — not `lanepaper.sty`, not the demo — and their "grid recovery"
+mechanisms were `\vspace{0pt plus X minus X}` glue centred on zero, which
+snaps to nothing. Measured proof that the demo never ran their code: align
+rows in the shipped PDF pitch at 26.1pt (baseline 16.32pt + `\jot` 9.9pt),
+not the 23.1pt the module would set. Their references in README,
+INSTALL, TROUBLESHOOTING, API_REFERENCE, the CONVENTIONS module table, and
+the `run-tests.sh` standalone probe are gone with them.
+
 Consolidated the documentation (issue #52).
 
 **69 markdown files and 16,249 lines down to 18 files and 7,313 lines.** Ten at

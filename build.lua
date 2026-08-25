@@ -13,7 +13,7 @@
   each l3build default is wrong for this repository:
 
     sourcefiles   default matches *.dtx, *.ins and dated .sty names; the
-                  sources here are 16 plain, hand-written .sty files
+                  sources here are 14 plain, hand-written .sty files
     unpackfiles   there is no .ins -- the .dtx/.ins scaffold was deleted in
                   issue #49. Unpack still stages the sources into unpackdir,
                   which is where `install` reads installfiles from.
@@ -45,7 +45,7 @@ textfiles  = {"README.md", "CHANGELOG.md", "LICENSE"}
 ctanreadme = "README.md"
 
 -- `l3build tag <version>` stamps one version and date into every
--- \ProvidesPackage. That is the whole point of adopting it: the 16 modules
+-- \ProvidesPackage. That is the whole point of adopting it: the 14 modules
 -- had drifted to three different version namespaces (v1.1, v1.2, v2.0) while
 -- the repository was tagged v2.1.0.
 tagfiles = {"*.sty"}
