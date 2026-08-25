@@ -68,9 +68,44 @@ Use `\lnp@` for internal lengths, temporary variables, helper commands,
 counters, and boxes — anything with a generic name. Do not prefix environment
 names or colour definitions; LaTeX and `xcolor` manage those namespaces.
 
+The prefix is not a licence to be vague: name for the job, not the type.
+`\lnp@listitemspacing` says what it controls; `\lnp@temp` says nothing and will
+collide with the next person's `\lnp@temp`. Group related definitions together
+so the set is visible at once.
+
+When a public name has to change, keep the old one as an alias and mark it in
+the same line that defines it, so the removal is findable later:
+
+```latex
+% Compatibility alias — DEPRECATED, remove in the next major release
+\let\oldname\newname
+```
+
 Entry points are loaded directly by a document: `lanepaper`, `lnpminimal`,
 `lnpgridoverlay`. Everything else is a module, loaded by `lanepaper` **by
-package name, never by path**. Module resolution depends on `TEXINPUTS`
+package name, never by path**.
+
+| Module | Purpose | Requires |
+|---|---|---|
+| `lnpcolors.sty` | Professional Color System | xcolor |
+| `lnpcompilationfixes.sty` | Simple Compilation Fixes | — |
+| `lnpdimensions.sty` | Page Layout and Spacing | geometry |
+| `lnpfontfallbacks.sty` | Font Fallback System | amssymb, courier, mathpazo, mathptmx, newpxmath, palatino, tgpagella, zi4 |
+| `lnpfontfeatures.sty` | Font Features Module | textcomp |
+| `lnpfonts.sty` | Font System Configuration | amsmath, amssymb, fontenc, inputenc, letterspace, mathalfa, newpxmath, scalefnt, textcase, textcomp, tgpagella, zi4 |
+| `lnpgridoverlay.sty` **(entry point)** | Visual Grid Overlay System | calc, eso-pic, tikz, xcolor |
+| `lnpheadings.sty` | Heading Typography System | etoolbox, lnpcolors, lnpdimensions, titlesec |
+| `lnpheadingsgridlocked.sty` | Grid-Locked Heading System | etoolbox, lnpcolors, lnpdimensions, titlesec |
+| `lnphochuli.sty` | Hochuli Optical Refinements | lnpdimensions, microtype, ragged2e |
+| `lnplists.sty` | List Typography System | enumitem, etoolbox, graphicx, lnpcolors, lnpdimensions |
+| `lnpmathgridlocked.sty` | Grid-Locked Mathematics | etoolbox, lnpdimensions |
+| `lnpmicrotype.sty` | Microtype Configuration | microtype |
+| `lnpminimal.sty` **(entry point)** | Minimal Typography | amsmath, amssymb, array, booktabs, caption, enumitem, etoolbox, fontenc, geometry, graphicx, iftex, inputenc, tgpagella, titlesec, xcolor, zi4 |
+| `lnpparagraphs.sty` | Paragraph Typography | etoolbox, lettrine, lnpcolors, lnpdimensions |
+
+Loading a module on its own works where its own `\RequirePackage` line covers
+its dependencies; the table above is generated from those lines, not
+maintained by hand. Module resolution depends on `TEXINPUTS`
 covering `./lanepaper`, which the `Makefile`, `.latexmkrc`, `compile.sh`, and
 the test scripts all set; once installed into a texmf tree that is no longer
 needed.
@@ -132,8 +167,8 @@ any rename.
 break would otherwise emit a space.
 
 Document source style — as opposed to package code — is covered by
-[`docs/guides/LATEX_STYLE_STANDARDS.md`](docs/guides/LATEX_STYLE_STANDARDS.md)
-and enforced by `src/sh/validate_latex_style.sh`. Do not restate it here, and
+[`CONTRIBUTING.md`](CONTRIBUTING.md) and enforced by
+`src/sh/validate_latex_style.sh`. Do not restate it here, and
 do not "simplify" that script's math-spacing check back to a bracket
 expression; it is a depth-tracking scan and `tests/test_infrastructure.py`
 covers it in four directions.

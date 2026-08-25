@@ -162,7 +162,7 @@ rebuild. Always clean when switching between TeX Live years.
 **Solutions**:
 Note: the base lines of the grid overlay step at the true body baseline (16.32pt);
 the 13.2pt quantum is a spacing unit, not the baseline. See
-`docs/typography/BASELINE-GRID-DECISION.md`.
+`docs/adr/0004-baseline-grid-is-a-spacing-quantum.md`.
 
 1. Use grid visualization:
    ```latex

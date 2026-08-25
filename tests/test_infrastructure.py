@@ -259,3 +259,37 @@ def test_build_lua_stamps_versions_where_the_package_keeps_them():
     source = (ROOT / "build.lua").read_text(encoding="utf-8")
     assert re.search(r"^tagfiles\s*=\s*\{\"\*\.sty\"\}", source, re.M)
     assert "\\\\ProvidesPackage" in source
+
+
+def test_every_relative_markdown_link_resolves():
+    """Issue #52: consolidation deletes documents other documents link to.
+
+    `CHANGELOG.md` is exempt because its entries are a historical record --
+    several point at files that have since been deleted, and rewriting past
+    entries to keep the links green would falsify the record. `docs/handoff/`
+    and `docs/archive/` are working and historical material, not published
+    documentation.
+
+    Link targets inside code fences and inline code are skipped: LaTeX like
+    `\\mathcal{L}[f](s)` reads as a markdown link otherwise.
+    """
+    link = re.compile(r"\[[^\]]*\]\(([^)\s#]+)(?:#[^)]*)?\)")
+    fence = re.compile(r"^\s*(```|~~~)")
+    broken = []
+    for rel in run_git(["ls-files", "*.md"]).stdout.split():
+        if rel == "CHANGELOG.md" or rel.startswith(("docs/handoff/", "docs/archive/")):
+            continue
+        path = ROOT / rel
+        in_fence = False
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if fence.match(line):
+                in_fence = not in_fence
+                continue
+            if in_fence:
+                continue
+            for target in link.findall(re.sub(r"`[^`]*`", "", line)):
+                if target.startswith(("http://", "https://", "mailto:")):
+                    continue
+                if not (path.parent / target).resolve().exists():
+                    broken.append(f"{rel}:{number} -> {target}")
+    assert broken == []

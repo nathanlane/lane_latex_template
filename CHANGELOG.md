@@ -4,6 +4,58 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Consolidated the documentation (issue #52).
+
+**69 markdown files and 16,249 lines down to 18 files and 7,313 lines.** Ten at
+the root, plus `docs/adr/`, `docs/handoff/`, `tests/README.md` and the two
+`.github/` templates. `docs/archive/`, `docs/development/`, `docs/technical/`,
+`docs/style/`, `docs/typography/`, `docs/guides/` and `docs/package/` are gone.
+
+Most of it was deletion: 22 files had not been touched since a single
+2025-07-09 import, and `docs/archive/` was a second, worse copy of git history
+that landed in every grep. What was reference-grade was folded rather than
+dropped:
+
+- `CUSTOM_COMMANDS.md` into `API_REFERENCE.md`, which goes from **83
+  documented commands to 109**. The package defines about 385 public macros,
+  so this is still short — but the gap is now visible in one file.
+- The five module documents, the bibliography guide, and the spacing-quantum
+  document into `API_REFERENCE.md` as system sections.
+- `STYLE_GUIDE.md` and `docs/package/README.md` selectively: only the sections
+  not already covered. Seven of eleven, and six of twelve, respectively.
+- `LATEX_STYLE_STANDARDS.md` into `CONTRIBUTING.md`, which is what
+  `CONVENTIONS.md` already deferred to for document source style.
+- `docs/technical/TESTING.md` (894 lines) into `tests/README.md`, rewritten
+  rather than concatenated, and corrected: it still described `paperstyle.sty`
+  and `\input{paper/preamble.tex}`.
+- `docs/style/CHANGELOG.md` into this file as its earliest history. It covered
+  a 2024-06-30 release that nothing else recorded.
+
+`docs/typography/BASELINE-GRID-DECISION.md` was **promoted to
+[ADR-0004](docs/adr/0004-baseline-grid-is-a-spacing-quantum.md)**. It was
+already a decision record and predated `docs/adr/`.
+
+The module table in `CONVENTIONS.md` section 3 is generated from the
+`\RequirePackage` lines rather than maintained by hand. The one it replaces
+listed 9 of 16 modules.
+
+`tests/test_infrastructure.py` gains a guard that every relative markdown link
+resolves, with `CHANGELOG.md` exempt: its entries point at files that have
+since been deleted, and rewriting past entries to keep links green would
+falsify the record.
+
+Two ADR citations of deleted files are annotated in place rather than rewritten
+(ADR-0001's fork audit, ADR-0002's roadmap); an accepted ADR is a record, not a
+live description.
+
+One document did contradict the code. `docs/GRID_SYSTEM_REFERENCE.md` still
+taught that `\gridunit` is "11pt body × 1.20 leading = 13.2pt" — the exact
+premise ADR-0004 overturned. It is deleted.
+
+`AGENTS.md` and `CONTRIBUTING.md` both listed the pre-commit gates. `AGENTS.md`
+now names the three targets and defers to `CONTRIBUTING.md` and
+`tests/README.md` for what they cover.
+
 Cut the Makefile from 24 targets to 11 (issue #51).
 
 The aliases are deleted, not forwarded. Four targets used to run the tests and
@@ -743,3 +795,45 @@ All 2026-08-12 entries below constitute the release.
 - Resolved the active merge marker in `main.tex` without changing the intended LaTeX layout.
 - Updated active build and test references from the removed package name to `lltpaperstyle`.
 - Added pytest coverage for build-target drift, executable shell harnesses, root changelog presence, active package references, and the minimal LaTeX regression harness.
+
+## 2024-06-30 and earlier
+
+Folded in from `docs/style/CHANGELOG.md` when the docs were consolidated
+(issue #52). It was a second changelog for the style modules, in Keep a
+Changelog format, covering history older than anything above. Its entries are
+reproduced verbatim; the dates and wording are as they were written.
+
+### Pre-2026 module changelog, unreleased at the time
+
+### Added
+- Sophisticated list typography system with multiple environments
+- Professional testing framework with visual output validation
+- Comprehensive typography documentation
+- Grid-aligned table system
+- Enhanced citation support with biblatex
+- Professional footnote system optimized for TeX Gyre Pagella
+- Testing infrastructure with Make targets
+- Repository audit documentation
+
+### Changed
+- Updated from Bembo (fbb) to TeX Gyre Pagella font system
+- Bullet colors adjusted from 45% to 20% gray for better visibility
+- Renamed `\endashmark` to `\dashmark` to avoid conflicts
+- Improved section heading typography with color and tracking
+
+### Fixed
+- LaTeX compilation errors with duplicate command definitions
+- Cross-reference warnings in test fixtures
+- Bibliography processing in test suite
+- Overleaf "Incomplete \iffalse" error by properly protecting @ commands in user macros
+- Microtype warnings for unavailable character slots (now gracefully handled)
+
+### v0.1.0 — 2024-06-30
+
+### Added
+- Initial LaTeX template with sophisticated typography
+- TeX Gyre Pagella font integration
+- Modular scale typography system
+- Chicago Manual of Style citation support
+- Professional appendix management
+- Baseline grid implementation

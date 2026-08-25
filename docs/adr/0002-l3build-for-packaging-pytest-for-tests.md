@@ -46,7 +46,9 @@ pdfLaTeX-only.
 
 So `build.lua` declares no test files — a normal configuration — and CI keeps
 running `python3 -m pytest -q` unchanged. This supersedes the l3build migration
-planned in `docs/PACKAGE_ROADMAP.md` (T-402), which is withdrawn.
+planned in `docs/PACKAGE_ROADMAP.md` (T-402), which is withdrawn. That file was
+deleted on 2026-08-25 by issue #52; the withdrawal stands, and the roadmap is in
+git history.
 
 ## Consequences
 
