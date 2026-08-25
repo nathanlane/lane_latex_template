@@ -320,7 +320,7 @@ Bold emphasis for critical terms.
 Technical terms (italic).
 
 ```latex
-The \term{baseline grid} ensures vertical rhythm.
+The \term{baseline grid} sits at 16.32pt.
 ```
 
 #### `\person{name}`
@@ -571,11 +571,11 @@ Nested quotes.
 ### Enhanced Table Environments
 
 #### `gridtable`
-Table with automatic grid-aligned row height.
+Table with the standard quantum-derived row height.
 
 ```latex
 \begin{gridtable}[tbp]
-  \caption{Grid-Aligned Table}
+  \caption{Table with Standard Row Height}
   \centering
   \begin{tabular}{lrr}
     \toprule
@@ -643,13 +643,13 @@ Professional notes following QJE style.
 ### Figure Commands
 
 #### `gridfigure`
-Figure with grid-aligned dimensions.
+Figure with height rounded to a quantum multiple.
 
 ```latex
 \begin{gridfigure}[tbp]
   \centering
   \gridincludegraphics[width=0.8\textwidth]{figure.pdf}
-  \caption{Grid-aligned figure}
+  \caption{Figure with quantum-rounded height}
 \end{gridfigure}
 ```
 
@@ -931,17 +931,17 @@ Display the baseline-grid overlay (lines at the real \baselineskip).
 #### `\hidegrid`
 Hide the grid overlay.
 
-### Grid-Aligned Commands
+### Quantum-Spacing Commands
 
 #### `\gridincludegraphics[options]{file}`
-Include graphics with height rounded to grid.
+Include graphics with height rounded to a quantum multiple.
 
 ```latex
 \gridincludegraphics[width=0.8\textwidth]{figure.pdf}
 ```
 
 #### `\vspacegrid{units}`
-Add grid-aligned vertical space.
+Add vertical space in whole quanta.
 
 ```latex
 \vspacegrid{2}  % Add 2 grid units
@@ -1466,14 +1466,14 @@ The module provides semantic commands for common uses:
 
 ### Overview
 
-The dimensions module (`lnpdimensions.sty`) manages page geometry and implements the 13.2pt spacing quantum system for consistent vertical rhythm (the body baseline measures 16.32pt).
+The dimensions module (`lnpdimensions.sty`) manages page geometry and implements the 13.2pt spacing quantum --- the unit spacing values are stated in (the body baseline measures 16.32pt).
 
 ### Spacing Quantum System
 
 #### Foundation
 - **Base unit**: 13.2pt spacing quantum (nominal 11pt × 1.20; the actual baseline measures 16.32pt)
 - **Grid philosophy**: All vertical spacing in multiples of base unit
-- **Purpose**: Consistent vertical rhythm throughout document
+- **Purpose**: Spacing values drawn from one quantum scale
 
 #### Grid Units
 ```latex
@@ -1567,15 +1567,10 @@ The module provides three paragraph formatting styles:
 \hidegrid  % Hide grid lines
 ```
 
-#### Grid-Aligned Elements
+#### Quantum-Sized Elements
 ```latex
-% Ensure element height is grid-multiple
-\begin{gridbox}
-  Content automatically sized to grid
-\end{gridbox}
-
-% Manual grid alignment
-\vspace{\gridunit minus 3.3pt}  % Snap to grid
+% Manual quantum spacing (coefficient form: a bare register truncates glue)
+\vspace{1\gridunit minus 0.25\gridunit}  % One quantum, shrinkable
 ```
 
 ### Page Layout Options
@@ -1607,7 +1602,7 @@ The module provides three paragraph formatting styles:
 
 #### Grid Calculations
 ```latex
-% Calculate grid-aligned dimensions
+% Derive lengths from the quantum
 \newlength{\myheight}
 \setlength{\myheight}{10\gridunit}  % 132pt
 
@@ -1627,9 +1622,9 @@ The module provides three paragraph formatting styles:
 
 ### Best Practices
 
-#### Maintaining Grid Alignment
+#### Staying on the Quantum Scale
 
-1. **Use grid units** for all vertical spacing
+1. **Use quantum units** for all vertical spacing
 2. **Avoid arbitrary dimensions** like `\vspace{1cm}`
 3. **Test with grid overlay** during development
 4. **Account for line height** in custom environments
@@ -1648,10 +1643,9 @@ The module provides three paragraph formatting styles:
 
 ### Troubleshooting
 
-#### Broken Grid Alignment
-- Check for non-grid spacing
-- Verify font size changes maintain grid
-- Use `\showgrid` to visualize
+#### Off-Scale Spacing
+- Check for spacing not stated in quanta
+- Use `\showgrid` to visualize line positions
 
 #### Page Overfull/Underfull
 - Adjust flexible spacing
@@ -1665,7 +1659,7 @@ The module provides three paragraph formatting styles:
 \begin{figure}[tb]
   \centering
   \includegraphics[height=10\gridunit]{image}
-  \caption{Grid-aligned figure}
+  \caption{Figure with quantum-rounded height}
 \end{figure}
 ```
 
@@ -1925,7 +1919,7 @@ Inline paragraph heading style...
 
 ### Overview
 
-The lists module (`lists.sty`) implements sophisticated list typography with multiple styles, perfect grid alignment, and professional aesthetics.
+The lists module (`lists.sty`) implements sophisticated list typography with multiple styles, quantum-derived spacing, and professional aesthetics.
 
 ### List Types
 
@@ -2120,7 +2114,7 @@ Lists after headings automatically have appropriate spacing:
 \subsection{Key Points}
 \begin{itemize}
 \item First paragraph after list is flush left
-\item Spacing is grid-aligned
+\item Spacing is stated in quanta
 \end{itemize}
 No indent here due to list above.
 ```
@@ -2563,7 +2557,7 @@ The system uses a two-pass auxiliary file mechanism:
 \end{table}
 ```
 
-#### Grid-Aligned Tables
+#### Tables with Standard Row Heights
 
 ```latex
 % Standard rows (~21.8pt measured: \arraystretch 1.2 × 16.32pt + 2.2pt)
@@ -2643,7 +2637,7 @@ The system uses a two-pass auxiliary file mechanism:
 \tryherefigure{...}     % Attempts [h], falls back to [tbp]
 \forceherefigure{...}   % Absolute placement
 \begin{herefloat}
-  % Grid-aligned here placement
+  % Standard-row-height here placement
 \end{herefloat}
 
 % Visual balance
@@ -2758,7 +2752,7 @@ The style package implements three complementary typographic philosophies:
 - Manually adjust spacing with `\vspace{}` or `\hspace{}`
 - Use `\textbf{}` and `\textit{}` for emphasis - use `\emph{}` semantically
 - Override color schemes - use provided semantic color commands
-- Break the quantum rhythm with custom line spacing
+- Introduce off-scale spacing with custom line spacing
 
 ### Text Typography Standards
 
@@ -3336,7 +3330,7 @@ ResNet uses skip connections~\cite{tutorial2023deep}.
 ```latex
 % WRONG: Manual spacing
 \section{Title}\vspace{10pt}
-This breaks the quantum rhythm.
+This departs from the quantum scale.
 
 % WRONG: Presentational formatting  
 This is \textbf{important} text.
