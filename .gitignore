@@ -75,6 +75,10 @@ texput.log
 build/
 dist/
 
+# l3build output: `build/` is its work area, and `l3build ctan` drops the
+# finished archive at the repository root.
+*-ctan.zip
+
 # OS-specific files
 .DS_Store
 Thumbs.db

@@ -228,6 +228,69 @@ check-deps:
 	@# FIX: fail loudly when the script is missing instead of faking health.
 	$(SRC_DIR)/sh/check-packages.sh
 
+# ==============================================================================
+# Packaging and release
+# ==============================================================================
+# l3build handles packaging only; pytest remains the test harness and
+# build.lua declares no test files. See
+# docs/adr/0002-l3build-for-packaging-pytest-for-tests.md.
+L3BUILD = l3build
+# Recursive assignment: `date` runs when the recipe runs, not at parse time.
+RELEASE_DATE = $(shell date +%Y-%m-%d)
+
+# Install into TEXMFHOME so \usepackage{lanepaper} resolves outside this
+# repository. Repository builds are unaffected: TEXINPUTS above puts
+# ./lanepaper first, so the working tree always wins over an installed copy.
+.PHONY: install
+install:
+	@echo "==> Installing lanepaper into $$(kpsewhich -var-value=TEXMFHOME)..."
+	$(L3BUILD) install
+
+.PHONY: uninstall
+uninstall:
+	$(L3BUILD) uninstall
+
+# Build lanepaper-ctan.zip without submitting it.
+.PHONY: ctan
+ctan:
+	$(L3BUILD) ctan
+
+# make release VERSION=x.y.z
+#
+# Stamps one version and date into every \ProvidesPackage, promotes the
+# CHANGELOG's Unreleased section, commits, and tags. Pushing is deliberate
+# and separate:
+#
+#     git push origin main --follow-tags
+#
+# Pushing the tag is what builds the CTAN archive and publishes the GitHub
+# release (.github/workflows/release.yml). Submitting to CTAN stays a manual
+# step, because it is not reversible:
+#
+#     l3build upload x.y.z --email <address>
+.PHONY: release
+release:
+	@test -n "$(VERSION)" || { echo "ERROR: make release VERSION=x.y.z"; exit 1; }
+	@echo "$(VERSION)" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$$' \
+		|| { echo "ERROR: VERSION must be x.y.z, got '$(VERSION)'"; exit 1; }
+	@test -z "$$(git status --porcelain)" \
+		|| { echo "ERROR: working tree is not clean"; exit 1; }
+	@git rev-parse -q --verify "refs/tags/v$(VERSION)" >/dev/null \
+		&& { echo "ERROR: tag v$(VERSION) already exists"; exit 1; } || true
+	@echo "==> Stamping v$(VERSION) into every \\ProvidesPackage..."
+	$(L3BUILD) tag $(VERSION)
+	@echo "==> Promoting the CHANGELOG's Unreleased section..."
+	@grep -q '^## Unreleased$$' CHANGELOG.md \
+		|| { echo "ERROR: CHANGELOG.md has no '## Unreleased' section"; exit 1; }
+	@# The em dash is written as raw UTF-8 bytes, not \x{2014}: that escape
+	@# upgrades the string to character semantics, so perl re-encodes the whole
+	@# file and mangles every em dash already in it. Byte mode leaves them be.
+	@perl -0pi -e 's/^## Unreleased$$/## Unreleased\n\n## v$(VERSION) \xe2\x80\x94 $(RELEASE_DATE)/m' CHANGELOG.md
+	@git add -A
+	@git commit -q -m "release: v$(VERSION)"
+	@git tag -a "v$(VERSION)" -m "v$(VERSION)"
+	@echo "==> Tagged v$(VERSION). Push with: git push origin main --follow-tags"
+
 # Testing targets
 .PHONY: test
 test:
@@ -305,6 +368,12 @@ help:
 	@echo "Setup requirements:"
 	@echo "  macOS: brew install fswatch"
 	@echo "  Linux: sudo apt-get install inotify-tools"
+	@echo ""
+	@echo "Packaging targets:"
+	@echo "  make install    - Install the package into TEXMFHOME (l3build)"
+	@echo "  make uninstall  - Remove it from TEXMFHOME"
+	@echo "  make ctan       - Build lanepaper-ctan.zip without submitting"
+	@echo "  make release VERSION=x.y.z - Stamp, changelog, commit, tag"
 	@echo ""
 	@echo "Testing targets:"
 	@echo "  make test       - Run all tests"
