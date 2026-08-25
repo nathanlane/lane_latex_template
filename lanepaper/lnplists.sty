@@ -80,6 +80,10 @@
 \let\listhalfquantum\lnp@listhalfquantum
 \let\listquarterquantum\lnp@listquarterquantum
 \let\listquantum\lnp@listquantum
+% Pre-rename names shipped in v2.1.0; deprecated, kept until the next major
+\let\listhalfbaseline\lnp@listhalfquantum
+\let\listquarterbaseline\lnp@listquarterquantum
+\let\listbaselineskip\lnp@listquantum
 \let\listhangindent\lnp@listhangindent
 \let\listnestedindent\lnp@listnestedindent
 \let\listlabelsep\lnp@listlabelsep
@@ -259,7 +263,7 @@
   labelsep=\lnp@listlabelsep,
   itemsep=\lnp@listhalfquantum,                    % Generous spacing
   parsep=0pt,
-  topsep=\lnp@listquantum,                     % Full baseline above/below
+  topsep=\lnp@listquantum,                     % Full quantum above/below
   partopsep=0pt,
   font=\normalfont\bfseries\color{textblack}    % Bold items for emphasis
 }
@@ -344,7 +348,7 @@
 % Ensures consistent quantum rhythm
 % Adjusted for more traditional spacing (0.5 quanta)
 
-% Remove the quarter baseline reduction to get full topsep spacing
+% Remove the quarter-quantum reduction to get full topsep spacing
 % This gives us 6.6pt (0.5 grid units) before/after lists
 % Comment out these lines to restore the original minimal spacing
 %\setlist[itemize]{
