@@ -926,7 +926,7 @@ Bringhurst and Butterick bands. That suits TeX Gyre Pagella's large x-height, a
 ### Grid Display
 
 #### `\showgrid`
-Display the grid overlay (true-baseline and quantum lines).
+Display the baseline-grid overlay (lines at the real \baselineskip).
 
 #### `\hidegrid`
 Hide the grid overlay.
@@ -1560,7 +1560,7 @@ The module provides three paragraph formatting styles:
 ```latex
 % In document preamble
 \usepackage{lnpdimensions}
-\usepackage{paper/gridoverlay}
+\usepackage{lnpgridoverlay}
 
 % In document
 \showgrid  % Display grid lines
