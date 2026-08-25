@@ -3,8 +3,9 @@
 ## Building
 
 ```bash
-make          # compile main.tex → main.pdf
-make clean    # remove auxiliary files
+make          # compile demo/main.tex → main.pdf
+make clean    # remove generated output, the PDF included
+make help     # list every target
 ```
 
 Requires TeX Live 2020+ with `tgpagella`, `inconsolata`, `newpx`, `mathalfa`,
@@ -12,18 +13,18 @@ and `booktabs`. Verify your installation with `make check-deps`.
 
 ## Pre-commit Gates
 
-All four must pass before committing (`make lint`, `make build`, and
-`python3 -m pytest -q` are gated by `AGENTS.md`; the shell harness is
-documented in `docs/technical/TESTING.md`):
+All three must pass before committing, and they are exactly what CI runs:
 
 ```bash
-make lint              # chktex on demo/*.tex, demo/appendices/*.tex
-make build             # latexmk full compile → main.pdf
-bash tests/run-tests.sh  # shell harness: LaTeX fixtures + compatibility probes
-python3 -m pytest -q   # regression tests: measured values, contract assertions
+make lint     # chktex on demo/*.tex and demo/appendices/*.tex, then the
+              # math-spacing checker (src/sh/validate_latex_style.sh)
+make build    # latexmk full compile → main.pdf
+make test     # python3 -m pytest -q, then bash tests/run-tests.sh
 ```
 
-`make test` is a convenience alias for `bash tests/run-tests.sh`.
+`make test` runs both harnesses because issue #51 removed the four separate
+test targets: what CI runs and what you run can no longer drift apart. The
+shell harness is documented in `docs/technical/TESTING.md`.
 
 The pytest harness requires `pdftotext` (Poppler) for PDF text assertions; it
 skips those assertions cleanly when `pdftotext` is unavailable.

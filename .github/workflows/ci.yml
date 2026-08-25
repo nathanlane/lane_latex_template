@@ -49,11 +49,11 @@ jobs:
       - name: Build LaTeX document
         run: make build
 
-      - name: Run pytest suite
-        run: python3 -m pytest -q
-
-      - name: Run shell test suite
-        run: bash tests/run-tests.sh
+      # `make test` is pytest followed by the shell harness. Issue #51 collapsed
+      # the two steps into one target so that what CI runs and what a
+      # contributor runs cannot drift apart.
+      - name: Run the test suite
+        run: make test
 
       - name: Upload main.pdf
         if: always()

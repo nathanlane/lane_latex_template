@@ -12,7 +12,7 @@ This guide explains the bibliography system for the Lane LaTeX Template, which u
 
 2. **Compile your document:**
    ```bash
-   make pdf  # Full compilation with bibliography
+   make  # latexmk runs biber and re-runs LaTeX as needed
    ```
 
 ## Citation Commands
@@ -117,10 +117,9 @@ Edit `references.bib` following these examples:
 
 ### Using Make (Recommended)
 ```bash
-make pdf        # Full compilation with bibliography
-make quick      # Quick compilation (no bibliography update)
-make clean      # Remove auxiliary files
-make validate   # Check style compliance
+make            # latexmk runs biber and re-runs LaTeX as needed
+make clean      # Remove generated output, the PDF included
+make lint       # Check style compliance
 ```
 
 ### Manual Compilation

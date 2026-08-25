@@ -45,7 +45,7 @@ of font failures.
 
 2. **Check your LaTeX installation**:
    ```bash
-   make check
+   make check-deps
    ```
 
 > **Overleaf note (unverified):** the template resolves its modules via
@@ -64,19 +64,14 @@ of font failures.
    mpm --install=<package-name>
    ```
 
-4. **Run setup**:
+4. **Build the paper**:
    ```bash
-   make setup
+   make
    ```
 
-5. **Test compilation**:
+5. **Run the tests**:
    ```bash
-   make test-quick
-   ```
-
-6. **Build the paper**:
-   ```bash
-   make pdf
+   make test
    ```
 
 ## Platform-Specific Instructions
@@ -236,7 +231,7 @@ mpm --install=tgpagella
    ```bash
    # Clean and rebuild
    make clean
-   make pdf
+   make build
    ```
 
 4. **Font-related warnings**:
@@ -297,17 +292,14 @@ If you're having trouble with the full installation, try the minimal setup:
 After installation, verify everything works:
 
 ```bash
-# Check all tools
-make check
+# Check the required LaTeX packages
+make check-deps
 
-# Run minimal test
-make test-quick
-
-# Run full test suite
+# Run the full test suite
 make test
 
-# Show diagnostic information
-make diagnose
+# List every target
+make help
 ```
 
 ## Typography System Architecture

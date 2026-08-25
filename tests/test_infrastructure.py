@@ -39,11 +39,32 @@ def test_no_unresolved_merge_markers_in_active_sources():
     assert offenders == []
 
 
-def test_makefile_exposes_agents_targets():
+def test_makefile_exposes_one_target_per_job():
+    """Issue #51: the aliases were deleted, not turned into forwarders.
+
+    Four targets used to run the tests and nobody could tell which one CI
+    used. The set is asserted exactly, so a convenience alias cannot creep
+    back in unnoticed -- adding a genuinely new job means updating this list
+    on purpose.
+    """
     makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
-    for target in ("build", "lint", "fmt"):
-        assert re.search(rf"^\.PHONY:.*\b{target}\b", makefile, re.MULTILINE)
-        assert re.search(rf"^{target}:", makefile, re.MULTILINE)
+    declared = set(re.findall(r"^\.PHONY:\s*(\S+)", makefile, re.MULTILINE))
+    assert declared == {
+        "build",
+        "lint",
+        "test",
+        "clean",
+        "check-deps",
+        "watch",
+        "install",
+        "uninstall",
+        "ctan",
+        "release",
+        "help",
+    }
+    # AGENTS.md gates these two by name.
+    for target in ("build", "lint"):
+        assert re.search(rf"^{target}:", makefile, re.MULTILINE), target
 
 
 def test_required_shell_harnesses_are_executable():

@@ -24,14 +24,14 @@ Run these commands to test your setup:
 # Run all tests
 make test
 
-# Quick compilation test
-make test-quick
+# Full test suite: pytest, then the shell harness
+make test
 
 # Validate LaTeX style compliance
-make validate
+make lint
 
-# Test from clean state
-make test-clean
+# Test from a clean state
+make clean && make test
 
 # View test results
 ls tests/compilation/*.pdf
@@ -168,10 +168,9 @@ VERBOSE=1 ./tests/run-tests.sh
 
 #### Makefile Targets
 ```bash
-make test          # Run complete test suite
-make test-quick    # Run minimal test only
-make test-compile  # Test LaTeX compilation
-make test-clean    # Test from clean state (removes aux files first)
+make test    # pytest, then the shell harness -- what CI runs
+make lint    # chktex, then the math-spacing checker
+make clean   # remove generated output before a from-scratch run
 ```
 
 ### Test Output
@@ -383,10 +382,10 @@ The project includes an automated style validator that enforces typography best 
 
 #### Running Style Validation
 ```bash
-# Validate all LaTeX files
-make validate
+# Validate all LaTeX files (chktex, then the math-spacing checker)
+make lint
 
-# Run validator directly
+# Run the math-spacing validator directly
 ./src/sh/validate_latex_style.sh
 
 # Validate specific file
@@ -434,8 +433,8 @@ make validate
 Python scripts are automatically formatted and checked:
 
 ```bash
-# Format active TeX sources
-make format
+# Format Python sources
+black src/py/
 
 # Check Python style
 black --check src/py/
@@ -588,12 +587,13 @@ jobs:
         root_file: main.tex
         latexmk_use_xelatex: true
         
+    - name: Lint
+      run: make lint
+
     - name: Run Tests
       run: make test
-      
-    - name: Validate Style
-      run: make validate
-      
+
+
     - name: Upload PDFs
       uses: actions/upload-artifact@v2
       with:
@@ -614,11 +614,11 @@ All test scripts provide proper exit codes:
 ### 1. **Regular Testing**
 ```bash
 # Before commits
-make test-quick
-make validate
+make lint
+make test
 
-# Before pull requests  
-make test-clean
+# Before pull requests
+make clean && make build && make test
 ```
 
 ### 2. **Debug Workflow**
@@ -666,8 +666,8 @@ VERBOSE=1 ./tests/run-tests.sh
 # See detailed report
 ./src/sh/validate_latex_style.sh main.tex | less
 
-# Fix automatically (where possible)
-make format
+# Fix Python formatting automatically
+black src/py/
 ```
 
 #### 3. **Grid Misalignment**
