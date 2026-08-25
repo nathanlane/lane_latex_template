@@ -464,7 +464,7 @@ Features:
 Optimized for academic papers:
 
 ```latex
-% Display equations with grid alignment
+% Display equations with quantum-derived spacing
 \begin{equation}
   f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
 \end{equation}
@@ -575,7 +575,7 @@ See **[CONTRIBUTING.md](CONTRIBUTING.md)** for build instructions, test commands
 
 ### Development Guidelines
 
-1. **Typography first**: Don't break the spacing quantum rhythm
+1. **Typography first**: Don't introduce spacing values off the quantum scale
 2. **Test everything**: Run `make test` before commits
 3. **Document changes**: Update relevant documentation
 4. **Follow style**: One sentence per line in LaTeX

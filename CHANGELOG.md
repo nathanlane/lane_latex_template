@@ -19,6 +19,13 @@ deprecated names, corrected two stale baseline comments, and cleared the
 remaining grid-alignment claims the first pass missed ("Grid Compliance",
 "Grid-Aligned" headings and captions). Two standalone regression probes added.
 
+Swept the last old-model vocabulary from the documentation: `README.md` and
+`API_REFERENCE.md` no longer claim rhythm or grid alignment (the worst was
+"The baseline grid ensures vertical rhythm"), the documented-but-nonexistent
+`gridbox` environment example is gone, a documented `\vspace` example no
+longer carries the bare-register glue trap, and the demo appendix's
+"Grid-Aligned" heading and caption are renamed (2 pages changed, both read).
+
 Accepted ADR-0005: `\gridunit` (13.2pt) is a plain spacing quantum with no
 relationship to where text lands; all rhythm and grid-locking claims are
 being removed (issue #73, ADR-0005).
