@@ -1,0 +1,80 @@
+name: Release
+
+# Tagging is done locally by `make release VERSION=x.y.z`; pushing the tag is
+# what triggers this. Submitting to CTAN stays manual and deliberate
+# (`l3build upload x.y.z --email <address>`) -- this workflow never uploads.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    name: Build CTAN archive
+    runs-on: ubuntu-latest
+    container:
+      image: texlive/texlive:TL2025-historic
+    timeout-minutes: 30
+
+    steps:
+      - name: Install git
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends git unzip
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The container runs as a different user than the one owning the
+      # checkout, so git refuses the repo as "dubious ownership".
+      - name: Mark workspace safe for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Build the archive
+        run: l3build ctan
+
+      # `l3build ctan` runs `check`, which is a deliberate no-op here
+      # (ADR-0002), so nothing else would notice a build.lua regression that
+      # silently dropped sources from the archive.
+      - name: Verify the archive contents
+        run: |
+          count=$(unzip -l lanepaper-ctan.zip | grep -c '\.sty$')
+          expected=$(ls lanepaper/*.sty | wc -l)
+          echo "archive has $count .sty, working tree has $expected"
+          test "$count" -eq "$expected"
+          unzip -l lanepaper-ctan.zip | grep -q 'README.md'
+          unzip -l lanepaper-ctan.zip | grep -q 'LICENSE'
+
+      - name: Upload the archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctan-archive
+          path: lanepaper-ctan.zip
+          if-no-files-found: error
+
+  publish:
+    name: Publish GitHub release
+    needs: archive
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download the archive
+        uses: actions/download-artifact@v4
+        with:
+          name: ctan-archive
+
+      # gh is preinstalled on ubuntu-latest; the texlive container has no
+      # package for it, which is why this is a second job.
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" lanepaper-ctan.zip \
+            --title "${GITHUB_REF_NAME}" \
+            --generate-notes

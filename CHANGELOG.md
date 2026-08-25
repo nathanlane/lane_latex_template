@@ -4,6 +4,34 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Adopted l3build for packaging and release (issue #50).
+
+`build.lua` at the repository root drives four targets: `install` copies the
+package into `TEXMFHOME`, `tag` stamps one version and date into every
+`\ProvidesPackage`, `ctan` builds the archive, and `upload` submits it. The
+Makefile stays the entry point for humans: `make install`, `make ctan`, and
+`make release VERSION=x.y.z`.
+
+l3build is packaging only. `build.lua` declares **no test files** and CI keeps
+running `python3 -m pytest -q` unchanged - see
+[ADR-0002](docs/adr/0002-l3build-for-packaging-pytest-for-tests.md) for why
+log-diffing with `l3build check` is a poor fit for a package that loads this
+many third-party dependencies.
+
+`l3build tag` is what fixes the version drift: the 16 modules carried three
+different version namespaces (`v1.1`, `v1.2`, `v2.0`) while the repository was
+tagged `v2.1.0`. `\ProvidesPackage` is the only place a version appears in the
+package, so one stamping pass covers all of it. Nothing is stamped yet - the
+next `make release` does it.
+
+Pushing a `v*` tag now builds the CTAN archive and publishes a GitHub release
+(`.github/workflows/release.yml`). Submission to CTAN stays a manual step,
+because it cannot be undone.
+
+The archive currently ships the 16 `.sty` files plus `README.md`,
+`CHANGELOG.md`, and `LICENSE`. It has no typeset manual; documentation is
+issue #52's, which is also the remaining CTAN gate.
+
 Migrated to the LaTeX2e hook system (issue #56).
 
 All **11** `\AtBeginDocument` registrations are gone - the issue said seven,

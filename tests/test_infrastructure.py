@@ -214,3 +214,27 @@ def test_entry_points_require_a_format_new_enough_for_hooks():
     for name in ("lanepaper", "lnpminimal"):
         source = (ROOT / "lanepaper" / f"{name}.sty").read_text(encoding="utf-8")
         assert "\\NeedsTeXFormat{LaTeX2e}[2020/10/01]" in source, name
+
+
+def test_build_lua_declares_no_test_files():
+    """ADR-0002: l3build packages, pytest tests. Nothing declares test files.
+
+    This is the one part of build.lua that is easy to undo by accident -- an
+    l3build default, or a copied config, quietly reintroduces log-diffing and
+    the `ctan` target starts gating releases on `.tlg` files that do not exist.
+    """
+    source = (ROOT / "build.lua").read_text(encoding="utf-8")
+    for name in ("checkfiles", "checkengines", "typesetfiles", "unpackfiles"):
+        assert re.search(rf"^{name}\s*=\s*\{{\s*\}}\s*$", source, re.M), name
+
+
+def test_build_lua_stamps_versions_where_the_package_keeps_them():
+    """`l3build tag` is only useful if it rewrites the real version strings.
+
+    Every version in the package lives in a \\ProvidesPackage optional
+    argument and nowhere else, so tagfiles must reach the .sty files and
+    update_tag must target that macro.
+    """
+    source = (ROOT / "build.lua").read_text(encoding="utf-8")
+    assert re.search(r"^tagfiles\s*=\s*\{\"\*\.sty\"\}", source, re.M)
+    assert "\\\\ProvidesPackage" in source
