@@ -12,6 +12,13 @@ demo's nine printed rhythm claims to match ADR-0005. The prose edits change
 the PDF: raster-diffed at 150dpi, seven pages differ, each read and confined
 to the edited sentences plus a one-line reflow on pages 22–23.
 
+Post-review fixes from an external code review of #77: restored the live
+`\halfgridunit`/`\quartergridunit` fallbacks in `lnpminimal.sty` (only the
+`\gridunit` one was dead), kept the v2.1.0 `\list*baseline*` aliases as
+deprecated names, corrected two stale baseline comments, and cleared the
+remaining grid-alignment claims the first pass missed ("Grid Compliance",
+"Grid-Aligned" headings and captions). Two standalone regression probes added.
+
 Accepted ADR-0005: `\gridunit` (13.2pt) is a plain spacing quantum with no
 relationship to where text lands; all rhythm and grid-locking claims are
 being removed (issue #73, ADR-0005).
