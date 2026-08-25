@@ -11,369 +11,292 @@ topic: public-release-prep
 Get `lane_latex_template` to publicly releasable. `v2.1.0` is tagged and published as
 latest.
 
-The plan changed on 2026-08-22. A design review reframed the project from "work through
-a punch-list of issues" to "split the package from the template, then release the
-package." The decisions are recorded in `docs/adr/0001`–`0003` and `CONTEXT.md`; the
-work is issues #46–#57.
+The plan changed on 2026-08-22: a design review reframed the project from "work through
+a punch-list" to "split the package from the template, then release the package."
+Decisions live in `docs/adr/0001`–`0005` and `CONTEXT.md`; the work was issues #46–#57.
 
-**Eleven are now closed**, all merged to `main`: #45, #46, #47, #48, #49, #53,
-#54, #56, #57, plus #35 and #42. The package is `lanepaper`, the layout is
-`lanepaper/` + `demo/`, and `CONVENTIONS.md` at the root is the authority on how
-package code is written — it marks which of its own rules the code does not yet
-follow.
+**All of #46–#57 are now closed.** The package is `lanepaper`, the layout is
+`lanepaper/` + `demo/`, `CONVENTIONS.md` is the authority on package code, and
+`build.lua` drives packaging.
 
-**Remaining: #50 l3build, #51 makefile, #52 docs, #55 robustness, #29 microtype.**
+**The CTAN gate is clear.** ADR-0001 says submission is one `l3build upload` after
+#50 and #52; both landed. Nothing open blocks it mechanically — but see #55.
 
-Next: **#50**. Additive, unblocks #51, nothing existing changes. For CTAN the path
-is #52 then #50 — ADR-0001 says submission is one `l3build upload` after those.
-#55 is the last heavy package-code item.
+**Open: #73, #74, #55, #29, and ADR-0005 awaiting a decision.**
 
 ## Important Details
 
-Hard-won facts. Most cost a failed run or a review round to learn.
+Hard-won facts. Most cost a failed run or a review round.
 
-### The ADRs are now mostly built
+### ADR-0005 is proposed and blocks work — decide it first
 
-`docs/adr/0001`–`0003` were aspirational at `d075ceb`. #46, #47, #48 and #56 have
-closed the gap; #50, #51, #52 and #55 have not. Two ADR statements are now known
-wrong and are corrected in place rather than rewritten:
+[ADR-0005](../adr/0005-what-the-spacing-quantum-is.md) is `status: proposed`, not
+accepted. It is a decision waiting on the maintainer, and half of #73 is blocked
+until it lands.
 
-- **ADR-0001 says "the four competing internal prefixes" and names four.** Five
-  were retired — it omits `\paperstyle@`. It carries a dated erratum; the original
-  sentence is deliberately left as written, because an accepted ADR records what
-  was decided, not what the code is.
-- **ADR-0003 says `longtable` and `tabularx` are "used zero times"** and slates
-  them for deletion. False: the package sets `\LTcapwidth` and hooks
-  `\lnp@tablecaptionsetup` onto the longtable environment, and `\LTcapwidth` is
-  longtable's *own* length — an unguarded `\setlength` is an undefined control
-  sequence. #48 treated them as configure-if-loaded instead, with the
-  maintainer's agreement.
+The finding, measured rather than argued: `13.2 ÷ 16.32 = 0.809`, so the spacing
+quantum and the document baseline are **incommensurable** — adding one quantum never
+returns text to the line grid. Measured line gaps on page 12 of the shipped demo run
+1.232 / 1.842 / 1.474 quanta. **Nothing lands on a quantum multiple.** One document
+runs four pitches: body 16.32pt, quote 15.84pt, display maths 13.20pt, footnote
+12.00pt.
 
-**#52 conflicts with an older instruction.** An earlier note said `production-grade`
-survives under `docs/` on purpose (archival). #52 deletes ~30 stale docs including
-`docs/archive/`. #52 is newer and wins, but confirm before deleting.
+13.2pt itself came from `11 × 1.20`, and both inputs are wrong (the `11pt` option sets
+10.95pt; `\linespread` scales the class's 13.6pt baseline). ADR-0004 established the
+number is not the baseline; ADR-0005 exists because it never said what the number *is*.
 
-**`docs/PACKAGE_ROADMAP.md` is bannered SUPERSEDED, not deleted.** ADR-0002 cites
-its T-402 item in order to withdraw it, so deleting the file would leave an accepted
-ADR pointing at nothing. **#52 owns the deletion and must fix ADR-0002's reference
-in the same change.** The file is worse than stale — its Vision describes East-Asian
-typesetting and its checklist proposes an `\east@` namespace; it was imported from
-another project.
+**Cost of delay is real**: 45 hardcoded `13.2pt` literals sit in executable positions
+against 162 uses of `\gridunit`. Every new one written against 13.2pt is another site
+that will not follow if ADR-0005 picks a baseline-derived quantum.
 
 ### Traps that cost real debugging — these will bite again
 
-- **A `.sty` has `@` as a letter by construction, so `\makeatother` inside one revokes
-  it for the rest of the file.** The old prefixes had no `@`, so 137 stray
-  `\makeatletter`/`\makeatother` lines sat harmless for a year. The moment names became
-  `\lnp@*`, the build died with `Command \lnp already defined`. All 137 were removed
-  (pairs verified balanced, no literal `@` needed "other" catcode); `lnplists.sty` also
-  had an unbalanced extra `\makeatletter`. Do not reintroduce them.
-- **`\@ifundefined{name}` takes a name WITHOUT a backslash**, so a macro-name sweep
-  driven by `\`-prefixed patterns silently skips it. Two sites survived the rename
-  testing the old name while defining the new one — a double `\newif` on reload. Grep
-  `\@ifundefined` separately after any rename.
-- **biber is PAR-packed and macOS temp purges corrupt its cache.** Presents as
-  `test_manual_biblatex_contract_passes` failing with exit 2 and an *empty* error log;
-  the real cause is `Unicode::UCD: failed to find unicore/version`. Fix: delete the
-  ~153MB `/var/folders/.../T/par-*` cache and let biber re-extract. This is not a
-  regression in the repo and will recur.
-- **`grep -c` counts lines, not registrations.** `\AtBeginDocument` matches 11
-  lines in `lanepaper/` but only **8** are registrations; three are comments.
-  A reviewer caught this in a document whose entire value was that its counts
-  were true. Filter comments before quoting a count.
-- **`\AtBeginDocument` decides precedence by registration order**, which makes it
-  an accident of file layout. Deferring the cleveref block in #48 inverted a
-  `\crefname` precedence that had held for a year: an appendix range rendered
-  "§§ 1–2" instead of "appendices 1–2". Rendered output changed and no test
-  noticed — only raster comparison did. #56 removed the whole class by moving to
-  package hooks; `\AtBeginDocument` is now banned and guarded by a test.
+- **A `.sty` has `@` as a letter by construction**, so `\makeatother` inside one revokes
+  it for the rest of the file. 137 stray pairs sat harmless until names became `\lnp@*`,
+  then the build died with `Command \lnp already defined`. Do not reintroduce them.
+- **`\@ifundefined{name}` takes a name WITHOUT a backslash**, so a `\`-driven rename
+  sweep silently skips it. Grep `\@ifundefined` separately after any rename.
+- **`\AtBeginDocument` decides precedence by registration order** — an accident of file
+  layout. Deferring a cleveref block in #48 inverted a year-old `\crefname` precedence
+  and rendered "§§ 1–2" instead of "appendices 1–2". No test noticed; only raster did.
+  #56 removed the class; `\AtBeginDocument` is now banned and guarded.
 - **A command the optional package owns is a fatal error, not "less styling".**
-  `\startappendices` called `\phantomsection` (hyperref's), always defined while
-  the package loaded hyperref. Once #48 stopped, a bare document died on it.
-  `\providecommand` it.
-- **Dropping `babel` changes line breaking.** The measured `\spaceskip` values
-  were tuned with babel present, so without it all five pages of
-  `tests/fixtures/opening-test.tex` re-break. Neutral given the same package set;
-  a bare document's typography does move.
-- **`grep -c` counts lines, not registrations.** `\AtBeginDocument` matched 11
-  lines when only 8 were real; three were comments. A reviewer caught that in a
-  document whose whole value was that its counts were true.
-- **`compare -metric AE` prints `0 (0)`, not `0`.** String-matching the whole output
-  reports every page as differing. Take the first field only.
+  `\startappendices` called hyperref's `\phantomsection`; once #48 stopped loading
+  hyperref a bare document died. `\providecommand` it.
+- **Dropping `babel` changes line breaking.** Measured `\spaceskip` values were tuned
+  with babel present; without it all five pages of `opening-test.tex` re-break.
+- **`grep -c` counts lines, not registrations.** `\AtBeginDocument` matched 11 lines
+  when only 8 were real; three were comments. Filter before quoting a count.
+- **`compare -metric AE` prints `0 (0)`, not `0`.** Take the first field only.
+- **biber is PAR-packed and macOS temp purges corrupt its cache.** Presents as an
+  exit-2 failure with an *empty* error log; the real cause is
+  `Unicode::UCD: failed to find unicore/version`. Delete `/var/folders/.../T/par-*`.
+  Not a repo regression; it will recur.
+
+### Traps found this session
+
+- **A `.md` link guard that strips inline code is half a guard.** The one added in #52
+  missed every backticked path (`` `docs/technical/TESTING.md` ``) and every path cited
+  from `.sty`/`.py`/`.sh`/`.tex`. **18 dead references survived**, two of them rendered
+  into the demo PDF. #71 added `test_every_referenced_documentation_path_exists` to
+  cover both. `docs/adr/` is exempt like `CHANGELOG.md` — ADRs deliberately cite files
+  #52 deleted.
+- **`perl -0pi -e 's/…/\x{2014}/'` re-encodes the entire file.** The escape upgrades the
+  string to character semantics, so every pre-existing UTF-8 byte is re-encoded: it
+  corrupted 34 em dashes in `CHANGELOG.md` before it was caught. Write the raw bytes
+  (`\xe2\x80\x94`) and perl stays in byte mode.
+- **A markdown reference documented two ways defeats one-shaped dedup.**
+  `API_REFERENCE.md` documents commands as `####` headings *and* as table rows; a
+  heading-only dedup appended four duplicates. Cross-check both representations. #74
+  carries the guard.
+- **`chktex -q -n48 <missing-file>` exits 0.** The Makefile probe pointed at a root
+  `main.tex` that does not exist, so it passed by accident; on a real file chktex exits
+  non-zero when there are warnings, which would have silently dropped the flag. Probe
+  `/dev/null`.
+- **Changing a line's length in `demo/main.tex` repaginates the demo.** A longer
+  replacement wrapped and cascaded across pages 2–7. Match the original's rendered
+  length; the fix took the raster diff from 6 pages to 2.
+
+### l3build (adopted in #50 — packaging only, ADR-0002)
+
+- **`install` reads `installfiles` from `unpackdir`, not `sourcefiledir`.** With no
+  `.ins`, `unpack` still stages sources into `build/unpacked`, which is what makes
+  `install` work. Do not "simplify" `unpackfiles = {}` away.
+- **`cleanfiles` defaults to `{"*.log","*.pdf","*.zip"}` applied to `maindir`** — it
+  would delete the demo's `main.pdf`. Set to `{}` deliberately; `make clean` owns
+  artefacts. Verified `l3build clean` now leaves `main.pdf` alone.
+- **`l3build upload --dry-run` still posts metadata to CTAN's validator.** It skips the
+  submission, not the network call. Do not run it casually.
+- **The uploader email is deliberately absent from `build.lua`.** Supply per upload:
+  `l3build upload x.y.z --email <address>`. `announcement` and `topic` are absent too —
+  see the comment in `build.lua`.
+- **`make release VERSION=x.y.z` was proven end-to-end in a throwaway clone**, not on
+  the real repo. Do the same for any change to it.
 
 ### Build and test truths
 
-- **The engine is pdflatex, not LuaLaTeX**, and since #54 both entry points stop
-  with one `\PackageError` on anything else. `iftex`'s own `\RequirePDFTeX` was not
-  used: it does not name the package that wanted pdfTeX. The guard hard-stops
-  (`\batchmode\@@end`) because `\PackageError` alone is recoverable and a
-  `nonstopmode` build walks straight into the cascade it exists to prevent.
-- **Do not delete the "Mark workspace safe for git" step in `ci.yml`** (`ci.yml:39-41`).
-  It looks redundant with `actions/checkout`, which does handle `safe.directory` — but
-  only within its own step. Later steps still need it. Without it
-  `tests/test_infrastructure.py` fails with `git ls-files` exit 128 (dubious ownership).
-  This was a real red CI run.
-- **`make check` and `make check-deps` are different and the difference matters.**
-  `make check` uses a hardcoded Makefile list; `make check-deps` runs
-  `src/sh/check-packages.sh`, which CI uses. Both are in scope for #51's cut.
-  `check-packages.sh` is now **generated from the source** — regenerate it rather
-  than hand-editing, and use a pattern that matches hyphens and comma-separated
-  groups. Mine did not, and silently dropped `eso-pic` and mangled
-  `amsmath,amssymb` until review caught it.
-- **`TEXINPUTS`/`BIBINPUTS` in the Makefile are what kept #47 invisible to CI.**
-  `./lanepaper:./demo` on the path means documents `\input{preamble.tex}` bare and
-  `main.pdf` still lands at the repository root. Anything that hardcodes a directory
-  instead of relying on this will break the next time files move.
+- **The engine is pdflatex**, and since #54 both documented entry points stop with one
+  `\PackageError` on anything else. `iftex`'s `\RequirePDFTeX` was not used: it does not
+  name the calling package. The guard hard-stops (`\batchmode\@@end`) because
+  `\PackageError` alone is recoverable.
+- **Do not delete the "Mark workspace safe for git" step in `ci.yml`.** It looks
+  redundant with `actions/checkout`, which handles `safe.directory` only within its own
+  step. Without it `tests/test_infrastructure.py` fails with `git ls-files` exit 128.
+- **`src/sh/check-packages.sh` is generated**, not hand-maintained. Regenerate from the
+  source, and use a pattern matching hyphens and comma-separated groups — a naive one
+  silently dropped `eso-pic` and mangled `amsmath,amssymb`.
+- **`TEXINPUTS`/`BIBINPUTS` in the Makefile** (`./lanepaper:./demo`) are why documents
+  `\input{preamble.tex}` bare and `main.pdf` lands at the repo root. Anything
+  hardcoding a directory breaks the next time files move.
 - **The lettrine `*** ATTENTION REQUIRED ***` warning is positional, not a defect.**
-  It fires when remaining page space is less than the drop cap's depth
-  (`lettrine.sty:317`). Allowlisting it would blind the harness to all future lettrine
-  warnings; lettrine's `nextpage` option changes rendered output, which `AGENTS.md`
-  rule 1 forbids.
-- **`tests/visual/output/*.pdf` are generated, not baselines.** Regenerated by every
-  `tests/run-tests.sh` run. `!demo/figures/*.pdf` in `.gitignore` is different and is
-  load-bearing — `README.md` tells adopters to put real figure assets there.
-- **`lnphochuli` is not loaded by the default build.** Of its refinements only the
-  Pagella kerning pairs and `\parfillskip` apply on load; the rest are opt-in commands
-  invoked nowhere. A README bullet claiming otherwise was caught as a false front-page
-  claim. Preserve that distinction in any future wording.
+  Allowlisting it would blind the harness to all future lettrine warnings.
+- **`tests/visual/output/*.pdf` are generated, not baselines.** `!demo/figures/*.pdf`
+  in `.gitignore` is different and load-bearing.
+- **`lnphochuli` is not loaded by the default build.** Only the Pagella kerning pairs
+  and `\parfillskip` apply on load; the rest are opt-in. A README bullet claiming
+  otherwise was caught as a false front-page claim.
 
-### Proving that rendering did not change — read this before touching the `.sty` files
-
-This cost three review rounds on #39, and every remaining ticket that touches typography
-depends on it.
+### Proving that rendering did not change — read before touching the `.sty` files
 
 - **`pdftotext` comparison is not a rendering proof.** It reported byte-identical text
-  while a page had visibly reflowed. Text extraction cannot see reflow.
-- **PDF byte comparison is meaningless.** Rebuilding unchanged source yields a different
-  hash every time via the embedded timestamp.
-- **Raster comparison is the proof that works**, but only over documents that actually
-  exercise the changed code. Per-page `pdftoppm -r 150 -png` plus per-page
-  `compare -metric AE`. Fail loudly on any page-count change.
+  while a page had visibly reflowed.
+- **PDF byte comparison is meaningless** — the embedded timestamp changes every build.
+- **Per-page raster is the proof**: `pdftoppm -r 150 -png` plus `compare -metric AE`.
+  Fail loudly on any page-count change.
 - **`main.tex` alone is not sufficient coverage.** It never exercises `\firstlinesc`;
-  that path regressed and 40 pages of clean raster comparison did not notice. Render
-  `tests/fixtures/opening-test.tex` too when touching small-caps or tracking.
-- **Rebuild both sides the same day.** `\today` on the title page otherwise shows up as
-  a real-looking diff. This wasted a cycle.
-- **`make build` will hand you a stale `main.pdf`.** It reports "All targets are
-  up-to-date" and leaves the old file in place. Raster-comparing against that
-  showed 9 of 40 pages differing for a change that touches no package code;
-  rebuilding both sides after `make clean` showed 0, byte-identical. **Build
-  both sides from clean before comparing**, every time.
-- **Read every differing page, do not tally them.** The #46–#53 baseline ends at 4
-  differing pages of 40, all accounted for: the `\today` line, two pages where the demo
-  prints its own `\usepackage{...}` listing, and one citing a renamed doc path.
+  that path regressed while 40 pages compared clean. Render `opening-test.tex` too when
+  touching small-caps or tracking.
+- **Build both sides from clean, the same day.** `make build` reports "up-to-date" and
+  serves a stale `main.pdf` — that produced 9 phantom differing pages once; a date
+  rollover produced a `\today` diff another time.
+- **Read every differing page, do not tally them.** Every raster claim in this repo's
+  history that was wrong, was wrong because someone trusted the count.
 
 ### microtype tracking — the mental model
 
 - **`\SetTracking` is global and order-sensitive.** `\lsstyle` selects the tracked font
-  immediately; `\SetTracking` only registers a list for *later* selections. Code that
-  runs `\lsstyle` before `\SetTracking{...}{N}` never applies N. Of 27 executable sites
-  audited, 26 ordered it correctly and only `\spacedfirsline` was reversed — which made
-  "restoring" its N a regression, not a fix.
-- **microtype has no point-of-use named-list selection.** `name` and `load` declare and
-  inherit lists (§5.2–5.3); there is no way to pick one inside a macro. The original #39
-  plan assumed otherwise and was impossible. `\textls[N]{...}` (§7) is the working API.
+  immediately; `\SetTracking` only registers a list for *later* selections. Of 27 sites
+  audited, only `\spacedfirsline` was reversed — which made "restoring" its N a
+  regression, not a fix.
+- **microtype has no point-of-use named-list selection.** `\textls[N]{...}` is the
+  working API. The original #39 plan assumed otherwise and was impossible.
 - **microtype matches sizes exactly.** An explicit `\fontsize{11}` matches no named-size
-  list, because `\normalsize` and `\large` are 10.95pt and 12pt in an 11pt class. That
-  is why a handful of amounts were genuinely effective while most were inert.
-- **Every tracking list in the repo declares `T1` only.** `lnpfontfeatures.sty` exposes
-  OT1 deliberately, so amounts there were effective too.
+  list, because `\normalsize` is 10.95pt in an 11pt class.
 
-### Tooling
+### Tooling and process
 
-- **`gh-axi` IS available via `npx -y gh-axi`** — the earlier note that it was not
-  installed is wrong. Two gotchas: `--repo` must come *after* the subcommand, and
-  `issue close --reason` takes `"not planned"` with a space, not `not_planned`.
+- **GitHub parses a closing keyword against the first issue number only.**
+  `Closes #49, #46, #47, #53` closed exactly one issue. Write `closes` before each.
+- **Commit before mutation-testing a guard.** `git checkout <file>`, used to undo a
+  deliberate break, silently discarded uncommitted work twice.
+- **Two PRs branched from different bases are never CI-tested together.** #71 and #72
+  each passed alone; their combination was only verified locally after merge. Check the
+  merged result when the second branch predates the first's new guard.
+- **`gh-axi` is available via `npx -y gh-axi`.** `--repo` must come *after* the
+  subcommand; `issue close --reason` takes `"not planned"` with a space.
 - **`/grill-with-docs` and `/to-tickets` cannot be invoked by the agent** — both set
-  `disable-model-invocation: true`. The user must type them. `grilling` and
-  `domain-modeling` are model-invocable and are what `/grill-with-docs` calls.
-- **GitHub parses a closing keyword against the first issue number only.**
-  `Closes #49, #46, #47, #53` closed only #49. Write `closes` before each number,
-  or close the rest by hand.
-- **A Herdr pane keeps roughly 24 lines of scrollback.** A long reviewer result
-  is unrecoverable once it scrolls; `--source recent-unwrapped --lines N` does
-  not reach further back. Ask the reviewer for a compact re-emit, or brief it to
-  answer in few lines from the start.
-- **`herdr agent prompt` with a multi-line body lands as an unsent paste.** The
-  pane shows `[Pasted text #N]` and nothing runs until `herdr agent send-keys
-  <pane> enter`. Single-line prompts submit normally. Stray suggestion text also
-  appears in the input box and does not clear with `esc` or backspace — it is
-  rendered, not buffered; ignore it rather than fighting it.
+  `disable-model-invocation: true`.
 - **A Herdr pane keeps ~24 lines of scrollback.** A long reviewer result is
-  unrecoverable once it scrolls, and `--source recent-unwrapped --lines N` does
-  not reach further back. Brief reviewers to answer in few lines, or ask for a
-  compact re-emit.
-- **`herdr agent prompt` with a multi-line body lands as an unsent paste.** The
-  pane shows `[Pasted text #N]` and nothing runs until
-  `herdr agent send-keys <pane> enter`. Single-line prompts submit normally.
-  Stray suggestion text also appears in the input box and clears with neither
-  `esc` nor backspace — it is rendered, not buffered. Ignore it; never act on it,
-  and note that it sometimes reads like an instruction ("merge the branch").
-- **The selector routes `bounded-substantive` and `complex-high-risk` to the kimi
-  profile**, which this repo has recorded as wedging. Record `harness_crash` for
-  `kimi-herdr-reviewer` in `failed_attempts` and it advances to
-  `claude-opus-herdr-reviewer`. `codex-sol-inline-reviewer` still cannot bind on
-  the inline surface — record `startup_failure`.
-- **`l3build` is already installed** (`/usr/local/texlive/2025/bin/universal-darwin/l3build`)
-  and is present in the CI container, since it ships with TeX Live. No new dependency
-  for #50.
-- **`TEXMFHOME` here is `/Users/nathanlane/Library/texmf`**, not `~/texmf`, which does
-  not exist. That is where `l3build install` will write.
-
-### Process notes for a foreman-style session
-
-- **Reviewers are not a substitute for running CI**, and independent review is not
-  optional theatre — it rejected substantive work three times, including two claims the
-  coordinator had already verified and believed.
-- `close-worker.sh` must run **before** the worktree is removed, or its receipt no
-  longer validates.
-- `start-worker.sh` refuses a `--cwd` in a different git worktree unless it is *invoked
-  from inside* that worktree. Run it via `(cd <worktree> && start-worker.sh ...)`.
-- The OpenCode/kimi reviewer profile **wedges**: it repeatedly tries to spawn sub-agents
-  and shell probes its own profile denies, then stops responding to `esc` and `ctrl+c`.
-  Record `harness_crash` and let the selector advance. The codex-sol reviewer worked
-  reliably every time.
-- The inline surface **cannot bind non-Claude models**. A selected
-  `codex-sol-inline-reviewer` is unlaunchable here; record `startup_failure` and take
-  the herdr variant.
+  unrecoverable once it scrolls; `--source recent-unwrapped --lines N` does not reach
+  further back. Brief reviewers to answer in few lines.
+- **`herdr agent prompt` with a multi-line body lands as an unsent paste** — nothing
+  runs until `herdr agent send-keys <pane> enter`. Stray suggestion text in the input
+  box clears with neither `esc` nor backspace; ignore it, and never act on it (it
+  sometimes reads like an instruction, e.g. "merge the branch").
+- **Reviewer routing**: record `startup_failure` for `codex-sol-inline-reviewer` (the
+  inline surface cannot bind non-Claude models) and `harness_crash` for
+  `kimi-herdr-reviewer` (it wedges) to reach `claude-opus-herdr-reviewer`.
 - **Do not judge agent liveness by screen content** — an animated progress bar makes a
-  wedged agent look busy. Compare `revision` and `state_change_seq` from
-  `herdr agent get` instead.
-- Successive right-splits produce unusable ~20-column panes. Split `down` from a wide
-  pane; close finished panes to reclaim geometry.
-- **Commit before mutation-testing a guard.** Twice this session `git checkout
-  <file>` — used to undo a deliberate break — silently discarded uncommitted work
-  on that file. Stage the work first, then break it, then `git checkout`.
-- **GitHub parses a closing keyword against the first issue number only.**
-  `Closes #49, #46, #47, #53` closed exactly one issue. Write `closes` before
-  each number.
-- **Verify a raster baseline was built the same day.** `make build` reports
-  "up-to-date" and will serve a stale `main.pdf`; that produced 9 phantom
-  differing pages once, and a date rollover produced a 1-page `\today` diff
-  another time. Rebuild both sides from clean, same day, before comparing.
-- **Keep `CHANGELOG.md` coordinator-owned** when two leaves run in parallel — it is the
-  one file every leaf wants. Even so, two branches touching `## Unreleased` conflict at
-  merge time; resolve by keeping both sections.
+  wedged agent look busy. Compare `revision` and `state_change_seq`.
+- **Reviewers are not a substitute for running CI.** Independent review rejected
+  substantive work three times, including two claims already verified and believed.
 
 ## Work State
 
-`main` at `ebaa106`, clean, in sync, CI green. No worktrees or agent panes left over.
+`main` at `0299114`, clean, in sync, CI green. No open PRs, no worktrees or panes.
 
-Local gates: **pytest 46 passed, 0 skipped**, **`tests/run-tests.sh` 115 passed /
-0 failed**, `make build` and `make check-deps` clean, style validator clean
-(32 warnings — 31 was the pre-#48 baseline; the extra is a prose advisory on
-`demo/landscape.tex`, which the validator can see now that it is a `.tex`).
+Local gates: **pytest 50 passed**, **`tests/run-tests.sh` 115 passed / 0 failed**,
+`make lint` and `make build` clean, style validator 0 errors / 26 warnings.
 
-Open: **#29, #50, #51, #52, #55.**
+Repository shape after this session: 19 tracked markdown files (was 69), 5 ADRs,
+17 guards in `tests/test_infrastructure.py`, 11 Makefile targets (was 24).
 
-Merged this session, newest first: #66 (#56 hooks), #65 (#48 dependencies),
-#64 (handoff), #63 (roadmap banner + ADR erratum), #62 (#45 CONVENTIONS.md),
-#61 (#57 partial + #35), #60 (#54 engine guard), #59 (#46/#47/#49/#53).
+Merged this session: #69 (#51 Makefile), #70 (#52 docs), #71 (orphaned references),
+#72 (ADR-0005 proposed), and earlier #68 (#50 l3build), #67 (handoff).
 
-**#48 was a breaking change.** `\usepackage{lanepaper}` alone no longer gives a
-bibliography, links, or cross-references. Third-party loads went 45 → 33. The
-package imposes **no load order at all**. `demo/preamble.tex` shows exactly what
-a document must load, carrying the biblatex option set the package used to
-impose. `[natbib]` and `[nobiblatex]` are deprecated and inert — still declared
-so existing documents warn rather than fail on an unknown option.
+**#48 remains the breaking change.** `\usepackage{lanepaper}` alone gives no
+bibliography, links, or cross-references; third-party loads went 45 → 33 and the
+package imposes no load order. `demo/preamble.tex` shows what a document must load.
 
 Deliberately not done, with reasons:
 
-- **#57 was closed only after #45 landed** — its last criterion needed
-  `CONVENTIONS.md` to exist.
-- **#49's literal criterion "no remaining references to `.dtx`" was not met.**
-  Satisfying it meant editing LPPL boilerplate and dated review records.
-  Documented in `CHANGELOG.md`.
-- **The cleveref convenience wrappers (`\refpage`, `\pref`, `\seeref`) call
-  `\cref` unguarded, deliberately.** They are wrappers over cleveref; calling one
-  without it is a usage error, not a trap. A `\providecommand` fallback would emit
-  a reference pointing nowhere, which is worse than the error. Reasoning is in
-  `CONVENTIONS.md` §9.
+- **`\everydisplay{\baselineskip=13.2pt}` was left in place** (`lnpmathgridlocked.sty:130`).
+  Tighter display leading may be right; it has never been *chosen*. ADR-0005 decides.
+- **`docs/adr/` is exempt from the reference guard.** ADR-0001 and ADR-0002 deliberately
+  cite files #52 deleted, annotated as such. An accepted ADR is a record.
+- **`CHANGELOG.md` is exempt from both link guards.** Its entries point at deleted
+  files; rewriting history to keep links green would falsify the record.
+- **The cleveref wrappers (`\refpage`, `\pref`, `\seeref`) call `\cref` unguarded**,
+  deliberately — a `\providecommand` fallback would emit a reference pointing nowhere,
+  which is worse than the error. Reasoning in `CONVENTIONS.md` §9.
 
 ## Next Move
 
-**#50, l3build for packaging and release.** Additive — nothing existing changes —
-and it unblocks #51. `l3build` is already installed and ships with TeX Live, so
-there is no new dependency. ADR-0002 governs: l3build for packaging only, pytest
-stays the test harness; do not let it pull the test suite along.
+**Decide ADR-0005** (PR #72 merged it as `proposed`). Everything else in the grid
+thread waits on it, and the 45 literals get more expensive with every commit. Three
+options are laid out there; making the 13.2pt grid *real* is explicitly not one.
 
-Then:
+Then, in order of independence:
 
 ```
-#50 l3build ── #51 makefile
-#52 docs
-#55 robustness   (independent)
+ADR-0005 decision ── #73 items 6–9
+#73 items 1–5   (unblocked now)
+#74             (unblocked now)
+#55             (independent, and the one that matters for CTAN)
+#29             (unscheduled)
 ```
 
-- **#52 is the CTAN gate.** ADR-0001: submission is one `l3build upload` after #52
-  and #50. It owns deleting `docs/PACKAGE_ROADMAP.md` **and** fixing ADR-0002's
-  reference to it in the same change. Note #45 already did part of #52's work by
-  absorbing both naming docs into `CONVENTIONS.md`.
-- **#55 is the last heavy package-code item.** Its body was corrected on
-  2026-08-24: both `\DeclareRobustCommand` uses are on *internal* macros, so **no
-  public macro is robust at all**, and the count is ~315 prefix-free
-  `\newcommand`, not ~500. When it lands, `CONVENTIONS.md` §8's "not met" heading
-  comes off.
-- **#29** (microtype `verbose=silent`) is untouched and unscheduled.
+- **#73 items 1–5 can start today**: `CONTEXT.md`'s "Grid-locked" glossary asserts the
+  disproved model; `lnpmathgridlocked.sty:129`'s comment says "inline" over a
+  `\everydisplay`; `\lnp@listbaselineskip` is a `topsep`; `lnpminimal.sty:176–178` are
+  dead fallbacks that can never fire; and `demo/main.tex:154` prints a rhythm claim the
+  measurement contradicts. That last one changes the PDF — raster-prove it.
+- **#55 is the last heavy package-code item and the real CTAN risk.** Both
+  `\DeclareRobustCommand` uses are on *internal* macros, so **no public macro is robust
+  at all** (~315 prefix-free `\newcommand`). A CTAN reviewer's test document surfaces
+  this immediately. When it lands, `CONVENTIONS.md` §8's "not met" heading comes off.
 - **CTAN has no date** and that is deliberate (ADR-0001).
-- Optional: `actions/checkout@v4` and `upload-artifact@v4` emit a Node 20
-  deprecation annotation every run. Harmless, noisy.
+- Optional: `actions/checkout@v4` and `upload-artifact@v4` emit a Node 20 deprecation
+  annotation every run. Harmless, noisy.
 
 ### Unowned by any ticket
 
 - **Public macro names carry no prefix** — `\tightlists`, `\centeredpar`, `\dialogue`,
-  `\forceindent`. That is the documented convention and predates ADR-0001, but it is
-  weak on CTAN, where a shared texmf tree makes collisions real. #55 is robustness, not
-  namespacing. Recorded as a known gap in `CONVENTIONS.md` §4.
+  `\forceindent`. Documented convention, predates ADR-0001, but weak on CTAN where a
+  shared texmf tree makes collisions real. #55 is robustness, not namespacing. Recorded
+  as a known gap in `CONVENTIONS.md` §4.
 - **`\lanepaperinfo` is defined in `lanepaper/lanepaper.sty` and called nowhere.**
-- **`lnpgridoverlay` is an entry point but carries no engine guard.** #54 guarded
-  `lanepaper` and `lnpminimal`, the two surfaces README documents. Loading
-  `lnpgridoverlay` bare on XeLaTeX gets no clear message.
+- **`lnpgridoverlay` is an entry point with no engine guard.** #54 guarded the two
+  surfaces README documents. Loading it bare on XeLaTeX gets no clear message.
+- **The CTAN archive ships no typeset manual** — 16 `.sty` plus `README.md`,
+  `CHANGELOG.md`, `LICENSE`. Acceptable, but a reviewer may ask.
 
 ## Relevant Files
 
-- `CONVENTIONS.md` — **read this first before touching `lanepaper/`.** How package
-  code is written. §8 robustness is still marked **not met** (#55); §9 hooks and
-  dependencies are now met. Every count in it was measured — re-measure rather
-  than copying one out, and note §9's count moved twice in one day.
-- `docs/adr/0001`–`0003` and `CONTEXT.md` — the decisions and the glossary.
-  `CONTEXT.md` fixes Package / Template / Demo so the issues read unambiguously.
-  Two ADR statements are wrong; see the erratum notes above.
-- `lanepaper/lanepaper.sty` — 3076 lines, the main package and #55's audit
-  target. Its `\AddToHook{package/*/after}` blocks are where all
-  configure-if-loaded styling lives.
-- `demo/preamble.tex` — the worked example of what a document must now load, and
-  the reference for the biblatex options the package used to impose.
-- `demo/landscape.tex` — the landscape/rotation family, moved out by #48. It
-  belongs to the Template once ADR-0001's separate repository exists.
-- `tests/test_infrastructure.py` — five guards: retired package names, LPPL
-  headers, no `\AtBeginDocument`, the five package hooks, and the format floor.
-  Each is written to avoid matching its own source.
-- `tests/test_option_contracts.py` — encodes the post-#48 bibliography contract
-  and the bare-document regression guard.
-- `src/sh/check-packages.sh` — **generated**, not hand-maintained. Regenerate from
-  the source.
+- `CONVENTIONS.md` — **read first before touching `lanepaper/`.** §8 robustness is still
+  **not met** (#55). Every count in it was measured; re-measure rather than copying one
+  out. Its module table is generated from the `\RequirePackage` lines — regenerate it.
+- `docs/adr/0001`–`0005` and `CONTEXT.md` — the decisions and the glossary. **0005 is
+  proposed, not accepted.** 0001 and 0002 carry dated errata and cite deleted files on
+  purpose. `CONTEXT.md`'s "Grid-locked" entry is wrong (#73 item 1).
+- `build.lua` — packaging only, no test files declared, guarded by
+  `tests/test_infrastructure.py`. The comment block explains why each empty file list is
+  set explicitly; every l3build default is wrong for this repo.
+- `lanepaper/lanepaper.sty` — the main package and #55's audit target. Its
+  `\AddToHook{package/*/after}` blocks hold all configure-if-loaded styling.
+- `lanepaper/lnpdimensions.sty` — where `\gridunit` and `\linespread` are set, and the
+  clearest statement of the quantum-vs-baseline distinction.
+- `demo/preamble.tex` — the worked example of what a document must now load.
+- `API_REFERENCE.md` — 3.3k lines, the single reference after #52. Documents commands as
+  both `####` headings and table rows; see #74.
+- `tests/test_infrastructure.py` — 17 guards, each written to avoid matching its own
+  source. Includes the two markdown-reference guards and the `build.lua` contract.
 - `src/sh/validate_latex_style.sh` — the math-spacing check is a depth-tracking perl
-  scan; `tests/test_infrastructure.py` covers it in four directions. Do not "simplify"
-  it back to a bracket expression.
+  scan covered in four directions by pytest. Do not "simplify" it to a bracket
+  expression.
 - `tests/fixtures/opening-test.tex` — the only document exercising `\firstlinesc`;
-  required for any rendering proof touching tracking. It loads `babel` explicitly
-  since #48 — do not remove that.
+  required for any rendering proof touching tracking. It loads `babel` explicitly since
+  #48 — do not remove that.
 - `README.md` features list — carries a guardrail comment limiting claims to verified
-  support. Two separate sessions have violated it; check claims against the `.sty`
-  files, never against existing prose.
+  support. Two sessions have violated it; check claims against the `.sty` files, never
+  against existing prose.
 
 ## Suggested Skills
 
-- `foreman` — for the rest of the queue. **Merge mode is re-selected per invocation
-  and permission does not carry over**; a named queue does not authorize merging a
-  different issue. Reviewer routing: record `startup_failure` for
-  `codex-sol-inline-reviewer` and `harness_crash` for `kimi-herdr-reviewer` in
-  `failed_attempts` to reach `claude-opus-herdr-reviewer`, which worked every time.
-  The remaining work is genuinely parallel — #52, #55 and #50 touch different files.
-- `gh-axi` — issue and PR work. Available via `npx -y gh-axi`; see the tooling gotchas
-  above.
+- `foreman` — for the remaining queue. **Merge mode is re-selected per invocation and
+  permission does not carry over.** Reviewer routing gotchas are in Tooling above. #73,
+  #74 and #55 touch different files and are genuinely parallel.
+- `gh-axi` — issue and PR work, via `npx -y gh-axi`.
 - `pr-body` — this repo has `.github/pull_request_template.md` (`## Summary` /
-  `## Test plan`) but no `scripts/check_pr_body.py`, so the skill's validation step is a
-  no-op here and its three-section format does not match the template. Follow the repo
-  template.
+  `## Test plan`) but no `scripts/check_pr_body.py`, so the skill's validation is a
+  no-op here and its three-section format does not match. Follow the repo template.
