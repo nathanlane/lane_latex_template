@@ -173,8 +173,11 @@
 % ==============================================================================
 
 % Define commands that might be used but aren't available
-%% FIX: the \gridunit family fallbacks were dead code — \newlength{\gridunit}
-%% earlier in this file always defines it first (#73).
+%% FIX: only the \gridunit fallback was dead code (\newlength{\gridunit}
+%% earlier in this file always defines it first); the derived-unit fallbacks
+%% are live when lnpminimal is loaded standalone (#73).
+\providecommand{\halfgridunit}{0.5\gridunit}
+\providecommand{\quartergridunit}{0.25\gridunit}
 \providecommand{\FloatBarrier}{\clearpage}
 
 \endinput

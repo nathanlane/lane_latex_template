@@ -153,21 +153,20 @@ This document demonstrates a comprehensive academic typography system synthesizi
 
 Vertical space in this document is stated in a 13.2pt spacing quantum: spaces are whole or fractional quanta rather than ad-hoc point values. The quantum is a unit of measure, not a grid --- the body baseline is 16.32pt, and text does not land on quantum multiples (see \texttt{docs/adr/0005-what-the-spacing-quantum-is.md}).
 
-\safeparagraph{Master Grid Definition}
+\safeparagraph{Spacing-Quantum Definition}
 \begin{itemize}
 \item \emph{Project:} Lane LaTeX Template
 \item \emph{Spacing Quantum:} 13.2pt
 \item \emph{Foundation:} 10.95pt/16.32pt TeX Gyre Pagella (the 11pt class option with \texttt{\textbackslash linespread\{1.20\}})
-\item \emph{Grid Compliance:} ~90\% (improved from 75\% baseline)
 \end{itemize}
 
-\safeparagraph{Grid-Aligned Components}
-This document demonstrates several grid-aware features:
+\safeparagraph{Quantum-Spaced Components}
+This document demonstrates several features whose spacing is stated in quanta:
 \begin{itemize}
 \item \emph{Sections:} 39.6pt before (3 units), 19.8pt after (1.5 units) with -0.8pt optical adjustment
 \item \emph{Subsections:} 26.4pt before (2 units), 13.2pt after (1 unit) with -0.5pt optical adjustment  
-\item \emph{Tables:} Grid-aligned row heights via \code{\textbackslash{}begin\{gridtable\}}
-\item \emph{Images:} Heights automatically rounded to grid multiples via \code{\textbackslash{}gridincludegraphics}
+\item \emph{Tables:} Standard row heights via \code{\textbackslash{}begin\{gridtable\}}
+\item \emph{Images:} Heights automatically rounded to quantum multiples via \code{\textbackslash{}gridincludegraphics}
 \item \emph{Floats:} 19.8pt separation (1.5 units) between consecutive floats
 \end{itemize}
 
@@ -237,7 +236,7 @@ f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
 
 For inline mathematics, we maintain consistency: $\norm{x}_2 = \sqrt{\sum_{i=1}^n x_i^2}$ and $\abs{z} = \sqrt{a^2 + b^2}$ for complex numbers $z = a + bi \in \complex$.
 
-\safeparagraph{Mathematical Integration} The system provides seamless text-math transitions through newpxmath with enhanced symbols and grid-aligned spacing.
+\safeparagraph{Mathematical Integration} The system provides seamless text-math transitions through newpxmath with enhanced symbols and quantum-derived spacing.
 
 \section{Code Typography}
 
@@ -501,12 +500,12 @@ For tables requiring full text width, use \code{tabularx} with \code{X} column s
 
 \safeparagraph{TabularX Benefits}~ The \code{X} column type automatically adjusts width to fill available space while maintaining proper text justification, as demonstrated in the Description column of Table~\ref{tab:extended-results}.
 
-\subsection{Grid-Aligned Tables}
+\subsection{Tables with Standard Row Heights}
 
 The framework provides specialized table environments with systematic row spacing:
 
 \begin{gridtable}[tbp]
-  \caption{Grid-Aligned Table with Standard Row Height (~21.8pt measured)}
+  \caption{Table with Standard Row Height (~21.8pt measured)}
   \label{tab:grid-example}
   \centering
   \begin{tabular}{@{}lrrr@{}}
@@ -520,14 +519,14 @@ The framework provides specialized table environments with systematic row spacin
   \end{tabular}
 \end{gridtable}
 
-\safeparagraph{Grid Table Environments}~ The framework provides three grid-aligned environments:
+\safeparagraph{Grid Table Environments}~ The framework provides three table environments with standard row heights:
 \begin{itemize}
 \item \code{gridtable} --- Standard rows (~21.8pt measured) for normal data
 \item \code{regressiontable} --- ~21.0pt rows (measured) for statistical results
 \item \code{compactgridtable} --- ~16.9pt rows (measured) for dense information
 \end{itemize}
 
-Each environment automatically sets \code{\textbackslash arraystretch} to maintain exact grid alignment while preserving the professional appearance of booktabs.
+Each environment automatically sets \code{\textbackslash arraystretch} to maintain the standard row height while preserving the professional appearance of booktabs.
 
 \subsection{Multi-Page Tables with LongTable}
 
@@ -649,7 +648,7 @@ Numbered lists use oldstyle figures for classical typography:
     \item Preserves readability through systematic progression
     \end{enumerate}
   \end{enumerate}
-\item \emph{Baseline preservation:} Spacing stays on the quantum scale throughout
+\item \emph{Spacing scale:} Spacing stays on the quantum scale throughout
 \end{enumerate}
 
 \subsection{Compact Lists for Dense Information}
@@ -885,7 +884,7 @@ Wide coefficient plots and panel visualizations can use \code{landscapefigure}:
 \end{landscapefigure}
 \end{verbatim}
 
-The landscape and rotation features maintain grid alignment and professional spacing while accommodating the specialized needs of empirical research presentations.
+The landscape and rotation features keep quantum-derived spacing while accommodating the specialized needs of empirical research presentations.
 
 \section{Production Guidelines}
 

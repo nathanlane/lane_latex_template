@@ -236,6 +236,28 @@ EOF
         probe_failures=$((probe_failures + 1))
     fi
 
+    if ! run_compatibility_probe "standalone-lnpminimal-units" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage{lnpminimal}
+\begin{document}
+Derived units resolve standalone: \vspace{\halfgridunit}\vspace{\quartergridunit}ok.
+\end{document}
+EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
+
+    if ! run_compatibility_probe "standalone-lnplists-legacy-aliases" <<'EOF'
+\documentclass[11pt]{article}
+\usepackage{lnplists}
+\begin{document}
+Legacy v2.1.0 aliases: \the\listbaselineskip, \the\listhalfbaseline, \the\listquarterbaseline.
+\end{document}
+EOF
+    then
+        probe_failures=$((probe_failures + 1))
+    fi
+
     if ! run_compatibility_probe "standalone-lnpfontfallbacks" <<'EOF'
 \documentclass[11pt]{article}
 \usepackage{lnpfontfallbacks}
