@@ -138,6 +138,19 @@ Return to numeric footnotes for main text.
 \titlefootnotereset
 ```
 
+#### `\elegantauthor{name}`
+Individual author name with enhanced small caps.
+- **Size:** 12pt/14pt
+- **Style:** Small caps
+- **Tracking:** 100 units (10% letter spacing)
+- **Usage:** Within `\articleauthors` if desired
+
+#### `\begin{articleabstract}...\end{articleabstract}`
+Professional abstract environment.
+- **Width:** 0.618 × text width (golden ratio)
+- **Label:** "ABSTRACT" in enhanced small caps
+- **Font size:** 10pt (small)
+- **Spacing:** 0.5 grid units internal
 ## Typography Commands
 
 ### Section Opening Styles
@@ -190,6 +203,55 @@ Conservative drop cap for academic use.
 \academicdropcap{T}{his introduction} begins with a minimal drop cap...
 ```
 
+#### `\elegantsc{text}`
+Enhanced small caps with superior visibility and tracking.
+- **Tracking:** 80 units (8% letter spacing)
+- **Usage:** General small caps text with optimal readability
+- **Example:** `\elegantsc{introduction}` → INTRODUCTION (with tracking)
+
+#### `\elegantscbold{text}`
+Bold small caps with generous tracking for emphasis.
+- **Tracking:** 100 units (10% letter spacing)
+- **Weight:** Bold with tracking compensation
+- **Example:** `\elegantscbold{key finding}` → KEY FINDING (bold with tracking)
+
+#### `\titlesc{text}`
+Title page small caps with maximum elegance.
+- **Size:** 11pt/13pt
+- **Tracking:** 120 units (12% letter spacing)
+- **Usage:** Title page elements requiring exceptional visibility
+- **Example:** `\titlesc{abstract}` → ABSTRACT (larger with extensive tracking)
+
+#### `\bsc{text}`
+Standard bold small caps command.
+- **Weight:** Bold
+- **Usage:** Inline emphasis, shorter text
+- **Example:** `\bsc{note}` → NOTE (bold small caps)
+
+#### `\code{text}`
+Weight-compensated inline code.
+- **Font:** Inconsolata scaled to 98%
+- **Color:** Code color (RGB 25,25,25)
+- **Usage:** Inline code snippets
+- **Example:** `\code{git commit}` → `git commit`
+
+#### `\inlinecode{text}`
+Inline code with micro-spacing.
+- **Spacing:** 0.05em padding on each side
+- **Usage:** Code within flowing text
+- **Example:** `Use \inlinecode{npm start} to begin`
+
+#### `\filepath{path}`
+File paths with proper hyphenation.
+- **Font:** Monospace with hyphenation enabled
+- **Usage:** File and directory paths
+- **Example:** `\filepath{/Users/name/documents/file.tex}`
+
+#### `\var{name}`
+Variable names in monospace.
+- **Font:** Monospace in code color
+- **Usage:** Mathematical or programming variables
+- **Example:** `\var{x}` → x (monospace)
 ## Spacing Commands
 
 ### Grid Units
@@ -297,6 +359,7 @@ Critical notices (bold small caps).
 | `\emdashclassic` | — | Em dash without spaces |
 | `\emdashopen` | — | Em dash with word spaces |
 | `--` | – | En dash (standard LaTeX) |
+| `\dashmark` | – | En dash for lists and ranges (replaces `\endashmark`) |
 
 ```latex
 Typography\emdash the art of arranging type\emdash is essential.
@@ -652,6 +715,50 @@ Vector norm.
 $\norm{v} = 1$
 ```
 
+#### `\real`
+Real numbers ℝ
+- **Font:** Blackboard bold
+- **Example:** `$x \in \real$`
+
+#### `\complex`
+Complex numbers ℂ
+
+#### `\integer`
+Integer numbers ℤ
+
+#### `\rational`
+Rational numbers ℚ
+
+#### `\natural`
+Natural numbers ℕ
+
+#### `\field`
+Generic field 𝔽
+
+#### `\prob`
+Probability measure ℙ
+
+### Operators and Norms
+
+#### `\inner{x}{y}`
+Inner product
+- **Output:** ⟨x, y⟩
+- **Example:** `$\inner{u}{v} = 0$`
+
+#### `\hilbert`
+Hilbert space ℋ
+
+#### `\banach`
+Banach space ℬ
+
+#### `\algebra`
+Algebra 𝒜
+
+#### `\topology`
+Topology 𝒯
+
+#### `\measure`
+Measure space ℳ
 ## Cross-Reference Commands
 
 ### Smart References (via cleveref)
@@ -810,15 +917,21 @@ Add grid-aligned vertical space.
 \vspacegrid{2}  % Add 2 grid units
 ```
 
+#### `\halfbaselinespace`
+Insert half baseline space in tables.
+- **Height:** 6.6pt (0.5 grid units)
+- **Usage:** `\halfbaselinespace` between table sections
+
+#### `\fullbaselinespace`
+Insert full baseline space.
+- **Height:** 13.2pt (1 quantum)
+
+#### `\baselinespace{multiplier}`
+Custom baseline space.
+- **Example:** `\baselinespace{1.5}` → 19.8pt
+
+### Image Commands
 ## Footnote Commands
-
-### Title Page Footnotes
-
-#### `\titlefootnotesetup`
-Switch to symbols (*, †, ‡).
-
-#### `\titlefootnotereset`
-Return to numbers.
 
 ### Special Footnote Commands
 

@@ -50,10 +50,8 @@ policy, and the rule against `\makeatletter` in a `.sty` -- is in
 `lanepaper/`.
 
 Internal LaTeX identifiers (lengths, counters, private commands) use the
-`\lnp@` prefix to avoid conflicts. See
-[`docs/PACKAGE_NAMING_CONVENTION.md`](docs/PACKAGE_NAMING_CONVENTION.md) and
-[`docs/package/NAMESPACE_CONVENTIONS.md`](docs/package/NAMESPACE_CONVENTIONS.md)
-for the full convention.
+`\lnp@` prefix to avoid conflicts. `CONVENTIONS.md` section 3 is the full
+convention; there is no second naming document.
 
 ## Module Documentation
 

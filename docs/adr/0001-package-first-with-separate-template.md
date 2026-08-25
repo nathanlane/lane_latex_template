@@ -34,10 +34,9 @@ for hyperref, `\Gm@` for geometry.
 > #46 found a fifth prefix, `\paperstyle@` (6 occurrences), which was retired
 > with the other four. The decision is unchanged — all of them collapse to
 > `\lnp@` — but anything citing "four" is citing this sentence, not the code.
-> `CONVENTIONS.md` and `docs/package/NAMESPACE_CONVENTIONS.md` say five, and
-> the guard in `tests/test_infrastructure.py` covers all five. The original
-> sentence is left as written because an accepted ADR is a record of what was
-> decided, not a live description.
+> `CONVENTIONS.md` says five, and the guard in `tests/test_infrastructure.py`
+> covers all five. The original sentence is left as written because an accepted
+> ADR is a record of what was decided, not a live description.
 
 `paper` was the obvious name and is unavailable: `paper.sty` already ships in
 TeX Live. `-latex` and `-style` suffixes were rejected as redundant inside a

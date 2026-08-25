@@ -71,7 +71,7 @@ Load modules with custom settings before the main package:
 \usepackage{lanepaper}
 ```
 
-For complete module documentation, see [modules/README.md](modules.md).
+For complete module documentation, see [`CONVENTIONS.md` section 3](../../CONVENTIONS.md).
 
 #### List Typography Module
 
