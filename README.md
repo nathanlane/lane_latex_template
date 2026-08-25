@@ -553,8 +553,20 @@ make              # Full rebuild
 - Or compile manually with pdflatex/biber
 
 **Local installation**:
+
+To use the package from your own documents, anywhere on the system, install it
+into your home texmf tree:
+
 ```bash
-# Set TEXINPUTS if needed
+make install     # copies lanepaper into TEXMFHOME; make uninstall reverses it
+```
+
+`\usepackage{lanepaper}` then resolves from any directory. Working inside this
+repository needs no install -- the Makefile puts `./lanepaper` first on
+`TEXINPUTS`, so the working tree always wins over an installed copy. To compile
+by hand from the repository without Make:
+
+```bash
 export TEXINPUTS=".:./lanepaper//:"
 ```
 
