@@ -17,7 +17,7 @@ A comprehensive LaTeX style package implementing professional typography princip
 - [Special Characters and Symbols](#special-characters-and-symbols)
 - [Technical Implementation](#technical-implementation)
 
-For quick start, basic usage, and compilation instructions, see [`../README.md`](../README.md).
+For quick start, basic usage, and compilation instructions, see [`README.md`](../../README.md).
 
 ## Modular Architecture
 
@@ -814,8 +814,8 @@ Quarter quantum (\quartergridunit): 3.3pt
 
 - **Compilation Speed**: Two-pass system requires `pdflatex` twice for appendix detection
 - **Memory Usage**: Microtype and font loading increase memory requirements
-- **Compatibility**: Tested with TeX Live 2022, 2025, 2026 (see [`../README.md`](../README.md) for details); MiKTeX not verified
+- **Compatibility**: Tested with TeX Live 2022, 2025, 2026 (see [`README.md`](../../README.md) for details); MiKTeX not verified
 
 ---
 
-For version history, see [`../CHANGELOG.md`](../../CHANGELOG.md) and the `Version History` section of [`../README.md`](../README.md).
+For version history, see [`CHANGELOG.md`](../../CHANGELOG.md) and the `Version History` section of [`README.md`](../../README.md).

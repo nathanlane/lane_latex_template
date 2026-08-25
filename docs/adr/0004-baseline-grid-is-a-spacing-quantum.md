@@ -1,7 +1,14 @@
+---
+status: accepted
+date: 2026-08-11
+---
+
+<!-- Promoted from docs/typography/BASELINE-GRID-DECISION.md on 2026-08-25 (issue #52).
+     It was already a decision record; it predates docs/adr/ and carries the number of
+     the date it was filed here, not the date it was decided. -->
+
 # Decision Record: The Baseline Grid Is a Spacing Quantum, Not a Baseline
 
-**Date:** 2026-08-11
-**Status:** Decided
 **Evidence:** adopter defect report (finding 1) and decision brief (both
 archived in git history under `notes/`)
 

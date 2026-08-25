@@ -743,3 +743,45 @@ All 2026-08-12 entries below constitute the release.
 - Resolved the active merge marker in `main.tex` without changing the intended LaTeX layout.
 - Updated active build and test references from the removed package name to `lltpaperstyle`.
 - Added pytest coverage for build-target drift, executable shell harnesses, root changelog presence, active package references, and the minimal LaTeX regression harness.
+
+## 2024-06-30 and earlier
+
+Folded in from `docs/style/CHANGELOG.md` when the docs were consolidated
+(issue #52). It was a second changelog for the style modules, in Keep a
+Changelog format, covering history older than anything above. Its entries are
+reproduced verbatim; the dates and wording are as they were written.
+
+### Pre-2026 module changelog, unreleased at the time
+
+### Added
+- Sophisticated list typography system with multiple environments
+- Professional testing framework with visual output validation
+- Comprehensive typography documentation
+- Grid-aligned table system
+- Enhanced citation support with biblatex
+- Professional footnote system optimized for TeX Gyre Pagella
+- Testing infrastructure with Make targets
+- Repository audit documentation
+
+### Changed
+- Updated from Bembo (fbb) to TeX Gyre Pagella font system
+- Bullet colors adjusted from 45% to 20% gray for better visibility
+- Renamed `\endashmark` to `\dashmark` to avoid conflicts
+- Improved section heading typography with color and tracking
+
+### Fixed
+- LaTeX compilation errors with duplicate command definitions
+- Cross-reference warnings in test fixtures
+- Bibliography processing in test suite
+- Overleaf "Incomplete \iffalse" error by properly protecting @ commands in user macros
+- Microtype warnings for unavailable character slots (now gracefully handled)
+
+### v0.1.0 — 2024-06-30
+
+### Added
+- Initial LaTeX template with sophisticated typography
+- TeX Gyre Pagella font integration
+- Modular scale typography system
+- Chicago Manual of Style citation support
+- Professional appendix management
+- Baseline grid implementation

@@ -19,7 +19,8 @@ repository as the CI fixture; it is not a starting point for real papers.
 
 The deciding argument was adoption across projects. A template is forked, and
 forks drift — this already happened once here, which is why
-`docs/LOCAL_FORK_TEMPLATE_AUDIT_2026-05-27.md` had to be written. A package is
+`docs/LOCAL_FORK_TEMPLATE_AUDIT_2026-05-27.md` had to be written (deleted
+2026-08-25 by issue #52; it is in git history). A package is
 installed once and upgraded in place. Only the second has an upgrade path.
 
 ## The name

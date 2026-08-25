@@ -11,7 +11,7 @@ This template applies classic typographic principles to create scholarly article
 
 <!-- %% FIX: Keep active feature claims limited to locally verified support. -->
 - **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
-- **Spacing Quantum System** – most vertical spacing in multiples of a 13.2pt quantum; body leading measures 16.32pt (see `docs/typography/BASELINE-GRID-DECISION.md`)
+- **Spacing Quantum System** – most vertical spacing in multiples of a 13.2pt quantum; body leading measures 16.32pt (see `docs/adr/0004-baseline-grid-is-a-spacing-quantum.md`)
 - **Optical Refinements** – Optional `lnphochuli` module; when loaded, automatically applies custom Pagella kerning pairs and last-line length control (`\parfillskip`); also provides opt-in commands for selective ligature suppression and hanging punctuation at paragraph openings
 - **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
@@ -612,7 +612,6 @@ make lint         # chktex, then the math-spacing checker
 
 - **[API Reference](API_REFERENCE.md)** – Complete command reference
 - **[Style Guide](docs/package/STYLE_GUIDE.md)** – Typography standards
-- **[Code Review Report](docs/technical/LATEX_CODE_REVIEW_2026-05-28.md)** – Maintainability and package API findings
 - **[Testing Guide](tests/README.md)** – Test framework documentation
 
 ### Key Commands
@@ -680,7 +679,6 @@ Historical package-development versions are alpha snapshots:
 If upgrading from an older version:
 - `\usepackage{paper/paperstyle}` → `\usepackage{lanepaper}`
 - All module names now have the `lnp` prefix
-- See [MIGRATION.md](docs/archive/MIGRATION.md) for details
 
 ### Full Changelog
 
