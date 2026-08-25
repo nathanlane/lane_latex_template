@@ -69,29 +69,29 @@
 \newcommand{\spacioussections}{%
   % Original generous spacing (2 units before, 1 after)
   \titlespacing*{\section}{0pt}
-    {26.4pt plus 3.3pt minus 3.3pt}
-    {13.2pt plus 1.65pt minus 0pt}
+    {2\gridunit plus 0.25\gridunit minus 0.25\gridunit}
+    {1\gridunit plus 0.125\gridunit minus 0pt}
 }
 
 \newcommand{\moderatesections}{%
   % Moderate spacing (1.5 units before, 1 after) - DEFAULT
   \titlespacing*{\section}{0pt}
-    {19.8pt plus 3.3pt minus 3.3pt}
-    {13.2pt plus 1.65pt minus 0pt}
+    {1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit}
+    {1\gridunit plus 0.125\gridunit minus 0pt}
 }
 
 \newcommand{\compactsections}{%
   % Compact spacing (1 unit before, 1 after)
   \titlespacing*{\section}{0pt}
-    {13.2pt plus 3.3pt minus 3.3pt}
-    {13.2pt plus 1.65pt minus 0pt}
+    {1\gridunit plus 0.25\gridunit minus 0.25\gridunit}
+    {1\gridunit plus 0.125\gridunit minus 0pt}
 }
 
 \newcommand{\tightsections}{%
   % Tight academic spacing (1 unit before, 0.5 after)
   \titlespacing*{\section}{0pt}
-    {13.2pt plus 3.3pt minus 1.65pt}
-    {6.6pt plus 1.65pt minus 0pt}
+    {1\gridunit plus 0.25\gridunit minus 0.125\gridunit}
+    {0.5\gridunit plus 0.125\gridunit minus 0pt}
 }
 
 % ==============================================================================
@@ -110,8 +110,8 @@
   {}  % No optical compensation - achieve alignment through leading
 \titlespacing*{\section}
   {0pt}
-  {19.8pt plus 3.3pt minus 3.3pt}  % 1.5 units ±0.25 (reduced from 2)
-  {13.2pt plus 1.65pt minus 0pt}    % 1 unit +0.125/-0 (unchanged)
+  {1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit}  % 1.5 units ±0.25 (reduced from 2)
+  {1\gridunit plus 0.125\gridunit minus 0pt}    % 1 unit +0.125/-0 (unchanged)
 
 % Subsections: Bold with moderate tracking and midnight blue
 % OPTIMIZED: 19.8pt leading (1.5 grid units) for perfect alignment
@@ -123,8 +123,8 @@
   {}  % No optical compensation - proper leading ensures alignment
 \titlespacing*{\subsection}
   {0pt}
-  {19.8pt plus 3.3pt minus 1.65pt}  % 1.5 units ±0.25/0.125 (reduced from 2)
-  {9.9pt plus 1.65pt minus 0pt}      % 0.75 units +0.125/-0 (tighter)
+  {1.5\gridunit plus 0.25\gridunit minus 0.125\gridunit}  % 1.5 units ±0.25/0.125 (reduced from 2)
+  {0.75\gridunit plus 0.125\gridunit minus 0pt}      % 0.75 units +0.125/-0 (tighter)
 
 % Subsubsections: Bold with charcoal color for softer impact
 % OPTIMIZED: Single grid unit leading for tight alignment
@@ -135,8 +135,8 @@
   {}
 \titlespacing*{\subsubsection}
   {0pt}
-  {19.8pt plus 3.3pt minus 1.65pt}  % 1.5 units ±0.25/0.125
-  {6.6pt plus 1.65pt minus 0pt}      % 0.5 units +0.125/-0 (reduced from 0.75)
+  {1.5\gridunit plus 0.25\gridunit minus 0.125\gridunit}  % 1.5 units ±0.25/0.125
+  {0.5\gridunit plus 0.125\gridunit minus 0pt}      % 0.5 units +0.125/-0 (reduced from 0.75)
 
 % Paragraphs: Bold italic for contrast without blockiness
 % OPTIMIZED: Exact body text size and leading for perfect integration
@@ -151,7 +151,7 @@
   {}
 \titlespacing*{\paragraph}
   {0pt}
-  {13.2pt plus 3.3pt minus 1.65pt}  % 1 unit ±0.25/0.125
+  {1\gridunit plus 0.25\gridunit minus 0.125\gridunit}  % 1 unit ±0.25/0.125
   {0.75em}  % Run-in separation from following text
 
 % ==============================================================================
@@ -173,7 +173,7 @@
     {}
   \titlespacing*{\paragraph}
     {0pt}
-    {13.2pt plus 3.3pt minus 1.65pt}  % 1 unit ±0.25/0.125
+    {1\gridunit plus 0.25\gridunit minus 0.125\gridunit}  % 1 unit ±0.25/0.125
     {0.75em}  % Run-in separation from following text
 }
 
@@ -188,9 +188,9 @@
 % Safe paragraph command for Overleaf compatibility
 % Use this if standard \paragraph causes "missing \item" errors
 \newcommand{\safeparagraph}[1]{%
-  \par\vspace{13.2pt}% 1 grid unit before
+  \par\vspace{\gridunit}% 1 grid unit before
   {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{paragraphcolor}#1}%
-  \par\vspace{6.6pt}% 0.5 grid units after
+  \par\vspace{0.5\gridunit}% 0.5 grid units after
   \noindent
 }
 

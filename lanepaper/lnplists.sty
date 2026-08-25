@@ -69,9 +69,9 @@
 \newlength{\lnp@listlabelsep}
 
 % Initialise values
-\setlength{\lnp@listhalfbaseline}{6.6pt}      % 0.5 grid units
-\setlength{\lnp@listquarterbaseline}{3.3pt}   % 0.25 grid units  
-\setlength{\lnp@listbaselineskip}{13.2pt}     % 1 full grid unit
+\setlength{\lnp@listhalfbaseline}{0.5\gridunit}      % 6.6pt
+\setlength{\lnp@listquarterbaseline}{0.25\gridunit}   % 3.3pt  
+\setlength{\lnp@listbaselineskip}{\gridunit}     % 13.2pt; used as a topsep, not a baselineskip (#73)
 \setlength{\lnp@listhangindent}{26.4pt}       % 2 grid units (optimized for Pagella)
 \setlength{\lnp@listnestedindent}{13.2pt}     % 1 grid unit for nested lists
 \setlength{\lnp@listlabelsep}{0.7em}          % Space between bullet and text
@@ -286,7 +286,7 @@
   labelsep=0.55em,
   itemsep=\lnp@listhalfbaseline,                  % 0.5 units for readability
   parsep=0pt,
-  topsep=9.9pt plus 1.65pt,                   % 0.75 units above/below
+  topsep=0.75\gridunit plus 0.125\gridunit,     % 9.9pt +1.65pt
   partopsep=0pt,
   before={\vspace{-\parskip}\vspace{\lnp@listhalfbaseline}},
   after={\vspace{-\parskip}\vspace{\lnp@listhalfbaseline}}
