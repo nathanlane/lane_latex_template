@@ -78,7 +78,7 @@ That's it! You now have a professionally typeset academic paper.
 
 <!-- %% FIX: Remove unsupported external build claims and keep the local toolchain explicit. -->
 Verified locally on August 12, 2026 (all gates: `make lint`, `make build`,
-`make check-deps`, `make style-check`, pytest):
+`make check-deps`, `make test`):
 
 - **TeX Live 2026** at `/usr/local/texlive/2026`, pdfTeX 1.40.29, using
   `latexmk -pdf -interaction=nonstopmode main.tex`.
@@ -99,7 +99,7 @@ Earlier verification (July 4, 2026): TeX Live 2025, pdfTeX 1.40.28,
 
 ```bash
 # Verify your LaTeX installation
-make check
+make check-deps
 
 # Install missing packages (if any)
 tlmgr install tgpagella inconsolata newpx mathalfa booktabs
@@ -148,10 +148,10 @@ pytest -q
 
 **Using Make** (recommended):
 ```bash
-make              # Full compilation with bibliography
-make quick        # Fast compilation (skip bibliography)
-make clean        # Remove temporary files
+make              # Compile the demo document
+make clean        # Remove generated output, the PDF included
 make watch        # Auto-recompile on changes
+make help         # List every target
 ```
 
 **Repository verification gates**:
@@ -593,9 +593,8 @@ See **[CONTRIBUTING.md](CONTRIBUTING.md)** for build instructions, test commands
 ### Testing
 
 ```bash
-make test         # Full test suite
-make test-quick   # Quick compilation test
-make validate     # Style validation
+make test         # pytest, then the shell harness
+make lint         # chktex, then the math-spacing checker
 ```
 
 ### Pull Request Process

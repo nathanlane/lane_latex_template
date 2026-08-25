@@ -330,13 +330,10 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
 ### Running Tests
 
 ```bash
-# Quick validation
-make test-quick
-
-# Full test suite  
+# Full test suite: pytest, then the shell harness
 make test
 
-# Specific test
+# One fixture
 ./tests/run-tests.sh tests/fixtures/minimal.tex
 
 # With verbose output
@@ -361,14 +358,12 @@ VERBOSE=1 ./tests/run-tests.sh
 ### Style Validation
 
 ```bash
-# Check for common issues
-make validate
+# chktex, then the math-spacing checker
+make lint
 
-# Analyze warnings
-make warnings
-
-# Show diagnostics
-make diagnose
+# Count overfull and underfull boxes in the last build
+grep -c 'Overfull \\hbox' main.log
+grep -c 'Underfull \\hbox' main.log
 ```
 
 ## Getting Help

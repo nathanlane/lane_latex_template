@@ -16,20 +16,29 @@
 | Command | Purpose | Acceptable exit code |
 |---------|---------|----------------------|
 | `chktex -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48 demo/*.tex demo/appendices/*.tex` | Catch obvious bad constructs while ignoring intentional template/prose warnings that require visual-output changes. `-n48` requires ChkTeX ≥ 1.7.7; older binaries (TeX Live 2022's 1.7.6) reject it — the Makefile probes support and drops it. | 0 |
-| `latexmk -pdf -interaction=nonstopmode main.tex` | Full compile; output PDF must be produced. | 0 |
-| `pytest -q` | Runs regression tests over fixtures, package-option contracts, and PDF-text assertions where Poppler is available. | 0 |
+| `latexmk -pdf -interaction=nonstopmode demo/main.tex` | Full compile; output PDF must be produced. | 0 |
+| `make test` | `pytest -q` then `bash tests/run-tests.sh`: regression tests over fixtures, package-option contracts, and PDF-text assertions where Poppler is available, then the shell harness. | 0 |
 
 If **any** command fails, fix the cause instead of suppressing it.
 
 ## ⚙️ Build targets available
-* `make build` – alias for the latexmk command above  
-* `make lint` – runs the chktex line above  
-* `make fmt` – runs `latexindent -l -w` (no layout impact, indentation only)
+`make help` lists all of them. The three that matter here:
+
+* `make build` – the latexmk command above
+* `make lint` – the chktex command above, plus the math-spacing checker
+* `make test` – `pytest -q` then the shell harness, exactly what CI runs
+
+There is no formatting target. Issue #51 deleted the aliases; run the
+formatter directly when you want it:
+
+```bash
+latexindent -l -w demo/*.tex demo/appendices/*.tex   # indentation only
+```
 
 ## 🔄 Workflow
 1. `make lint` – fix warnings **unless** they require visual changes.  
 2. `make build` – iterate until the build is green.  
-3. `pytest` – ensure regression tests pass.  
+3. `make test` – ensure regression tests pass.  
 4. Document the change and commit.
 
 ## 🏁 Definition of Done

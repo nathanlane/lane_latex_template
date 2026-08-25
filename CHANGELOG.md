@@ -4,6 +4,45 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Cut the Makefile from 24 targets to 11 (issue #51).
+
+The aliases are deleted, not forwarded. Four targets used to run the tests and
+nobody could tell which one CI used; `pdf`, `quick` and `build` were three
+routes to the same compile; `clean`, `distclean` and `test-clean` overlapped.
+
+What survives: `build`, `lint`, `test`, `clean`, `check-deps`, `watch`,
+`install`, `uninstall`, `ctan`, `release`, `help`. The last four came from #50,
+which landed after this issue was written -- the issue's own target list was
+eight, and these are packaging jobs rather than aliases.
+
+Two targets changed meaning:
+
+- `lint` now runs `src/sh/validate_latex_style.sh` after chktex. The math-
+  spacing checker previously had its own `style-check` target that CI never
+  ran, so this is a check CI gains.
+- `clean` now removes the PDF as well. `distclean` was the only way to get a
+  genuinely clean tree, and a stale `main.pdf` has silently passed for a fresh
+  build here before.
+
+`make test` runs pytest and then the shell harness, and CI calls that single
+target instead of the two commands, so what CI runs and what a contributor
+runs cannot drift apart.
+
+Deleted with no replacement target: `fmt`, `format`, `figures`, `diagnose`,
+`warnings`, `dev`, `setup`, `validate`, `all`. The formatter commands they
+wrapped are documented directly in `AGENTS.md` and `docs/technical/TESTING.md`.
+
+Also fixed a latent bug in the chktex probe: it tested `-n48` support against a
+root `main.tex` that does not exist. chktex exits 0 on a missing file and
+non-zero on a real file with warnings, so pointing the probe at a real document
+would have silently dropped the flag. It now probes `/dev/null`.
+
+Stale `make` instructions were corrected across `README.md`, `INSTALL.md`,
+`TROUBLESHOOTING.md`, `CONTRIBUTING.md`, `AGENTS.md`, `demo/main.tex`,
+`tests/README.md`, `docs/guides/BIBLIOGRAPHY_GUIDE.md` and
+`docs/technical/TESTING.md`, and `src/sh/validate_latex_style.sh` no longer
+tells the user to run a target that no longer exists.
+
 Adopted l3build for packaging and release (issue #50).
 
 `build.lua` at the repository root drives four targets: `install` copies the

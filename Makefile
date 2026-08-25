@@ -1,242 +1,97 @@
-# Makefile for Lane LaTeX Template
-# %% FIX: Keep active command help aligned with the repository identity.
-# LaTeX compilation workflow
+# Makefile for the lanepaper package and its demo document.
+#
+# One target per job. Aliases were deleted in issue #51 rather than kept as
+# forwarders: when four targets ran the tests, nobody could tell which one CI
+# used. Every gate below is the one CI runs.
 
-# Variables
-MAIN = main
-LATEX = pdflatex
-BIBER = biber
+# Tools
 LATEXMK = latexmk
-CHKTEX = chktex
-LATEXINDENT = latexindent
-LATEXFLAGS = -interaction=nonstopmode -halt-on-error
-# FIX: Suppress intentional template/prose warnings that require visual-output changes.
-# FIX: -n48 exists only in chktex >= 1.7.7; older binaries (e.g. TeX Live
-# 2022's 1.7.6) error out with "Illegal warning number". Probe once at make
-# time and include the flag only when the local binary supports it.
-CHKTEXFLAGS = -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46
-CHKTEX_N48 := $(shell $(CHKTEX) -q -n48 main.tex >/dev/null 2>&1 && echo " -n48")
-CHKTEXFLAGS += $(CHKTEX_N48)
-PYTHON = python3
-BLACK = black
+CHKTEX  = chktex
+L3BUILD = l3build
 
-# Set TEXINPUTS to find the lanepaper package files
+# chktex warning classes suppressed for this project's prose conventions.
+CHKTEXFLAGS = -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46
+# -n48 exists only in chktex >= 1.7.7; older binaries (TeX Live 2022's 1.7.6)
+# error out with "Illegal warning number". Probe once at make time. The probe
+# runs against /dev/null on purpose: it must answer "does this binary accept
+# the flag", not "does some file have warnings", and chktex exits non-zero
+# when a real file has any.
+CHKTEX_N48 := $(shell $(CHKTEX) -q -n48 /dev/null >/dev/null 2>&1 && echo " -n48")
+CHKTEXFLAGS += $(CHKTEX_N48)
+
+# Recursive assignment: `date` runs when the recipe runs, not at parse time.
+RELEASE_DATE = $(shell date +%Y-%m-%d)
+
+# Directories
+MAIN           = main
+PKG_DIR        = lanepaper
+DEMO_DIR       = demo
+APPENDICES_DIR = demo/appendices
+SRC_DIR        = src
+
+# Watched sources
+TEX_SOURCES   = $(wildcard $(DEMO_DIR)/*.tex) $(wildcard $(APPENDICES_DIR)/*.tex)
+STYLE_SOURCES = $(wildcard $(PKG_DIR)/*.sty)
+
+# Find the package and the demo's bibliography without installing them.
 export TEXINPUTS := ./lanepaper:./demo:$(TEXINPUTS)
 export BIBINPUTS := .:./demo:$(BIBINPUTS)
 
-# Directories
-PKG_DIR = lanepaper
-DEMO_DIR = demo
-APPENDICES_DIR = demo/appendices
-FIGURES_DIR = demo/figures
-SRC_DIR = src
-DATA_DIR = data
-
-# Source files
-TEX_SOURCES = $(wildcard $(DEMO_DIR)/*.tex) $(wildcard $(APPENDICES_DIR)/*.tex)
-BIB_SOURCES = $(DEMO_DIR)/references.bib
-STYLE_SOURCES = $(wildcard $(PKG_DIR)/*.sty)
-
-# Python sources
-PY_SOURCES = $(wildcard $(SRC_DIR)/py/*.py)
-
-# Default target
-.PHONY: all
-all: pdf
-
-# FIX: Mirror AGENTS.md verification commands without changing legacy targets.
+# `make` with no target builds the demo.
 .PHONY: build
 build:
 	$(LATEXMK) -pdf -interaction=nonstopmode $(DEMO_DIR)/$(MAIN).tex
 
-# FIX: Keep the lint gate identical to AGENTS.md.
-# FIX: glob the .tex sources that actually exist under demo/.
+# Both source checks. chktex reads the demo's prose; validate_latex_style.sh
+# checks math spacing, which chktex does not cover.
 .PHONY: lint
 lint:
 	$(CHKTEX) $(CHKTEXFLAGS) $(DEMO_DIR)/*.tex $(APPENDICES_DIR)/*.tex
+	$(SRC_DIR)/sh/validate_latex_style.sh
 
-# FIX: Provide the documented indentation-only formatting target.
-.PHONY: fmt
-fmt:
-	$(LATEXINDENT) -l -w $(DEMO_DIR)/*.tex $(APPENDICES_DIR)/*.tex
+# The whole suite, in the order CI runs it.
+.PHONY: test
+test:
+	python3 -m pytest -q
+	bash tests/run-tests.sh
 
-# Main PDF compilation with full bibliography processing
-.PHONY: pdf
-pdf: $(MAIN).pdf
-
-$(MAIN).pdf: $(TEX_SOURCES) $(BIB_SOURCES) $(STYLE_SOURCES)
-	@echo "==> Initial LaTeX compilation..."
-	$(LATEX) $(LATEXFLAGS) $(MAIN)
-	@echo "==> Running Biber for bibliography..."
-	$(BIBER) $(MAIN)
-	@echo "==> Second LaTeX compilation..."
-	$(LATEX) $(LATEXFLAGS) $(MAIN)
-	@echo "==> Final LaTeX compilation..."
-	$(LATEX) $(LATEXFLAGS) $(MAIN)
-	@echo "==> PDF compilation complete: $(MAIN).pdf"
-
-# Quick compilation (no bibliography)
-.PHONY: quick
-quick:
-	@echo "==> Quick LaTeX compilation (no bibliography)..."
-	@if $(LATEX) $(LATEXFLAGS) $(MAIN); then \
-		echo "==> Quick compilation complete: $(MAIN).pdf"; \
-	else \
-		echo "==> ERROR: Compilation failed. Check syntax and missing packages."; \
-		exit 1; \
-	fi
-
-# Clean auxiliary files but keep PDF
+# Removes generated output, the PDF included. Everything here is rebuilt by
+# `make build`.
 .PHONY: clean
 clean:
-	@echo "==> Cleaning auxiliary files..."
-	rm -f $(MAIN).aux $(MAIN).bbl $(MAIN).bcf $(MAIN).blg
-	rm -f $(MAIN).log $(MAIN).out $(MAIN).run.xml $(MAIN).toc
-	rm -f $(MAIN).nav $(MAIN).snm $(MAIN).vrb
+	$(LATEXMK) -C $(DEMO_DIR)/$(MAIN).tex >/dev/null 2>&1 || true
+	rm -f $(MAIN).aux $(MAIN).bbl $(MAIN).bcf $(MAIN).blg $(MAIN).fdb_latexmk \
+		$(MAIN).fls $(MAIN).log $(MAIN).out $(MAIN).run.xml $(MAIN).toc $(MAIN).pdf
 	rm -f $(DEMO_DIR)/*.aux $(APPENDICES_DIR)/*.aux
 	rm -f texput.log
-	@echo "==> Clean complete (PDF preserved)"
+	@echo "==> Clean complete"
 
-# Deep clean including PDF
-.PHONY: distclean
-distclean: clean
-	@echo "==> Removing PDF output..."
-	rm -f $(MAIN).pdf
-	@echo "==> Deep clean complete"
+.PHONY: check-deps
+check-deps:
+	$(SRC_DIR)/sh/check-packages.sh
 
-# Watch mode for development (requires inotify-tools or fswatch)
 .PHONY: watch
 watch:
-	@echo "==> Starting watch mode (Ctrl+C to stop)..."
-	@echo "==> Watching: $(TEX_SOURCES) $(STYLE_SOURCES)"
+	@echo "==> Watching for changes (Ctrl+C to stop)..."
 	@if command -v fswatch >/dev/null 2>&1; then \
 		fswatch -o $(TEX_SOURCES) $(STYLE_SOURCES) | while read; do \
-			echo "==> File changed, recompiling..."; \
-			$(MAKE) quick; \
+			$(MAKE) build; \
 		done; \
 	elif command -v inotifywait >/dev/null 2>&1; then \
 		while inotifywait -r -e modify $(DEMO_DIR) $(PKG_DIR) >/dev/null 2>&1; do \
-			echo "==> File changed, recompiling..."; \
-			$(MAKE) quick; \
+			$(MAKE) build; \
 		done; \
 	else \
-		echo "==> ERROR: Please install fswatch (macOS) or inotify-tools (Linux)"; \
-		echo "==> macOS: brew install fswatch"; \
-		echo "==> Linux: sudo apt-get install inotify-tools"; \
+		echo "==> ERROR: install fswatch (macOS: brew install fswatch)"; \
+		echo "==>        or inotify-tools (Linux: apt-get install inotify-tools)"; \
 		exit 1; \
 	fi
-
-# Validate template integrity
-.PHONY: validate
-validate:
-	@echo "==> Validating template integrity..."
-	@# FIX: Validate the renamed package that is actually shipped.
-	@if ! test -f $(PKG_DIR)/lanepaper.sty; then \
-		echo "==> ERROR: lanepaper.sty not found"; exit 1; \
-	fi
-	@if ! test -f $(BIB_SOURCES); then \
-		echo "==> ERROR: $(BIB_SOURCES) not found"; exit 1; \
-	fi
-	@echo "==> Checking for required LaTeX packages..."
-	@if ! kpsewhich biblatex.sty >/dev/null 2>&1; then \
-		echo "==> WARNING: biblatex package not found"; \
-	fi
-	@if ! kpsewhich microtype.sty >/dev/null 2>&1; then \
-		echo "==> WARNING: microtype package not found"; \
-	fi
-	@echo "==> Template validation complete"
-
-# Development workflow
-.PHONY: dev
-dev: clean validate quick
-	@echo "==> Development build complete"
-
-# Format Python code with black
-.PHONY: format
-format:
-	@if [ -n "$(PY_SOURCES)" ]; then \
-		echo "==> Formatting Python code with black..."; \
-		$(BLACK) $(SRC_DIR)/py/; \
-	else \
-		echo "==> No Python files to format"; \
-	fi
-
-# Validate LaTeX style compliance (alternative target)
-.PHONY: style-check
-style-check:
-	@echo "==> Validating LaTeX style compliance..."
-	@$(SRC_DIR)/sh/validate_latex_style.sh
-
-# Generate all figures from Python scripts
-.PHONY: figures
-figures:
-	@echo "==> Generating figures..."
-	@for script in $(PY_SOURCES); do \
-		echo "Running $$script..."; \
-		$(PYTHON) $$script; \
-	done
-
-# Old watch target removed - using enhanced version above
-
-# Check for required tools and packages
-.PHONY: check
-check:
-	@echo "==> Checking for required tools..."
-	@which $(LATEX) > /dev/null || (echo "ERROR: pdflatex not found" && exit 1)
-	@which $(BIBER) > /dev/null || (echo "ERROR: biber not found" && exit 1)
-	@which $(PYTHON) > /dev/null || (echo "ERROR: python3 not found" && exit 1)
-	@which $(BLACK) > /dev/null || echo "WARNING: black not found (needed for Python formatting)"
-	@echo "==> All required tools found"
-	@echo ""
-	@echo "==> Checking for required LaTeX packages..."
-	@for pkg in biblatex microtype booktabs caption enumitem titlesec fancyhdr \
-		geometry graphicx hyperref cleveref csquotes tgpagella inconsolata \
-		newpx amsmath amssymb xcolor adjustbox; do \
-		if kpsewhich $$pkg.sty >/dev/null 2>&1; then \
-			echo "✓ $$pkg"; \
-		else \
-			echo "✗ $$pkg - Install with: tlmgr install $$pkg"; \
-			MISSING=1; \
-		fi; \
-	done
-	@if [ "$$MISSING" = "1" ]; then \
-		echo ""; \
-		echo "==> Some packages are missing. Install them with tlmgr or mpm."; \
-		exit 1; \
-	else \
-		echo ""; \
-		echo "==> All required packages found!"; \
-	fi
-
-# Setup project structure
-.PHONY: setup
-setup: check
-	@echo "==> Setting up project structure..."
-	@mkdir -p $(FIGURES_DIR) $(DATA_DIR)/raw $(DATA_DIR)/processed
-	@echo "==> Testing minimal compilation..."
-	@if $(MAKE) test-quick; then \
-		echo "==> Setup complete! You can now run 'make pdf' to build the paper."; \
-	else \
-		echo "==> Setup incomplete. Check the errors above."; \
-		exit 1; \
-	fi
-
-# Check package dependencies only
-.PHONY: check-deps
-check-deps:
-	@echo "==> Checking LaTeX package dependencies..."
-	@# FIX: fail loudly when the script is missing instead of faking health.
-	$(SRC_DIR)/sh/check-packages.sh
 
 # ==============================================================================
 # Packaging and release
 # ==============================================================================
-# l3build handles packaging only; pytest remains the test harness and
-# build.lua declares no test files. See
+# l3build packages; pytest tests. build.lua declares no test files. See
 # docs/adr/0002-l3build-for-packaging-pytest-for-tests.md.
-L3BUILD = l3build
-# Recursive assignment: `date` runs when the recipe runs, not at parse time.
-RELEASE_DATE = $(shell date +%Y-%m-%d)
 
 # Install into TEXMFHOME so \usepackage{lanepaper} resolves outside this
 # repository. Repository builds are unaffected: TEXINPUTS above puts
@@ -257,9 +112,9 @@ ctan:
 
 # make release VERSION=x.y.z
 #
-# Stamps one version and date into every \ProvidesPackage, promotes the
-# CHANGELOG's Unreleased section, commits, and tags. Pushing is deliberate
-# and separate:
+# Stamps one version and date into every \ProvidesPackage, proves the archive
+# still builds from the stamped sources, promotes the CHANGELOG's Unreleased
+# section, commits, and tags. Pushing is deliberate and separate:
 #
 #     git push origin main --follow-tags
 #
@@ -281,6 +136,9 @@ release:
 		|| { echo "ERROR: $(L3BUILD) not found (it ships with TeX Live)"; exit 1; }
 	@echo "==> Stamping v$(VERSION) into every \\ProvidesPackage..."
 	$(L3BUILD) tag $(VERSION)
+	@echo "==> Building the archive from the stamped sources..."
+	@$(L3BUILD) ctan >/dev/null \
+		|| { echo "ERROR: l3build ctan failed. Recover with: git checkout -- ."; exit 1; }
 	@echo "==> Promoting the CHANGELOG's Unreleased section..."
 	@grep -q '^## Unreleased$$' CHANGELOG.md \
 		|| { echo "ERROR: CHANGELOG.md has no '## Unreleased' section"; exit 1; }
@@ -293,94 +151,21 @@ release:
 	@git tag -a "v$(VERSION)" -m "v$(VERSION)"
 	@echo "==> Tagged v$(VERSION). Push with: git push origin main --follow-tags"
 
-# Testing targets
-.PHONY: test
-test:
-	@echo "==> Running all tests..."
-	@tests/run-tests.sh
-
-.PHONY: test-compile
-test-compile:
-	@echo "==> Running compilation tests..."
-	@tests/run-tests.sh
-
-.PHONY: test-quick
-test-quick:
-	@echo "==> Running quick tests (minimal fixture only)..."
-	@tests/run-tests.sh tests/fixtures/minimal.tex
-
-.PHONY: test-clean
-test-clean: clean
-	@echo "==> Testing from clean state..."
-	@$(MAKE) test
-
-# Diagnostic commands
-.PHONY: diagnose
-diagnose:
-	@echo "==> Running LaTeX diagnostics..."
-	@echo "\\documentclass{article}" > diagnose.tex
-	@echo "% FIX: Load the renamed package for diagnostics." >> diagnose.tex
-	@echo "\\usepackage{lanepaper}" >> diagnose.tex
-	@echo "\\begin{document}" >> diagnose.tex
-	@echo "\\lanepaperdiagnostics" >> diagnose.tex
-	@echo "\\end{document}" >> diagnose.tex
-	@$(LATEX) -interaction=nonstopmode diagnose.tex > /dev/null 2>&1 || true
-	@rm -f diagnose.*
-	@echo "==> Check main.log for diagnostic output"
-
-.PHONY: warnings
-warnings:
-	@echo "==> Analyzing compilation warnings..."
-	@if [ -f main.log ]; then \
-		echo ""; \
-		echo "Overfull hboxes:"; \
-		grep "Overfull \\\\hbox" main.log | wc -l; \
-		echo ""; \
-		echo "Underfull hboxes:"; \
-		grep "Underfull \\\\hbox" main.log | wc -l; \
-		echo ""; \
-		echo "Package warnings (excluding hyperref):"; \
-		grep "Warning:" main.log | grep -v "hyperref Warning: Token" | head -10; \
-	else \
-		echo "No main.log found. Run 'make pdf' first."; \
-	fi
-
-# Help target
 .PHONY: help
 help:
-	@echo "Lane LaTeX Template - Makefile targets:"
+	@echo "lanepaper - make targets:"
 	@echo ""
-	@echo "Compilation targets:"
-	@echo "  make build      - AGENTS.md latexmk build gate"
-	@echo "  make lint       - AGENTS.md chktex lint gate"
-	@echo "  make fmt        - Run latexindent on active TeX sources"
-	@echo "  make pdf        - Full compilation with bibliography (default)"
-	@echo "  make quick      - Quick compilation without bibliography"
-	@echo "  make clean      - Remove auxiliary files (keep PDF)"
-	@echo "  make distclean  - Remove all generated files including PDF"
+	@echo "  build       Compile the demo document (default)"
+	@echo "  lint        chktex plus the math-spacing checker"
+	@echo "  test        pytest plus the shell harness"
+	@echo "  clean       Remove generated output, PDF included"
+	@echo "  check-deps  Verify the required LaTeX packages are installed"
+	@echo "  watch       Rebuild on change (needs fswatch or inotify-tools)"
 	@echo ""
-	@echo "Development targets:"
-	@echo "  make dev        - Development build (clean + validate + quick)"
-	@echo "  make watch      - Auto-rebuild on file changes (requires fswatch/inotify)"
-	@echo "  make validate   - Check template integrity and dependencies"
-	@echo "  make style-check - Check LaTeX style compliance"
-	@echo "  make format     - Format Python code with black"
-	@echo "  make figures    - Generate all figures from Python scripts"
+	@echo "  install     Install the package into TEXMFHOME"
+	@echo "  uninstall   Remove it from TEXMFHOME"
+	@echo "  ctan        Build lanepaper-ctan.zip without submitting it"
+	@echo "  release VERSION=x.y.z"
+	@echo "              Stamp versions, update the CHANGELOG, commit and tag"
 	@echo ""
-	@echo "Setup requirements:"
-	@echo "  macOS: brew install fswatch"
-	@echo "  Linux: sudo apt-get install inotify-tools"
-	@echo ""
-	@echo "Packaging targets:"
-	@echo "  make install    - Install the package into TEXMFHOME (l3build)"
-	@echo "  make uninstall  - Remove it from TEXMFHOME"
-	@echo "  make ctan       - Build lanepaper-ctan.zip without submitting"
-	@echo "  make release VERSION=x.y.z - Stamp, changelog, commit, tag"
-	@echo ""
-	@echo "Testing targets:"
-	@echo "  make test       - Run all tests"
-	@echo "  make test-compile - Test LaTeX compilation"
-	@echo "  make test-quick - Quick test with minimal fixture"
-	@echo "  make test-clean - Test from clean state"
-	@echo ""
-	@echo "  make help       - Show this help message"
+	@echo "  help        This message"

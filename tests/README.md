@@ -9,11 +9,12 @@ Run all tests:
 make test
 ```
 
-Run specific test types:
+`make test` runs `pytest -q` and then the shell harness, which is what CI
+runs. To run one harness on its own:
 ```bash
-make test-compile    # Test LaTeX compilation
-make test-quick      # Quick compilation check (no bibliography)
-make test-clean      # Test from clean state
+python3 -m pytest -q                          # regression tests
+bash tests/run-tests.sh                       # shell harness
+bash tests/run-tests.sh tests/fixtures/minimal.tex   # one fixture
 ```
 
 Some pytest regression checks inspect generated PDF text. Install Poppler so

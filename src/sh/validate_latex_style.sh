@@ -147,7 +147,7 @@ check_python_style() {
   for file in $py_files; do
     if ! black --check --quiet "$file" 2>/dev/null; then
       print_error "Python file needs formatting: $file"
-      print_info "  Run: make format"
+      print_info "  Run: black src/py/"
     else
       print_success "Python formatting OK: $(basename $file)"
     fi
