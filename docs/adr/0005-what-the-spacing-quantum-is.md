@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 date: 2026-08-25
 ---
 
@@ -11,8 +11,7 @@ spacing quantum rather than a baseline. It settled what 13.2pt **is not**. It
 did not settle what it **is**, and it left three questions open that the
 package answers by accident today.
 
-This ADR is `proposed`, not accepted. It exists to make the decision explicit
-rather than inherit it.
+This ADR exists to make the decision explicit rather than inherit it.
 
 ## The problem ADR-0004 left behind
 
@@ -47,21 +46,64 @@ PDF:
 Nothing lands on a quantum multiple. The quantum is an input to spacing
 calculations; the grid the output actually sits on is 16.32pt.
 
-**One document runs four vertical pitches**, only one of which is a whole
-quantum, and that one by accident:
+**One document runs three vertical pitches**, none a whole quantum:
 
 | Context | Pitch | In quanta | Set where |
 |---|---|---|---|
 | body | 16.32pt | 1.236 | `\linespread{1.20}` on the class baseline |
 | quote | 15.84pt | 1.200 | `\fontsize{10.5}{13.2}` × `\linespread` |
-| display maths | 13.20pt | 1.000 | `lnpmathgridlocked.sty:130` |
 | footnote | 12.00pt | 0.909 | class default |
+
+An earlier draft of this ADR listed a fourth pitch, display maths at 13.2pt
+from `lnpmathgridlocked.sty:130` — that attribution was wrong; see issue 1.
 
 ## Decision
 
-**Not yet made.** The options are below.
+**Option A, with one addition: the gridlocked modules are deleted.**
 
-### Option A — accept the quantum as a plain spacing unit
+`\gridunit` is a **spacing quantum** — the unit vertical space values are
+drawn from — and nothing more. It has no relationship to where text lands.
+Every claim of rhythm, alignment, or grid-locking comes out of documentation,
+comments, and the demo. "Spacing quantum" (ADR-0004) remains the canonical
+term.
+
+Two observations are recorded without weight being put on them. The quantum
+is ≈1.2 nominal ems (1.2 × 11pt; 1.205 × the true 10.95pt em) — a
+size-relative modulus is a legitimate tradition, but this rationale is
+retrofitted, so it is noted, not relied on. And ADR-0004's third path (a
+baseline-fraction quantum — Option B below) stays open to a future major
+release; deciding A now forecloses nothing.
+
+**The deletion.** `lnpheadingsgridlocked.sty` and `lnpmathgridlocked.sty` are
+removed rather than renamed. Nothing loads them — not `lanepaper.sty`, not the
+demo (verified under issue 1) — and their mechanisms cannot do what their
+names promise: the "grid recovery" commands are `\vspace{0pt plus X minus X}`,
+glue centred on zero, which snaps to nothing. Pre-CTAN is the cheapest moment
+the names will ever be free. No stubs ship.
+
+Sub-decisions, so none is inherited silently:
+
+- **`\gridunit` and its five derived public names stay.** Documentation
+  carries the honesty ("the spacing scale's unit, not a baseline grid"); a
+  future major may rename.
+- **The `[grid]` overlay draws only the real 16.32pt baseline grid.** The
+  13.2pt quantum lines go: a unit is not a set of positions (issue 7).
+- **Remaining executable `13.2pt` literals become `\gridunit`** or derived
+  lengths, proven by raster identity (issue 4, now hygiene rather than
+  migration prep).
+- **`\parindent` is set to an explicit `13.2pt`**, deliberately not
+  `\gridunit`: a horizontal indent must not follow a vertical unit (issue 6).
+  `1.2em` would be 13.14pt — a rendering change — so the literal is the
+  rule-compliant form. This is the one deliberate `13.2pt` literal.
+- **Display spacing in `lanepaper.sty` keeps its values, with the rationale
+  written down**: a multi-line display is read as one object, so compact
+  internal leading binds its rows while `\abovedisplayskip` separates the
+  block from prose; maths rows carry their own vertical bulk and `\lineskip`
+  guards collisions.
+
+The options considered:
+
+### Option A — accept the quantum as a plain spacing unit (chosen)
 
 Keep 13.2pt. Delete every claim of rhythm, alignment, or grid-locking from
 documentation, comments, module names, and the demo. `\gridunit` becomes what
@@ -72,7 +114,7 @@ Cheapest, changes no rendering, and is honest. Its cost is that the package
 keeps a number nobody can justify, and the name `\gridunit` keeps implying a
 grid that does not exist.
 
-### Option B — re-derive the quantum from the baseline
+### Option B — re-derive the quantum from the baseline (rejected; stays the future-major path)
 
 Choose a quantum that divides the baseline: 16.32 / 2 = 8.16pt, or / 4 =
 4.08pt. Spacing in whole quanta then preserves the line grid, and the rhythm
@@ -83,7 +125,14 @@ the new quantum, so it needs the same per-page raster proof any typographic
 change needs. ADR-0004 records this as the "third path" and put it out of
 scope; it is the only option that makes the existing vocabulary correct.
 
-### Option C — keep 13.2pt and justify it independently
+Rejected for a further reason: re-deriving the number does not deliver the
+discipline. The package spaces with stretchable glue, and TeX stretches it
+whenever a page needs flushing — text drifts off *any* grid on any page with
+flexible material (the dominant 16.26pt gap above is that stretch showing).
+A true grid needs rigid skips plus snap-back machinery, which is the
+future-major project, not a constant change.
+
+### Option C — keep 13.2pt and justify it independently (collapsed into A)
 
 If 13.2pt is defensible on its own typographic merits — as a spacing interval
 unrelated to leading — say so with a reason, and keep the vocabulary honest the
@@ -100,14 +149,18 @@ lead for Pagella at this measure; and it forces every fork to re-port.
 These exist today regardless of which option wins. Each is a defect or a
 question the current code answers silently.
 
-1. **`lnpmathgridlocked.sty:130` sets display maths to the discredited number.**
-   `\everydisplay{\baselineskip=13.2pt}` — measured live and unscaled. It is a
-   bare literal rather than `\gridunit`, the comment above it reads "Ensure
-   inline math doesn't disrupt line spacing" when `\everydisplay` fires on
-   *display* maths, and no test covers it. It materially sets multi-line
-   display spacing: `align` rows measure 23.1pt (13.2 + `\jot` 9.9) where the
-   real baseline would give 26.2pt. **Tighter display leading may well be
-   right — but it has never been decided, only inherited.**
+1. **`lnpmathgridlocked.sty:130` sets display maths to the discredited number
+   — in a module nothing loads.** `\everydisplay{\baselineskip=13.2pt}` is a
+   bare literal, its comment reads "Ensure inline math doesn't disrupt line
+   spacing" when `\everydisplay` fires on *display* maths, and no test pins
+   it. But neither `lanepaper.sty` nor the demo loads either gridlocked
+   module; the line's only executions were the standalone compile probe in
+   `tests/run-tests.sh`. Measured in the shipped demo (2026-08-25, page 38,
+   same-glyph pairs across the two `align` rows: ε↔ε 26.12pt, tags (2)↔(3)
+   26.13pt): the row pitch is 26.1pt — the real 16.32pt baseline + 9.9pt
+   `\jot` — not the 23.1pt an earlier draft of this ADR reported. That figure
+   reproduces only when the module is loaded directly. **Resolved by the
+   deletion**; the shipped display leading was body-derived all along.
 
 2. **"Grid-locked" is wrong twice.** `CONTEXT.md` defines it as forcing output
    onto "the baseline grid"; the modules lock to the quantum, not the baseline.
@@ -146,13 +199,17 @@ question the current code answers silently.
 
 ## Consequences
 
-- Options A and C are documentation-and-naming work: no rendering changes, so
-  no raster proof needed beyond a confirmation that nothing moved.
-- Option B is a typographic change and needs per-page raster proof at 150dpi,
-  read page by page rather than tallied.
-- Items 1–3, 5 and 8 above are fixable under any option and should not wait for
-  this decision. Item 4 is blocked by it. Items 6 and 7 are for the decision
-  itself to answer.
-- Whichever option wins, `CONTEXT.md`'s glossary and the `*gridlocked* module
-  names are part of the deliverable. A decision that leaves the vocabulary
-  asserting the old model has not been implemented.
+- Documentation-and-naming work plus two file deletions: no rendering
+  changes, so the proof obligation is raster identity, not per-page reading.
+- `lnpheadingsgridlocked.sty` and `lnpmathgridlocked.sty` are deleted along
+  with their references (README, the generated `CONVENTIONS.md` module table,
+  `API_REFERENCE.md`'s tree, the `run-tests.sh` probe). No stubs: nothing
+  shipped loads them, and CTAN has not yet frozen the names.
+- Item 1 is resolved by the deletion. Items 4, 6 and 7 are resolved as
+  decided above. Items 2, 3, 5 and 8 proceed under #73; the modules' half of
+  item 2 dies with the files, leaving the `CONTEXT.md` glossary entry.
+- `CONTEXT.md`'s glossary and the demo's rhythm claim are part of the
+  deliverable. A decision that leaves the vocabulary asserting the old model
+  has not been implemented.
+- This ADR gates CTAN: the vocabulary fixes and #55 land before
+  `l3build upload`. CTAN keeps no date (ADR-0001).
