@@ -277,6 +277,8 @@ release:
 		|| { echo "ERROR: working tree is not clean"; exit 1; }
 	@git rev-parse -q --verify "refs/tags/v$(VERSION)" >/dev/null \
 		&& { echo "ERROR: tag v$(VERSION) already exists"; exit 1; } || true
+	@which $(L3BUILD) >/dev/null \
+		|| { echo "ERROR: $(L3BUILD) not found (it ships with TeX Live)"; exit 1; }
 	@echo "==> Stamping v$(VERSION) into every \\ProvidesPackage..."
 	$(L3BUILD) tag $(VERSION)
 	@echo "==> Promoting the CHANGELOG's Unreleased section..."
