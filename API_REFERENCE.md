@@ -1226,7 +1226,7 @@ Enhanced symbol sets from mathalfa:
 
 ### Usage
 
-#### Basic Usage
+#### Using the fonts
 ```latex
 \RequirePackage{lnpfonts}
 ```
@@ -1333,7 +1333,7 @@ subtlegray      % gray!85         - Very dark gray
 
 ### Usage
 
-#### Basic Usage
+#### Using the colours
 ```latex
 \RequirePackage{lnpcolors}
 ```
@@ -1506,7 +1506,7 @@ The dimensions module (`lnpdimensions.sty`) manages page geometry and implements
 
 ### Usage
 
-#### Basic Usage
+#### Using the layout
 ```latex
 \RequirePackage{lnpdimensions}
 ```
@@ -1698,7 +1698,7 @@ The headings module (`lnpheadings.sty`) provides sophisticated section and headi
 
 ### Usage
 
-#### Basic Usage
+#### Using the headings
 ```latex
 \RequirePackage{lnpheadings}
 ```
@@ -1867,7 +1867,7 @@ Default settings work perfectly with standard article class.
 #### Overleaf "Missing \item" Error
 Use `\safeparagraph{Title}` instead of `\paragraph{Title}`
 
-#### Inconsistent Spacing
+#### Inconsistent heading spacing
 - Check for manual `\vspace` commands
 - Verify consistent spacing style
 - Look for `\paragraph` placement
@@ -2203,7 +2203,7 @@ Key principles include:
 
 ### Troubleshooting
 
-#### Inconsistent Spacing
+#### Inconsistent list spacing
 - Check for manual `\vspace` commands
 - Ensure consistent list environment usage
 - Verify no paragraph breaks in items
@@ -2316,7 +2316,7 @@ Paragraph style switchers (indent and parskip per command):
 
 ### Title Page System
 
-#### Overview
+#### How the title page is built
 
 Systematic commands for professional title pages following economics paper conventions:
 
@@ -2469,7 +2469,7 @@ Rule specs: 33% width, 0.4pt thickness, text color
 
 ### Chicago-Compliant Appendix System
 
-#### Overview
+#### How the appendix system works
 
 Professional appendix management with automatic single/multiple detection:
 

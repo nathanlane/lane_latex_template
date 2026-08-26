@@ -340,3 +340,82 @@ def test_every_referenced_documentation_path_exists():
                     continue
                 missing.append(f"{rel}:{number} -> {target}")
     assert missing == []
+
+
+def _api_reference_duplicates(text):
+    """Issue #74: commands in API_REFERENCE.md live either under a `####`
+    heading or in a table row, never both and never twice. Returns the
+    duplicated command names, counting both representations as one pool.
+    Adjacent rows of one table may repeat a name -- those are argument
+    variants of a single entry (\\textcite{key} / \\textcite[45]{key}).
+    Code fences are skipped so example markdown cannot register commands.
+    """
+    heading = re.compile(r"^####\s+`(\\[a-zA-Z]+)")
+    row = re.compile(r"^\|\s*`(\\[a-zA-Z]+)")
+    fence = re.compile(r"^\s*(```|~~~)")
+    seen, duplicates = {}, []
+    in_fence = False
+    table_id = 0
+    in_table = False
+    for line in text.splitlines():
+        if fence.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        is_row = line.lstrip().startswith("|")
+        if is_row and not in_table:
+            table_id += 1
+        in_table = is_row
+        m = heading.match(line) or row.match(line)
+        if m:
+            name = m.group(1)
+            where = table_id if is_row else None
+            if name in seen and not (is_row and seen[name] == where):
+                duplicates.append(name)
+            seen[name] = where
+    return duplicates
+
+
+def test_api_reference_documents_each_command_once():
+    """Issue #74: the #52 fold deduplicated on `####` headings only, so four
+    commands documented in table rows were appended again as headings."""
+    text = (ROOT / "API_REFERENCE.md").read_text(encoding="utf-8")
+    assert _api_reference_duplicates(text) == []
+
+
+def test_api_reference_duplicate_guard_sees_both_representations():
+    """Issue #74 mutation check: the guard must fire when a known-good entry
+    is duplicated as a second heading, in a second table, or across the two
+    representations -- the blind spot that let #52's duplicates in. Variant
+    rows inside one table are a single entry and must not fire."""
+    twice_as_headings = "#### `\\emdash`\ntext\n#### `\\emdash`\n"
+    same_table_variants = "| `\\emdash{a}` | x |\n| `\\emdash[b]{a}` | y |\n"
+    separate_tables = "| `\\emdash` | x |\n\ntext\n\n| `\\emdash` | y |\n"
+    across = "#### `\\emdash`\ntext\n| `\\emdash` | x |\n"
+    fenced = "#### `\\emdash`\n```\n#### `\\emdash`\n```\n"
+    assert _api_reference_duplicates(twice_as_headings) == ["\\emdash"]
+    assert _api_reference_duplicates(same_table_variants) == []
+    assert _api_reference_duplicates(separate_tables) == ["\\emdash"]
+    assert _api_reference_duplicates(across) == ["\\emdash"]
+    assert _api_reference_duplicates(fenced) == []
+
+
+def test_api_reference_heading_text_is_unique():
+    """Issue #74: five module documents folded into API_REFERENCE.md carried
+    generic subheadings ("Basic Usage" x4); markdown auto-anchors collide and
+    resolve position-dependently, so any repeat silently breaks links."""
+    fence = re.compile(r"^\s*(```|~~~)")
+    seen, repeats = set(), []
+    in_fence = False
+    for line in (ROOT / "API_REFERENCE.md").read_text(encoding="utf-8").splitlines():
+        if fence.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence or not line.startswith("#### "):
+            continue
+        text = line[5:].strip()
+        if text in seen:
+            repeats.append(text)
+        seen.add(text)
+    assert repeats == []
