@@ -22,6 +22,7 @@
 % ==============================================================================
 
 \ProvidesPackage{lnpcolors}[2026/08/12 v1.1 Professional Color System]
+\RequirePackage{etoolbox} % for \robustify (#55)
 
 \RequirePackage{xcolor}
 
@@ -79,3 +80,16 @@
 \newcommand{\secondarycolor}{\color{subtlegray}}
 \newcommand{\accentcolor}{\color{linknavy}}
 \newcommand{\codeaccent}{\color{codecolor}}
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\maincolor}{\robustify{\maincolor}}{}
+\ifdefmacro{\secondarycolor}{\robustify{\secondarycolor}}{}
+\ifdefmacro{\accentcolor}{\robustify{\accentcolor}}{}
+\ifdefmacro{\codeaccent}{\robustify{\codeaccent}}{}

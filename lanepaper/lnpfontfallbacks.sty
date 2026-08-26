@@ -22,6 +22,7 @@
 % ==============================================================================
 
 \ProvidesPackage{lnpfontfallbacks}[2026/08/12 v1.1 Font Fallback System]
+\RequirePackage{etoolbox} % for \robustify (#55)
 
 % Track which fonts are successfully loaded
 \newif\ifpagellaloaded
@@ -263,5 +264,21 @@
   \renewcommand{\oldstylenums}[1]{##1}%
   \PackageInfo{font-fallbacks}{Compatibility mode enabled - using CM fonts only}%
 }
+
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\checkfontfamily}{\robustify{\checkfontfamily}}{}
+\ifdefmacro{\checksmallcaps}{\robustify{\checksmallcaps}}{}
+\ifdefmacro{\checkfontfeatures}{\robustify{\checkfontfeatures}}{}
+\ifdefmacro{\showfontconfig}{\robustify{\showfontconfig}}{}
+\ifdefmacro{\testfontfeatures}{\robustify{\testfontfeatures}}{}
+\ifdefmacro{\enablecompatibilitymode}{\robustify{\enablecompatibilitymode}}{}
 
 \endinput

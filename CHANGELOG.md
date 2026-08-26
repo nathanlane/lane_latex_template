@@ -4,6 +4,20 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Made every public macro robust (issue #55). All 372 prefix-free macros across
+the 14 modules are now protected against expansion in moving arguments —
+section titles, captions, footnotes, and the `.aux` round-trip — via etoolbox
+`\robustify` (e-TeX `\protected`), applied in a `ROBUSTNESS (#55)` block at
+the end of each module. Definitions stay `\newcommand`, so load-time name
+collisions with other packages still error instead of silently clobbering.
+The `\pdfstringdefDisableCommands` block gains plain-text fallbacks for the
+semantic and symbol macros likely to appear in headings, so PDF bookmarks
+degrade without warnings. New contract fixture
+`tests/fixtures/robustness-test.tex` exercises macros in a section title,
+caption, footnote, and bookmarks over two passes. Rendering proved unchanged:
+all 40 demo pages and all 5 `opening-test` pages byte-identical at 150dpi,
+built from clean on both sides.
+
 Cleared the remaining spacing-quantum defects (issue #73): renamed the
 `\lnp@list*baseline*` lengths to `\lnp@list*quantum` (they hold quantum
 fractions used as topsep/itemsep; the measured list baselineskip is 16.32pt),
