@@ -187,20 +187,24 @@ you would a test: if you are about to remove the code it guards, find out why
 it is there first. Add one when you make a choice whose reason is not evident
 from the code.
 
-## 8. Robustness — **not met**
+## 8. Robustness
 
 Any macro a user can place in a heading, caption, or PDF bookmark must be
-`\DeclareRobustCommand`, because it will be written to and re-read from the
-`.aux` file.
+robust, because it will be written to and re-read from the `.aux` file.
 
-Current state: **2** `\DeclareRobustCommand` in the whole package, and both are
-on *internal* macros (`\lnp@textapprox`, `\lnp@textinfty` at
-`lanepaper/lanepaper.sty:457-458`). **No public macro is robust**, against
-roughly 315 prefix-free `\newcommand` definitions. `\protected` is used 0
-times.
+The mechanism (#55): definitions stay `\newcommand` — so a name collision
+with another package still errors at load time — and every module ends with a
+`ROBUSTNESS (#55)` block that applies etoolbox `\robustify` (e-TeX
+`\protected`) to each public macro, guarded by `\ifdefmacro` for names that
+resolve to registers in some load orders. A new public macro is not done until
+its name is in that block. **372** macros are robustified across the 14
+modules; re-measure rather than copying that number.
 
-Issue #55 is the fix. Until it lands, this section states the rule, not the
-practice.
+Robustness does not make formatting valid inside PDF bookmark strings — the
+`\pdfstringdefDisableCommands` block in `lanepaper.sty` supplies plain-text
+fallbacks for that, and stays. `tests/fixtures/robustness-test.tex` is the
+contract: package macros in a section title, a caption, a footnote, and PDF
+bookmarks, compiled twice.
 
 ## 9. Hooks and load order
 

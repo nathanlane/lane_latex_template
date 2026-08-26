@@ -2503,6 +2503,20 @@
     %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
     \def\SetTracking#1#2{}%      % Remove tracking commands
     \def\lsstyle{}%              % Remove letterspacing style
+    %% #55: text fallbacks for the semantic and symbol macros most likely to
+    %% appear in headings, so bookmarks degrade to plain text without warnings.
+    \def\term#1{#1}%             % Term -> plain text
+    \def\person#1{#1}%           % Person -> plain text
+    \def\acro#1{#1}%             % Acronym -> plain text
+    \def\work#1{#1}%             % Work title -> plain text
+    \def\meta#1{#1}%             % Meta -> plain text
+    \def\strongemph#1{#1}%       % Strong emphasis -> plain text
+    \def\subtleemph#1{#1}%       % Subtle emphasis -> plain text
+    \def\refinedscbold#1{#1}%    % Bold small caps -> plain text
+    \def\dashrange#1#2{#1-#2}%   % En-dash range -> hyphenated
+    \def\half{1/2}%              % Fraction -> ASCII
+    \def\quarter{1/4}%
+    \def\threequarters{3/4}%
     \let\\\space%                % Line break -> space
     \def\hspace#1{ }%            % Horizontal space -> space
     \def\vspace#1{}%             % Vertical space -> nothing
@@ -2822,6 +2836,10 @@
 
 % Define PDF-safe commands - these will be available after hyperref loads
 % Using \providecommand to avoid errors if hyperref is not loaded
+%% FIX (#55): kept although every public macro is now robust. These wrappers
+%% predate robustness and remain public API; they still add explicit
+%% \texorpdfstring alternatives, which give cleaner bookmark text than the
+%% \pdfstringdefDisableCommands fallbacks. Do not delete without a major.
 \newcommand{\pdfcode}[1]{%
   \@ifundefined{texorpdfstring}{\code{#1}}{\texorpdfstring{\code{#1}}{#1}}%
 }
@@ -3074,5 +3092,251 @@
     \item[Lists] Refined bullets with hanging punctuation
   \end{description}
 }
+
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\refinedsc}{\robustify{\refinedsc}}{}
+\ifdefmacro{\refinedscbold}{\robustify{\refinedscbold}}{}
+\ifdefmacro{\titlesc}{\robustify{\titlesc}}{}
+\ifdefmacro{\elegantsc}{\robustify{\elegantsc}}{}
+\ifdefmacro{\elegantscbold}{\robustify{\elegantscbold}}{}
+\ifdefmacro{\elegantbullet}{\robustify{\elegantbullet}}{}
+\ifdefmacro{\elegantdot}{\robustify{\elegantdot}}{}
+\ifdefmacro{\elegantdash}{\robustify{\elegantdash}}{}
+\ifdefmacro{\elegantcircle}{\robustify{\elegantcircle}}{}
+\ifdefmacro{\emdash}{\robustify{\emdash}}{}
+\ifdefmacro{\emdashclassic}{\robustify{\emdashclassic}}{}
+\ifdefmacro{\emdashopen}{\robustify{\emdashopen}}{}
+\ifdefmacro{\dashrange}{\robustify{\dashrange}}{}
+\ifdefmacro{\dashcompound}{\robustify{\dashcompound}}{}
+\ifdefmacro{\dashparen}{\robustify{\dashparen}}{}
+\ifdefmacro{\ldots}{\robustify{\ldots}}{}
+\ifdefmacro{\tdots}{\robustify{\tdots}}{}
+\ifdefmacro{\cdots}{\robustify{\cdots}}{}
+\ifdefmacro{\fdots}{\robustify{\fdots}}{}
+\ifdefmacro{\edots}{\robustify{\edots}}{}
+\ifdefmacro{\degrees}{\robustify{\degrees}}{}
+\ifdefmacro{\primetext}{\robustify{\primetext}}{}
+\ifdefmacro{\dblprimetext}{\robustify{\dblprimetext}}{}
+\ifdefmacro{\ordth}{\robustify{\ordth}}{}
+\ifdefmacro{\ordst}{\robustify{\ordst}}{}
+\ifdefmacro{\ordnd}{\robustify{\ordnd}}{}
+\ifdefmacro{\ordrd}{\robustify{\ordrd}}{}
+\ifdefmacro{\S}{\robustify{\S}}{}
+\ifdefmacro{\P}{\robustify{\P}}{}
+\ifdefmacro{\euro}{\robustify{\euro}}{}
+\ifdefmacro{\pound}{\robustify{\pound}}{}
+\ifdefmacro{\cent}{\robustify{\cent}}{}
+\ifdefmacro{\currency}{\robustify{\currency}}{}
+\ifdefmacro{\trademark}{\robustify{\trademark}}{}
+\ifdefmacro{\registered}{\robustify{\registered}}{}
+\ifdefmacro{\copyright}{\robustify{\copyright}}{}
+\ifdefmacro{\servicemark}{\robustify{\servicemark}}{}
+\ifdefmacro{\textpm}{\robustify{\textpm}}{}
+\ifdefmacro{\texttimes}{\robustify{\texttimes}}{}
+\ifdefmacro{\textdiv}{\robustify{\textdiv}}{}
+\ifdefmacro{\larrow}{\robustify{\larrow}}{}
+\ifdefmacro{\rarrow}{\robustify{\rarrow}}{}
+\ifdefmacro{\uarrow}{\robustify{\uarrow}}{}
+\ifdefmacro{\darrow}{\robustify{\darrow}}{}
+\ifdefmacro{\sq}{\robustify{\sq}}{}
+\ifdefmacro{\dq}{\robustify{\dq}}{}
+\ifdefmacro{\nq}{\robustify{\nq}}{}
+\ifdefmacro{\half}{\robustify{\half}}{}
+\ifdefmacro{\quarter}{\robustify{\quarter}}{}
+\ifdefmacro{\threequarters}{\robustify{\threequarters}}{}
+\ifdefmacro{\super}{\robustify{\super}}{}
+\ifdefmacro{\sub}{\robustify{\sub}}{}
+\ifdefmacro{\abbrspace}{\robustify{\abbrspace}}{}
+\ifdefmacro{\initialspace}{\robustify{\initialspace}}{}
+\ifdefmacro{\fig}{\robustify{\fig}}{}
+\ifdefmacro{\tab}{\robustify{\tab}}{}
+\ifdefmacro{\unit}{\robustify{\unit}}{}
+\ifdefmacro{\thinspace}{\robustify{\thinspace}}{}
+\ifdefmacro{\medspace}{\robustify{\medspace}}{}
+\ifdefmacro{\thickspace}{\robustify{\thickspace}}{}
+\ifdefmacro{\wordspace}{\robustify{\wordspace}}{}
+\ifdefmacro{\emspace}{\robustify{\emspace}}{}
+\ifdefmacro{\twoemspace}{\robustify{\twoemspace}}{}
+\ifdefmacro{\apos}{\robustify{\apos}}{}
+\ifdefmacro{\dag}{\robustify{\dag}}{}
+\ifdefmacro{\ddag}{\robustify{\ddag}}{}
+\ifdefmacro{\emph}{\robustify{\emph}}{}
+\ifdefmacro{\strongemph}{\robustify{\strongemph}}{}
+\ifdefmacro{\meta}{\robustify{\meta}}{}
+\ifdefmacro{\critical}{\robustify{\critical}}{}
+\ifdefmacro{\semantic}{\robustify{\semantic}}{}
+\ifdefmacro{\person}{\robustify{\person}}{}
+\ifdefmacro{\term}{\robustify{\term}}{}
+\ifdefmacro{\acro}{\robustify{\acro}}{}
+\ifdefmacro{\work}{\robustify{\work}}{}
+\ifdefmacro{\termintro}{\robustify{\termintro}}{}
+\ifdefmacro{\regsc}{\robustify{\regsc}}{}
+\ifdefmacro{\itsc}{\robustify{\itsc}}{}
+\ifdefmacro{\headsc}{\robustify{\headsc}}{}
+\ifdefmacro{\inlinebsc}{\robustify{\inlinebsc}}{}
+\ifdefmacro{\smartitalic}{\robustify{\smartitalic}}{}
+\ifdefmacro{\smartbold}{\robustify{\smartbold}}{}
+\ifdefmacro{\bsc}{\robustify{\bsc}}{}
+\ifdefmacro{\subtleemph}{\robustify{\subtleemph}}{}
+\ifdefmacro{\externalref}{\robustify{\externalref}}{}
+\ifdefmacro{\importantnote}{\robustify{\importantnote}}{}
+\ifdefmacro{\boolemph}{\robustify{\boolemph}}{}
+\ifdefmacro{\maxemph}{\robustify{\maxemph}}{}
+\ifdefmacro{\codecomment}{\robustify{\codecomment}}{}
+\ifdefmacro{\authorname}{\robustify{\authorname}}{}
+\ifdefmacro{\affiliation}{\robustify{\affiliation}}{}
+\ifdefmacro{\keywords}{\robustify{\keywords}}{}
+\ifdefmacro{\code}{\robustify{\code}}{}
+\ifdefmacro{\inlinecode}{\robustify{\inlinecode}}{}
+\ifdefmacro{\balancedcode}{\robustify{\balancedcode}}{}
+\ifdefmacro{\filepath}{\robustify{\filepath}}{}
+\ifdefmacro{\var}{\robustify{\var}}{}
+\ifdefmacro{\doccode}{\robustify{\doccode}}{}
+\ifdefmacro{\noindentpar}{\robustify{\noindentpar}}{}
+\ifdefmacro{\forceindent}{\robustify{\forceindent}}{}
+\ifdefmacro{\compactpar}{\robustify{\compactpar}}{}
+\ifdefmacro{\loosepars}{\robustify{\loosepars}}{}
+\ifdefmacro{\centeredpar}{\robustify{\centeredpar}}{}
+\ifdefmacro{\dialogue}{\robustify{\dialogue}}{}
+\ifdefmacro{\quoteattribution}{\robustify{\quoteattribution}}{}
+\ifdefmacro{\academicdropcap}{\robustify{\academicdropcap}}{}
+\ifdefmacro{\firstlinesc}{\robustify{\firstlinesc}}{}
+\ifdefmacro{\sectionopening}{\robustify{\sectionopening}}{}
+\ifdefmacro{\sectionsep}{\robustify{\sectionsep}}{}
+\ifdefmacro{\spacebreak}{\robustify{\spacebreak}}{}
+\ifdefmacro{\majorsectionspace}{\robustify{\majorsectionspace}}{}
+\ifdefmacro{\thinrulebreak}{\robustify{\thinrulebreak}}{}
+\ifdefmacro{\abstractopening}{\robustify{\abstractopening}}{}
+\ifdefmacro{\quartergridparagraphs}{\robustify{\quartergridparagraphs}}{}
+\ifdefmacro{\thirdgridparagraphs}{\robustify{\thirdgridparagraphs}}{}
+\ifdefmacro{\paragraphsep}{\robustify{\paragraphsep}}{}
+\ifdefmacro{\sidenote}{\robustify{\sidenote}}{}
+\ifdefmacro{\real}{\robustify{\real}}{}
+\ifdefmacro{\natural}{\robustify{\natural}}{}
+\ifdefmacro{\integer}{\robustify{\integer}}{}
+\ifdefmacro{\rational}{\robustify{\rational}}{}
+\ifdefmacro{\complex}{\robustify{\complex}}{}
+\ifdefmacro{\field}{\robustify{\field}}{}
+\ifdefmacro{\prob}{\robustify{\prob}}{}
+\ifdefmacro{\norm}{\robustify{\norm}}{}
+\ifdefmacro{\abs}{\robustify{\abs}}{}
+\ifdefmacro{\inner}{\robustify{\inner}}{}
+\ifdefmacro{\set}{\robustify{\set}}{}
+\ifdefmacro{\given}{\robustify{\given}}{}
+\ifdefmacro{\hilbert}{\robustify{\hilbert}}{}
+\ifdefmacro{\banach}{\robustify{\banach}}{}
+\ifdefmacro{\algebra}{\robustify{\algebra}}{}
+\ifdefmacro{\topology}{\robustify{\topology}}{}
+\ifdefmacro{\measure}{\robustify{\measure}}{}
+\ifdefmacro{\topfraction}{\robustify{\topfraction}}{}
+\ifdefmacro{\bottomfraction}{\robustify{\bottomfraction}}{}
+\ifdefmacro{\textfraction}{\robustify{\textfraction}}{}
+\ifdefmacro{\floatpagefraction}{\robustify{\floatpagefraction}}{}
+\ifdefmacro{\topfigrule}{\robustify{\topfigrule}}{}
+\ifdefmacro{\botfigrule}{\robustify{\botfigrule}}{}
+\ifdefmacro{\section}{\robustify{\section}}{}
+\ifdefmacro{\subsection}{\robustify{\subsection}}{}
+\ifdefmacro{\softfloatbarrier}{\robustify{\softfloatbarrier}}{}
+\ifdefmacro{\hardfloatbarrier}{\robustify{\hardfloatbarrier}}{}
+\ifdefmacro{\sectionendfloatbarrier}{\robustify{\sectionendfloatbarrier}}{}
+\ifdefmacro{\tryherefigure}{\robustify{\tryherefigure}}{}
+\ifdefmacro{\forceherefigure}{\robustify{\forceherefigure}}{}
+\ifdefmacro{\showfloatstats}{\robustify{\showfloatstats}}{}
+\ifdefmacro{\floatwarning}{\robustify{\floatwarning}}{}
+\ifdefmacro{\balancefloatpage}{\robustify{\balancefloatpage}}{}
+\ifdefmacro{\compensatetopfloat}{\robustify{\compensatetopfloat}}{}
+\ifdefmacro{\captionsource}{\robustify{\captionsource}}{}
+\ifdefmacro{\captioncontinued}{\robustify{\captioncontinued}}{}
+\ifdefmacro{\tabnote}{\robustify{\tabnote}}{}
+\ifdefmacro{\tablenote}{\robustify{\tablenote}}{}
+\ifdefmacro{\tabsource}{\robustify{\tabsource}}{}
+\ifdefmacro{\tabstars}{\robustify{\tabstars}}{}
+\ifdefmacro{\tabdaggers}{\robustify{\tabdaggers}}{}
+\ifdefmacro{\fignote}{\robustify{\fignote}}{}
+\ifdefmacro{\figurenote}{\robustify{\figurenote}}{}
+\ifdefmacro{\figsource}{\robustify{\figsource}}{}
+\ifdefmacro{\tabsample}{\robustify{\tabsample}}{}
+\ifdefmacro{\tabvars}{\robustify{\tabvars}}{}
+\ifdefmacro{\tabmethod}{\robustify{\tabmethod}}{}
+\ifdefmacro{\tabcluster}{\robustify{\tabcluster}}{}
+\ifdefmacro{\panellabel}{\robustify{\panellabel}}{}
+\ifdefmacro{\panelnote}{\robustify{\panelnote}}{}
+\ifdefmacro{\articletitle}{\robustify{\articletitle}}{}
+\ifdefmacro{\articletitlefootnote}{\robustify{\articletitlefootnote}}{}
+\ifdefmacro{\articletitlecompact}{\robustify{\articletitlecompact}}{}
+\ifdefmacro{\articletitlecompactfootnote}{\robustify{\articletitlecompactfootnote}}{}
+\ifdefmacro{\authorspace}{\robustify{\authorspace}}{}
+\ifdefmacro{\elegantauthor}{\robustify{\elegantauthor}}{}
+\ifdefmacro{\articleauthors}{\robustify{\articleauthors}}{}
+\ifdefmacro{\articledate}{\robustify{\articledate}}{}
+\ifdefmacro{\articlekeywords}{\robustify{\articlekeywords}}{}
+\ifdefmacro{\articlejel}{\robustify{\articlejel}}{}
+\ifdefmacro{\titlefootnotesetup}{\robustify{\titlefootnotesetup}}{}
+\ifdefmacro{\titlefootnotereset}{\robustify{\titlefootnotereset}}{}
+\ifdefmacro{\footnoterule}{\robustify{\footnoterule}}{}
+\ifdefmacro{\thefootnote}{\robustify{\thefootnote}}{}
+\ifdefmacro{\footnote}{\robustify{\footnote}}{}
+\ifdefmacro{\multiplefootnotes}{\robustify{\multiplefootnotes}}{}
+\ifdefmacro{\startappendices}{\robustify{\startappendices}}{}
+\ifdefmacro{\finishappendices}{\robustify{\finishappendices}}{}
+\ifdefmacro{\refpage}{\robustify{\refpage}}{}
+\ifdefmacro{\Refpage}{\robustify{\Refpage}}{}
+\ifdefmacro{\pref}{\robustify{\pref}}{}
+\ifdefmacro{\Pref}{\robustify{\Pref}}{}
+\ifdefmacro{\seeref}{\robustify{\seeref}}{}
+\ifdefmacro{\Seeref}{\robustify{\Seeref}}{}
+\ifdefmacro{\seealso}{\robustify{\seealso}}{}
+\ifdefmacro{\Seealso}{\robustify{\Seealso}}{}
+\ifdefmacro{\standardgrid}{\robustify{\standardgrid}}{}
+\ifdefmacro{\compactgrid}{\robustify{\compactgrid}}{}
+\ifdefmacro{\spaciousgrid}{\robustify{\spaciousgrid}}{}
+\ifdefmacro{\customgrid}{\robustify{\customgrid}}{}
+\ifdefmacro{\gridspace}{\robustify{\gridspace}}{}
+\ifdefmacro{\halfbaselinespace}{\robustify{\halfbaselinespace}}{}
+\ifdefmacro{\fullbaselinespace}{\robustify{\fullbaselinespace}}{}
+\ifdefmacro{\arraystretch}{\robustify{\arraystretch}}{}
+\ifdefmacro{\roundtogrid}{\robustify{\roundtogrid}}{}
+\ifdefmacro{\gridincludegraphics}{\robustify{\gridincludegraphics}}{}
+\ifdefmacro{\imagegridspace}{\robustify{\imagegridspace}}{}
+\ifdefmacro{\eqref}{\robustify{\eqref}}{}
+\ifdefmacro{\mathbinx}{\robustify{\mathbinx}}{}
+\ifdefmacro{\mathrelx}{\robustify{\mathrelx}}{}
+\ifdefmacro{\dint}{\robustify{\dint}}{}
+\ifdefmacro{\ssup}{\robustify{\ssup}}{}
+\ifdefmacro{\ssub}{\robustify{\ssub}}{}
+\ifdefmacro{\lim}{\robustify{\lim}}{}
+\ifdefmacro{\le}{\robustify{\le}}{}
+\ifdefmacro{\ge}{\robustify{\ge}}{}
+\ifdefmacro{\epsilon}{\robustify{\epsilon}}{}
+\ifdefmacro{\phi}{\robustify{\phi}}{}
+\ifdefmacro{\vec}{\robustify{\vec}}{}
+\ifdefmacro{\pdfcode}{\robustify{\pdfcode}}{}
+\ifdefmacro{\pdfsc}{\robustify{\pdfsc}}{}
+\ifdefmacro{\pdfemph}{\robustify{\pdfemph}}{}
+\ifdefmacro{\pdfbf}{\robustify{\pdfbf}}{}
+\ifdefmacro{\pdfit}{\robustify{\pdfit}}{}
+\ifdefmacro{\pdffilepath}{\robustify{\pdffilepath}}{}
+\ifdefmacro{\pdfvar}{\robustify{\pdfvar}}{}
+\ifdefmacro{\tightpar}{\robustify{\tightpar}}{}
+\ifdefmacro{\loosepar}{\robustify{\loosepar}}{}
+\ifdefmacro{\riverlesspar}{\robustify{\riverlesspar}}{}
+\ifdefmacro{\balancedpar}{\robustify{\balancedpar}}{}
+\ifdefmacro{\nohyphpar}{\robustify{\nohyphpar}}{}
+\ifdefmacro{\techpar}{\robustify{\techpar}}{}
+\ifdefmacro{\protectfooter}{\robustify{\protectfooter}}{}
+\ifdefmacro{\fixfooter}{\robustify{\fixfooter}}{}
+\ifdefmacro{\frontmatterpages}{\robustify{\frontmatterpages}}{}
+\ifdefmacro{\mainmatterpages}{\robustify{\mainmatterpages}}{}
+\ifdefmacro{\unnumberedpage}{\robustify{\unnumberedpage}}{}
+\ifdefmacro{\lanepaperdiagnostics}{\robustify{\lanepaperdiagnostics}}{}
+\ifdefmacro{\lanepaperinfo}{\robustify{\lanepaperinfo}}{}
 
 \endinput

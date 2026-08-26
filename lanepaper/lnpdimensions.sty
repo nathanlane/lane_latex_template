@@ -22,6 +22,7 @@
 % ==============================================================================
 
 \ProvidesPackage{lnpdimensions}[2026/08/12 v1.1 Page Layout and Spacing]
+\RequirePackage{etoolbox} % for \robustify (#55)
 
 \RequirePackage{geometry}
 
@@ -94,3 +95,17 @@
   \setlength{\parindent}{\threequartergridunit}%     % 0.75 grid units
   \setlength{\parskip}{\quartergridunit}%       % 0.25 grid units
 }
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\gridmult}{\robustify{\gridmult}}{}
+\ifdefmacro{\gridmath}{\robustify{\gridmath}}{}
+\ifdefmacro{\classicalparagraphs}{\robustify{\classicalparagraphs}}{}
+\ifdefmacro{\modernparagraphs}{\robustify{\modernparagraphs}}{}
+\ifdefmacro{\hybridparagraphs}{\robustify{\hybridparagraphs}}{}

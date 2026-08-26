@@ -35,6 +35,7 @@
 % ------------------------------------------------------------------------------
 
 \ProvidesPackage{lnpgridoverlay}[2026/08/12 v1.1 Visual Grid Overlay System]
+\RequirePackage{etoolbox} % for \robustify (#55)
 
 % Required packages
 \RequirePackage{tikz}
@@ -80,5 +81,18 @@
   }
   \fi
 }
+
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\showgrid}{\robustify{\showgrid}}{}
+\ifdefmacro{\hidegrid}{\robustify{\hidegrid}}{}
+\ifdefmacro{\gridoverlay}{\robustify{\gridoverlay}}{}
 
 \endinput

@@ -22,6 +22,7 @@
 % ==============================================================================
 
 \ProvidesPackage{lnphochuli}[2026/08/12 v1.1 Hochuli Optical Refinements]
+\RequirePackage{etoolbox} % for \robustify (#55)
 
 % Dependencies
 \RequirePackage{ragged2e}  % Better ragged right
@@ -278,5 +279,38 @@
 \newcommand{\normalmargins}{%
   \microtypesetup{protrusion=true,factor=1000}%
 }
+
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\nolig}{\robustify{\nolig}}{}
+\ifdefmacro{\offering}{\robustify{\offering}}{}
+\ifdefmacro{\offline}{\robustify{\offline}}{}
+\ifdefmacro{\shelfful}{\robustify{\shelfful}}{}
+\ifdefmacro{\tightlastline}{\robustify{\tightlastline}}{}
+\ifdefmacro{\normallastline}{\robustify{\normallastline}}{}
+\ifdefmacro{\balancedlastline}{\robustify{\balancedlastline}}{}
+\ifdefmacro{\quoteparagraph}{\robustify{\quoteparagraph}}{}
+\ifdefmacro{\squoteparagraph}{\robustify{\squoteparagraph}}{}
+\ifdefmacro{\nestedquoteparagraph}{\robustify{\nestedquoteparagraph}}{}
+\ifdefmacro{\tightragged}{\robustify{\tightragged}}{}
+\ifdefmacro{\normalragged}{\robustify{\normalragged}}{}
+\ifdefmacro{\looseragged}{\robustify{\looseragged}}{}
+\ifdefmacro{\fountainpar}{\robustify{\fountainpar}}{}
+\ifdefmacro{\invertfountainpar}{\robustify{\invertfountainpar}}{}
+\ifdefmacro{\diamondpar}{\robustify{\diamondpar}}{}
+\ifdefmacro{\footnotesize}{\robustify{\footnotesize}}{}
+\ifdefmacro{\captionsize}{\robustify{\captionsize}}{}
+\ifdefmacro{\spacedfirsline}{\robustify{\spacedfirsline}}{}
+\ifdefmacro{\scfirstword}{\robustify{\scfirstword}}{}
+\ifdefmacro{\tightmargins}{\robustify{\tightmargins}}{}
+\ifdefmacro{\loosemargins}{\robustify{\loosemargins}}{}
+\ifdefmacro{\normalmargins}{\robustify{\normalmargins}}{}
 
 \endinput

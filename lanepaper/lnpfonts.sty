@@ -22,6 +22,7 @@
 % ==============================================================================
 
 \ProvidesPackage{lnpfonts}[2026/08/12 v1.1 Font System Configuration]
+\RequirePackage{etoolbox} % for \robustify (#55)
 
 % FONT ENCODING AND BASE CONFIGURATION
 % UTF-8 support with T1 encoding for proper character handling
@@ -60,3 +61,14 @@
 % These can be customized before loading lanepaper
 \providecommand{\monospacescale}{0.96}   % Inconsolata scaling
 \providecommand{\mathscale}{1.0}         % Math font scaling
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\monospacescale}{\robustify{\monospacescale}}{}
+\ifdefmacro{\mathscale}{\robustify{\mathscale}}{}

@@ -283,4 +283,29 @@
 %% FIX: Use providecommand so preload order with lanepaper stays compatible.
 \providecommand{\majorsectionspace}{\vspace{\gridunit}}
 
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\noindentpar}{\robustify{\noindentpar}}{}
+\ifdefmacro{\forceindent}{\robustify{\forceindent}}{}
+\ifdefmacro{\centeredpar}{\robustify{\centeredpar}}{}
+\ifdefmacro{\dialogue}{\robustify{\dialogue}}{}
+\ifdefmacro{\quoteattribution}{\robustify{\quoteattribution}}{}
+\ifdefmacro{\academicdropcap}{\robustify{\academicdropcap}}{}
+\ifdefmacro{\firstlinesc}{\robustify{\firstlinesc}}{}
+\ifdefmacro{\sectionopening}{\robustify{\sectionopening}}{}
+\ifdefmacro{\sectionsep}{\robustify{\sectionsep}}{}
+\ifdefmacro{\spacebreak}{\robustify{\spacebreak}}{}
+\ifdefmacro{\paragraphsep}{\robustify{\paragraphsep}}{}
+\ifdefmacro{\sidenote}{\robustify{\sidenote}}{}
+\ifdefmacro{\compactpar}{\robustify{\compactpar}}{}
+\ifdefmacro{\loosepars}{\robustify{\loosepars}}{}
+\ifdefmacro{\majorsectionspace}{\robustify{\majorsectionspace}}{}
+
 \endinput

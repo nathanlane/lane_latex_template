@@ -21,6 +21,7 @@
 % ==============================================================================
 
 \ProvidesPackage{lnpcompilationfixes}[2026/08/12 v1.1 Simple Compilation Fixes]
+\RequirePackage{etoolbox} % for \robustify (#55)
 
 % ==============================================================================
 % OVERFULL HBOX FIXES
@@ -88,5 +89,18 @@
 \newcommand{\hideoverfulls}{%
   \overfullrule=0pt % Hide black bars
 }
+
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\fitwide}{\robustify{\fitwide}}{}
+\ifdefmacro{\showoverfulls}{\robustify{\showoverfulls}}{}
+\ifdefmacro{\hideoverfulls}{\robustify{\hideoverfulls}}{}
 
 \endinput

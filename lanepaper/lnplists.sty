@@ -426,3 +426,32 @@
 \AtEndEnvironment{displayitem}{\@afterindentfalse}
 \AtEndEnvironment{academicitem}{\@afterindentfalse}
 \AtEndEnvironment{readableitem}{\@afterindentfalse}
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\bulletmark}{\robustify{\bulletmark}}{}
+\ifdefmacro{\dashmark}{\robustify{\dashmark}}{}
+\ifdefmacro{\refinedbullet}{\robustify{\refinedbullet}}{}
+\ifdefmacro{\diamondmark}{\robustify{\diamondmark}}{}
+\ifdefmacro{\squaremark}{\robustify{\squaremark}}{}
+\ifdefmacro{\trianglemark}{\robustify{\trianglemark}}{}
+\ifdefmacro{\subtlebullet}{\robustify{\subtlebullet}}{}
+\ifdefmacro{\refineddash}{\robustify{\refineddash}}{}
+\ifdefmacro{\labelacademicitemi}{\robustify{\labelacademicitemi}}{}
+\ifdefmacro{\itembullet}{\robustify{\itembullet}}{}
+\ifdefmacro{\itemdash}{\robustify{\itemdash}}{}
+\ifdefmacro{\itemdiamond}{\robustify{\itemdiamond}}{}
+\ifdefmacro{\itemsquare}{\robustify{\itemsquare}}{}
+\ifdefmacro{\itemtriangle}{\robustify{\itemtriangle}}{}
+\ifdefmacro{\tightlists}{\robustify{\tightlists}}{}
+\ifdefmacro{\normallists}{\robustify{\normallists}}{}
+\ifdefmacro{\spaciouslists}{\robustify{\spaciouslists}}{}
+\ifdefmacro{\dashbullets}{\robustify{\dashbullets}}{}
+\ifdefmacro{\trianglebullets}{\robustify{\trianglebullets}}{}
+\ifdefmacro{\defaultbullets}{\robustify{\defaultbullets}}{}

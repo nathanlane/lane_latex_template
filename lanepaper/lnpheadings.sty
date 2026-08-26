@@ -263,3 +263,23 @@
 % ==============================================================================
 % Set moderate spacing as the default for professional documents
 \moderatesections
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\spacioussections}{\robustify{\spacioussections}}{}
+\ifdefmacro{\moderatesections}{\robustify{\moderatesections}}{}
+\ifdefmacro{\compactsections}{\robustify{\compactsections}}{}
+\ifdefmacro{\tightsections}{\robustify{\tightsections}}{}
+\ifdefmacro{\paragraphsc}{\robustify{\paragraphsc}}{}
+\ifdefmacro{\displayparagraph}{\robustify{\displayparagraph}}{}
+\ifdefmacro{\safeparagraph}{\robustify{\safeparagraph}}{}
+\ifdefmacro{\sectionopening}{\robustify{\sectionopening}}{}
+\ifdefmacro{\sectionsep}{\robustify{\sectionsep}}{}
+\ifdefmacro{\spacebreak}{\robustify{\spacebreak}}{}
+\ifdefmacro{\firstline}{\robustify{\firstline}}{}

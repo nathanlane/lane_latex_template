@@ -180,4 +180,19 @@
 \providecommand{\quartergridunit}{0.25\gridunit}
 \providecommand{\FloatBarrier}{\clearpage}
 
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\emph}{\robustify{\emph}}{}
+\ifdefmacro{\checkminimalmode}{\robustify{\checkminimalmode}}{}
+\ifdefmacro{\halfgridunit}{\robustify{\halfgridunit}}{}
+\ifdefmacro{\quartergridunit}{\robustify{\quartergridunit}}{}
+\ifdefmacro{\FloatBarrier}{\robustify{\FloatBarrier}}{}
+
 \endinput

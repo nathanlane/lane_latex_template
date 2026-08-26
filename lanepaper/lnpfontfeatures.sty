@@ -22,6 +22,7 @@
 % ==============================================================================
 
 \ProvidesPackage{lnpfontfeatures}[2026/08/12 v1.1 Font Features Module]
+\RequirePackage{etoolbox} % for \robustify (#55)
 
 % Dependencies
 \RequirePackage{textcomp}  % Additional symbols and features
@@ -215,5 +216,54 @@
     \item[Symbols] \texteuro\ \textsterling\ \textyen\ \textcopyright\ \textregistered
   \end{description}
 }
+
+
+% ==============================================================================
+% ROBUSTNESS (#55)
+% ==============================================================================
+% Every public macro defined above is made robust for moving arguments
+% (section titles, captions, marks, the .aux round-trip) via etoolbox
+% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
+% so a name collision with another package still errors at load time.
+% \ifdefmacro skips names that resolve to registers in this load order.
+\ifdefmacro{\oldfigs}{\robustify{\oldfigs}}{}
+\ifdefmacro{\textfigs}{\robustify{\textfigs}}{}
+\ifdefmacro{\liningfigs}{\robustify{\liningfigs}}{}
+\ifdefmacro{\tablefigs}{\robustify{\tablefigs}}{}
+\ifdefmacro{\tabularfigs}{\robustify{\tabularfigs}}{}
+\ifdefmacro{\textsup}{\robustify{\textsup}}{}
+\ifdefmacro{\supfigs}{\robustify{\supfigs}}{}
+\ifdefmacro{\inffigs}{\robustify{\inffigs}}{}
+\ifdefmacro{\chemform}{\robustify{\chemform}}{}
+\ifdefmacro{\titlesc}{\robustify{\titlesc}}{}
+\ifdefmacro{\headersc}{\robustify{\headersc}}{}
+\ifdefmacro{\tightsc}{\robustify{\tightsc}}{}
+\ifdefmacro{\texteuro}{\robustify{\texteuro}}{}
+\ifdefmacro{\textsterling}{\robustify{\textsterling}}{}
+\ifdefmacro{\textyen}{\robustify{\textyen}}{}
+\ifdefmacro{\textcent}{\robustify{\textcent}}{}
+\ifdefmacro{\openquote}{\robustify{\openquote}}{}
+\ifdefmacro{\closequote}{\robustify{\closequote}}{}
+\ifdefmacro{\singleopenquote}{\robustify{\singleopenquote}}{}
+\ifdefmacro{\singleclosequote}{\robustify{\singleclosequote}}{}
+\ifdefmacro{\onequarter}{\robustify{\onequarter}}{}
+\ifdefmacro{\onehalf}{\robustify{\onehalf}}{}
+\ifdefmacro{\threequarters}{\robustify{\threequarters}}{}
+\ifdefmacro{\interrobang}{\robustify{\interrobang}}{}
+\ifdefmacro{\numero}{\robustify{\numero}}{}
+\ifdefmacro{\estimated}{\robustify{\estimated}}{}
+\ifdefmacro{\referencemark}{\robustify{\referencemark}}{}
+\ifdefmacro{\nolig}{\robustify{\nolig}}{}
+\ifdefmacro{\breaklig}{\robustify{\breaklig}}{}
+\ifdefmacro{\shelfful}{\robustify{\shelfful}}{}
+\ifdefmacro{\cufflink}{\robustify{\cufflink}}{}
+\ifdefmacro{\textuppercase}{\robustify{\textuppercase}}{}
+\ifdefmacro{\textlowercase}{\robustify{\textlowercase}}{}
+\ifdefmacro{\textapostrophe}{\robustify{\textapostrophe}}{}
+\ifdefmacro{\textendash}{\robustify{\textendash}}{}
+\ifdefmacro{\textemdash}{\robustify{\textemdash}}{}
+\ifdefmacro{\degree}{\robustify{\degree}}{}
+\ifdefmacro{\footnote}{\robustify{\footnote}}{}
+\ifdefmacro{\showfontfeatures}{\robustify{\showfontfeatures}}{}
 
 \endinput

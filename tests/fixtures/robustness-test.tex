@@ -1,0 +1,30 @@
+\documentclass[11pt,a4paper]{article}
+% Robustness contract (#55): package macros must survive moving arguments —
+% section titles (toc + PDF bookmarks), captions (lof), and the .aux
+% round-trip. The harness compiles this twice, so a fragile macro that
+% corrupts the .aux fails the second pass.
+\usepackage{lanepaper}
+\usepackage{hyperref}
+
+\begin{document}
+
+\tableofcontents
+\listoffigures
+
+\section{Robust macros: \code{make build} and \term{quantum}}
+
+Body text referencing \person{Hochuli} and \acro{CTAN}.
+
+\subsection{Symbols in a heading: \half\ and \dashrange{1}{9}}
+
+\begin{figure}[htbp]
+  \centering
+  \rule{3cm}{1cm}
+  \caption{A caption with \code{lanepaper}, \refinedsc{Small Caps}, and
+    \term{spacing quantum} --- all read back from the \code{.lof} file.}
+\end{figure}
+
+A footnote is a moving argument too.\footnote{Set with \code{pdflatex},
+  \emph{emphasis}, and \work{The Elements of Typographic Style}.}
+
+\end{document}
