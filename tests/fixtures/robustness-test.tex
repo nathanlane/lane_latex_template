@@ -27,4 +27,34 @@ Body text referencing \person{Hochuli} and \acro{CTAN}.
 A footnote is a moving argument too.\footnote{Set with \code{pdflatex},
   \emph{emphasis}, and \work{The Elements of Typographic Style}.}
 
+\subsection{Symbols in bookmarks: \euro100, \yen100, \degrees}
+
+Two footnotes with a label on the first: the kernel must freeze the
+footnote number at label time.\footnote{First footnote.\label{sec:fnfirst}}
+Another.\footnote{Second footnote.}
+Cross-reference: footnote~\ref{sec:fnfirst}.
+
+% Self-asserting regression (#55 follow-up): if \thefootnote were protected,
+% the label would freeze as the unexpanded macro and resolve to the CURRENT
+% counter value (2) when read back — this makes the second pass error.
+\makeatletter
+\AtEndDocument{%
+  % \relax means pass 1 (no .aux yet, \ref predefined the csname): skip.
+  % The invariant: the kernel froze the footnote NUMBER at \label time, so
+  % the stored label may contain robust formatting (\oldstylenums{1}) but
+  % never an unexpanded \thefootnote — that is the bug this guards against
+  % (a protected \thefootnote resolves to the wrong number at read-back).
+  % \pdfmatch is pdfTeX-specific; the harness compiles fixtures with pdflatex.
+  \expandafter\ifx\csname r@sec:fnfirst\endcsname\relax\else
+    \edef\lnptest@all{\csname r@sec:fnfirst\endcsname}%
+    \def\lnptest@car#1#2\lnptest@nil{\def\lnptest@first{#1}}%
+    \expandafter\lnptest@car\lnptest@all\lnptest@nil
+    \edef\lnptest@str{\detokenize\expandafter{\lnptest@first}}%
+    \ifnum\pdfmatch{thefootnote}{\lnptest@str}=1
+      \errmessage{robustness-test: footnote label froze unexpanded: \lnptest@str}%
+    \fi
+  \fi
+}
+\makeatother
+
 \end{document}

@@ -104,8 +104,9 @@
 % \robustify, which applies e-TeX \protected. Definitions stay \newcommand
 % so a name collision with another package still errors at load time.
 % \ifdefmacro skips names that resolve to registers in this load order.
-\ifdefmacro{\gridmult}{\robustify{\gridmult}}{}
-\ifdefmacro{\gridmath}{\robustify{\gridmath}}{}
+%% FIX (#55 follow-up): \gridmult and \gridmath are deliberately NOT
+%% robustified — they are expandable value helpers (\dimexpr /
+%% \the\dimexpr) that must survive \edef and dimension scanning.
 \ifdefmacro{\classicalparagraphs}{\robustify{\classicalparagraphs}}{}
 \ifdefmacro{\modernparagraphs}{\robustify{\modernparagraphs}}{}
 \ifdefmacro{\hybridparagraphs}{\robustify{\hybridparagraphs}}{}
