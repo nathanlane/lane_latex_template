@@ -4,6 +4,15 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Guarded `API_REFERENCE.md` against duplicate command documentation (issue
+#74): a test now collects commands from both `####` headings and table rows
+and fails if any name appears twice (variant rows inside one table are a
+single entry); the guard is mutation-checked against both representations.
+The eight generic subheadings the #52 fold left colliding ("Basic Usage" x4,
+"Inconsistent Spacing" x2, "Overview" x2) are renamed to what they cover, and
+a second test keeps `####` heading text unique so markdown auto-anchors stay
+position-independent.
+
 Post-merge external review of #79 found four robustness defects, fixed here:
 `\thefootnote` is deliberately un-robustified (protection froze footnote
 labels at the wrong number — the fixture now asserts this differentially);
