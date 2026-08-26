@@ -4,6 +4,16 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Post-merge external review of #79 found four robustness defects, fixed here:
+`\thefootnote` is deliberately un-robustified (protection froze footnote
+labels at the wrong number — the fixture now asserts this differentially);
+`\gridmult`/`\gridmath` are exempted as deliberately expandable value
+helpers; `lnpfontfallbacks`' runtime redefinitions of `\textsc` and
+`\oldstylenums` re-robustify at the definition site; hook-defined `\yen` is
+robustified where defined; and the PDF-bookmark fallbacks now cover the
+currency and symbol macros, whose `\kern` guards previously mangled bookmark
+strings.
+
 Made every public macro robust (issue #55). All 372 prefix-free macros across
 the 14 modules are now protected against expansion in moving arguments —
 section titles, captions, footnotes, and the `.aux` round-trip — via etoolbox

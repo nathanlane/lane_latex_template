@@ -180,6 +180,7 @@
     \renewcommand{\textsc}[1]{%
       {\fontsize{9pt}{11pt}\selectfont\MakeUppercase{##1}}%
     }%
+    \robustify{\textsc}% #55: runtime redefinition must be re-robustified
   \fi
 }
 
@@ -260,8 +261,10 @@
   \let\textsc\relax
   %% FIX: Double nested argument tokens inside compatibility-mode fallbacks.
   \renewcommand{\textsc}[1]{\MakeUppercase{##1}}%
+  \robustify{\textsc}% #55: runtime redefinition must be re-robustified
   \let\oldstylenums\relax
   \renewcommand{\oldstylenums}[1]{##1}%
+  \robustify{\oldstylenums}% #55: same
   \PackageInfo{font-fallbacks}{Compatibility mode enabled - using CM fonts only}%
 }
 

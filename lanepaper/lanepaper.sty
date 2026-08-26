@@ -432,6 +432,7 @@
   \providecommand{\yen}{\kern0.05em\textyen\kern0.05em}
 \else
   \renewcommand{\yen}{\kern0.05em\textyen\kern0.05em}  % Use renewcommand as newpxmath defines \yen
+  \robustify{\yen}% #55: hook-defined, missed by the module-end sweep
 \fi
 \newcommand{\cent}{\kern0.03em\textcent\kern0.03em}
 \newcommand{\currency}{\kern0.05em\textcurrency\kern0.05em}
@@ -2517,6 +2518,17 @@
     \def\half{1/2}%              % Fraction -> ASCII
     \def\quarter{1/4}%
     \def\threequarters{3/4}%
+    %% #55 follow-up: symbol macros wrap glyphs in \kern, which mangles PDF
+    %% strings; map them straight to their PU-encoded glyphs.
+    \def\euro{\texteuro}%
+    \def\pound{\textsterling}%
+    \def\yen{\textyen}%
+    \def\cent{\textcent}%
+    \def\currency{\textcurrency}%
+    \def\degrees{\textdegree}%
+    \def\trademark{TM}%
+    \def\registered{\textregistered}%
+    \def\servicemark{SM}%
     \let\\\space%                % Line break -> space
     \def\hspace#1{ }%            % Horizontal space -> space
     \def\vspace#1{}%             % Vertical space -> nothing
@@ -3282,7 +3294,9 @@
 \ifdefmacro{\titlefootnotesetup}{\robustify{\titlefootnotesetup}}{}
 \ifdefmacro{\titlefootnotereset}{\robustify{\titlefootnotereset}}{}
 \ifdefmacro{\footnoterule}{\robustify{\footnoterule}}{}
-\ifdefmacro{\thefootnote}{\robustify{\thefootnote}}{}
+%% FIX (#55 follow-up): \thefootnote is deliberately NOT robustified.
+%% \protected@edef must expand it to freeze the footnote number into
+%% \@currentlabel; protection made a \label in footnote 1 resolve to 2.
 \ifdefmacro{\footnote}{\robustify{\footnote}}{}
 \ifdefmacro{\multiplefootnotes}{\robustify{\multiplefootnotes}}{}
 \ifdefmacro{\startappendices}{\robustify{\startappendices}}{}
