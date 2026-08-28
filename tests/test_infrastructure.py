@@ -219,15 +219,20 @@ def test_package_uses_the_latex2e_hook_system_not_atbegindocument():
 
 
 def test_configure_if_loaded_uses_package_hooks():
-    """The five configure-if-loaded packages are wired to their load hooks.
+    """The configure-if-loaded packages are wired to their load hooks.
 
     A package hook fires whether the document loads the package before or after
     this one, and not at all when it is absent -- which is exactly the
     configure-if-loaded contract from ADR-0003.
+
+    v3 (issue #84) dropped cleveref from this set: cross-reference typography is
+    now fully document-owned (ADR-0003 rule 3), so the package neither loads nor
+    configures cleveref.
     """
     source = (ROOT / "lanepaper" / "lanepaper.sty").read_text(encoding="utf-8")
-    for package in ("hyperref", "cleveref", "longtable", "appendix", "biblatex"):
+    for package in ("hyperref", "longtable", "appendix", "biblatex"):
         assert f"\\AddToHook{{package/{package}/after}}" in source, package
+    assert "\\AddToHook{package/cleveref/after}" not in source
 
 
 def test_entry_points_require_a_format_new_enough_for_hooks():

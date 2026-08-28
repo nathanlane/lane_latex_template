@@ -1,0 +1,35 @@
+% Retained-title-surface probe for the v3 generic-API contraction (issue #84).
+%
+% The defensible small-caps behavior used by lanepaper's retained front matter
+% must stay available but PRIVATE (\lnp@titlesc), with no public alias, and the
+% title surface must still render.
+%
+% RED before #84 (\lnp@titlesc absent, public \titlesc present); GREEN after.
+\documentclass[11pt]{article}
+\usepackage{lanepaper}
+
+\makeatletter
+% Retained front-matter small caps is present and private.
+\@ifundefined{lnp@titlesc}%
+  {\PackageError{title}{Private front-matter small caps lnp@titlesc is missing}%
+    {Keep the retained title small caps as a private macro.}}{}
+% Its old public name must be gone (no compatibility alias).
+\@ifundefined{titlesc}{}%
+  {\PackageError{title}{Public titlesc must be removed, not aliased}%
+    {The v3 contraction removes the generic small-caps API.}}
+\makeatother
+
+\begin{document}
+\articletitle{A Retained Title Surface}
+\articleauthors{Jane Q. Author}
+\articledate{August 2026}
+\begin{articleabstract}
+The retained front matter renders with the private small caps, visually
+unchanged by the generic-API contraction.
+\end{articleabstract}
+\articlekeywords{typography, contraction, coexistence}
+\articlejel{C10, D20}
+
+\section{Body}
+Body text follows the retained title surface.
+\end{document}

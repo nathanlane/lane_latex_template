@@ -131,9 +131,8 @@
 % ==============================================================================
 % SIMPLE COMMANDS
 % ==============================================================================
-
-% Basic emphasis
-\renewcommand{\emph}[1]{\textit{#1}}
+% v3 (issue #84) removed the \emph redefinition; \emph keeps its standard
+% LaTeX meaning.
 
 % Section spacing (simplified)
 \RequirePackage{titlesec}
@@ -189,7 +188,6 @@
 % \robustify, which applies e-TeX \protected. Definitions stay \newcommand
 % so a name collision with another package still errors at load time.
 % \ifdefmacro skips names that resolve to registers in this load order.
-\ifdefmacro{\emph}{\robustify{\emph}}{}
 \ifdefmacro{\checkminimalmode}{\robustify{\checkminimalmode}}{}
 \ifdefmacro{\halfgridunit}{\robustify{\halfgridunit}}{}
 \ifdefmacro{\quartergridunit}{\robustify{\quartergridunit}}{}

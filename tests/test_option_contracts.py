@@ -173,24 +173,6 @@ def test_bare_package_survives_without_hyperref(tmp_path):
     assert "Undefined control sequence" not in log_text
 
 
-def test_text_symbol_commands_compile_in_t1_encoding(tmp_path):
-    result, log_text = compile_latex(
-        tmp_path,
-        "text-symbol-contract",
-        r"""
-        \documentclass[11pt]{article}
-        \usepackage{lanepaper}
-        \begin{document}
-        The value is \textapprox 3.14159.
-        The limit approaches \textinfty.
-        \end{document}
-        """,
-    )
-    assert_compiles(result, log_text)
-    assert "Command \\textapprox unavailable in encoding T1" not in log_text
-    assert "Command \\textinfty unavailable in encoding T1" not in log_text
-
-
 def test_plain_ref_does_not_emit_package_warning(tmp_path):
     result, log_text = compile_latex(
         tmp_path,
@@ -245,48 +227,6 @@ def test_nosubsectionbarriers_reports_disabled_mode(tmp_path):
     )
     assert_compiles(result, log_text)
     assert "Package lanepaper Info: subsection float barriers disabled" in log_text
-
-
-def test_math_redefs_default_off(tmp_path):
-    result, log_text = compile_latex(
-        tmp_path,
-        "mathredefs-default-contract",
-        r"""
-        \documentclass[11pt]{article}
-        \usepackage{lanepaper}
-        \begin{document}
-        \makeatletter
-        \typeout{LNP_LE=\meaning\le}
-        \typeout{LNP_PHI=\meaning\phi}
-        \makeatother
-        $a \le b$
-        \end{document}
-        """,
-    )
-    assert_compiles(result, log_text)
-    assert "LNP_LE=\\mathchar" in log_text
-    assert "LNP_PHI=\\mathchar" in log_text
-
-
-def test_math_redefs_option_enables_variants(tmp_path):
-    result, log_text = compile_latex(
-        tmp_path,
-        "mathredefs-optin-contract",
-        r"""
-        \documentclass[11pt]{article}
-        \usepackage[mathredefs]{lanepaper}
-        \begin{document}
-        \makeatletter
-        \typeout{LNP_LE=\meaning\le}
-        \typeout{LNP_PHI=\meaning\phi}
-        \makeatother
-        $a \le b$
-        \end{document}
-        """,
-    )
-    assert_compiles(result, log_text)
-    assert "macro:->\\leqslant" in log_text  # 2022 kernel: \long macro; 2026+: plain macro
-    assert "macro:->\\varphi" in log_text
 
 
 def test_footmisc_option_passthrough_no_clash(tmp_path):

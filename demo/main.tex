@@ -41,7 +41,7 @@ This section provides a concise guide to using the template. For detailed exampl
 \item \textbf{Clone this repository} to start your paper
 \item \textbf{Edit main.tex} with your content (replacing this demonstration)
 \item \textbf{Add citations} to references.bib
-\item \textbf{Compile} using \code{make} or the commands below
+\item \textbf{Compile} using \texttt{make} or the commands below
 \end{enumerate}
 
 \subsection{Compilation}
@@ -62,26 +62,26 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 
 \safeparagraph{Text Emphasis}
 \begin{itemize}
-\item Regular emphasis: \code{\textbackslash emph\{...\}} produces \emph{italicized text}
-\item Strong emphasis: \code{\textbackslash textbf\{...\}} produces \textbf{bold text}
-\item Small caps: \code{\textbackslash textsc\{...\}} produces \textsc{small capitals}
-\item Academic style: \code{\textbackslash textsc\{...\}} produces \textsc{standard small caps}
+\item Regular emphasis: \texttt{\textbackslash emph\{...\}} produces \emph{italicized text}
+\item Strong emphasis: \texttt{\textbackslash textbf\{...\}} produces \textbf{bold text}
+\item Small caps: \texttt{\textbackslash textsc\{...\}} produces \textsc{small capitals}
+\item Academic style: \texttt{\textbackslash textsc\{...\}} produces \textsc{standard small caps}
 \end{itemize}
 
 \safeparagraph{Common Typography}
 \begin{itemize}
-\item Smart quotes: \code{\textbackslash{}enquote\{...\}} produces \enquote{context-aware quotes}
-\item Code inline: \code{\textbackslash{}code\{...\}} produces \code{monospace text}
-\item File paths: \code{\textbackslash{}filepath\{...\}} produces \filepath{/path/to/file.tex}
-\item Variables: \code{\textbackslash{}var\{...\}} produces \var{variableName}
+\item Smart quotes: \texttt{\textbackslash{}enquote\{...\}} produces \enquote{context-aware quotes}
+\item Inline code: \texttt{\textbackslash{}texttt\{...\}} produces \texttt{monospace text}
+\item File paths: \texttt{\textbackslash{}texttt\{...\}} produces \texttt{/path/to/file.tex}
+\item Variables: \texttt{\textbackslash{}texttt\{...\}} produces \texttt{variableName}
 \end{itemize}
 
 \safeparagraph{Citations}
 \begin{itemize}
-\item Textual: \code{\textbackslash{}textcite\{key\}} --- \enquote{Author (Year) states...}
-\item Parenthetical: \code{\textbackslash{}autocite\{key\}} --- \enquote{...statement (Author Year)}
-\item Author only: \code{\textbackslash{}citeauthor\{key\}} --- \enquote{Author}
-\item Year only: \code{\textbackslash{}citeyear\{key\}} --- \enquote{(Year)}
+\item Textual: \texttt{\textbackslash{}textcite\{key\}} --- \enquote{Author (Year) states...}
+\item Parenthetical: \texttt{\textbackslash{}autocite\{key\}} --- \enquote{...statement (Author Year)}
+\item Author only: \texttt{\textbackslash{}citeauthor\{key\}} --- \enquote{Author}
+\item Year only: \texttt{\textbackslash{}citeyear\{key\}} --- \enquote{(Year)}
 \end{itemize}
 
 \subsection{Typography Specimens}
@@ -93,7 +93,7 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 \item \textit{Italic:} For gentle emphasis and citations
 \item \textbf{\textit{Bold Italic:}} For paragraph headings
 \item \textsc{Small Caps:} For acronyms and special terms
-\item \code{Monospace:} For code and technical terms
+\item \texttt{Monospace:} For code and technical terms
 \item Mathematics: $f(x) = \alpha x^2 + \beta x + \gamma$
 \end{itemize}
 
@@ -165,8 +165,8 @@ This document demonstrates several features whose spacing is stated in quanta:
 \begin{itemize}
 \item \emph{Sections:} 39.6pt before (3 units), 19.8pt after (1.5 units) with -0.8pt optical adjustment
 \item \emph{Subsections:} 26.4pt before (2 units), 13.2pt after (1 unit) with -0.5pt optical adjustment  
-\item \emph{Tables:} Standard row heights via \code{\textbackslash{}begin\{gridtable\}}
-\item \emph{Images:} Heights automatically rounded to quantum multiples via \code{\textbackslash{}gridincludegraphics}
+\item \emph{Tables:} Standard row heights via \texttt{\textbackslash{}begin\{gridtable\}}
+\item \emph{Images:} Heights rounded to quantum multiples via \texttt{\textbackslash{}gridincludegraphics}
 \item \emph{Floats:} 19.8pt separation (1.5 units) between consecutive floats
 \end{itemize}
 
@@ -234,20 +234,15 @@ The spacing follows Hochuli's systematic principles in quantum multiples:
 f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
 \end{equation}
 
-For inline mathematics, we maintain consistency: $\norm{x}_2 = \sqrt{\sum_{i=1}^n x_i^2}$ and $\abs{z} = \sqrt{a^2 + b^2}$ for complex numbers $z = a + bi \in \complex$.
+For inline mathematics, we maintain consistency: $\lVert x\rVert_2 = \sqrt{\sum_{i=1}^n x_i^2}$ and $\lvert z\rvert = \sqrt{a^2 + b^2}$ for complex numbers $z = a + bi \in \mathbb{C}$.
 
 \safeparagraph{Mathematical Integration} The system provides seamless text-math transitions through newpxmath with enhanced symbols and quantum-derived spacing.
 
 \section{Code Typography}
 
-The template integrates \code{Inconsolata} (zi4 package) as the monospace font, carefully optimized for harmony with Pagella through Hochuli's systematic approach to typographic integration.
+The template integrates \texttt{Inconsolata} (zi4 package) as the monospace font, carefully optimized for harmony with Pagella through Hochuli's systematic approach to typographic integration.
 
-\safeparagraph{Code Commands} The system provides specialized commands:
-\begin{itemize}
-\item \code{\textbackslash{}code\{\}} for inline code elements
-\item \code{\textbackslash{}filepath\{\}} for file paths  
-\item \code{\textbackslash{}var\{\}} for variable names
-\end{itemize}
+\safeparagraph{Code Commands} Use the standard \texttt{\textbackslash{}texttt\{...\}} command for inline code elements, file paths, and variable names.
 
 Inconsolata is scaled to 96\% for optimal harmony with Pagella, with enhanced character options and professional spacing.
 
@@ -301,15 +296,15 @@ The TeX Gyre series represents the gold standard for academic typography, provid
 
 This section demonstrates how all three typography systems work together harmoniously in realistic academic contexts.
 
-\safeparagraph{Mathematical Programming Example} Consider the optimization problem: minimize $f(x) = \norm{Ax - b}_2^2$ subject to $x \in \real^n$. 
-The implementation uses \code{scipy.optimize.minimize} with the \filepath{L-BFGS-B} algorithm.
-The \code{gradient} function computes $\nabla f(x) = 2A^T(Ax - b)$ for efficient convergence in the Hilbert space $\hilbert = L^2(\real^n)$.
+\safeparagraph{Mathematical Programming Example} Consider the optimization problem: minimize $f(x) = \lVert Ax - b\rVert_2^2$ subject to $x \in \mathbb{R}^n$.
+The implementation uses \texttt{scipy.optimize.minimize} with the \texttt{L-BFGS-B} algorithm.
+The \texttt{gradient} function computes $\nabla f(x) = 2A^T(Ax - b)$ for efficient convergence in the Hilbert space $\mathcal{H} = L^2(\mathbb{R}^n)$.
 
-\safeparagraph{Statistical Analysis Integration} When analyzing data with \code{pandas}, we often compute sample statistics like $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ and $s^2 = \frac{1}{n - 1}\sum_{i=1}^n (x_i - \bar{x})^2$.
-The \inlinecode{DataFrame.describe()} method provides these automatically, while custom functions like \var{compute\_confidence\_interval} handle more complex calculations in the probability space $(\Omega, \mathcal{F}, \prob)$.
+\safeparagraph{Statistical Analysis Integration} When analyzing data with \texttt{pandas}, we often compute sample statistics like $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ and $s^2 = \frac{1}{n - 1}\sum_{i=1}^n (x_i - \bar{x})^2$.
+The \texttt{DataFrame.describe()} method provides these automatically, while custom functions like \texttt{compute\_confidence\_interval} handle more complex calculations in the probability space $(\Omega, \mathcal{F}, \mathbb{P})$.
 
-\safeparagraph{Algorithmic Complexity} The algorithm runs in $O(n \log n)$ time complexity, implemented using the \code{heapq} module.
-For large datasets stored in \filepath{/data/processed/}, the \balancedcode{numpy.ndarray} structure provides efficient memory access patterns that respect the underlying mathematical structure of $\mathbb{R}^{n \times m}$ matrices.
+\safeparagraph{Algorithmic Complexity} The algorithm runs in $O(n \log n)$ time complexity, implemented using the \texttt{heapq} module.
+For large datasets stored in \texttt{/data/processed/}, the \texttt{numpy.ndarray} structure provides efficient memory access patterns that respect the underlying mathematical structure of $\mathbb{R}^{n \times m}$ matrices.
 
 
 This demonstrates how Hochuli's integration principles create unified typography where text, mathematics, and code work together seamlessly without visual disruption.
@@ -353,7 +348,7 @@ The system uses aggressive penalties to prevent typographic rivers, widows, and 
 
 \subsection{Sophisticated Hyphenation}
 
-Academic English hyphenation patterns optimize text flow with specialized handling for terms like \enquote{meth-od-ology} and \enquote{theo-ret-ical}. The system uses a hyphenation penalty of 800\emdash{}optimized for Pagella's wider characters\emdash{}with emergency stretch capabilities for challenging justification scenarios.
+Academic English hyphenation patterns optimize text flow with specialized handling for terms like \enquote{meth-od-ology} and \enquote{theo-ret-ical}. The system uses a hyphenation penalty of 800---{}optimized for Pagella's wider characters---{}with emergency stretch capabilities for challenging justification scenarios.
 
 \safeparagraph{Language-Specific Optimization} Babel integration with microtype enables context-aware character protrusion and expansion. This prevents rivers in justified text while maintaining consistent color across pages.
 
@@ -370,14 +365,14 @@ Following Hochuli's principle that \enquote{color should enhance, never compete 
 \item \emph{Subsubsection headings:} \textcolor{subsubcolor}{Medium charcoal} (25\% gray) softens bold weight
 \item \emph{Paragraph headings:} \textcolor{paragraphcolor}{Dark gray} (15\% gray) prevents harsh small bold
 \item \emph{Body text:} \textcolor{textblack}{Near-black (5\% gray)} for optimal reading comfort
-\item \emph{All links:} \externalref{Enhanced navy blue} (RGB 0,102,180) for consistent visual treatment
+\item \emph{All links:} \emph{Enhanced navy blue} (RGB 0,102,180) for consistent visual treatment
 \end{itemize}
 
 \emph{Semantic Color Commands:}
 \begin{itemize}
-\item \emph{Subtle emphasis:} \subtleemph{Conservative blue} for rare special emphasis
-\item \emph{Important notes:} \importantnote{Restrained red} for critical information
-\item \emph{Code comments:} \codecomment{Italic gray} for programming documentation
+\item \emph{Subtle emphasis:} \emph{Conservative blue} for rare special emphasis
+\item \emph{Important notes:} \textbf{Restrained red} for critical information
+\item \emph{Code comments:} \textit{Italic gray} for programming documentation
 \end{itemize}
 
 \emph{List Typography Colors:}
@@ -399,7 +394,7 @@ Following Bringhurst and Hochuli's classical principles, this framework employs 
 
 \safeparagraph{Special Environment Handling} Lists, blockquotes, verbatim blocks, and floats automatically suppress indentation within their contexts, while ensuring the first paragraph following these environments returns to flush left positioning for optimal visual flow.
 
-\safeparagraph{Alternative Paragraph Styles} The framework provides flexibility with paragraph formatting. While the default uses bold italic for contrast, users can activate bold small caps with the \code{\textbackslash paragraphsc} command for maximum distinction with generous tracking (+12\%) to prevent blockiness.
+\safeparagraph{Alternative Paragraph Styles} The framework provides flexibility with paragraph formatting. While the default uses bold italic for contrast, users can activate bold small caps with the \texttt{\textbackslash paragraphsc} command for maximum distinction with generous tracking (+12\%) to prevent blockiness.
 
 \section{Professional Figures and Tables}
 
@@ -407,7 +402,7 @@ This section demonstrates best-practice implementation of figures, tables, and f
 
 \subsection{Figure Integration}
 
-Figures should be placed using the \code{figure} environment with appropriate placement options. The recommended placement specification is \code{[tbp]} (top, bottom, page) for professional academic documents.
+Figures should be placed using the \texttt{figure} environment with appropriate placement options. The recommended placement specification is \texttt{[tbp]} (top, bottom, page) for professional academic documents.
 
 \begin{figure}[tbp]
   \centering
@@ -449,7 +444,7 @@ Professional figure inclusion follows this pattern:
 
 \subsection{Professional Table Design}
 
-Tables demonstrate the power of \code{booktabs} package with no vertical rules, creating clean, readable presentations of data. The framework provides table environments with quantum-derived spacing.
+Tables demonstrate the power of \texttt{booktabs} package with no vertical rules, creating clean, readable presentations of data. The framework provides table environments with quantum-derived spacing.
 
 \begin{table}[tbp]
   \caption{Sample Data Table Using Booktabs Design Principles}
@@ -473,11 +468,11 @@ Tables demonstrate the power of \code{booktabs} package with no vertical rules, 
   \end{tablenotes}
 \end{table}
 
-\safeparagraph{Table Conventions}~ Table~\ref{tab:sample-data} shows proper caption placement \emph{above} the table content, following Chicago Manual of Style guidelines. The booktabs design uses only horizontal rules (\code{\textbackslash{}toprule}, \code{\textbackslash{}midrule}, \code{\textbackslash{}bottomrule}) for professional appearance.
+\safeparagraph{Table Conventions}~ Table~\ref{tab:sample-data} shows proper caption placement \emph{above} the table content, following Chicago Manual of Style guidelines. The booktabs design uses only horizontal rules (\texttt{\textbackslash{}toprule}, \texttt{\textbackslash{}midrule}, \texttt{\textbackslash{}bottomrule}) for professional appearance.
 
 \subsection{Full-Width Tables with TabularX}
 
-For tables requiring full text width, use \code{tabularx} with \code{X} column specifications:
+For tables requiring full text width, use \texttt{tabularx} with \texttt{X} column specifications:
 
 \begin{table}[tbp]
   \caption{Extended Analysis Results Using Full Text Width}
@@ -498,7 +493,7 @@ For tables requiring full text width, use \code{tabularx} with \code{X} column s
   \end{tablenotes}
 \end{table}
 
-\safeparagraph{TabularX Benefits}~ The \code{X} column type automatically adjusts width to fill available space while maintaining proper text justification, as demonstrated in the Description column of Table~\ref{tab:extended-results}.
+\safeparagraph{TabularX Benefits}~ The \texttt{X} column type automatically adjusts width to fill available space while maintaining proper text justification, as demonstrated in the Description column of Table~\ref{tab:extended-results}.
 
 \subsection{Tables with Standard Row Heights}
 
@@ -521,16 +516,16 @@ The framework provides specialized table environments with systematic row spacin
 
 \safeparagraph{Grid Table Environments}~ The framework provides three table environments with standard row heights:
 \begin{itemize}
-\item \code{gridtable} --- Standard rows (~21.8pt measured) for normal data
-\item \code{regressiontable} --- ~21.0pt rows (measured) for statistical results
-\item \code{compactgridtable} --- ~16.9pt rows (measured) for dense information
+\item \texttt{gridtable} --- Standard rows (~21.8pt measured) for normal data
+\item \texttt{regressiontable} --- ~21.0pt rows (measured) for statistical results
+\item \texttt{compactgridtable} --- ~16.9pt rows (measured) for dense information
 \end{itemize}
 
-Each environment automatically sets \code{\textbackslash arraystretch} to maintain the standard row height while preserving the professional appearance of booktabs.
+Each environment automatically sets \texttt{\textbackslash arraystretch} to maintain the standard row height while preserving the professional appearance of booktabs.
 
 \subsection{Multi-Page Tables with LongTable}
 
-For tables spanning multiple pages, use \code{longtable} with proper header and footer specifications:
+For tables spanning multiple pages, use \texttt{longtable} with proper header and footer specifications:
 
 \begin{verbatim}
 \begin{longtable}{@{}lrrr@{}}
@@ -559,7 +554,7 @@ For tables spanning multiple pages, use \code{longtable} with proper header and 
 
 \subsection{Float Control with FloatBarrier}
 
-Use \code{\textbackslash{}clearpage} to control float placement by section:
+Use \texttt{\textbackslash{}clearpage} to control float placement by section:
 
 \begin{verbatim}
 % End of current section - ensure all floats appear before next section
@@ -569,24 +564,24 @@ Use \code{\textbackslash{}clearpage} to control float placement by section:
 % This section starts with all previous floats properly placed
 \end{verbatim}
 
-\safeparagraph{When to Use clearpage} Insert \code{\textbackslash{}clearpage} before major section breaks to prevent figures and tables from drifting beyond their contextual sections. This is particularly important in academic papers where figures should appear near their discussion.
+\safeparagraph{When to Use clearpage} Insert \texttt{\textbackslash{}clearpage} before major section breaks to prevent figures and tables from drifting beyond their contextual sections. This is particularly important in academic papers where figures should appear near their discussion.
 
 \safeparagraph{Professional Float Placement} Our framework configures optimal float placement defaults:
 \begin{itemize}
-\item \emph{Preferred placement:} \code{[tbp]} allows top, bottom, or dedicated float pages
-\item \emph{Avoid:} \code{[h]} (here) placement, which can create poor layout
+\item \emph{Preferred placement:} \texttt{[tbp]} allows top, bottom, or dedicated float pages
+\item \emph{Avoid:} \texttt{[h]} (here) placement, which can create poor layout
 \item \emph{Multiple floats:} Maximum 3 top floats, 2 bottom floats per page
 \item \emph{Page composition:} Minimum 15\% text content per page
 \end{itemize}
 
 \subsection{Quotation Integration}
 
-The \code{csquotes} package provides context-sensitive quotation handling:
+The \texttt{csquotes} package provides context-sensitive quotation handling:
 
 \begin{itemize}
-\item \emph{Inline quotes:} Use \code{\textbackslash{}enquote\{text\}} for \enquote{proper quotation marks}
-\item \emph{Block quotes:} Use \code{displayquote} environment for longer quotations
-\item \emph{Citations:} Integrates with bibliography for \code{\textbackslash{}textcite\{key\}} formatting
+\item \emph{Inline quotes:} Use \texttt{\textbackslash{}enquote\{text\}} for \enquote{proper quotation marks}
+\item \emph{Block quotes:} Use \texttt{displayquote} environment for longer quotations
+\item \emph{Citations:} Integrates with bibliography for \texttt{\textbackslash{}textcite\{key\}} formatting
 \end{itemize}
 
 \safeparagraph{Smart Quotation Example} The framework automatically handles nested quotations: \enquote{He said, \enquote{The results are very promising according to our analysis.}}
@@ -808,8 +803,8 @@ For legacy compatibility, the framework enables natbib commands:
 
 \safeparagraph{Migration Guide} When converting from natbib to biblatex:
 \begin{itemize}
-\item Replace \code{\textbackslash{}citet} with \code{\textbackslash{}textcite}
-\item Replace \code{\textbackslash{}citep} with \code{\textbackslash{}autocite}
+\item Replace \texttt{\textbackslash{}citet} with \texttt{\textbackslash{}textcite}
+\item Replace \texttt{\textbackslash{}citep} with \texttt{\textbackslash{}autocite}
 \item Update bibliography database for enhanced field support
 \item Utilize advanced biblatex features for DOIs, URLs, and annotations
 \end{itemize}
@@ -826,7 +821,7 @@ The framework provides comprehensive support for wide tables and rotated content
 
 \subsection{Landscape Tables for Wide Regression Results}
 
-For wide regression tables with many specifications, use the \code{landscapetable} environment:
+For wide regression tables with many specifications, use the \texttt{landscapetable} environment:
 
 \begin{verbatim}
 \begin{landscapetable}[tbp]
@@ -845,7 +840,7 @@ For wide regression tables with many specifications, use the \code{landscapetabl
 
 \subsection{Rotated Tables for Correlation Matrices}
 
-For single-column tables that benefit from rotation, use \code{rotatedtable}:
+For single-column tables that benefit from rotation, use \texttt{rotatedtable}:
 
 \begin{verbatim}
 \begin{rotatedtable}[tbp]
@@ -859,7 +854,7 @@ For single-column tables that benefit from rotation, use \code{rotatedtable}:
 
 \subsection{Adjustable Tables with Auto-Scaling}
 
-For tables that need automatic width adjustment, use \code{fittable}:
+For tables that need automatic width adjustment, use \texttt{fittable}:
 
 \begin{verbatim}
 \begin{fittable}[tbp]{1.2\textwidth}
@@ -873,7 +868,7 @@ For tables that need automatic width adjustment, use \code{fittable}:
 
 \subsection{Landscape Figures for Wide Visualizations}
 
-Wide coefficient plots and panel visualizations can use \code{landscapefigure}:
+Wide coefficient plots and panel visualizations can use \texttt{landscapefigure}:
 
 \begin{verbatim}
 \begin{landscapefigure}[tbp]

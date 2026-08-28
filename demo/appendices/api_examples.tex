@@ -54,17 +54,17 @@ The template provides several title commands for different contexts:
 
 \subsubsection{Emphasis Hierarchy}
 
-The template provides semantic emphasis commands for different content types:
+Use the standard LaTeX emphasis commands for different content types:
 
 \begin{itemize}
 \item \emph{Basic emphasis:} Use \verb|\emph{text}| for \emph{standard emphasis}
-\item \strongemph{Strong emphasis:} Use \verb|\strongemph{text}| for \strongemph{critical terms}
-\item \term{Technical terms:} Use \verb|\term{baseline grid}| for the \term{baseline grid}
-\item \person{Person names:} Use \verb|\person{Robert Bringhurst}| for \person{Robert Bringhurst}
-\item \acro{Acronyms:} Use \verb|\acro{PDF}| for \acro{PDF} format
-\item \work{Published works:} Use \verb|\work{The Elements of Typographic Style}| for \work{The Elements of Typographic Style}
-\item \meta{Metadata:} Use \verb|\meta{Version 1.0}| for \meta{Version 1.0}
-\item \critical{Critical notices:} Use \verb|\critical{WARNING}| for \critical{WARNING} messages
+\item \textbf{Strong emphasis:} Use \verb|\textbf{text}| for \textbf{critical terms}
+\item \emph{Technical terms:} Use \verb|\emph{baseline grid}| for the \emph{baseline grid}
+\item \textsc{Person names:} Use \verb|\textsc{Robert Bringhurst}| for \textsc{Robert Bringhurst}
+\item \textsc{Acronyms:} Use \verb|\textsc{PDF}| for \textsc{PDF} format
+\item \emph{Published works:} Use \verb|\emph{The Elements of Typographic Style}| for \emph{The Elements of Typographic Style}
+\item \textsc{Metadata:} Use \verb|\textsc{Version 1.0}| for \textsc{Version 1.0}
+\item \textbf{\textsc{Critical notices:}} Use \verb|\textbf{\textsc{WARNING}}| for \textbf{\textsc{WARNING}} messages
 \end{itemize}
 
 \subsubsection{Section Opening Styles}
@@ -87,10 +87,10 @@ following classical typography conventions.
 
 \subsubsection{Dash Usage}
 
-The template provides sophisticated dash commands:
+Use standard LaTeX dashes:
 
 \begin{itemize}
-\item Em dash with thin spaces: Typography\emdash the art of arranging type\emdash is essential
+\item Em dash: Typography---the art of arranging type---is essential
 \item Classic em dash: Typography---without spaces---for traditional style
 \item En dash for ranges: Pages 10--20
 \item Years: 2020--2025
@@ -101,9 +101,9 @@ The template provides sophisticated dash commands:
 Professional spacing for all symbols:
 
 \begin{itemize}
-\item Currency: \euro 100, \pound 50, \yen 1000, 50\cent
-\item Technical: 25\degrees C, Area = 100m\textsuperscript{2}
-\item Legal: Product\trademark, Company\registered, \copyright 2025
+\item Currency: \texteuro 100, \textsterling 50, \textyen 1000, 50\textcent
+\item Technical: 25\textdegree C, Area = 100m\textsuperscript{2}
+\item Legal: Product\texttrademark, Company\textregistered, \copyright 2025
 \item Mathematical in text: 5\textpm 2, 3\texttimes 4, 12\textdiv 3, $\pi \approx 3.14$
 \end{itemize}
 
@@ -152,9 +152,9 @@ The primary colors are (i) red, (ii) green, and (iii) blue, forming the RGB colo
 \subsubsection{Smart Quote Commands}
 
 \begin{itemize}
-\item Single quotes: \sq{quoted text}
-\item Double quotes: \dq{quoted text}
-\item Nested quotes: \nq{She said}{Hello there}
+\item Single quotes: `quoted text'
+\item Double quotes: ``quoted text''
+\item Nested quotes: ``She said `Hello there' She said''
 \end{itemize}
 
 Note: For block quotes, use the standard \texttt{quote} environment or see the main document for examples.
@@ -197,14 +197,14 @@ Professional notes following QJE style:
 
 \subsubsection{Mathematical Operators}
 
-The template provides standard operators:
+amsmath provides standard operators (declare more with \verb|\DeclareMathOperator|):
 
 \begin{itemize}
-\item Trace: $\tr(A)$
-\item Rank: $\rank(M)$
-\item Span: $\Span\{v_1, v_2\}$
-\item Support: $\supp(f)$
-\item Optimization: $\argmax_{x} f(x)$, $\argmin_{x} g(x)$
+\item Trace: $\operatorname{tr}(A)$
+\item Rank: $\operatorname{rank}(M)$
+\item Span: $\operatorname{span}\{v_1, v_2\}$
+\item Support: $\operatorname{supp}(f)$
+\item Optimization: $\arg\max_{x} f(x)$, $\arg\min_{x} g(x)$
 \end{itemize}
 
 \subsubsection{Standard Equations}
@@ -218,15 +218,15 @@ The template provides standard operators:
 
 \subsubsection{Smart References with cleveref}
 
-The template uses intelligent cross-referencing:
+The document loads and configures cleveref for intelligent cross-referencing:
 
 \begin{itemize}
 \item Standard reference: See \cref{fig:professional-example}
 \item Sentence start: \Cref{tab:sample-data} shows the data
 \item Range: \crefrange{sec:introduction}{sec:quickstart} display the results
-\item Page reference: \refpage{sec:introduction}
-\item Parenthetical: The results \pref{fig:professional-example} confirm
-\item See also: \seealso{app:main}
+\item Page reference: \cref{sec:introduction} on \cpageref{sec:introduction}
+\item Parenthetical: The results (\cref{fig:professional-example}) confirm
+\item See also: see also \cref{app:main}
 \end{itemize}
 
 \subsection{Spacing Commands}
@@ -244,15 +244,15 @@ All vertical spacing uses grid units:
 
 \subsection{Color System}
 
-\subsubsection{Semantic Color Commands}
+\subsubsection{Standard Emphasis}
 
-The template provides semantic color commands:
+Use the standard LaTeX emphasis commands:
 
 \begin{itemize}
-\item \subtleemph{Subtle emphasis} for secondary importance
-\item \importantnote{Important note} for critical information
-\item \codecomment{Code comments} in documentation
-\item \externalref{External references} for links
+\item \emph{Subtle emphasis} for secondary importance
+\item \textbf{Important note} for critical information
+\item \textit{Code comments} in documentation
+\item \emph{External references} for links
 \end{itemize}
 
 \subsection{Paragraph Styles}
