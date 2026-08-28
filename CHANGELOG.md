@@ -4,6 +4,26 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Contracted the public API for v3 (issue #84, ADR-0006). The generic writing,
+emphasis, code, punctuation, symbol, currency, fraction, spacing, math, and
+reference helpers were removed rather than kept as compatibility aliases,
+restoring standard LaTeX, amsmath, and third-party ownership of the names they
+shadowed or collided with — including `\unit` (siunitx), `\meta` (doc), `\S`,
+`\P`, `\copyright`, `\dag`, `\ddag`, `\ldots`, `\cdots`, `\natural`, `\lim`,
+`\thinspace`, `\medspace`, and `\thickspace`. The cleveref format/name
+configuration and the reference wrappers (`\refpage`, `\pref`, `\seeref`,
+`\seealso`, ...) were removed too: cross-references are now fully
+document-owned (ADR-0003 rule 3), so a document loads and configures cleveref
+itself. The `\pdf*` bookmark wrappers were removed with the emphasis/code
+helpers they wrapped. The defensible title-page small caps used by the
+retained front matter (abstract, keywords, JEL) is kept but made private
+(`\lnp@titlesc`) and is visually unchanged. `API_REFERENCE.md` drops the
+removed commands from the active API and gains a "Removed in v3" migration
+table; two focused fixtures probe the standard/package collisions and the
+retained title surface. No compatibility aliases were added. Demo call sites
+were mechanically repointed to the standard equivalents to keep the build
+green; the demo/documentation rewrite remains issue #89.
+
 Recorded the accepted v3 package boundary in ADR-0006 and corrected the older
 architecture records and glossary to match it. Public-release execution now
 lives in GitHub issue #82 and its dependency-ordered children; the operational

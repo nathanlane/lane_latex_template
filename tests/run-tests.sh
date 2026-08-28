@@ -55,12 +55,15 @@ test_latex_file() {
     local source_toc="${tex_file%.tex}.toc"
     local source_bcf="${tex_file%.tex}.bcf"
     local source_run_xml="${tex_file%.tex}.run.xml"
+    # FIX: the doc package writes a .hd file for a coexistence probe that loads it.
+    local source_hd="${tex_file%.tex}.hd"
     local root_aux="$PROJECT_ROOT/${basename}.aux"
     local root_log="$PROJECT_ROOT/${basename}.log"
     local root_out="$PROJECT_ROOT/${basename}.out"
     local root_toc="$PROJECT_ROOT/${basename}.toc"
     local root_bcf="$PROJECT_ROOT/${basename}.bcf"
     local root_run_xml="$PROJECT_ROOT/${basename}.run.xml"
+    local root_hd="$PROJECT_ROOT/${basename}.hd"
     
     log_info "Testing $basename..."
     
@@ -131,9 +134,9 @@ test_latex_file() {
     # FIX: Compatibility probes can live in tmp dirs while pdflatex writes aux
     # files into PROJECT_ROOT, so clean both source-path and root fallbacks.
     rm -f "$source_aux" "$source_log" "$source_out" "$source_toc" \
-          "$source_bcf" "$source_run_xml" \
+          "$source_bcf" "$source_run_xml" "$source_hd" \
           "$root_aux" "$root_log" "$root_out" "$root_toc" \
-          "$root_bcf" "$root_run_xml"
+          "$root_bcf" "$root_run_xml" "$root_hd"
     
     return 0
 }
@@ -213,7 +216,7 @@ EOF
 \begin{document}
 \textfigs{123}
 \chemform{E=mc^2}
-\onehalf
+\liningfigs{456}
 \end{document}
 EOF
     then

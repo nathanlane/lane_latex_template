@@ -118,7 +118,7 @@ This document codifies the LaTeX source code formatting standards for this proje
 ##### Inline Mathematics
 - **Use `$...$`** for inline math (not `\(...\)`)
 - **Add thin spaces** around operators when needed: `$x\,=\,y$`
-- **Semantic commands** for common constructs: `\real`, `\norm{x}`
+- **Standard amsmath notation** for common constructs: `\mathbb{R}`, `\lVert x\rVert` (v3 removed the generic `\real`/`\norm` helpers)
 
 ##### Display Mathematics
 - **Use `\[...\]`** for unnumbered display equations

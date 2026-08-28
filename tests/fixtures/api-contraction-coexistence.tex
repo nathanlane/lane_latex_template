@@ -1,0 +1,72 @@
+% Coexistence probe for the v3 generic-API contraction (issue 84).
+%
+% Loads the established packages that own the marquee colliding names --
+% siunitx (\unit) and doc (\meta) -- BEFORE lanepaper, then asserts lanepaper
+% leaves their definitions untouched and restores standard LaTeX / amsmath
+% meanings. Bare checks confirm the other removed helpers are undefined.
+%
+% RED before #84 (lanepaper's \newcommand{\unit}/{\meta} clashed with the
+% established packages, and its renews changed standard commands); GREEN after.
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{siunitx}   % owns \unit
+\usepackage{doc}       % owns \meta
+
+% Capture established-package and standard meanings BEFORE lanepaper loads.
+\let\lnpprobeunit\unit
+\let\lnpprobemeta\meta
+\let\lnpprobecode\code
+\let\lnpprobethinspace\thinspace
+\let\lnpprobemedspace\medspace
+\let\lnpprobethickspace\thickspace
+\let\lnpprobeS\S
+\let\lnpprobeP\P
+\let\lnpprobecopyright\copyright
+\let\lnpprobedag\dag
+\let\lnpprobeddag\ddag
+
+\usepackage{lanepaper}
+
+\makeatletter
+% (a) Established-package and standard commands are left untouched by lanepaper.
+\def\lnpprobe@same#1#2{%
+  \ifx#1#2\else
+    \PackageError{coexistence}{A command owned elsewhere was changed by lanepaper}%
+      {The v3 contraction (issue 84) must not redefine it.}%
+  \fi}
+\lnpprobe@same\lnpprobeunit\unit%       siunitx keeps \unit
+\lnpprobe@same\lnpprobemeta\meta%       doc keeps \meta
+\lnpprobe@same\lnpprobecode\code%       doc keeps \code
+\lnpprobe@same\lnpprobethinspace\thinspace
+\lnpprobe@same\lnpprobemedspace\medspace
+\lnpprobe@same\lnpprobethickspace\thickspace
+\lnpprobe@same\lnpprobeS\S
+\lnpprobe@same\lnpprobeP\P
+\lnpprobe@same\lnpprobecopyright\copyright
+\lnpprobe@same\lnpprobedag\dag
+\lnpprobe@same\lnpprobeddag\ddag
+
+% (b) The other removed generic helpers are undefined by lanepaper.
+\def\lnpprobe@gone#1{%
+  \@ifundefined{#1}{}{%
+    \PackageError{coexistence}{Macro #1 is still defined by lanepaper}%
+      {The v3 contraction (issue 84) must remove this generic macro.}}%
+}
+\lnpprobe@gone{strongemph}%
+\lnpprobe@gone{critical}%
+\lnpprobe@gone{semantic}%
+\lnpprobe@gone{emdash}%
+\lnpprobe@gone{euro}%
+\lnpprobe@gone{half}%
+\lnpprobe@gone{real}%
+\lnpprobe@gone{norm}%
+\lnpprobe@gone{refpage}%
+\lnpprobe@gone{seealso}%
+\lnpprobe@gone{titlesc}%   the retained small caps is private now, not public
+\makeatother
+
+\begin{document}
+Coexistence holds: \unit{\meter} and \meta{arg}, with standard
+\S1, \P2, \copyright, \dag, \ddag, \dots.
+\end{document}

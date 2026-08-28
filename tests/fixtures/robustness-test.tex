@@ -1,8 +1,11 @@
 \documentclass[11pt,a4paper]{article}
-% Robustness contract (#55): package macros must survive moving arguments —
+% Robustness contract (#55): formatting must survive moving arguments —
 % section titles (toc + PDF bookmarks), captions (lof), and the .aux
-% round-trip. The harness compiles this twice, so a fragile macro that
-% corrupts the .aux fails the second pass.
+% round-trip. Since v3 (issue #84) removed the generic inline API, this
+% exercises the retained formatting surface (\textsc, \textbf, \emph, \textit)
+% and the package's \pdfstringdefDisableCommands bookmark degradation. The
+% harness compiles this twice, so a fragile macro that corrupts the .aux fails
+% the second pass.
 \usepackage{lanepaper}
 \usepackage{hyperref}
 
@@ -11,23 +14,23 @@
 \tableofcontents
 \listoffigures
 
-\section{Robust macros: \code{make build} and \term{quantum}}
+\section{Robust formatting: \textsc{small caps} and \emph{quantum}}
 
-Body text referencing \person{Hochuli} and \acro{CTAN}.
+Body text referencing \textsc{Hochuli} and \textsc{CTAN}.
 
-\subsection{Symbols in a heading: \half\ and \dashrange{1}{9}}
+\subsection{Formatting in a heading: \textbf{bold} and \emph{italic}}
 
 \begin{figure}[htbp]
   \centering
   \rule{3cm}{1cm}
-  \caption{A caption with \code{lanepaper}, \refinedsc{Small Caps}, and
-    \term{spacing quantum} --- all read back from the \code{.lof} file.}
+  \caption{A caption with \textsc{lanepaper}, \textbf{bold}, and
+    \emph{spacing quantum} --- all read back from the \texttt{.lof} file.}
 \end{figure}
 
-A footnote is a moving argument too.\footnote{Set with \code{pdflatex},
-  \emph{emphasis}, and \work{The Elements of Typographic Style}.}
+A footnote is a moving argument too.\footnote{Set with \emph{emphasis},
+  \textbf{bold}, and \emph{The Elements of Typographic Style}.}
 
-\subsection{Symbols in bookmarks: \euro100, \yen100, \degrees}
+\subsection{Bookmark degrades: \textsc{scshape} and \emph{emphasis}}
 
 Two footnotes with a label on the first: the kernel must freeze the
 footnote number at label time.\footnote{First footnote.\label{sec:fnfirst}}

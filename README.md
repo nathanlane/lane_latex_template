@@ -203,9 +203,10 @@ Create a professional title page with mathematical spacing:
 ### Citations and Bibliography
 
 **The document owns its bibliography.** Since issue #48 the package does not
-load `biblatex`, `natbib`, `hyperref`, `cleveref`, `babel` or `appendix` — it
-styles them if you load them (ADR-0003). Nothing here dictates your load order
-or your citation style.
+load `biblatex`, `natbib`, `hyperref`, `cleveref`, `babel` or `appendix`. It
+configures `hyperref` and `appendix` if you load them (ADR-0003); since v3
+(issue #84) `cleveref` is fully document-owned — the package neither loads nor
+configures it. Nothing here dictates your load order or your citation style.
 
 Load biblatex with whatever options you want:
 
@@ -336,7 +337,6 @@ Available options:
 - `draft` – Enable draft-mode diagnostics, including draft-mode `microtype`
 - `nobiblatex` – **Deprecated, inert.** There is no automatic biblatex loading left to disable
 - `subsectionbarriers` / `nosubsectionbarriers` – Enable/disable automatic float barriers before subsections
-- `mathredefs` – Opt in to variant math glyphs (`\le`→`\leqslant`, `\ge`→`\geqslant`, `\epsilon`→`\varepsilon`, `\phi`→`\varphi`, `\vec`→bold). Off by default: the redefinitions change mathematical meaning, so standard LaTeX semantics ship unless requested. Assumes full (non-`minimal`) mode, where the symbol fonts are loaded
 - `nocolor` – Disable all custom colors
 
 Note: `\usepackage[minimal]{lanepaper}` and
@@ -388,30 +388,31 @@ baseline measures 16.32pt):
 \vspace{2\gridunit}       % 26.4pt (2 units)
 ```
 
-### Emphasis Hierarchy
+### Emphasis
 
-Semantic commands for different emphasis levels:
+Use the standard LaTeX emphasis commands:
 
 ```latex
-\emph{emphasis}           % Smart italic/roman
-\strongemph{critical}     % Bold for critical terms
-\term{baseline grid}      % Technical terms
-\person{Hermann Zapf}     % Person names (small caps)
-\acro{PDF}               % Acronyms (small caps)
-\work{Book Title}        % Published works
-\critical{WARNING}       % Maximum emphasis
+\emph{emphasis}           % Italic (toggles in nested context)
+\textbf{critical}         % Bold for critical terms
+\textsc{Hermann Zapf}     % Person names, acronyms (small caps)
+\textit{Book Title}       % Published works
 ```
+
+> v3 removed the generic `\strongemph`, `\term`, `\person`, `\acro`, `\work`,
+> and `\critical` helpers; use the standard commands above (see API_REFERENCE.md
+> "Removed in v3").
 
 ### Special Characters
 
-Professional typography for special characters:
+Use standard LaTeX and `textcomp`/`csquotes`:
 
 ```latex
-Typography\emdash the art\emdash is essential
-Pages 10--20              % En dash for ranges
-25\degrees C              % Degree symbol
-\texteuro 100            % Currency symbols
-\copyright 2025          % Legal symbols
+Typography---the art---is essential   % Em dash
+Pages 10--20                          % En dash for ranges
+25\textdegree C                       % Degree symbol (textcomp)
+\texteuro 100                         % Currency (textcomp)
+\copyright 2025                       % Legal symbols
 ```
 
 ---
@@ -469,11 +470,14 @@ Optimized for academic papers:
   f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
 \end{equation}
 
-% Semantic math commands
-$x \in \real$              % Real numbers
-$\norm{v} = 1$            % Vector norm
-$\abs{x} < \epsilon$      % Absolute value
+% Standard amsmath notation
+$x \in \mathbb{R}$              % Real numbers
+$\lVert v\rVert = 1$           % Vector norm
+$\lvert x\rvert < \epsilon$    % Absolute value
 ```
+
+> v3 removed the generic `\real`, `\norm`, `\abs`, ... math helpers; use amsmath
+> notation and `\DeclareMathOperator` (see API_REFERENCE.md "Removed in v3").
 
 ---
 
@@ -606,10 +610,10 @@ make lint         # chktex, then the math-spacing checker
 
 ### Key Commands
 
-**Typography**:
+**Typography** (standard LaTeX):
 ```latex
-\emph{}, \strongemph{}, \term{}, \person{}, \acro{}
-\emdash, \degrees, \texteuro, \textpm
+\emph{}, \textbf{}, \textit{}, \textsc{}, \texttt{}
+---, --, \textdegree, \texteuro, \textpm
 ```
 
 **Structure**:
@@ -631,13 +635,15 @@ gridtable, landscapetable, documentAppendices
 
 ### Dependencies
 
-Core packages:
+Package-loaded typography dependencies:
 - `tgpagella` – TeX Gyre Pagella fonts
 - `newpxmath` – Mathematics
-- `biblatex` – Bibliography
 - `booktabs` – Professional tables
-- `cleveref` – Smart references
 - `microtype` – Microtypography
+
+Document-owned (load them yourself; the demo does):
+- `biblatex` – Bibliography
+- `cleveref` – Smart cross-references
 
 ---
 
@@ -697,11 +703,11 @@ Use this comprehensive checklist to ensure your academic paper meets the highest
 - [ ] Special cases handled correctly (e.g., "X-ray" not "X-Ray")
 
 #### Typography Standards
-- [ ] All emphasis uses semantic commands (`\emph{}`, not `\textit{}`)
-- [ ] Small caps use provided commands (`\bsc{}`, `\headsc{}`, `\balancedbsc{}`)
-- [ ] Mathematical notation uses semantic commands (`\real`, `\norm{}`, `\abs{}`)
-- [ ] Code typography uses appropriate commands for context
-- [ ] Colors use semantic commands, not manual `\textcolor{}`
+- [ ] Emphasis uses `\emph{}` (italic); strong emphasis uses `\textbf{}`
+- [ ] Small caps use standard `\textsc{}`
+- [ ] Mathematical notation uses amsmath (`\mathbb{R}`, `\lVert\,\rVert`, `\lvert\,\rvert`, `\DeclareMathOperator`)
+- [ ] Code typography uses `\texttt{}`
+- [ ] Colors use the palette's semantic color names, not manual `\textcolor{}`
 
 #### Professional Cross-Referencing
 - [ ] All labels use systematic prefixes (`tbl:`, `fig:`, `sec:`, `subsec:`, `alg:`, `app:`)

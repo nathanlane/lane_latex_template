@@ -53,7 +53,7 @@
 % DEPENDENCIES:
 %   Core: fontenc, fbb, zi4, newtxmath, mathalfa, microtype
 %   Layout: titlesec, enumitem, caption, geometry  
-%   Advanced: appendix, cleveref, hyperref
+%   Advanced: appendix, hyperref
 %
 % USAGE:
 %   \usepackage{lanepaper}                   % Full features
@@ -170,9 +170,6 @@
 \newif\iflnp@nobiblatex
 \newif\iflnp@subsectionbarriers
 \lnp@subsectionbarrierstrue
-%% FIX: opt-in flag for math redefinitions (they change mathematical meaning,
-%% not just appearance, so they must not be unconditional).
-\newif\iflnp@mathredefs
 
 % Declare package options
 \DeclareOption{grid}{\lnp@gridtrue}
@@ -189,9 +186,6 @@
 %% FIX: Expose subsection float-barrier behavior as a documented package option.
 \DeclareOption{subsectionbarriers}{\lnp@subsectionbarrierstrue}
 \DeclareOption{nosubsectionbarriers}{\lnp@subsectionbarriersfalse}
-%% FIX: [mathredefs] opts into the \le/\ge/\epsilon/\phi/\vec redefinitions;
-%% default is standard LaTeX semantics.
-\DeclareOption{mathredefs}{\lnp@mathredefstrue}
 
 % Process options
 \ProcessOptions\relax
@@ -325,358 +319,20 @@
 %   %% FIX: Document the renamed public package entry point.
 %   \usepackage{lanepaper}
 
-% ELEGANT SMALL CAPS COMMAND
-% Enhanced small caps with superior visibility and elegance
-%% FIX(#39): drop dead global \SetTracking{...}{80}; the T1 sc list at
-%% lnpmicrotype.sty:74 already sets the amount at normalsize, so bare \lsstyle
-%% preserves current rendering (and outer kerning) with no override message.
-\newcommand{\refinedsc}[1]{%
-  {\scshape\lsstyle #1}%
-}
-%% FIX(#39): drop dead \SetTracking{...}{100}; bold sc resolves via the T1
-%% bold-sc list (lnpmicrotype.sty:82), so \lsstyle is render-neutral.
-\newcommand{\refinedscbold}[1]{%
-  {\bfseries\scshape\lsstyle #1}%
-}
-% Title page small caps with refined tracking
+% RETAINED FRONT-MATTER SMALL CAPS (private)
+% v3 (issue #84) removed the generic public small-caps API (\refinedsc,
+% \elegantsc, \meta, \regsc, ...). Only the title-page small caps consumed by
+% the retained front matter survives; it is now private and visually unchanged.
 %% FIX(#39): explicit \fontsize{11pt} matches no named-size sc list, so {50} was
 %% effective; \textls[50] reproduces the original (like \abstractopening above).
-\newcommand{\titlesc}[1]{%
+\newcommand{\lnp@titlesc}[1]{%
   {\fontsize{11pt}{13pt}\selectfont\scshape\textls[50]{#1}}%
 }
 
-% Compatibility aliases for backward compatibility
-%% FIX: Define compatibility aliases lazily so modules can load in either order.
-\newcommand{\elegantsc}[1]{\refinedsc{#1}}
-\newcommand{\elegantscbold}[1]{\refinedscbold{#1}}
-\newcommand{\elegantbullet}{%
-  \@ifundefined{refinedbullet}{\textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.75}{$\bullet$}}}}{\refinedbullet}%
-}
-\newcommand{\elegantdot}{\textcolor{subtlegray}{\raisebox{0.15ex}{\scalebox{0.65}{\textbullet}}}}
-\newcommand{\elegantdash}{%
-  \@ifundefined{refineddash}{\textcolor{subtlegray}{\kern0.05em\textendash\kern0.05em}}{\refineddash}%
-}
-\newcommand{\elegantcircle}{\textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.55}{$\circ$}}}}
-
-% ==============================================================================
-% SPECIAL CHARACTERS AND SYMBOL OPTIMIZATION
-% ==============================================================================
-% Perfectionist-level symbol handling for Pagella
-
-% Legacy symbol definitions (kept for compatibility)
-% \newcommand{\numero}{n\textsuperscript{o}}  % Numero sign
-% \newcommand{\textcdot}{\kern0.08em\ensuremath{\cdot}\kern0.08em} % Centered dot
-
-% ==============================================================================
-% SECTION III: SPECIAL CHARACTERS & SYMBOLS (Comprehensive System)
-% ==============================================================================
-% Professional special character typography following:
-% - Bringhurst: Contextual dash spacing and symbol harmony
-% - Butterick: Modern dash usage and smart quotes
-% - Hochuli: Micro-details and optical adjustments
-% - Chicago Manual: Standard punctuation rules
+% Special-character, symbol, and emphasis helpers removed in v3 (issue #84);
+% standard LaTeX/amsmath and third-party ownership restored.
 %
-% This comprehensive system provides context-aware spacing for all special
-% characters, preventing collisions and ensuring consistent rhythm.
-%
-% ------------------------------------------------------------------------------
-
-% SOPHISTICATED DASH TYPOGRAPHY
-% Context-aware dash spacing for different uses
-
-% Simplified dash system (backward compatible, zero visual impact)
-\newcommand{\emdash}{\kern0.08em---\kern0.08em}       % Standard em dash
-%% FIX: Restore documented dash aliases used by existing fixtures and documents.
-\newcommand{\emdashclassic}{---}                      % Traditional (no spaces)
-\newcommand{\emdashopen}{ --- }                       % Open em dash with word spaces
-\@ifundefined{endash}{\def\endash{\kern0.06em--\kern0.06em}}{} % Standard en dash
-\newcommand{\dashrange}[2]{#1--#2}                    % Range en dash
-\newcommand{\dashcompound}[2]{#1-#2}                  % Standard hyphen
-\newcommand{\dashparen}{\emdash}                      % Standard em dash
-
-% Simplified ellipsis system (backward compatible, minimal visual change)
-%% FIX: Preserve math-mode ellipses while keeping text-mode spacing refinement.
-\let\lnp@origldots\ldots
-\let\lnp@origcdots\cdots
-\renewcommand{\ldots}{\ifmmode\lnp@origldots\else\textellipsis\kern0.16em\fi}
-%% FIX: Restore documented ellipsis aliases used by existing fixtures and documents.
-\newcommand{\tdots}{\ldots}                           % Alias: adequate for dialogue
-\renewcommand{\cdots}{\ensuremath{\lnp@origcdots}}    % Standard math dots
-\newcommand{\fdots}{\ldots}                           % Alias: standard is fine
-\newcommand{\edots}{\ldots}                           % Alias: standard is fine
-
-% DEGREE, PRIME, AND TECHNICAL SYMBOLS
-% Properly aligned and spaced for Pagella
-
-\newcommand{\degrees}{\kern0.05em\textdegree\kern0.05em} % Temperature/angles
-\newcommand{\primetext}{\kern0.02em\raisebox{0.1ex}{\(\prime\)}\kern0.02em} % Prime mark
-\newcommand{\dblprimetext}{\kern0.02em\raisebox{0.1ex}{\(\prime\prime\)}\kern0.02em} % Double prime
-%% FIX: Provide math-symbol text fallbacks for T1 encodings that lack glyphs.
-
-% Ordinal indicators with proper kerning
-\newcommand{\ordth}{\textsuperscript{\kern0.02em th\kern0.02em}}
-\newcommand{\ordst}{\textsuperscript{\kern0.02em st\kern0.02em}}
-\newcommand{\ordnd}{\textsuperscript{\kern0.02em nd\kern0.02em}}
-\newcommand{\ordrd}{\textsuperscript{\kern0.02em rd\kern0.02em}}
-
-% Section and paragraph symbols
-\renewcommand{\S}{\textsection\kern0.08em}            % § with space
-\renewcommand{\P}{\textparagraph\kern0.08em}          % ¶ with space
-
-% CURRENCY SYMBOLS
-% Properly sized and spaced for text
-
-\newcommand{\euro}{\kern0.05em\texteuro\kern0.05em}
-\newcommand{\pound}{\kern0.05em\textsterling\kern0.05em}
-\iflnp@minimal
-  \providecommand{\yen}{\kern0.05em\textyen\kern0.05em}
-\else
-  \renewcommand{\yen}{\kern0.05em\textyen\kern0.05em}  % Use renewcommand as newpxmath defines \yen
-  \robustify{\yen}% #55: hook-defined, missed by the module-end sweep
-\fi
-\newcommand{\cent}{\kern0.03em\textcent\kern0.03em}
-\newcommand{\currency}{\kern0.05em\textcurrency\kern0.05em}
-
-% TRADEMARK AND COPYRIGHT SYMBOLS
-% Properly sized superscripts
-
-\newcommand{\trademark}{\kern0.05em\textsuperscript{\kern0.02em TM\kern0.02em}}
-\newcommand{\registered}{\kern0.05em\textsuperscript{\textregistered}}
-\renewcommand{\copyright}{\kern0.05em\textcopyright\kern0.05em}
-\newcommand{\servicemark}{\kern0.05em\textsuperscript{\kern0.02em SM\kern0.02em}}
-
-% MATHEMATICAL OPERATORS IN TEXT
-\renewcommand{\textpm}{\kern0.08em\ensuremath{\pm}\kern0.08em}
-\providecommand{\texttimes}{\kern0.08em\ensuremath{\times}\kern0.08em}
-\providecommand{\textdiv}{\kern0.08em\ensuremath{\div}\kern0.08em}
-%% FIX: Register text-symbol commands for T1 using math wrappers.
-\DeclareRobustCommand{\lnp@textapprox}{\kern0.08em\ensuremath{\approx}\kern0.08em}
-\DeclareRobustCommand{\lnp@textinfty}{\kern0.08em\ensuremath{\infty}\kern0.08em}
-\DeclareTextCommandDefault{\textapprox}{\lnp@textapprox}
-\DeclareTextCommand{\textapprox}{T1}{\lnp@textapprox}
-\DeclareTextCommandDefault{\textinfty}{\lnp@textinfty}
-\DeclareTextCommand{\textinfty}{T1}{\lnp@textinfty}
-
-% ARROWS WITH SPACING
-\newcommand{\larrow}{\kern0.08em\ensuremath{\leftarrow}\kern0.08em}
-\newcommand{\rarrow}{\kern0.08em\ensuremath{\rightarrow}\kern0.08em}
-\newcommand{\uarrow}{\kern0.05em\ensuremath{\uparrow}\kern0.05em}
-\newcommand{\darrow}{\kern0.05em\ensuremath{\downarrow}\kern0.05em}
-
-% SMART QUOTES WITH KERNING
-\newcommand{\sq}[1]{\kern0.02em`#1'\kern0.02em}      % Single quotes
-\newcommand{\dq}[1]{\kern0.02em``#1''\kern0.02em}    % Double quotes
-\newcommand{\nq}[2]{\kern0.02em``#1 \sq{#2} #1''\kern0.02em} % Nested quotes
-
-% FRACTIONS AND SUPERIOR/INFERIOR FIGURES
-\newcommand{\half}{\kern0.03em\textonehalf\kern0.03em}
-\newcommand{\quarter}{\kern0.03em\textonequarter\kern0.03em}
-\newcommand{\threequarters}{\kern0.03em\textthreequarters\kern0.03em}
-\newcommand{\super}[1]{\textsuperscript{\kern0.02em#1\kern0.02em}}
-\newcommand{\sub}[1]{\textsubscript{\kern0.02em#1\kern0.02em}}
-
-% NON-BREAKING SPACES AND TIES
-\newcommand{\abbrspace}{\,}                           % Simplified: 0.167em vs 0.12em
-\newcommand{\initialspace}{\,}                        % Simplified: 0.167em vs 0.08em
-
-% Smart spacing commands
-\newcommand{\fig}[1]{Figure~#1}                       % Prevents break
-\newcommand{\tab}[1]{Table~#1}                        % Prevents break
-\newcommand{\unit}[2]{#1\kern0.16em#2}                % 5 km, 10 GB
-
-% REFINED SPACING COMMANDS
-\renewcommand{\thinspace}{\kern0.0625em}              % 1/16 em (hair space)
-\renewcommand{\medspace}{\kern0.125em}                % 1/8 em
-\renewcommand{\thickspace}{\kern0.25em}               % 1/4 em
-\newcommand{\wordspace}{\kern0.33em}                  % 1/3 em
-\newcommand{\emspace}{\kern1em}                       % Full em
-\newcommand{\twoemspace}{\kern2em}                    % Two em
-
-% SPECIAL CASES
-\newcommand{\apos}{'}                                  % Smart apostrophe
-%% FIX: Preserve original dagger commands before adding spacing wrappers.
-\let\lnp@origdag\dag
-\let\lnp@origddag\ddag
-\renewcommand{\dag}{\kern0.05em\lnp@origdag\kern0.05em}       % Dagger
-\renewcommand{\ddag}{\kern0.05em\lnp@origddag\kern0.05em}     % Double dagger
-
-% ------------------------------------------------------------------------------
-
-% ==============================================================================
-% SEMANTIC EMPHASIS HIERARCHY (Optimized for TeX Gyre Pagella)
-% ==============================================================================
-%
-% Implements a sophisticated emphasis system following typographic masters:
-% - Butterick: Restraint and hierarchy
-% - Hochuli: Micro-refinements for each style
-% - Bringhurst: Harmony between roman, italic, and small caps
-%
-% HIERARCHY LEVELS:
-%   1. Roman (default) - no emphasis
-%   2. Italic - primary emphasis (most common)
-%   3. Bold - strong emphasis (use sparingly, <5% of text)
-%   4. Small caps - metadata emphasis (names, acronyms)
-%   5. Bold small caps - critical emphasis (very rare)
-%
-% ------------------------------------------------------------------------------
-
-% --- Level 1: Smart Emphasis with Nesting Support ---
-% Create internal command to check italic state
-\newcommand{\lnp@ifitalic}{%
-  \ifx\f@shape\itdefault
-    \expandafter\@firstoftwo
-  \else
-    \expandafter\@secondoftwo
-  \fi
-}
-% `@` is a letter throughout this package file, as LaTeX sets it for packages.
-
-% Redefines \emph to handle nested emphasis correctly
-\renewcommand{\emph}[1]{%
-  \lnp@ifitalic{\textnormal{#1}}{\textit{#1}}%
-}
-
-% --- Level 2: Strong Emphasis ---
-% For critical terms requiring immediate attention
-\newcommand{\strongemph}[1]{%
-  \textbf{#1}%  % Bold only, no compounding
-}
-
-% --- Level 3: Metadata Emphasis ---
-% For structured information: names, acronyms, technical terms
-%% FIX(#39): drop dead \SetTracking{...}{30}; {30} equals the T1 sc list
-%% (lnpmicrotype.sty:74) at normalsize, so \lsstyle is render-neutral.
-\newcommand{\meta}[1]{%
-  {\scshape\lsstyle #1}%
-}
-
-% --- Level 4: Critical Emphasis ---
-% Reserved for warnings, critical instructions (use very rarely)
-%% FIX(#39): drop dead \SetTracking{...}{45}; {45} equals the T1 bold-sc list
-%% (lnpmicrotype.sty:82) at normalsize, so \lsstyle is render-neutral.
-\newcommand{\critical}[1]{%
-  {\bfseries\scshape\lsstyle #1}%
-}
-
-% --- UNIFIED EMPHASIS SYSTEM ---
-
-% Single semantic emphasis command with style parameter
-% Usage: \semantic{style}{text} where style = term, person, acro, work
-%% FIX(#39): person/acro drop dead \SetTracking{...}{25}/{40}; both resolve via
-%% the T1 sc list (lnpmicrotype.sty:74) at normalsize/\small, so \lsstyle is
-%% render-neutral (the {25}/{40} never took effect).
-\newcommand{\semantic}[2]{%
-  \ifstrequal{#1}{term}{\textit{#2}}{%
-  \ifstrequal{#1}{person}{{\scshape\lsstyle #2}}{%
-  \ifstrequal{#1}{acro}{{\small\scshape\lsstyle #2}}{%
-  \ifstrequal{#1}{work}{\textit{#2}}{%
-  \textit{#2}% Default to italic
-  }}}}%
-}
-
-% Legacy commands for backward compatibility
-\newcommand{\person}[1]{\semantic{person}{#1}}
-\newcommand{\term}[1]{\semantic{term}{#1}}
-\newcommand{\acro}[1]{\semantic{acro}{#1}}
-\newcommand{\work}[1]{\semantic{work}{#1}}
-%% FIX: Restore legacy first-use term command as an alias for semantic terms.
-\newcommand{\termintro}[1]{\semantic{term}{#1}}
-%% FIX: Restore legacy small-caps variant commands used by existing fixtures.
-%% FIX(#39): regsc/headsc/inlinebsc drop dead \SetTracking; each resolves via a
-%% T1 sc list (regsc->30 :74, headsc/inlinebsc->45 :82), so \lsstyle is neutral.
-\newcommand{\regsc}[1]{{\scshape\lsstyle #1}}
-%% FIX(#39): \itshape\scshape is shape scit, which matches NO tracking list, so
-%% the {20} WAS effective; \textls[20] preserves it (bare \lsstyle would fall
-%% back to microtype's 50). Verified by pdftotext width.
-\newcommand{\itsc}[1]{{\itshape\scshape\textls[20]{#1}}}
-\newcommand{\headsc}[1]{{\bfseries\scshape\lsstyle #1}}
-\newcommand{\inlinebsc}[1]{{\bfseries\scshape\lsstyle #1}}
-
-% --- NESTED EMPHASIS HANDLERS ---
-
-% Smart italic that reverses in italic context
-\newcommand{\smartitalic}[1]{%
-  \ifx\f@shape\itdefault
-    \textnormal{#1}%  % Italic -> Roman
-  \else
-    \textit{#1}%      % Roman -> Italic
-  \fi
-}
-
-% Smart bold that adds italic in bold context
-\newcommand{\smartbold}[1]{%
-  \ifx\f@series\bfdefault
-    \textbf{\textit{#1}}%  % Bold -> Bold italic
-  \else
-    \textbf{#1}%           % Regular -> Bold
-  \fi
-}
-
-% --- LEGACY COMMANDS (kept for compatibility) ---
-\newcommand{\bsc}[1]{{\critical{#1}}}  % Redirect to semantic command
-\newcommand{\subtleemph}[1]{\emph{#1}}  % Color emphasis removed (accessibility)
-\newcommand{\externalref}[1]{\emph{#1}}  % Deprecated - use \emph
-\newcommand{\importantnote}[1]{\strongemph{#1}}  % Deprecated - use \strongemph
-%% FIX: Restore legacy emphasis API names used by existing fixtures and documents.
-\newcommand{\boolemph}[1]{\critical{#1}}  % Deprecated - use \critical
-\newcommand{\maxemph}[1]{\critical{#1}}   % Deprecated - use \critical
-\newcommand{\codecomment}[1]{\textit{#1}}  % Deprecated - use \code or \textit
-
-% --- Front Matter Optimization (Hochuli's principles) ---
-
-% Author formatting with tracked small caps (using microtype)
-%% FIX(#39): drop dead \SetTracking{...}{60}; \large sc resolves via the T1
-%% display sc list (lnpmicrotype.sty:90 -> 80), so \lsstyle is render-neutral.
-\newcommand{\authorname}[1]{%
-  {\large\scshape\lsstyle #1}%
-}
-
-% Affiliation with italics (oldstyle handled by fbb package)
-\newcommand{\affiliation}[1]{%
-  {\normalsize\itshape #1}%
-}
-
-% Keywords with controlled spacing (using microtype)
-%% FIX(#39): the bold-roman label drops dead \SetTracking{...}{10} -- bold text
-%% resolves via the T1 series=b list (lnpmicrotype.sty:140 -> -10), so \lsstyle
-%% is neutral. The italic value matches NO list, so its {5} was effective and is
-%% preserved with \textls[5] (bare would fall back to microtype's 50).
-\newcommand{\keywords}[1]{%
-  \noindent{\bfseries\lsstyle Keywords:}
-  {\itshape\textls[5]{#1}}%
-}
-
-% --- Monospace Font Optimization (Hochuli's harmonious integration) ---
-% Weight-harmonized inline code with proper spacing
-\newcommand{\code}[1]{%
-  {\scalefont{0.98}\textcolor{codecolor}{\texttt{#1}}}%
-}
-
-% Inline code with micro-spacing to prevent text disruption
-\newcommand{\inlinecode}[1]{%
-  \mbox{\kern0.05em\code{#1}\kern0.05em}%
-}
-
-% Balanced monospace for general use
-\newcommand{\balancedcode}[1]{%
-  \textcolor{codecolor}{\texttt{#1}}%
-}
-
-% File paths with proper hyphenation
-\newcommand{\filepath}[1]{%
-  \texttt{\hyphenchar\font=`\-\relax #1}%
-}
-
-% Variable names with subtle emphasis (Inconsolata has no italic/slanted)
-\newcommand{\var}[1]{%
-  \texttt{\textcolor{codecolor}{#1}}%
-}
-
-% Mixed serif/mono for documentation
-\newcommand{\doccode}[2]{%
-  #1: \balancedcode{#2}% Description in Pagella, code in balanced mono
-}
-
+% Level 1 emphasis stays standard: use \emph, \textbf, \textit, \textsc.
 % ==============================================================================
 % III. MICRO-TYPOGRAPHY OPTIMIZATION
 % ==============================================================================
@@ -1110,64 +766,8 @@
 }
 
 
-% ==============================================================================
-% VI. MATHEMATICAL TYPOGRAPHY SYSTEM
-% ==============================================================================
-%
-% Comprehensive mathematical typography using newpxmath harmonized with Pagella,
-% enhanced with professional symbol sets from mathalfa package.
-% All spacing in multiples of the 13.2pt quantum (baseline measures 16.32pt).
-%
-% FONT INTEGRATION:
-%   - newtxmath with libertine option for serif math harmony
-%   - mathalfa: Boondoxo calligraphic, Boondox blackboard/fraktur
-%   - Optimized mu-spacing for inline mathematics
-%   - Baseline-aligned display mathematics
-%
-% REFERENCES:
-%   - Knuth, D. (1986). The TeXbook. Addison-Wesley.
-%   - Downes, M. et al. (2002). The amsmath package. AMS.
-%   - Sharpe, M. (2024). newtx package documentation. CTAN.
-%
-% ------------------------------------------------------------------------------
-
-% DISPLAY MATHEMATICS SPACING
-% All spacing based on the 13.2pt spacing quantum (NOT the document baseline,
-%% which measures 16.32pt — see docs/adr/0004-baseline-grid-is-a-spacing-quantum.md)
-% Hochuli: "Consistent vertical rhythm improves readability"
-
-% --- Semantic Math Commands (Brown's systematic approach with enhanced fonts) ---
-% Number sets with improved blackboard bold
-\newcommand{\real}{\mathbb{R}}
-\renewcommand{\natural}{\mathbb{N}}
-\newcommand{\integer}{\mathbb{Z}}
-\newcommand{\rational}{\mathbb{Q}}
-\newcommand{\complex}{\mathbb{C}}
-\newcommand{\field}{\mathbb{F}}        % Fields
-\newcommand{\prob}{\mathbb{P}}         % Probability measure
-
-% Operators and functions
-\newcommand{\norm}[1]{\|#1\|}
-\newcommand{\abs}[1]{|#1|}
-\newcommand{\inner}[2]{\langle #1, #2 \rangle}
-\newcommand{\set}[1]{\{#1\}}
-\newcommand{\given}{\mid}              % Conditional probability/sets
-
-% Calligraphic letters for spaces, algebras, etc.
-\newcommand{\hilbert}{\mathcal{H}}     % Hilbert space
-\newcommand{\banach}{\mathcal{B}}      % Banach space  
-\newcommand{\algebra}{\mathcal{A}}     % Algebra
-\newcommand{\topology}{\mathcal{T}}    % Topology
-\newcommand{\measure}{\mathcal{M}}     % Measure space
-
-% Common mathematical constructions
-\DeclareMathOperator{\tr}{tr}          % Trace
-\DeclareMathOperator{\rank}{rank}      % Rank
-\DeclareMathOperator{\Span}{span}      % Span
-\DeclareMathOperator{\supp}{supp}      % Support
-\DeclareMathOperator*{\argmax}{arg\,max} % Argmax
-\DeclareMathOperator*{\argmin}{arg\,min} % Argmin
-
+% Generic math-notation helpers removed in v3 (issue #84); documents define the
+% notation they need. Display-math typography is retained below in section XI.
 
 % ==============================================================================
 % PROFESSIONAL CAPTION AND FLOAT SYSTEM
@@ -1681,7 +1281,7 @@
   \begin{minipage}{\titlepagewidth}%
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{0.5\titlespaceinter}%
-  {\normalsize\color{subsubcolor}\titlesc{Abstract}}\par%
+  {\normalsize\color{subsubcolor}\lnp@titlesc{Abstract}}\par%
   \vspace{0.8\titlespaceinter}%
   \small\color{textblack}% 10pt for abstract text, near-black
 }{%
@@ -1693,7 +1293,7 @@
   \vspace{\titlespaceminor}%
   \begin{minipage}{\titlepagewidth}%
     \setlength{\baselineskip}{1.3\baselineskip}%
-    {\small\color{subsubcolor}\titlesc{Keywords:}\kern0.5em\color{textblack} #1\par}%
+    {\small\color{subsubcolor}\lnp@titlesc{Keywords:}\kern0.5em\color{textblack} #1\par}%
   \end{minipage}\par%
 }
 
@@ -1702,7 +1302,7 @@
   \vspace{0.5\titlespaceminor}%
   \begin{minipage}{\titlepagewidth}%
     \setlength{\baselineskip}{1.3\baselineskip}%
-    {\small\color{subsubcolor}\titlesc{JEL Classification:}\kern0.5em\color{textblack} #1\par}%
+    {\small\color{subsubcolor}\lnp@titlesc{JEL Classification:}\kern0.5em\color{textblack} #1\par}%
   \end{minipage}\par%
 }
 
@@ -1943,7 +1543,6 @@
 %   - First pass: Counts appendices, writes to auxiliary file
 %   - Second pass: Reads count, applies appropriate formatting
 %   - Backward compatible with legacy \startappendices commands
-%   - Full cleveref integration for enhanced cross-referencing
 %
 % CHICAGO COMPLIANCE:
 %   - Proper capitalization and numbering
@@ -2077,27 +1676,16 @@
   \finishappendices%
 }
 
-%% Issue #48: these cleveref names moved into the guarded cleveref block
-%% below. They must be applied AFTER the general \crefname settings, which
-%% is what the original ordering achieved: the general names ran at package
-%% load and this block overrode them at \begin{document}. Once both are
-%% deferred, \AtBeginDocument runs them in registration order and this block
-%% -- being earlier in the file -- would have lost. Verified by the appendix
-%% range reference on page 38 of the demo rendering "appendices 1-2", not
-%% "SS 1-2".
-
 % ==============================================================================
 % X. CORE FUNCTIONALITY AND INTEGRATION
 % ==============================================================================
 %
 % Final package loading and integration for essential functionality:
 % - Graphics and table support
-% - Hyperref with professional styling
-% - Enhanced cross-referencing with cleveref
+% - Hyperref with professional styling (configured if loaded)
 % - Final formatting and compatibility adjustments
 %
 % PACKAGE LOADING ORDER:
-%   Critical: hyperref MUST load before cleveref for proper functionality
 %   Graphics packages provide figure and table support
 %   Booktabs ensures professional table formatting
 %
@@ -2109,7 +1697,6 @@
 % REFERENCES:
 %   - LaTeX Graphics Companion (2nd ed.)
 %   - Hyperref package documentation
-%   - Cleveref package manual
 %
 % ------------------------------------------------------------------------------
 
@@ -2124,9 +1711,11 @@
 \RequirePackage{placeins}        % Float barriers for sectional control
 \RequirePackage{csquotes}        % Context-sensitive quotation commands
 \RequirePackage{fancyhdr}        % Custom headers and footers
-%% Issue #48 (ADR-0003 rule 2): hyperref and cleveref are configured, never
-%% loaded. Loading hyperref here would dictate load order to every document
-%% using this package -- the single most likely thing to break an adopter.
+%% Issue #48 (ADR-0003 rule 2): hyperref is configured if loaded, never loaded.
+%% Loading hyperref here would dictate load order to every document using this
+%% package -- the single most likely thing to break an adopter. Since v3
+%% (issue #84) cleveref is no longer configured either; cross-references are
+%% fully document-owned (ADR-0003 rule 3).
 
 % ==============================================================================
 % QUANTUM-SPACED TABLE ROW SYSTEM
@@ -2150,142 +1739,8 @@
 %
 % ------------------------------------------------------------------------------
 
-% ==============================================================================
-% SECTION XII: CROSS-REFERENCE TYPOGRAPHY
-% ==============================================================================
-% Professional cross-reference formatting with cleveref
-% Implements consistent reference styles following Chicago Manual guidelines
-%
-% This section configures the cleveref package (already loaded) to provide
-% intelligent cross-referencing with proper typography, including:
-%   - Consistent abbreviations (fig., table, §)
-%   - Smart pluralization and range handling
-%   - Non-breaking spaces automatically included
-%   - Proper capitalization at sentence beginnings
-%
-% KEY PRINCIPLES:
-%   - Lowercase references in running text (fig. 1, table 2)
-%   - Capitalized references at sentence start (Figure 1, Table 2)
-%   - Section symbol (§) for compact section references
-%   - Parenthetical style for equations: (1), (2)
-%   - En-dash for ranges: figs. 1–3, tables 2–5
-%   - Oxford comma in lists: figs. 1, 2, and 3
-%
-% USAGE:
-%   \cref{label}     - lowercase reference (fig. 1)
-%   \Cref{label}     - capitalized reference (Figure 1)
-%   \cref{l1,l2,l3}  - multiple references (figs. 1, 2 and 3)
-%   \crefrange{l1}{l2} - range reference (figs. 1–3)
-%
-% ------------------------------------------------------------------------------
-
-%% Issue #48 (ADR-0003 rule 2): cleveref is configured here, never loaded.
-%% Deferred like the hyperref block: cleveref must follow hyperref, so a
-%% document loads it late and an inline check would miss it.
-\AddToHook{package/cleveref/after}{%
-  % CLEVEREF FORMAT DEFINITIONS
-  % Define reference formats for all document elements
-
-  % Figures - abbreviated with non-breaking space
-  \crefformat{figure}{fig.~#2#1#3}
-  \Crefformat{figure}{Figure~#2#1#3}
-  \crefrangeformat{figure}{figs.~#3#1#4--#5#2#6}
-  \Crefrangeformat{figure}{Figures~#3#1#4--#5#2#6}
-  \crefmultiformat{figure}{figs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-  \Crefmultiformat{figure}{Figures~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-
-  % Tables - lowercase with non-breaking space
-  \crefformat{table}{table~#2#1#3}
-  \Crefformat{table}{Table~#2#1#3}
-  \crefrangeformat{table}{tables~#3#1#4--#5#2#6}
-  \Crefrangeformat{table}{Tables~#3#1#4--#5#2#6}
-  \crefmultiformat{table}{tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-  \Crefmultiformat{table}{Tables~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
-
-  % Sections - using § symbol for compactness
-  \crefformat{section}{§#2#1#3}
-  \Crefformat{section}{Section~#2#1#3}
-  \crefformat{subsection}{§#2#1#3}
-  \Crefformat{subsection}{Section~#2#1#3}
-  \crefformat{subsubsection}{§#2#1#3}
-  \Crefformat{subsubsection}{Section~#2#1#3}
-
-  % Equations - parentheses style (Chicago standard)
-  \crefformat{equation}{(#2#1#3)}
-  \Crefformat{equation}{Equation~(#2#1#3)}
-  \crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
-  \Crefrangeformat{equation}{Equations~(#3#1#4)--(#5#2#6)}
-  \crefmultiformat{equation}{(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
-  \Crefmultiformat{equation}{Equations~(#2#1#3)}{ and~(#2#1#3)}{, (#2#1#3)}{ and~(#2#1#3)}
-
-  % Appendices - capital letter format
-  \crefformat{appendix}{appendix~#2#1#3}
-  \Crefformat{appendix}{Appendix~#2#1#3}
-
-  % Footnotes
-  \crefformat{footnote}{footnote~#2#1#3}
-  \Crefformat{footnote}{Footnote~#2#1#3}
-
-  % Page references
-  \crefformat{page}{page~#2#1#3}
-  \Crefformat{page}{Page~#2#1#3}
-  \crefrangeformat{page}{pages~#3#1#4--#5#2#6}
-  \Crefrangeformat{page}{Pages~#3#1#4--#5#2#6}
-
-  % CLEVEREF NAME CONFIGURATION
-  \crefname{figure}{fig.}{figs.}
-  \Crefname{figure}{Figure}{Figures}
-  \crefname{table}{table}{tables}
-  \Crefname{table}{Table}{Tables}
-  \crefname{section}{§}{§§}
-  \Crefname{section}{Section}{Sections}
-  \crefname{appendix}{appendix}{appendices}
-  \Crefname{appendix}{Appendix}{Appendices}
-
-  % Conjunction configuration - use 'and' not '&'
-  \newcommand{\crefpairconjunction}{ and }
-  \newcommand{\crefmiddleconjunction}{, }
-  \newcommand{\creflastconjunction}{, and }
-  \newcommand{\crefrangeconjunction}{--}
-
-  % Equation label format
-  \creflabelformat{equation}{(#2#1#3)}
-
-  % Appendix-aware names, moved here by #48 (see the note above).
-  % Configure cleveref names for better appendix references
-  \crefname{section}{appendix}{appendices}%
-  \Crefname{section}{Appendix}{Appendices}%
-  \@ifundefined{chapter}{}{%
-  \crefname{chapter}{appendix}{appendices}%
-  \Crefname{chapter}{Appendix}{Appendices}%
-  }%
-  % Special handling for appendix figures and tables
-  \crefname{figure}{figure}{figures}%
-  \Crefname{figure}{Figure}{Figures}%
-  \crefname{table}{table}{tables}%
-  \Crefname{table}{Table}{Tables}%
-}
-
-% CONVENIENCE COMMANDS FOR COMMON PATTERNS
-
-% Smart page reference including "on"
-\newcommand{\refpage}[1]{\cref{#1} on \cpageref{#1}}
-\newcommand{\Refpage}[1]{\Cref{#1} on \cpageref{#1}}
-
-% Parenthetical references
-\newcommand{\pref}[1]{(\cref{#1})}
-\newcommand{\Pref}[1]{(\Cref{#1})}
-
-% See/see also references
-\newcommand{\seeref}[1]{see \cref{#1}}
-\newcommand{\Seeref}[1]{See \cref{#1}}
-\newcommand{\seealso}[1]{see also \cref{#1}}
-\newcommand{\Seealso}[1]{See also \cref{#1}}
-
-%% FIX: Leave LaTeX's core \ref unchanged; style nudges belong in linting.
-% Prefer \cref and \Cref in template prose, but do not alter \ref at runtime.
-
-% ------------------------------------------------------------------------------
+% Cleveref configuration and reference wrappers removed in v3 (issue #84);
+% cross-references are document-owned (ADR-0003 rule 3). \ref/\eqref untouched.
 
 % BOOKTABS, ARRAY, AND LONGTABLE CONFIGURATION
 % Configure table packages after loading
@@ -2494,41 +1949,11 @@
     \def\textbf#1{#1}%           % Bold -> plain text
     \def\textit#1{#1}%           % Italic -> plain text
     \def\emph#1{#1}%             % Emphasis -> plain text
-    \def\code#1{#1}%             % Code -> plain text
-    \def\var#1{#1}%              % Variable -> plain text
-    \def\filepath#1{#1}%         % Filepath -> plain text
-    \def\refinedsc#1{#1}%        % Refined small caps -> plain text
-    \def\elegantsc#1{#1}%        % Elegant small caps -> plain text
-    \def\titlesc#1{#1}%          % Title small caps -> plain text
+    \def\lnp@titlesc#1{#1}%      % Retained front-matter small caps -> plain text
     %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
     %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
     \def\SetTracking#1#2{}%      % Remove tracking commands
     \def\lsstyle{}%              % Remove letterspacing style
-    %% #55: text fallbacks for the semantic and symbol macros most likely to
-    %% appear in headings, so bookmarks degrade to plain text without warnings.
-    \def\term#1{#1}%             % Term -> plain text
-    \def\person#1{#1}%           % Person -> plain text
-    \def\acro#1{#1}%             % Acronym -> plain text
-    \def\work#1{#1}%             % Work title -> plain text
-    \def\meta#1{#1}%             % Meta -> plain text
-    \def\strongemph#1{#1}%       % Strong emphasis -> plain text
-    \def\subtleemph#1{#1}%       % Subtle emphasis -> plain text
-    \def\refinedscbold#1{#1}%    % Bold small caps -> plain text
-    \def\dashrange#1#2{#1-#2}%   % En-dash range -> hyphenated
-    \def\half{1/2}%              % Fraction -> ASCII
-    \def\quarter{1/4}%
-    \def\threequarters{3/4}%
-    %% #55 follow-up: symbol macros wrap glyphs in \kern, which mangles PDF
-    %% strings; map them straight to their PU-encoded glyphs.
-    \def\euro{\texteuro}%
-    \def\pound{\textsterling}%
-    \def\yen{\textyen}%
-    \def\cent{\textcent}%
-    \def\currency{\textcurrency}%
-    \def\degrees{\textdegree}%
-    \def\trademark{TM}%
-    \def\registered{\textregistered}%
-    \def\servicemark{SM}%
     \let\\\space%                % Line break -> space
     \def\hspace#1{ }%            % Horizontal space -> space
     \def\vspace#1{}%             % Vertical space -> nothing
@@ -2584,25 +2009,12 @@
 %% the claim is corrected here and there.
 \jot=0.5\gridunit  % 0.5 quanta (6.6pt) before the begindocument-hook addition (ships as 9.9pt)
 
-% INLINE EQUATION SIZING
-% Compensate for Pagella's larger x-height with subtle scaling
-\newcommand{\@inlinemath}[1]{%
-  \ensuremath{\scalebox{0.98}{#1}}%  % 98% scaling for inline math
-}
-% Note: Direct \everymath modification can cause issues with amsmath
-% Instead, we provide semantic commands for controlled usage
-
 % Optimized script sizes for Pagella readability
 %% FIX: the document body runs at 10.95pt (the class's 11pt option), so the
 %% previous {11} key never fired and script sizes fell back to the class
 %% defaults (measured scriptscript 6.1pt, not the declared 6pt). Keyed to
 %% 10.95 so the declaration actually applies.
 \DeclareMathSizes{10.95}{10.95}{8}{6}  % text, script, scriptscript, tiny
-
-% EQUATION NUMBERING ALIGNMENT
-% Grid-aligned with upright numbers matching Pagella's oldstyle figures
-\def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip\@@italiccorr)}}
-\renewcommand{\eqref}[1]{\textup{\tagform@{\ref{#1}}}}
 
 %% FIX: applies to EVERY multi-line display (the addition is unconditional),
 %% despite the earlier "numbered equations" claim. In-force \jot = 9.9pt.
@@ -2637,24 +2049,14 @@
 \medmuskip=4.8mu plus 2.4mu minus 1.2mu        % Binary operators
 \thickmuskip=6.0mu plus 3.0mu minus 1.2mu      % Relational operators
 
-% Custom spacing commands for special cases
-\newcommand{\mathbinx}[1]{\mathbin{\mkern2mu#1\mkern2mu}}  % Extra binary space
-\newcommand{\mathrelx}[1]{\mathrel{\mkern3mu#1\mkern3mu}}  % Extra relation space
+% v3 (issue #84) removed the generic math wrappers \mathbinx, \mathrelx,
+% \dint, \ssup, \ssub and the \lim redefinition; \lim keeps its standard
+% amsmath meaning. Math spacing (mu-skips above) and the fraction-rule weight
+% below are retained typography.
 
-% Improved differential spacing (Hochuli's detail)
-\newcommand{\dint}{\,\mathrm{d}}  % Differential with thin space
-
-% FRACTION AND SCRIPT TYPOGRAPHY
-% Optical adjustments for Pagella's weight and proportions
+% FRACTION RULE WEIGHT
+% Optical adjustment for Pagella's weight and proportions
 \setlength{\fboxrule}{0.5pt}  % Match fraction rule to Pagella's weight
-
-% Enhanced script commands with size control
-\newcommand{\ssup}[1]{^{\scriptscriptstyle #1}}  % Smaller superscript
-\newcommand{\ssub}[1]{_{\scriptscriptstyle #1}}  % Smaller subscript
-
-% Force limits below for better readability
-\let\oldlim\lim
-\renewcommand{\lim}{\mathop{\oldlim}\limits}
 
 % THEOREM AND PROOF ENVIRONMENTS
 % Professional mathematical document structure
@@ -2670,27 +2072,6 @@
 %   {.5em}%                       % Space after theorem head
 %   {}%                           % Theorem head spec
 % \theoremstyle{pagellathm}
-
-% MATHEMATICAL SYMBOLS ENHANCEMENT
-% Additional symbols and corrections for professional documents
-%% FIX: these redefinitions change mathematical meaning, not appearance — a
-%% paper distinguishing \epsilon from \varepsilon or \phi from \varphi loses
-%% the distinction silently, and \vec loses its arrow. Now opt-in via the
-%% [mathredefs] package option; default is standard LaTeX semantics.
-\iflnp@mathredefs
-\renewcommand{\le}{\leqslant}        % Slanted inequality (more elegant)
-\renewcommand{\ge}{\geqslant}        % Slanted inequality
-\renewcommand{\epsilon}{\varepsilon} % Lunate epsilon (preferred)
-\renewcommand{\phi}{\varphi}         % Curly phi (more readable)
-
-% Vector notation with consistent weight
-\renewcommand{\vec}[1]{\mathbf{#1}}  % Bold vectors (modern style)
-\fi
-
-% Set notation with proper spacing
-\providecommand{\set}[1]{\{#1\}}         % Set notation
-\providecommand{\abs}[1]{\lvert#1\rvert} % Absolute value
-\providecommand{\norm}[1]{\lVert#1\rVert} % Norm
 
 % DISPLAY MATH CENTERING
 % Ensure equations respect the grid
@@ -2837,42 +2218,11 @@
 
 %% FIX: Active microtype setup moved to lnpmicrotype to avoid duplicated owners.
 
-% ==============================================================================
-% PDF STRING HANDLING FOR HYPERREF
-% ==============================================================================
-%
-% Provides robust commands that automatically handle PDF bookmarks
-% preventing hyperref warnings about formatting in PDF strings
-%
-% ------------------------------------------------------------------------------
-
-% Define PDF-safe commands - these will be available after hyperref loads
-% Using \providecommand to avoid errors if hyperref is not loaded
-%% FIX (#55): kept although every public macro is now robust. These wrappers
-%% predate robustness and remain public API; they still add explicit
-%% \texorpdfstring alternatives, which give cleaner bookmark text than the
-%% \pdfstringdefDisableCommands fallbacks. Do not delete without a major.
-\newcommand{\pdfcode}[1]{%
-  \@ifundefined{texorpdfstring}{\code{#1}}{\texorpdfstring{\code{#1}}{#1}}%
-}
-\newcommand{\pdfsc}[1]{%
-  \@ifundefined{texorpdfstring}{\textsc{#1}}{\texorpdfstring{\textsc{#1}}{#1}}%
-}
-\newcommand{\pdfemph}[1]{%
-  \@ifundefined{texorpdfstring}{\emph{#1}}{\texorpdfstring{\emph{#1}}{#1}}%
-}
-\newcommand{\pdfbf}[1]{%
-  \@ifundefined{texorpdfstring}{\textbf{#1}}{\texorpdfstring{\textbf{#1}}{#1}}%
-}
-\newcommand{\pdfit}[1]{%
-  \@ifundefined{texorpdfstring}{\textit{#1}}{\texorpdfstring{\textit{#1}}{#1}}%
-}
-\newcommand{\pdffilepath}[1]{%
-  \@ifundefined{texorpdfstring}{\filepath{#1}}{\texorpdfstring{\filepath{#1}}{#1}}%
-}
-\newcommand{\pdfvar}[1]{%
-  \@ifundefined{texorpdfstring}{\var{#1}}{\texorpdfstring{\var{#1}}{#1}}%
-}
+% v3 (issue #84) removed the \pdf* emphasis/code bookmark wrappers (\pdfcode,
+% \pdfsc, \pdfemph, \pdfbf, \pdfit, \pdffilepath, \pdfvar). Standard commands
+% used in headings degrade to plain bookmark text through the
+% \pdfstringdefDisableCommands block above; a document needing custom bookmark
+% text uses hyperref's own \texorpdfstring.
 
 % ==============================================================================
 % PARAGRAPH OPTIMIZATION COMMANDS
@@ -3114,104 +2464,7 @@
 % \robustify, which applies e-TeX \protected. Definitions stay \newcommand
 % so a name collision with another package still errors at load time.
 % \ifdefmacro skips names that resolve to registers in this load order.
-\ifdefmacro{\refinedsc}{\robustify{\refinedsc}}{}
-\ifdefmacro{\refinedscbold}{\robustify{\refinedscbold}}{}
-\ifdefmacro{\titlesc}{\robustify{\titlesc}}{}
-\ifdefmacro{\elegantsc}{\robustify{\elegantsc}}{}
-\ifdefmacro{\elegantscbold}{\robustify{\elegantscbold}}{}
-\ifdefmacro{\elegantbullet}{\robustify{\elegantbullet}}{}
-\ifdefmacro{\elegantdot}{\robustify{\elegantdot}}{}
-\ifdefmacro{\elegantdash}{\robustify{\elegantdash}}{}
-\ifdefmacro{\elegantcircle}{\robustify{\elegantcircle}}{}
-\ifdefmacro{\emdash}{\robustify{\emdash}}{}
-\ifdefmacro{\emdashclassic}{\robustify{\emdashclassic}}{}
-\ifdefmacro{\emdashopen}{\robustify{\emdashopen}}{}
-\ifdefmacro{\dashrange}{\robustify{\dashrange}}{}
-\ifdefmacro{\dashcompound}{\robustify{\dashcompound}}{}
-\ifdefmacro{\dashparen}{\robustify{\dashparen}}{}
-\ifdefmacro{\ldots}{\robustify{\ldots}}{}
-\ifdefmacro{\tdots}{\robustify{\tdots}}{}
-\ifdefmacro{\cdots}{\robustify{\cdots}}{}
-\ifdefmacro{\fdots}{\robustify{\fdots}}{}
-\ifdefmacro{\edots}{\robustify{\edots}}{}
-\ifdefmacro{\degrees}{\robustify{\degrees}}{}
-\ifdefmacro{\primetext}{\robustify{\primetext}}{}
-\ifdefmacro{\dblprimetext}{\robustify{\dblprimetext}}{}
-\ifdefmacro{\ordth}{\robustify{\ordth}}{}
-\ifdefmacro{\ordst}{\robustify{\ordst}}{}
-\ifdefmacro{\ordnd}{\robustify{\ordnd}}{}
-\ifdefmacro{\ordrd}{\robustify{\ordrd}}{}
-\ifdefmacro{\S}{\robustify{\S}}{}
-\ifdefmacro{\P}{\robustify{\P}}{}
-\ifdefmacro{\euro}{\robustify{\euro}}{}
-\ifdefmacro{\pound}{\robustify{\pound}}{}
-\ifdefmacro{\cent}{\robustify{\cent}}{}
-\ifdefmacro{\currency}{\robustify{\currency}}{}
-\ifdefmacro{\trademark}{\robustify{\trademark}}{}
-\ifdefmacro{\registered}{\robustify{\registered}}{}
-\ifdefmacro{\copyright}{\robustify{\copyright}}{}
-\ifdefmacro{\servicemark}{\robustify{\servicemark}}{}
-\ifdefmacro{\textpm}{\robustify{\textpm}}{}
-\ifdefmacro{\texttimes}{\robustify{\texttimes}}{}
-\ifdefmacro{\textdiv}{\robustify{\textdiv}}{}
-\ifdefmacro{\larrow}{\robustify{\larrow}}{}
-\ifdefmacro{\rarrow}{\robustify{\rarrow}}{}
-\ifdefmacro{\uarrow}{\robustify{\uarrow}}{}
-\ifdefmacro{\darrow}{\robustify{\darrow}}{}
-\ifdefmacro{\sq}{\robustify{\sq}}{}
-\ifdefmacro{\dq}{\robustify{\dq}}{}
-\ifdefmacro{\nq}{\robustify{\nq}}{}
-\ifdefmacro{\half}{\robustify{\half}}{}
-\ifdefmacro{\quarter}{\robustify{\quarter}}{}
-\ifdefmacro{\threequarters}{\robustify{\threequarters}}{}
-\ifdefmacro{\super}{\robustify{\super}}{}
-\ifdefmacro{\sub}{\robustify{\sub}}{}
-\ifdefmacro{\abbrspace}{\robustify{\abbrspace}}{}
-\ifdefmacro{\initialspace}{\robustify{\initialspace}}{}
-\ifdefmacro{\fig}{\robustify{\fig}}{}
-\ifdefmacro{\tab}{\robustify{\tab}}{}
-\ifdefmacro{\unit}{\robustify{\unit}}{}
-\ifdefmacro{\thinspace}{\robustify{\thinspace}}{}
-\ifdefmacro{\medspace}{\robustify{\medspace}}{}
-\ifdefmacro{\thickspace}{\robustify{\thickspace}}{}
-\ifdefmacro{\wordspace}{\robustify{\wordspace}}{}
-\ifdefmacro{\emspace}{\robustify{\emspace}}{}
-\ifdefmacro{\twoemspace}{\robustify{\twoemspace}}{}
-\ifdefmacro{\apos}{\robustify{\apos}}{}
-\ifdefmacro{\dag}{\robustify{\dag}}{}
-\ifdefmacro{\ddag}{\robustify{\ddag}}{}
-\ifdefmacro{\emph}{\robustify{\emph}}{}
-\ifdefmacro{\strongemph}{\robustify{\strongemph}}{}
-\ifdefmacro{\meta}{\robustify{\meta}}{}
-\ifdefmacro{\critical}{\robustify{\critical}}{}
-\ifdefmacro{\semantic}{\robustify{\semantic}}{}
-\ifdefmacro{\person}{\robustify{\person}}{}
-\ifdefmacro{\term}{\robustify{\term}}{}
-\ifdefmacro{\acro}{\robustify{\acro}}{}
-\ifdefmacro{\work}{\robustify{\work}}{}
-\ifdefmacro{\termintro}{\robustify{\termintro}}{}
-\ifdefmacro{\regsc}{\robustify{\regsc}}{}
-\ifdefmacro{\itsc}{\robustify{\itsc}}{}
-\ifdefmacro{\headsc}{\robustify{\headsc}}{}
-\ifdefmacro{\inlinebsc}{\robustify{\inlinebsc}}{}
-\ifdefmacro{\smartitalic}{\robustify{\smartitalic}}{}
-\ifdefmacro{\smartbold}{\robustify{\smartbold}}{}
-\ifdefmacro{\bsc}{\robustify{\bsc}}{}
-\ifdefmacro{\subtleemph}{\robustify{\subtleemph}}{}
-\ifdefmacro{\externalref}{\robustify{\externalref}}{}
-\ifdefmacro{\importantnote}{\robustify{\importantnote}}{}
-\ifdefmacro{\boolemph}{\robustify{\boolemph}}{}
-\ifdefmacro{\maxemph}{\robustify{\maxemph}}{}
-\ifdefmacro{\codecomment}{\robustify{\codecomment}}{}
-\ifdefmacro{\authorname}{\robustify{\authorname}}{}
-\ifdefmacro{\affiliation}{\robustify{\affiliation}}{}
-\ifdefmacro{\keywords}{\robustify{\keywords}}{}
-\ifdefmacro{\code}{\robustify{\code}}{}
-\ifdefmacro{\inlinecode}{\robustify{\inlinecode}}{}
-\ifdefmacro{\balancedcode}{\robustify{\balancedcode}}{}
-\ifdefmacro{\filepath}{\robustify{\filepath}}{}
-\ifdefmacro{\var}{\robustify{\var}}{}
-\ifdefmacro{\doccode}{\robustify{\doccode}}{}
+\ifdefmacro{\lnp@titlesc}{\robustify{\lnp@titlesc}}{}
 \ifdefmacro{\noindentpar}{\robustify{\noindentpar}}{}
 \ifdefmacro{\forceindent}{\robustify{\forceindent}}{}
 \ifdefmacro{\compactpar}{\robustify{\compactpar}}{}
@@ -3231,23 +2484,6 @@
 \ifdefmacro{\thirdgridparagraphs}{\robustify{\thirdgridparagraphs}}{}
 \ifdefmacro{\paragraphsep}{\robustify{\paragraphsep}}{}
 \ifdefmacro{\sidenote}{\robustify{\sidenote}}{}
-\ifdefmacro{\real}{\robustify{\real}}{}
-\ifdefmacro{\natural}{\robustify{\natural}}{}
-\ifdefmacro{\integer}{\robustify{\integer}}{}
-\ifdefmacro{\rational}{\robustify{\rational}}{}
-\ifdefmacro{\complex}{\robustify{\complex}}{}
-\ifdefmacro{\field}{\robustify{\field}}{}
-\ifdefmacro{\prob}{\robustify{\prob}}{}
-\ifdefmacro{\norm}{\robustify{\norm}}{}
-\ifdefmacro{\abs}{\robustify{\abs}}{}
-\ifdefmacro{\inner}{\robustify{\inner}}{}
-\ifdefmacro{\set}{\robustify{\set}}{}
-\ifdefmacro{\given}{\robustify{\given}}{}
-\ifdefmacro{\hilbert}{\robustify{\hilbert}}{}
-\ifdefmacro{\banach}{\robustify{\banach}}{}
-\ifdefmacro{\algebra}{\robustify{\algebra}}{}
-\ifdefmacro{\topology}{\robustify{\topology}}{}
-\ifdefmacro{\measure}{\robustify{\measure}}{}
 \ifdefmacro{\topfraction}{\robustify{\topfraction}}{}
 \ifdefmacro{\bottomfraction}{\robustify{\bottomfraction}}{}
 \ifdefmacro{\textfraction}{\robustify{\textfraction}}{}
@@ -3301,14 +2537,6 @@
 \ifdefmacro{\multiplefootnotes}{\robustify{\multiplefootnotes}}{}
 \ifdefmacro{\startappendices}{\robustify{\startappendices}}{}
 \ifdefmacro{\finishappendices}{\robustify{\finishappendices}}{}
-\ifdefmacro{\refpage}{\robustify{\refpage}}{}
-\ifdefmacro{\Refpage}{\robustify{\Refpage}}{}
-\ifdefmacro{\pref}{\robustify{\pref}}{}
-\ifdefmacro{\Pref}{\robustify{\Pref}}{}
-\ifdefmacro{\seeref}{\robustify{\seeref}}{}
-\ifdefmacro{\Seeref}{\robustify{\Seeref}}{}
-\ifdefmacro{\seealso}{\robustify{\seealso}}{}
-\ifdefmacro{\Seealso}{\robustify{\Seealso}}{}
 \ifdefmacro{\standardgrid}{\robustify{\standardgrid}}{}
 \ifdefmacro{\compactgrid}{\robustify{\compactgrid}}{}
 \ifdefmacro{\spaciousgrid}{\robustify{\spaciousgrid}}{}
@@ -3320,25 +2548,6 @@
 \ifdefmacro{\roundtogrid}{\robustify{\roundtogrid}}{}
 \ifdefmacro{\gridincludegraphics}{\robustify{\gridincludegraphics}}{}
 \ifdefmacro{\imagegridspace}{\robustify{\imagegridspace}}{}
-\ifdefmacro{\eqref}{\robustify{\eqref}}{}
-\ifdefmacro{\mathbinx}{\robustify{\mathbinx}}{}
-\ifdefmacro{\mathrelx}{\robustify{\mathrelx}}{}
-\ifdefmacro{\dint}{\robustify{\dint}}{}
-\ifdefmacro{\ssup}{\robustify{\ssup}}{}
-\ifdefmacro{\ssub}{\robustify{\ssub}}{}
-\ifdefmacro{\lim}{\robustify{\lim}}{}
-\ifdefmacro{\le}{\robustify{\le}}{}
-\ifdefmacro{\ge}{\robustify{\ge}}{}
-\ifdefmacro{\epsilon}{\robustify{\epsilon}}{}
-\ifdefmacro{\phi}{\robustify{\phi}}{}
-\ifdefmacro{\vec}{\robustify{\vec}}{}
-\ifdefmacro{\pdfcode}{\robustify{\pdfcode}}{}
-\ifdefmacro{\pdfsc}{\robustify{\pdfsc}}{}
-\ifdefmacro{\pdfemph}{\robustify{\pdfemph}}{}
-\ifdefmacro{\pdfbf}{\robustify{\pdfbf}}{}
-\ifdefmacro{\pdfit}{\robustify{\pdfit}}{}
-\ifdefmacro{\pdffilepath}{\robustify{\pdffilepath}}{}
-\ifdefmacro{\pdfvar}{\robustify{\pdfvar}}{}
 \ifdefmacro{\tightpar}{\robustify{\tightpar}}{}
 \ifdefmacro{\loosepar}{\robustify{\loosepar}}{}
 \ifdefmacro{\riverlesspar}{\robustify{\riverlesspar}}{}

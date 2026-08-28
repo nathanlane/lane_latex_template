@@ -73,64 +73,9 @@
   \ensuremath{\mathrm{#1}}%
 }
 
-% ==============================================================================
-% ENHANCED SMALL CAPS
-% ==============================================================================
-% Building on existing tracking, provide semantic commands
-
-% Title case small caps (maximum tracking for display)
-%% FIX(#39): this module deliberately exposes OT1 (\liningfigs/\tabularfigs at
-%% :23/:30). Every tracking list in lnpmicrotype.sty:74-161 is encoding={T1}, so
-%% under OT1 no list matches and the {120} WAS effective; \textls[120] preserves
-%% it (bare \lsstyle would fall back to microtype's 50). Drops the override msg.
-\providecommand{\titlesc}{}% In case already defined
-\renewcommand{\titlesc}[1]{%
-  {\scshape\textls[120]{#1}}%
-}
-
-% Header small caps (moderate tracking)
-%% FIX(#39): OT1-effective {60} preserved via \textls[60]; see \titlesc above.
-\newcommand{\headersc}[1]{%
-  {\scshape\textls[60]{#1}}%
-}
-
-% Body text small caps (standard tracking - already defined as \textsc)
-% Just document the existing behavior
-
-% Tight small caps (minimal tracking for dense contexts)
-%% FIX(#39): OT1-effective {15} preserved via \textls[15]; see \titlesc above.
-\newcommand{\tightsc}[1]{%
-  {\scshape\textls[15]{#1}}%
-}
-
-% ==============================================================================
-% TEXTCOMP SYMBOL ACCESS
-% ==============================================================================
-% Professional symbols from textcomp optimized for Pagella
-
-% Currency symbols
-% Note: These may be defined by textcomp, so we use providecommand
-\providecommand{\texteuro}{\mbox{\texteuro}}  % Ensure proper spacing
-\providecommand{\textsterling}{\mbox{\textsterling}}
-\providecommand{\textyen}{\mbox{\textyen}}
-\providecommand{\textcent}{\mbox{\textcent}}
-
-% Professional quotation marks
-\newcommand{\openquote}{\textquotedblleft}
-\newcommand{\closequote}{\textquotedblright}
-\newcommand{\singleopenquote}{\textquoteleft}
-\newcommand{\singleclosequote}{\textquoteright}
-
-% Fractions (better than math mode for text)
-\newcommand{\onequarter}{\textonequarter}
-\newcommand{\onehalf}{\textonehalf}
-\newcommand{\threequarters}{\textthreequarters}
-
-% Professional symbols
-\newcommand{\interrobang}{\textinterrobang}
-\newcommand{\numero}{\textnumero}
-\newcommand{\estimated}{\textestimated}
-\newcommand{\referencemark}{\textreferencemark}
+% v3 (issue #84) removed the generic small-caps, quotation, fraction, and
+% symbol helpers here, plus the inert \mbox-wrapping currency providecommands.
+% Use \textsc and textcomp's own \texteuro, \textonehalf, \textnumero directly.
 
 % ==============================================================================
 % LIGATURE CONTROL
@@ -165,28 +110,8 @@
   \MakeTextLowercase{#1}%
 }
 
-% ==============================================================================
-% SPECIAL CHARACTER IMPROVEMENTS
-% ==============================================================================
-% Better versions of common characters
-
-% Professional apostrophe (not straight quote)
-\newcommand{\textapostrophe}{\textquoteright}
-
-% Professional dashes with proper spacing
-\ifcsname lnpfontfeatures@origtextendash\endcsname\else
-  \let\lnp@origtextendash\textendash
-\fi
-\ifcsname lnpfontfeatures@origtextemdash\endcsname\else
-  \let\lnp@origtextemdash\textemdash
-\fi
-
-%% FIX: Preserve existing dash glyphs while avoiding self-referential redefinitions.
-\renewcommand{\textendash}{\kern0.1em\lnp@origtextendash\kern0.1em}
-\renewcommand{\textemdash}{\kern0.1em\lnp@origtextemdash\kern0.1em}
-
-% Degree symbol with proper spacing
-\newcommand{\degree}{\ensuremath{^\circ}}
+% v3 (issue #84) removed the generic \textapostrophe and \degree helpers and
+% the \textendash/\textemdash redefinitions; the standard dashes are unchanged.
 
 % ==============================================================================
 % CONTEXTUAL FIGURE SELECTION
@@ -235,34 +160,12 @@
 \ifdefmacro{\supfigs}{\robustify{\supfigs}}{}
 \ifdefmacro{\inffigs}{\robustify{\inffigs}}{}
 \ifdefmacro{\chemform}{\robustify{\chemform}}{}
-\ifdefmacro{\titlesc}{\robustify{\titlesc}}{}
-\ifdefmacro{\headersc}{\robustify{\headersc}}{}
-\ifdefmacro{\tightsc}{\robustify{\tightsc}}{}
-\ifdefmacro{\texteuro}{\robustify{\texteuro}}{}
-\ifdefmacro{\textsterling}{\robustify{\textsterling}}{}
-\ifdefmacro{\textyen}{\robustify{\textyen}}{}
-\ifdefmacro{\textcent}{\robustify{\textcent}}{}
-\ifdefmacro{\openquote}{\robustify{\openquote}}{}
-\ifdefmacro{\closequote}{\robustify{\closequote}}{}
-\ifdefmacro{\singleopenquote}{\robustify{\singleopenquote}}{}
-\ifdefmacro{\singleclosequote}{\robustify{\singleclosequote}}{}
-\ifdefmacro{\onequarter}{\robustify{\onequarter}}{}
-\ifdefmacro{\onehalf}{\robustify{\onehalf}}{}
-\ifdefmacro{\threequarters}{\robustify{\threequarters}}{}
-\ifdefmacro{\interrobang}{\robustify{\interrobang}}{}
-\ifdefmacro{\numero}{\robustify{\numero}}{}
-\ifdefmacro{\estimated}{\robustify{\estimated}}{}
-\ifdefmacro{\referencemark}{\robustify{\referencemark}}{}
 \ifdefmacro{\nolig}{\robustify{\nolig}}{}
 \ifdefmacro{\breaklig}{\robustify{\breaklig}}{}
 \ifdefmacro{\shelfful}{\robustify{\shelfful}}{}
 \ifdefmacro{\cufflink}{\robustify{\cufflink}}{}
 \ifdefmacro{\textuppercase}{\robustify{\textuppercase}}{}
 \ifdefmacro{\textlowercase}{\robustify{\textlowercase}}{}
-\ifdefmacro{\textapostrophe}{\robustify{\textapostrophe}}{}
-\ifdefmacro{\textendash}{\robustify{\textendash}}{}
-\ifdefmacro{\textemdash}{\robustify{\textemdash}}{}
-\ifdefmacro{\degree}{\robustify{\degree}}{}
 \ifdefmacro{\footnote}{\robustify{\footnote}}{}
 \ifdefmacro{\showfontfeatures}{\robustify{\showfontfeatures}}{}
 

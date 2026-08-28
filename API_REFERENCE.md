@@ -9,25 +9,25 @@ Complete reference for all commands, environments, and options provided by the `
 3. [Typography Commands](#typography-commands)
 4. [Spacing Commands](#spacing-commands)
 5. [Emphasis and Semantic Commands](#emphasis-and-semantic-commands)
-6. [Special Characters and Symbols](#special-characters-and-symbols)
-7. [List Environments](#list-environments)
-8. [Quotation Environments](#quotation-environments)
-9. [Table and Figure Environments](#table-and-figure-environments)
-10. [Mathematical Commands](#mathematical-commands)
-11. [Cross-Reference Commands](#cross-reference-commands)
-12. [Paragraph Commands](#paragraph-commands)
-13. [Color Commands](#color-commands)
-14. [Grid System Commands](#grid-system-commands)
-15. [Footnote Commands](#footnote-commands)
-16. [Quick Reference Card](#quick-reference-card)
-17. [Bibliography and citations](#bibliography-and-citations)
-18. [The font system](#the-font-system)
-19. [The colour system](#the-colour-system)
-20. [Page layout and dimensions](#page-layout-and-dimensions)
-21. [The heading system](#the-heading-system)
-22. [The list system](#the-list-system)
-23. [How the package is put together](#how-the-package-is-put-together)
-24. [Typography standards](#typography-standards)
+6. [List Environments](#list-environments)
+7. [Quotation Environments](#quotation-environments)
+8. [Table and Figure Environments](#table-and-figure-environments)
+9. [Mathematical Commands](#mathematical-commands)
+10. [Cross-Reference Commands](#cross-reference-commands)
+11. [Paragraph Commands](#paragraph-commands)
+12. [Color Commands](#color-commands)
+13. [Grid System Commands](#grid-system-commands)
+14. [Footnote Commands](#footnote-commands)
+15. [Quick Reference Card](#quick-reference-card)
+16. [Bibliography and citations](#bibliography-and-citations)
+17. [The font system](#the-font-system)
+18. [The colour system](#the-colour-system)
+19. [Page layout and dimensions](#page-layout-and-dimensions)
+20. [The heading system](#the-heading-system)
+21. [The list system](#the-list-system)
+22. [How the package is put together](#how-the-package-is-put-together)
+23. [Typography standards](#typography-standards)
+24. [Removed in v3](#removed-in-v3)
 
 ## Package Options
 
@@ -48,7 +48,6 @@ Complete reference for all commands, environments, and options provided by the `
 | `nocolor` | off | Disable all custom colors (black text only) |
 | `draft` | off | Enable draft mode with visible overfull boxes |
 | `nobiblatex` | off | Disable automatic biblatex loading |
-| `mathredefs` | off | Opt in to `\le`/`\ge`/`\epsilon`/`\phi`/`\vec` variant redefinitions (they change mathematical meaning; default keeps standard LaTeX semantics) |
 
 ### Examples
 
@@ -212,55 +211,6 @@ Conservative drop cap for academic use.
 \academicdropcap{T}{his introduction} begins with a minimal drop cap...
 ```
 
-#### `\elegantsc{text}`
-Enhanced small caps with superior visibility and tracking.
-- **Tracking:** 80 units (8% letter spacing)
-- **Usage:** General small caps text with optimal readability
-- **Example:** `\elegantsc{introduction}` → INTRODUCTION (with tracking)
-
-#### `\elegantscbold{text}`
-Bold small caps with generous tracking for emphasis.
-- **Tracking:** 100 units (10% letter spacing)
-- **Weight:** Bold with tracking compensation
-- **Example:** `\elegantscbold{key finding}` → KEY FINDING (bold with tracking)
-
-#### `\titlesc{text}`
-Title page small caps with maximum elegance.
-- **Size:** 11pt/13pt
-- **Tracking:** 120 units (12% letter spacing)
-- **Usage:** Title page elements requiring exceptional visibility
-- **Example:** `\titlesc{abstract}` → ABSTRACT (larger with extensive tracking)
-
-#### `\bsc{text}`
-Standard bold small caps command.
-- **Weight:** Bold
-- **Usage:** Inline emphasis, shorter text
-- **Example:** `\bsc{note}` → NOTE (bold small caps)
-
-#### `\code{text}`
-Weight-compensated inline code.
-- **Font:** Inconsolata scaled to 98%
-- **Color:** Code color (RGB 25,25,25)
-- **Usage:** Inline code snippets
-- **Example:** `\code{git commit}` → `git commit`
-
-#### `\inlinecode{text}`
-Inline code with micro-spacing.
-- **Spacing:** 0.05em padding on each side
-- **Usage:** Code within flowing text
-- **Example:** `Use \inlinecode{npm start} to begin`
-
-#### `\filepath{path}`
-File paths with proper hyphenation.
-- **Font:** Monospace with hyphenation enabled
-- **Usage:** File and directory paths
-- **Example:** `\filepath{/Users/name/documents/file.tex}`
-
-#### `\var{name}`
-Variable names in monospace.
-- **Font:** Monospace in code color
-- **Usage:** Mathematical or programming variables
-- **Example:** `\var{x}` → x (monospace)
 ## Spacing Commands
 
 ### Grid Units
@@ -306,117 +256,6 @@ Smart emphasis with automatic nesting.
 ```latex
 \emph{This is emphasized and \emph{this is nested} emphasis}
 ```
-
-#### `\strongemph{text}`
-Bold emphasis for critical terms.
-
-```latex
-\strongemph{Important:} Read this carefully.
-```
-
-### Semantic Markup
-
-#### `\term{term}`
-Technical terms (italic).
-
-```latex
-The \term{baseline grid} sits at 16.32pt.
-```
-
-#### `\person{name}`
-Person names (small caps with tracking).
-
-```latex
-\person{Hermann Zapf} designed Palatino.
-```
-
-#### `\acro{ACRONYM}`
-Acronyms (small caps with wide tracking).
-
-```latex
-\acro{PDF} stands for Portable Document Format.
-```
-
-#### `\work{title}`
-Published works (italic).
-
-```latex
-See \work{The Elements of Typographic Style} by Bringhurst.
-```
-
-#### `\meta{metadata}`
-Metadata (small caps).
-
-```latex
-\meta{Version 1.0-alpha} released June 2025.
-```
-
-#### `\critical{text}`
-Critical notices (bold small caps).
-
-```latex
-\critical{Warning:} This will delete all files.
-```
-
-## Special Characters and Symbols
-
-### Dashes
-
-| Command | Output | Usage |
-|---------|--------|-------|
-| `\emdash` | — | Em dash with thin spaces |
-| `\emdashclassic` | — | Em dash without spaces |
-| `\emdashopen` | — | Em dash with word spaces |
-| `--` | – | En dash (standard LaTeX) |
-| `\dashmark` | – | En dash for lists and ranges (replaces `\endashmark`) |
-
-```latex
-Typography\emdash the art of arranging type\emdash is essential.
-Pages 10--20
-2020--2025
-```
-
-
-### Ellipsis Variants
-
-| Command | Output | Usage |
-|---------|--------|-------|
-| `\ldots` | … | Standard ellipsis |
-| `\tdots` | … | Tight ellipsis for dialogue |
-| `\cdots` | ⋯ | Centered dots for math |
-| `\fdots` | … | French spacing ellipsis |
-| `\edots` | …. | Ellipsis before period |
-
-### Currency Symbols
-
-| Command | Output | Description |
-|---------|--------|-------------|
-| `\euro` | € | Euro symbol |
-| `\pound` | £ | Pound sterling |
-| `\yen` | ¥ | Yen symbol |
-| `\cent` | ¢ | Cent symbol |
-| `\currency` | ¤ | Generic currency |
-
-### Technical Symbols
-
-| Command | Output | Description |
-|---------|--------|-------------|
-| `\degrees` | ° | Degree symbol |
-| `\trademark` | ™ | Trademark |
-| `\registered` | ® | Registered |
-| `\copyright` | © | Copyright |
-| `\S` | § | Section symbol |
-| `\P` | ¶ | Paragraph symbol |
-
-### Mathematical Symbols in Text
-
-| Command | Output | Description |
-|---------|--------|-------------|
-| `\textpm` | ± | Plus-minus |
-| `\texttimes` | × | Multiplication |
-| `\textdiv` | ÷ | Division |
-| `\textapprox` | ≈ | Approximately |
-| `\textinfty` | ∞ | Infinity |
 
 ## List Environments
 
@@ -545,27 +384,6 @@ Typography exists to honor content.
 #### `\quoteattribution{name}`
 Right-aligned attribution with em-dash.
 
-#### `\sq{text}`
-Smart single quotes.
-
-```latex
-\sq{quoted text}  % 'quoted text'
-```
-
-#### `\dq{text}`
-Smart double quotes.
-
-```latex
-\dq{quoted text}  % "quoted text"
-```
-
-#### `\nq{outer}{inner}`
-Nested quotes.
-
-```latex
-\nq{She said}{Hello}  % "She said 'Hello'"
-```
-
 ## Table and Figure Environments
 
 ### Enhanced Table Environments
@@ -668,17 +486,6 @@ Notes for figures.
 
 ## Mathematical Commands
 
-### Mathematical Operators
-
-| Command | Output | Description |
-|---------|--------|-------------|
-| `\tr` | tr | Trace |
-| `\rank` | rank | Rank |
-| `\Span` | span | Span |
-| `\supp` | supp | Support |
-| `\argmax` | arg max | Argmax |
-| `\argmin` | arg min | Argmin |
-
 ### Mathematical Environments
 
 #### Mathematical Alignment Environments
@@ -701,74 +508,11 @@ For aligned equations, use the standard LaTeX environments:
 
 *Note: Grid-specific equation environments may be added in future versions.*
 
-### Mathematical Helpers
-
-#### `\set{A}`
-Set notation with proper spacing.
-
-```latex
-$x \in \set{A}$
-```
-
-#### `\abs{x}`
-Absolute value.
-
-```latex
-$\abs{x} < \epsilon$
-```
-
-#### `\norm{v}`
-Vector norm.
-
-```latex
-$\norm{v} = 1$
-```
-
-#### `\real`
-Real numbers ℝ
-- **Font:** Blackboard bold
-- **Example:** `$x \in \real$`
-
-#### `\complex`
-Complex numbers ℂ
-
-#### `\integer`
-Integer numbers ℤ
-
-#### `\rational`
-Rational numbers ℚ
-
-#### `\natural`
-Natural numbers ℕ
-
-#### `\field`
-Generic field 𝔽
-
-#### `\prob`
-Probability measure ℙ
-
-### Operators and Norms
-
-#### `\inner{x}{y}`
-Inner product
-- **Output:** ⟨x, y⟩
-- **Example:** `$\inner{u}{v} = 0$`
-
-#### `\hilbert`
-Hilbert space ℋ
-
-#### `\banach`
-Banach space ℬ
-
-#### `\algebra`
-Algebra 𝒜
-
-#### `\topology`
-Topology 𝒯
-
-#### `\measure`
-Measure space ℳ
 ## Cross-Reference Commands
+
+Cross-references are document-owned since v3 (issue #84): the commands below are
+`cleveref`'s own — load and configure `cleveref` yourself, as the package no
+longer loads or configures it.
 
 ### Smart References (via cleveref)
 
@@ -785,29 +529,6 @@ Reference range.
 
 ```latex
 \crefrange{fig:a}{fig:d}  % "figs. 1–4"
-```
-
-### Specialized References
-
-#### `\refpage{label}`
-Reference with page number.
-
-```latex
-\refpage{tab:results}  % "table 1 on page 5"
-```
-
-#### `\pref{label}`
-Parenthetical reference.
-
-```latex
-The results \pref{fig:main} demonstrate...  % "The results (fig. 2) demonstrate..."
-```
-
-#### `\seealso{label}`
-"See also" reference.
-
-```latex
-\seealso{sec:methods}  % "see also §2.3"
 ```
 
 ## Paragraph Commands
@@ -886,20 +607,6 @@ Note: `\rapidexchange` and `\speaker` are not implemented.
 | `subtlegray` | Page numbers |
 | `quotegray` | Block quotes |
 
-### Color Commands
-
-#### `\subtleemph{text}`
-Conservative blue emphasis.
-
-#### `\importantnote{text}`
-Restrained red for critical info.
-
-#### `\codecomment{text}`
-Italic gray for code comments.
-
-#### `\externalref{text}`
-Enhanced navy for external links.
-
 ## Grid System Commands
 
 ### The spacing quantum
@@ -960,7 +667,6 @@ Insert full baseline space.
 Custom baseline space.
 - **Example:** `\baselinespace{1.5}` → 19.8pt
 
-### Image Commands
 ## Footnote Commands
 
 ### Special Footnote Commands
@@ -985,11 +691,10 @@ Important point.\sidenote{This appears in the margin.}
 \begin{articleabstract}...\end{articleabstract}
 \articlekeywords{word1, word2}
 
-% Emphasis
+% Emphasis (standard LaTeX)
 \emph{emphasis}
-\term{technical term}
-\person{Name}
-\acro{ACRONYM}
+\textbf{strong}
+\textsc{small caps}
 
 % Lists
 \begin{itemize}
@@ -999,18 +704,13 @@ Important point.\sidenote{This appears in the margin.}
 % Quotes
 \begin{quote}...\quoteattribution{Author}\end{quote}
 
-% References
+% References (document loads cleveref)
 \cref{label}
 \Cref{label}
 
 % Spacing
 \vspace{\gridunit}
 \vspace{\halfgridunit}
-
-% Special characters
-\emdash
-\endash
-\degrees
 ```
 
 ---
@@ -2430,19 +2130,19 @@ Sophisticated emphasis system optimized for TeX Gyre Pagella:
 ```latex
 % Hierarchy Levels (by frequency of use)
 \emph{text}            % Primary emphasis (italic↔roman)
-\strongemph{text}      % Bold for critical terms (<5% of text)
-\term{baseline grid}   % Technical terms (italic)
-\person{Hermann Zapf}  % Names (small caps, 2.5% tracking)
-\acro{PDF}            % Acronyms (small caps, 4% tracking)
-\work{Book Title}     % Published works (italic)
-\critical{WARNING}    % Maximum emphasis (bold small caps)
+\textbf{text}      % Bold for critical terms (<5% of text)
+\emph{baseline grid}   % Technical terms (italic)
+\textsc{Hermann Zapf}  % Names (small caps, 2.5% tracking)
+\textsc{PDF}            % Acronyms (small caps, 4% tracking)
+\emph{Book Title}     % Published works (italic)
+\textbf{\textsc{WARNING}}    % Maximum emphasis (bold small caps)
 
 % Smart nesting
 \emph{outer \emph{inner} outer}  % → italic roman italic
 
 % Context-aware nesting handlers
-\smartitalic{text}               % Italic in roman context, roman in italic context
-\smartbold{text}                 % Bold in regular context, bold-italic in bold context
+\emph{text}               % Italic in roman context, roman in italic context
+\textbf{text}                 % Bold in regular context, bold-italic in bold context
 ```
 
 #### Professional Footnote System
@@ -2656,7 +2356,11 @@ The system uses a two-pass auxiliary file mechanism:
 
 **Core dependencies** (auto-loaded):
 `tgpagella`, `zi4`, `newpxmath`, `mathalfa`, `microtype`,
-`enumitem`, `caption`, `geometry`, `appendix`, `cleveref`
+`enumitem`, `caption`, `geometry`
+
+Cross-references are document-owned since v3 (issue #84): load and configure
+`cleveref` yourself if you want it. `appendix` is configured if the document
+loads it.
 
 For appendix count issues, delete auxiliary files and recompile:
 ```bash
@@ -2744,7 +2448,7 @@ The style package implements three complementary typographic philosophies:
 
 **DO:**
 - Trust the spacing quantum system - all spacing derives from 13.2pt quantum multiples
-- Use semantic commands (`\emph{}`, `\bsc{}`, `\code{}`) over presentational formatting
+- Use semantic commands (`\emph{}`, `\textbf{\textsc{}}`, `\texttt{}`) over presentational formatting
 - Maintain consistent labeling conventions (`app:`, `fig:`, `tab:`, `eq:`)
 - Let the modular scale handle sizing relationships automatically
 
@@ -2901,13 +2605,13 @@ The results are statistically significant.
 
 ```latex
 % General purpose bold small caps
-Organizations like \bsc{UNESCO} require careful formatting.
+Organizations like \textbf{\textsc{UNESCO}} require careful formatting.
 
 % Heading-style small caps with enhanced tracking
-\headsc{Chapter Opening}
+\textbf{\textsc{Chapter Opening}}
 
 % Inline small caps for abbreviations
-The \inlinebsc{PhD} program requires comprehensive study.
+The \textbf{\textsc{PhD}} program requires comprehensive study.
 
 % Color-balanced small caps for headings
 Section headings use \balancedbsc{Enhanced Formatting}.
@@ -2931,16 +2635,16 @@ Typography--like architecture--requires systematic thinking.
 
 ```latex
 % Number sets (use semantic commands)
-\real^n, \complex, \integer, \rational, \natural, \field, \prob
+\mathbb{R}^n, \mathbb{C}, \mathbb{Z}, \mathbb{Q}, \mathbb{N}, \mathbb{F}, \mathbb{P}
 
 % Mathematical operators
-\norm{x}, \abs{z}, \inner{u}{v}, \set{A}
+\lVert x\rVert, \lvert z\rvert, \langle u, v\rangle, \{A\}
 
 % Mathematical spaces (calligraphic)
-\hilbert, \banach, \algebra, \topology, \measure
+\mathcal{H}, \mathcal{B}, \mathcal{A}, \mathcal{T}, \mathcal{M}
 
 % Declared operators  
-\tr(A), \rank(M), \Span{V}, \supp(f)
+\operatorname{tr}(A), \operatorname{rank}(M), \operatorname{span}\{V\}, \operatorname{supp}(f)
 ```
 
 #### Display Mathematics
@@ -2952,7 +2656,7 @@ f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
 \end{equation}
 
 % Enhanced inline mathematics
-The function $f \colon \real \to \complex$ satisfies $\norm{f}_2 < \infty$.
+The function $f \colon \mathbb{R} \to \mathbb{C}$ satisfies $\lVert f\rVert_2 < \infty$.
 ```
 
 #### Complex Mathematical Expressions
@@ -2961,7 +2665,7 @@ The function $f \colon \real \to \complex$ satisfies $\norm{f}_2 < \infty$.
 % Advanced mathematical typography
 \begin{align}
 \mathcal{L}[f](s) &= \int_0^{\infty} f(t) e^{-st} \, dt \\
-\text{where } f &\in L^1(\real_+) \cap C(\real_+)
+\text{where } f &\in L^1(\mathbb{R}_+) \cap C(\mathbb{R}_+)
 \end{align}
 ```
 
@@ -2986,8 +2690,8 @@ $E$ = energy, $m$ = mass, $c$ = speed of light.
 **Variable Definition Standards:**
 ```latex
 % CORRECT: Clear variable introduction
-Let $\mathbf{X} = (x_1, x_2, \ldots, x_n)^T \in \real^n$ denote the feature vector.
-The objective function $f: \real^n \to \real$ is defined as $f(\mathbf{x}) = \|\mathbf{Ax} - \mathbf{b}\|_2^2$.
+Let $\mathbf{X} = (x_1, x_2, \ldots, x_n)^T \in \mathbb{R}^n$ denote the feature vector.
+The objective function $f: \mathbb{R}^n \to \mathbb{R}$ is defined as $f(\mathbf{x}) = \|\mathbf{Ax} - \mathbf{b}\|_2^2$.
 
 % INCORRECT: Unclear variable usage
 Let $X$ be the features and $f$ be the function.
@@ -3014,19 +2718,19 @@ Let $X$ be the features and $f$ be the function.
 
 ```latex
 % Basic inline code
-The \code{numpy.array} function handles multidimensional data.
+The \texttt{numpy.array} function handles multidimensional data.
 
 % Micro-spaced code (prevents text flow disruption)
-Python's \inlinecode{DataFrame.groupby()} method provides aggregation.
+Python's \texttt{DataFrame.groupby()} method provides aggregation.
 
 % File paths with proper hyphenation
-Data is stored in \filepath{/data/processed/analysis_results.csv}.
+Data is stored in \texttt{/data/processed/analysis_results.csv}.
 
 % Mathematical variables in code context
-The variable \var{learning_rate} controls optimization speed.
+The variable \texttt{learning_rate} controls optimization speed.
 
 % Mixed documentation style
-\doccode{Function signature}{\textbackslash{}newcommand\{\textbackslash{}norm\}[1]}
+Function signature: \texttt{\textbackslash{}newcommand\{\textbackslash{}norm\}[1]}
 ```
 
 #### Code Block Standards
@@ -3225,11 +2929,11 @@ The proposed method was significantly better (p < 0.05).
 \mixedtitle{Longer Descriptive Title Text}   % Mixed case for readability
 
 % Author and affiliation
-\authorname{Author Name}                     % Tracked small caps
-\affiliation{Institution and Department}     % Italic formatting
+\textsc{Author Name}                     % Tracked small caps
+\emph{Institution and Department}     % Italic formatting
 
 % Keywords with tracking
-\keywords{keyword one, keyword two, keyword three}
+\textbf{Keywords:} \emph{keyword one, keyword two, keyword three}
 ```
 
 #### Bibliography Integration
@@ -3338,7 +3042,7 @@ Use \emph{semantic} formatting instead.
 
 % WRONG: Manual colors
 \textcolor{red}{Warning message}
-Use \importantnote{Warning message} instead.
+Use \textbf{Warning message} instead.
 
 % WRONG: Inconsistent labels
 \label{fig1}, \label{table-data}, \label{AppendixA}
@@ -3350,9 +3054,45 @@ Use \label{fig:analysis}, \label{tab:data}, \label{app:main}
 ```latex
 % WRONG: Inconsistent notation
 R^n, C, Z (mixing fonts and notation)
-Use \real^n, \complex, \integer consistently.
+Use \mathbb{R}^n, \mathbb{C}, \mathbb{Z} consistently.
 
 % WRONG: Poor spacing in math mode
 $f(x)=\int_0^1g(t)dt$ (cramped spacing)
 Use $f(x) = \int_0^1 g(t) \, dt$ (proper spacing).
 ```
+
+## Removed in v3
+
+v3 is a deliberate breaking contraction (issue #84, [ADR-0006](docs/adr/0006-one-public-entry-point-and-a-narrow-v3-interface.md)). `lanepaper` is a typography package, not a library of generic writing shortcuts, so the generic writing, emphasis, code, punctuation, symbol, currency, fraction, spacing, math, and reference helpers were removed rather than kept as compatibility aliases. Standard LaTeX, amsmath, and third-party packages (siunitx's `\unit`, `doc`'s `\meta`, ...) again own those names. No aliases are provided; update documents to the standard replacements below.
+
+| Removed | Use instead |
+|---------|-------------|
+| `\strongemph`, `\importantnote` | `\textbf` |
+| `\meta`, `\person`, `\acro`, `\regsc`, `\elegantsc`, `\refinedsc` | `\textsc` |
+| `\critical`, `\bsc`, `\headsc`, `\inlinebsc`, `\elegantscbold` | `\textbf{\textsc{...}}` |
+| `\term`, `\work`, `\subtleemph`, `\externalref`, `\smartitalic` | `\emph` |
+| `\codecomment` | `\textit` |
+| `\code`, `\inlinecode`, `\balancedcode`, `\filepath`, `\var` | `\texttt` |
+| `\doccode{a}{b}` | `a: \texttt{b}` |
+| `\authorname`, `\affiliation`, `\keywords` | title-page commands (`\articleauthors`, ...) or `\textsc`/`\emph` |
+| `\emdash`, `\emdashclassic`, `\dashparen` | `---` |
+| `\endash`, `\dashrange{a}{b}` | `--`, `a--b` |
+| `\tdots`, `\fdots`, `\edots` | `\dots` |
+| `\ldots`, `\cdots`, `\S`, `\P`, `\copyright`, `\dag`, `\ddag` | standard LaTeX (restored) |
+| `\thinspace`, `\medspace`, `\thickspace` | standard amsmath (restored) |
+| `\euro`, `\pound`, `\cent`, `\currency` | `\texteuro`, `\textsterling`, `\textcent`, `\textcurrency` |
+| `\trademark`, `\registered`, `\servicemark` | `\texttrademark`, `\textregistered`, `\textsuperscript{SM}` |
+| `\degrees`, `\half`, `\quarter`, `\threequarters` | `\textdegree`, `\textonehalf`, `\textonequarter`, `\textthreequarters` |
+| `\super`, `\sub` | `\textsuperscript`, `\textsubscript` |
+| `\sq`, `\dq`, `\nq` | csquotes' `\enquote` (or `` `...' `` / `` ``...'' ``) |
+| `\wordspace`, `\emspace`, `\twoemspace`, `\abbrspace` | `\quad`, `\qquad`, `\,` |
+| `\fig`, `\tab`, `\unit` | `Figure~\ref{...}`, `Table~\ref{...}`, siunitx's `\qty`/`\unit` |
+| `\real`, `\complex`, `\integer`, `\rational`, `\natural`, `\field`, `\prob` | `\mathbb{R}`, `\mathbb{C}`, `\mathbb{Z}`, ... |
+| `\hilbert`, `\banach`, `\algebra`, `\topology`, `\measure` | `\mathcal{H}`, `\mathcal{B}`, ... |
+| `\norm`, `\abs`, `\inner`, `\set`, `\given` | `\lVert\,\rVert`, `\lvert\,\rvert`, `\langle\,\rangle`, `\{\,\}`, `\mid` |
+| `\tr`, `\rank`, `\Span`, `\supp`, `\argmax`, `\argmin` | amsmath's `\DeclareMathOperator` |
+| `\mathbinx`, `\mathrelx`, `\dint`, `\ssup`, `\ssub`, `\lim` | standard amsmath (`\lim` restored) |
+| `\refpage`, `\pref`, `\seeref`, `\seealso` (and capitalized forms) | configure and use cleveref's `\cref`/`\Cref`/`\cpageref` |
+| `\pdfcode`, `\pdfsc`, `\pdfemph`, `\pdfbf`, `\pdfit`, `\pdffilepath`, `\pdfvar` | hyperref's `\texorpdfstring` |
+
+Cleveref is no longer configured by the package: a document that wants abbreviated names or parenthetical styles loads and configures cleveref itself. The title-page small caps this package still uses internally is private (`\lnp@titlesc`) and unchanged.
