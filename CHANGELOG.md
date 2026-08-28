@@ -4,6 +4,17 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Recorded the accepted v3 package boundary in ADR-0006 and corrected the older
+architecture records and glossary to match it. Public-release execution now
+lives in GitHub issue #82 and its dependency-ordered children; the operational
+handoff was removed after its decisions and follow-ups were transferred. CTAN
+submission remains explicitly on hold.
+
+Removed the unrelated `src/py/example_analysis.py` scaffold. It had no package
+or test callers and failed the repository's installed-Black lint gate.
+The non-pdfTeX guard test now requires one clear Lanepaper-owned error and no
+PDF instead of assuming the local engine emits no earlier environment errors.
+
 Guarded `API_REFERENCE.md` against duplicate command documentation (issue
 #74): a test now collects commands from both `####` headings and table rows
 and fails if any name appears twice (variant rows inside one table are a

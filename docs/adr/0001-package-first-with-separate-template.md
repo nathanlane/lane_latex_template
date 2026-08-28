@@ -14,8 +14,14 @@ without ever using them.
 We are splitting the two. The **Package** (`lanepaper`) owns everything that
 changes how text looks. The **Template** — a separate repository, extracted once
 the Package is stable — owns everything that decides what a document contains or
-which document-level packages to load. A minimal **Demo** stays in the Package
-repository as the CI fixture; it is not a starting point for real papers.
+which document-level packages to load. A curated **Demo** stays in the Package
+repository as the CI fixture and visual showcase; it is not a starting point
+for real papers.
+
+> **v3 revision (2026-08-28).** The boundary remains accepted and is applied
+> more strictly in ADR-0006. V3 preserves package-owned typography, not every
+> historical convenience: generic and document-level APIs are removed without
+> compatibility aliases rather than all being moved into a Template.
 
 The deciding argument was adoption across projects. A template is forked, and
 forks drift — this already happened once here, which is why
@@ -53,14 +59,14 @@ into a Template checkout via `git subtree`, which also lets an in-progress paper
 pull upstream fixes.
 
 CTAN is the endgame and has no date. It is what retires vendoring and what makes
-Overleaf work without manual uploads, so issue #34 is closed as won't-fix until
-then rather than being solved twice.
+Overleaf work without manual uploads. The public v3 GitHub release is separate,
+manual, and precedes any CTAN decision; CTAN remains on hold.
 
 ## Consequences
 
-- Nothing an author currently uses is lost. `\begin{landscape}`,
-  `\begin{sideways}`, and the `\adjustbox` wrapper move to the Template, where
-  they always belonged; they keep working in papers.
+- V3 deliberately removes generic and document-level conveniences from the
+  Package. Documents use standard LaTeX or load the owning third-party package;
+  the Package ships no deprecated aliases.
 - Until CTAN, Overleaf has no zero-setup path. Vendoring is a recurring
   per-project cost, and it stops paying at roughly three concurrent papers, or
   at the first co-author, or the first time one fix must reach everything at
