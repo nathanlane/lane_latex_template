@@ -10,7 +10,8 @@ issues, and code use one word per concept.
 
 **Package**:
 The `lanepaper` style files — the typography itself, installed once and reused
-across documents. The only thing that ships to CTAN.
+across documents. Public GitHub release and later CTAN publication are separate
+events.
 _Avoid_: style, stylesheet, lltpaperstyle, the paper package
 
 **Template**:
@@ -19,21 +20,23 @@ author's own conveniences. Depends on the Package; contains none of it.
 _Avoid_: starter, boilerplate, skeleton
 
 **Demo**:
-The minimal document inside the Package repository, compiled by CI to prove the
-Package works. Not a starting point for real papers — that is the Template.
+The curated visual document inside the Package repository, compiled by CI to
+prove the Package works. Not a starting point for real papers — that is the
+Template.
 _Avoid_: example, sample paper, main.tex
 
 **Module**:
-One `.sty` file inside the Package covering a single area of typography — fonts,
-headings, lists, the grid. Loaded by name, never by path.
-_Avoid_: component, submodule, include
+An internal owner for one coherent area of Package typography. It is not a
+separate adopter-facing package or load path.
+_Avoid_: public module, entry point, component, submodule, include
 
 ### Loading
 
 **Configure-if-loaded**:
-The rule that the Package styles a third-party package when the document has
-already loaded it, but never loads it itself. Applies to `hyperref`, `cleveref`,
-`biblatex`, `babel`, and `appendix`.
+The ownership relation in which the Package may style behavior of a third-party
+package only after the document has loaded it and only where the behavior is
+part of Lanepaper typography. It never transfers ownership of the third-party
+API to Lanepaper.
 _Avoid_: optional dependency, soft dependency
 
 **Vendoring**:
@@ -50,8 +53,7 @@ nothing forces elements onto it (ADR-0004, ADR-0005).
 _Avoid_: leading grid, vertical grid, rhythm
 
 **Quantum**:
-The 13.2pt unit vertical space values are drawn from (`\gridunit`). Spacing
-is stated in whole or fractional quanta. The quantum is not the baseline and
-does not divide it; spacing in quanta does not produce vertical rhythm
-(ADR-0005).
-_Avoid_: unit, step, tick, grid
+The private 13.2pt scale from which some internal vertical spaces are drawn.
+It is not the baseline, does not divide it, and is not a public unit or grid
+system (ADR-0005, ADR-0006).
+_Avoid_: public grid unit, baseline unit, step, tick, grid

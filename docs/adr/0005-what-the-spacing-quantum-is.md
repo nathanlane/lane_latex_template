@@ -13,6 +13,11 @@ package answers by accident today.
 
 This ADR exists to make the decision explicit rather than inherit it.
 
+> **v3 revision (2026-08-28).** The numerical decision remains accepted, but
+> ADR-0006 makes the quantum private. V3 removes `\gridunit`, its derived public
+> helpers, and the grid overlay instead of carrying misleading grid vocabulary
+> into the public API. The retained 13.2pt value and rendering are unchanged.
+
 ## The problem ADR-0004 left behind
 
 **13.2pt has no derivation.** It was produced by `11 × 1.20`. Both inputs are
@@ -83,14 +88,13 @@ the names will ever be free. No stubs ship.
 
 Sub-decisions, so none is inherited silently:
 
-- **`\gridunit` and its five derived public names stay.** Documentation
-  carries the honesty ("the spacing scale's unit, not a baseline grid"); a
-  future major may rename.
-- **The `[grid]` overlay draws only the real 16.32pt baseline grid.** The
-  13.2pt quantum lines go: a unit is not a set of positions (issue 7).
-- **Remaining executable `13.2pt` literals become `\gridunit`** or derived
-  lengths, proven by raster identity (issue 4, now hygiene rather than
-  migration prep).
+- **The 13.2pt quantum stays, but its public names do not.** V3 absorbs it into
+  a private package owner and removes `\gridunit` plus the five derived public
+  helpers. No compatibility aliases ship.
+- **The `[grid]` option and overlay are removed.** A spacing scale is not a set
+  of positions, and a diagnostic overlay does not justify a public subsystem.
+- **Executable spacing values use the private quantum owner** rather than
+  scattered literals, where that relationship is real.
 - **`\parindent` is set to an explicit `13.2pt`**, deliberately not
   `\gridunit`: a horizontal indent must not follow a vertical unit (issue 6).
   `1.2em` would be 13.14pt — a rendering change — so the literal is the
@@ -106,13 +110,12 @@ The options considered:
 ### Option A — accept the quantum as a plain spacing unit (chosen)
 
 Keep 13.2pt. Delete every claim of rhythm, alignment, or grid-locking from
-documentation, comments, module names, and the demo. `\gridunit` becomes what
-it demonstrably is: a convenient unit that spacing values are quoted in, with
-no relationship to where text lands.
+documentation, comments, module names, and the demo. In v3 the quantum is a
+private implementation value with no relationship to where text lands.
 
-Cheapest, changes no rendering, and is honest. Its cost is that the package
-keeps a number nobody can justify, and the name `\gridunit` keeps implying a
-grid that does not exist.
+This changes no rendering and is honest. Its cost is that the package keeps a
+number nobody can justify; keeping it private avoids turning that residue into
+an adopter-facing abstraction.
 
 ### Option B — re-derive the quantum from the baseline (rejected; stays the future-major path)
 
@@ -199,8 +202,8 @@ question the current code answers silently.
 
 ## Consequences
 
-- Documentation-and-naming work plus two file deletions: no rendering
-  changes, so the proof obligation is raster identity, not per-page reading.
+- The v3 public-surface contraction removes the remaining grid helpers and
+  overlay under issue #85; rendering changes are not implied by this decision.
 - `lnpheadingsgridlocked.sty` and `lnpmathgridlocked.sty` are deleted along
   with their references (README, the generated `CONVENTIONS.md` module table,
   `API_REFERENCE.md`'s tree, the `run-tests.sh` probe). No stubs: nothing
@@ -211,5 +214,5 @@ question the current code answers silently.
 - `CONTEXT.md`'s glossary and the demo's rhythm claim are part of the
   deliverable. A decision that leaves the vocabulary asserting the old model
   has not been implemented.
-- This ADR gates CTAN: the vocabulary fixes and #55 land before
-  `l3build upload`. CTAN keeps no date (ADR-0001).
+- CTAN remains separate and on hold. The GitHub v3 release follows the manual,
+  exact-green-SHA decision in ADR-0006 and issue #82.

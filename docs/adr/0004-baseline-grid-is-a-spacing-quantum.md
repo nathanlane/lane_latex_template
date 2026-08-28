@@ -21,6 +21,11 @@ option). `\gridunit` (13.2pt) is redefined in documentation as a **spacing
 quantum** — the unit vertical spaces are multiples of — not the document
 baseline. Option (a) (make the 13.2pt grid real) is rejected.
 
+> **v3 revision (2026-08-28).** The measured distinction remains accepted, but
+> ADR-0006 makes the 13.2pt quantum private and removes the public grid helpers
+> and overlay. This changes exposure, not the typography or the finding that the
+> quantum is not the baseline.
+
 ## Why
 
 1. **The no-visual-change rule (AGENTS.md rule 1) is decisive.** Making 13.2pt

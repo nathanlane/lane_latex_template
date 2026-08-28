@@ -3,45 +3,41 @@ status: accepted
 date: 2026-08-22
 ---
 
-# The Package configures third-party packages; it does not load them
+# Load only owned dependencies; configure third-party behavior narrowly
 
-The Package currently issues around thirty-seven unconditional `\RequirePackage`
-calls. Measured against its own source, `longtable` and `tabularx` are used zero
-times, and `rotating`, `pdflscape`, and `adjustbox` exist solely to support
-`\begin{landscape}`, `\begin{sideways}`, and one `\adjustbox` wrapper — document
-conveniences, not typography.
+The Package once loaded or configured packages because its template happened
+to use them. That made Lanepaper own document choices, load order, and APIs it
+did not need to implement typography.
 
-Three rules now govern what the Package loads:
+> **v3 revision (2026-08-28).** The former package lists were transitional and
+> are replaced by an ownership rule. "Configure if loaded" is a relationship,
+> not a permanent allowlist.
 
-1. **Load** what implementing the typography requires: `microtype`,
-   `letterspace`, `ragged2e`, `titlesec`, `enumitem`, `geometry`, `xcolor`,
-   `caption`, `lettrine`, `booktabs`, `fancyhdr`, `placeins`, the fonts.
-2. **Configure if loaded**, never load: `hyperref`, `cleveref`, `biblatex`,
-   `babel`, `appendix`. The Package styles them via `\@ifpackageloaded` when the
-   document has already brought them in.
-3. **Neither** — delete outright, or move to the Template: `longtable`,
-   `tabularx`, and the landscape/sideways/adjustbox wrappers with their three
-   supporting packages.
+Three rules govern v3:
 
-This lands the Package at roughly twenty-five loads.
+1. **Load** only a dependency needed to implement retained Lanepaper
+   typography. This includes the font and Microtype stack, layout and heading
+   owners, colors and captions, required `booktabs`, and `fancyhdr` while the
+   retained page style needs it.
+2. **Configure if loaded** only when the document has already loaded a package
+   and the configured result is Lanepaper typography. The retained cases are
+   narrow Hyperref link/bookmark styling and conditional longtable caption
+   width; the relation, not those names, is the durable decision.
+3. **Neither load nor configure** APIs owned by documents or third parties.
+   Cleveref, BibLaTeX, natbib, appendix orchestration, and threeparttable remain
+   document-owned; Lanepaper provides no wrappers or fallbacks for them.
 
-Rule 2 matters most. A style package that loads `hyperref` itself dictates load
-order to every document that uses it, and forces anyone wanting their own
-hyperref options to load first or use `\PassOptionsToPackage`. That is the
-single most likely thing to break an adopter, and it is avoidable: the
-cross-reference and link typography survive intact under `\@ifpackageloaded`.
-
-`fancyhdr` (running heads) and `placeins` (float barriers, tied to the
-`subsectionbarriers` option) were judged typography and stay loaded. `appendix`,
-with one use, does not.
+Hyperref illustrates the boundary. Loading it would dictate load order and
+options to every adopter. When a document loads it, Lanepaper may apply visible
+theme link colors and bookmark-safe substitutions for retained Lanepaper
+commands, but it does not own bookmark numbering, encoding, borders, or draft
+mode.
 
 ## Consequences
 
-- A document that loads none of the configure-if-loaded packages gets less
-  styling than before. The Template loads all of them, so papers are unaffected;
-  a third party using the Package bare must load what they want styled.
-- The reduction is not a tidy-up to be reverted. Anyone re-adding a
-  `\RequirePackage{hyperref}` to "fix" missing link colours is undoing this
-  decision — configure it under `\@ifpackageloaded` instead.
-- Fewer loads means fewer preamble conflicts, fewer `check-deps` entries, and
-  faster compiles.
+- A document explicitly loads bibliography, cross-reference, appendix, and
+  other content-level packages it chooses.
+- Missing third-party features are not repaired with generic wrappers or
+  `\providecommand` fallbacks.
+- Package lists are re-derived from surviving callers instead of maintained as
+  architecture.

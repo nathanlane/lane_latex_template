@@ -3,8 +3,8 @@
 Two levels of assertion. The static tests pin the guard's presence and shape so
 it cannot be dropped by a refactor. The functional tests actually run XeLaTeX
 and LuaLaTeX, because the thing worth protecting is not that the source
-contains a guard but that a wrong-engine run stops on one legible line instead
-of the font cascade underneath it.
+contains a guard but that a wrong-engine run emits one clear package-owned
+message and stops before producing a PDF. Engine setup may fail earlier too.
 """
 
 import os
@@ -14,7 +14,6 @@ import textwrap
 from pathlib import Path
 
 import pytest
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -48,15 +47,13 @@ def test_main_package_declares_the_format():
 def _run(engine, tmp_path, package):
     tex = tmp_path / "guard.tex"
     tex.write_text(
-        textwrap.dedent(
-            rf"""
+        textwrap.dedent(rf"""
             \documentclass[11pt]{{article}}
             \usepackage{{{package}}}
             \begin{{document}}
             ok
             \end{{document}}
-            """
-        ),
+            """),
         encoding="utf-8",
     )
     env = os.environ.copy()
@@ -74,16 +71,18 @@ def _run(engine, tmp_path, package):
 
 @pytest.mark.parametrize("engine", OTHER_ENGINES)
 @pytest.mark.parametrize("package", ENTRY_POINTS)
-def test_non_pdftex_engines_fail_with_one_message(engine, tmp_path, package):
+def test_non_pdftex_engines_fail_with_clear_package_message(engine, tmp_path, package):
     if shutil.which(engine) is None:
         pytest.skip(f"{engine} not installed")
     log_text = _run(engine, tmp_path, package)
     errors = [line for line in log_text.splitlines() if line.startswith("! ")]
-    # Exactly one: the guard stops the run. Without the stop the error is
-    # recoverable and microtype alone contributes two more on XeTeX.
-    assert len(errors) == 1, f"expected one error, got {errors}"
-    assert f"Package {package} Error" in errors[0]
-    assert "pdfTeX is required" in errors[0]
+    # FIX: engine/font setup can fail before package loading; assert only the
+    # Lanepaper-owned error, not the global error count. No PDF proves that the
+    # package error is a hard stop rather than a recoverable warning cascade.
+    package_errors = [line for line in errors if f"Package {package} Error" in line]
+    assert len(package_errors) == 1, f"expected one package error, got {errors}"
+    assert "pdfTeX is required" in package_errors[0]
+    assert not (tmp_path / "guard.pdf").exists()
 
 
 @pytest.mark.parametrize("package", ENTRY_POINTS)
