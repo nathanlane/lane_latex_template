@@ -16,9 +16,9 @@ This guide will help you set up the LaTeX template on your system with all requi
 
 **The engine is pdfLaTeX only.** XeLaTeX and LuaLaTeX are not supported: the
 font stack is 8-bit and pdfTeX-shaped, with no `fontspec` path, and `microtype`
-font expansion is unsupported on XeTeX. Loading `lanepaper` or `lnpminimal`
-under either engine stops the run with an explicit error rather than a cascade
-of font failures.
+font expansion is unsupported on XeTeX. Loading `lanepaper` under either
+engine stops the run with an explicit error rather than a cascade of font
+failures.
 
 1. **TeX Distribution** (one of the following). The LaTeX format must be
    **2020-10-01 or newer**; the package uses `\AddToHook` and declares that
@@ -272,11 +272,11 @@ If you're having trouble with the full installation, try the minimal setup:
      tgpagella geometry article hyperref
    ```
 
-2. **Use minimal mode**:
-   Create a file `minimal.tex`:
+2. **Check the package loads on its own**:
+   Create a file `probe.tex`:
    ```latex
-   \documentclass{article}
-   \usepackage[minimal]{lanepaper}
+   \documentclass[11pt]{article}
+   \usepackage{lanepaper}
    \begin{document}
    Your content here
    \end{document}
@@ -284,7 +284,7 @@ If you're having trouble with the full installation, try the minimal setup:
 
 3. **Compile with basic pdflatex**:
    ```bash
-   pdflatex minimal.tex
+   pdflatex probe.tex
    ```
 
 ## Verification
@@ -304,40 +304,28 @@ make help
 
 ## Typography System Architecture
 
-The template uses a modular typography system organized in `lanepaper/`:
+`\usepackage{lanepaper}` is the sole public load path (ADR-0006). The
+`lnp*.sty` files in `lanepaper/` are internal owners: `lanepaper` loads them,
+and loading one directly is unsupported.
 
-### Core Modules (Automatically Loaded)
-- `lnpcompilationfixes.sty` - Fixes common LaTeX warnings
-- `lnpcolors.sty` - Professional color definitions (linknavy, sectioncolor, bulletgray)
-- `lnpdimensions.sty` - Spacing quantum system (13.2pt quantum) and spacing commands
-- `lnpfonts.sty` - Font configuration (Pagella, Inconsolata, newpxmath, mathalfa)
-- `lnpheadings.sty` - Section heading styles with color hierarchy
-- `lnplists.sty` - List typography with refined bullets (6.6pt item spacing)
-- `lnpmicrotype.sty` - Enhanced character protrusion (factor 1050, stretch/shrink 15)
+| Module | Owns |
+|---|---|
+| `lnpcolors.sty` | The semantic colour palette, all names `lnp@`-prefixed |
+| `lnpdimensions.sty` | Page geometry and the 13.2pt spacing quantum |
+| `lnpfonts.sty` | Pagella, Inconsolata, newpxmath, mathalfa |
+| `lnpheadings.sty` | Section heading styles and their colour hierarchy |
+| `lnplists.sty` | List typography and refined bullets |
+| `lnpmicrotype.sty` | Character protrusion, expansion and spacing |
 
-### Optional Enhancement Modules
-- `lnpparagraphs.sty` - Advanced paragraph formatting, quotations, dialogue
-- `lnphochuli.sty` - Advanced optical adjustments
-- `lnpfontfeatures.sty` - Full Pagella feature access
-- `lnpfontfallbacks.sty` - Compatibility mode with fallback chains
+The package carries `lnpparagraphs.sty`, `lnphochuli.sty`,
+`lnpfontfeatures.sty` and `lnpfontfallbacks.sty` from v2. They are not loaded
+and not supported; issues #29 and #87 fold or delete them.
 
-### Module Features
-- **Modular loading**: Load only what you need
-- **Override capability**: Customize before loading lanepaper
-- **Dependency management**: Automatic loading of required modules
-- **Graceful degradation**: Fallbacks for missing packages
+Customisation happens in the document, after loading:
 
-Example customization:
 ```latex
-% Override colors
-\definecolor{linknavy}{RGB}{0,0,255}
-\definecolor{sectioncolor}{RGB}{0,0,0}
-
-% Load main package
 \usepackage{lanepaper}
-
-% Add optional enhancements
-\usepackage{lnphochuli}
+\geometry{margin=2in}   % Override the layout
 ```
 
 ## Next Steps

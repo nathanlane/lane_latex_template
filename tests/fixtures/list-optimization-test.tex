@@ -1,14 +1,9 @@
 \documentclass[11pt,a4paper]{article}
 %% FIX: Use the renamed package file; legacy package file is no longer shipped.
 \usepackage{lanepaper}
-%% FIX: Use the renamed grid overlay package file shipped by the template.
-\usepackage{lnpgridoverlay}
 \usepackage{lipsum}
 
 \begin{document}
-
-% Enable grid visualization
-\showgrid
 
 \section{Refined List Typography Tests}
 
@@ -37,9 +32,9 @@ The refined bullets are now 80\% of their original size with optical adjustments
 
 Old style (if using \texttt{\textbackslash bulletmark} directly):
 \begin{itemize}
-\item[\textcolor{bulletgray}{\textbullet}] Original bullet at 20\% gray (80\% black)
-\item[\textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.75}{$\bullet$}}}] New elegant bullet - scaled to 80\%, 25\% gray (75\% black)
-\item[\textcolor{subtlegray}{\raisebox{0.15ex}{\scalebox{0.65}{\textbullet}}}] Alternative dot style - naturally smaller and more refined
+\item[{\textcolor[gray]{0.25}{\textbullet}}] Original bullet at 20\% gray (80\% black)
+\item[{\textcolor[gray]{0.45}{\raisebox{0.1ex}{\scalebox{0.75}{$\bullet$}}}}] New elegant bullet - scaled to 80\%, 25\% gray (75\% black)
+\item[{\textcolor[gray]{0.45}{\raisebox{0.15ex}{\scalebox{0.65}{\textbullet}}}}] Alternative dot style - naturally smaller and more refined
 \end{itemize}
 
 \subsection{Numbered Lists with Refinements}

@@ -45,7 +45,7 @@ rebuild. Always clean when switching between TeX Live years.
 
 ### "Undefined control sequence" Error
 
-**Symptoms**: Commands like `\articletitle` or `\gridunit` not recognized
+**Symptoms**: A command like `\articletitle` is not recognized
 
 **Solutions**:
 1. Ensure lanepaper is loaded:
@@ -54,10 +54,11 @@ rebuild. Always clean when switching between TeX Live years.
    \usepackage{lanepaper}
    ```
 
-2. Check module loading order - some commands require specific modules:
-   ```latex
-   \usepackage{lnpdimensions}  % For \gridunit
-   ```
+2. Check whether v3 removed it. The v2 grid API (`\gridunit`,
+   `\halfgridunit`, `\gridspace`, `\gridincludegraphics`, `gridtable` and
+   friends) and the semantic colour commands are gone; state the length or
+   colour you want directly. See
+   [ADR-0006](docs/adr/0006-one-public-entry-point-and-a-narrow-v3-interface.md).
 
 ### Compilation Warnings
 
@@ -83,13 +84,7 @@ rebuild. Always clean when switching between TeX Live years.
    tlmgr install tex-gyre tex-gyre-math
    ```
 
-2. Use font fallback module:
-   ```latex
-   \usepackage{lnpfontfallbacks}
-   \enablecompatibilitymode
-   ```
-
-3. Manual fallback to Palatino:
+2. Manual fallback to Palatino:
    ```latex
    \usepackage{palatino}  % Before lanepaper
    \usepackage{lanepaper}
@@ -105,10 +100,9 @@ rebuild. Always clean when switching between TeX Live years.
    \usepackage[T1]{fontenc}
    ```
 
-2. Use the refined small caps commands:
+2. Use standard small caps:
    ```latex
-   \refinedsc{text}      % Regular small caps
-   \refinedscbold{text}  % Bold small caps
+   \textsc{text}
    ```
 
 ### Math Font Mismatches
@@ -160,21 +154,16 @@ rebuild. Always clean when switching between TeX Live years.
 **Symptoms**: Elements don't align to the 13.2pt spacing quantum
 
 **Solutions**:
-Note: the base lines of the grid overlay step at the true body baseline (16.32pt);
-the 13.2pt quantum is a spacing unit, not the baseline. See
+Note: body lines sit on the true baseline (16.32pt); the 13.2pt quantum is a
+spacing unit, not the baseline, so vertical space and line positions are not
+expected to coincide. See
 `docs/adr/0004-baseline-grid-is-a-spacing-quantum.md`.
 
-1. Use grid visualization:
+1. Adjust the space directly. The quantum is internal to the package, so a
+   document states the gap it wants:
    ```latex
-   \usepackage{lnpgridoverlay}
-   \showgrid
-   ```
-   Or load the style with `[grid]`: `\usepackage[grid]{lanepaper}`.
-
-2. Manual adjustment with grid units:
-   ```latex
-   \vspace{\gridunit}      % 13.2pt
-   \vspace{\halfgridunit}  % 6.6pt
+   \vspace{13.2pt}   % One quantum
+   \vspace{6.6pt}    % Half a quantum
    ```
 
 ### Page Count Inflation
@@ -229,26 +218,20 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
 ### Wide Tables Not Fitting
 
 **Solutions**:
-1. Use landscape environment:
+1. Load `pdflscape` in the document and use its standard `landscape`
+   environment:
    ```latex
-   \begin{landscapetable}[tbp]
-     % Wide table content
-   \end{landscapetable}
+   \begin{landscape}
+     \begin{table}[tbp]
+       % Wide table content
+     \end{table}
+   \end{landscape}
    ```
 
-2. Use adjustable tables:
-   ```latex
-   \begin{fittable}[tbp]{1.2\textwidth}
-     % Auto-scaled content
-   \end{fittable}
-   ```
+2. Reduce `\tabcolsep` or the table font size locally before scaling content.
 
-3. Rotate single tables:
-   ```latex
-   \begin{rotatedtable}[tbp]
-     % 90-degree rotation
-   \end{rotatedtable}
-   ```
+The demo defines `landscapetable`, `rotatedtable` and `fittable` for its own
+examples. They are not `lanepaper` package APIs.
 
 ## Typography Issues
 
@@ -284,11 +267,9 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
 
 **Symptoms**: Small caps appear too tight or loose
 
-**Solution**: Use size-specific commands:
+**Solution**: Use standard small caps:
 ```latex
-\textsc{body text}      % 3% tracking
-\titlesc{title text}    % 8-12% tracking
-\refinedscbold{bold}    % 4.5% tracking
+\textsc{small caps text}
 ```
 
 ## Package Conflicts
@@ -317,7 +298,8 @@ the 13.2pt quantum is a spacing unit, not the baseline. See
 
 ### Cleveref Conflicts
 
-`lanepaper` loads `hyperref` before `cleveref` automatically (the required order). If you encounter conflicts from other packages, load those packages before `\usepackage{lanepaper}` to ensure hyperref and cleveref load last.
+The document owns both packages. Load `hyperref` before `cleveref`; `lanepaper`
+may be loaded before either and applies its link styling when `hyperref` loads.
 
 ## Testing and Validation
 
@@ -375,20 +357,20 @@ grep -c 'Underfull \\hbox' main.log
 | Bad citations | `make clean && make` |
 | Float drift | Add `\FloatBarrier` |
 | Overfull hbox | Add `\sloppy` or hyphenation |
-| Grid misalignment | Use `\vspace{\gridunit}` |
-| Font missing | Use fallback module |
-| Compilation slow | Use draft mode |
+| Grid misalignment | Use `\vspace{13.2pt}` |
+| Font missing | `tlmgr install tex-gyre` |
 | Page inflation | Check emphasis grouping |
 
-## Emergency Minimal Mode
+## Minimal Reproduction
 
-If nothing else works:
+If nothing else works, reduce to the smallest failing document:
 ```latex
-\documentclass{article}
-\usepackage{lnpminimal}
+\documentclass[11pt]{article}
+\usepackage{lanepaper}
 \begin{document}
 Your content here
 \end{document}
 ```
 
-This loads only essential features with maximum compatibility.
+`\usepackage{lanepaper}` is the only supported load path (ADR-0006); the
+`lnp*.sty` modules are internal and loading one directly is unsupported.

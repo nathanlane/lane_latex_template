@@ -163,7 +163,8 @@ Note: For block quotes, use the standard \texttt{quote} environment or see the m
 
 \subsubsection{Tables with Standard Row Heights}
 
-\begin{gridtable}[h]
+\begin{table}[h]
+  \renewcommand{\arraystretch}{1.2}
   \caption{Example Table with Standard Row Height}
   \centering
   \begin{tabular}{@{}lrr@{}}
@@ -175,7 +176,7 @@ Note: For block quotes, use the standard \texttt{quote} environment or see the m
     Type C & 80 & 24.2\% \\
     \bottomrule
   \end{tabular}
-\end{gridtable}
+\end{table}
 
 \subsubsection{Table Notes}
 
@@ -231,15 +232,15 @@ The document loads and configures cleveref for intelligent cross-referencing:
 
 \subsection{Spacing Commands}
 
-\subsubsection{Grid Unit Usage}
+\subsubsection{Vertical Space}
 
-All vertical spacing uses grid units:
+The 13.2pt spacing quantum is internal to the package (ADR-0006), so a
+document states the space it wants directly:
 
 \begin{verbatim}
-\vspace{\gridunit}      % Add 13.2pt (1 grid unit)
-\vspace{2\gridunit}     % Add 26.4pt (2 grid units)
-\vspace{\halfgridunit}  % Add 6.6pt (0.5 units)
-\vspace{\quartergridunit} % Add 3.3pt (0.25 units)
+\vspace{13.2pt}   % One quantum
+\vspace{26.4pt}   % Two quanta
+\vspace{6.6pt}    % Half a quantum
 \end{verbatim}
 
 \subsection{Color System}
@@ -265,7 +266,6 @@ Switch between paragraph styles:
 \classicalparagraphs   % 13.2pt indent, no spacing (default)
 \modernparagraphs      % No indent, 6.6pt spacing
 \hybridparagraphs      % 9.9pt indent, 3.3pt spacing
-\quartergridparagraphs % 13.2pt indent, 3.3pt flexible spacing
 \end{verbatim}
 
 \subsubsection{Special Paragraphs}

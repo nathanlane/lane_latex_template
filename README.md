@@ -12,10 +12,9 @@ This template applies classic typographic principles to create scholarly article
 <!-- %% FIX: Keep active feature claims limited to locally verified support. -->
 - **Typography** – TeX Gyre Pagella (Palatino-based) with superior small caps, harmonized mathematics, and optimized monospace
 - **Spacing Quantum System** – most vertical spacing in multiples of a 13.2pt quantum; body leading measures 16.32pt (see `docs/adr/0004-baseline-grid-is-a-spacing-quantum.md`)
-- **Optical Refinements** – Optional `lnphochuli` module; when loaded, automatically applies custom Pagella kerning pairs and last-line length control (`\parfillskip`); also provides opt-in commands for selective ligature suppression and hanging punctuation at paragraph openings
-- **Grid Optimization** – Optional modules reduce drift while maintaining typography quality
+- **Optical Refinements** – The `[optical]` option adds sourced refinements over the defaults, currently last-line runt control (`\parfillskip`)
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
-- **Smart Citations** – styles `biblatex` or `natbib` when your document loads one; it never loads one for you
+- **Document-owned Citations** – load and configure `biblatex` or `natbib` in your document; lanepaper does not load either
 - **Floats** – Comprehensive figure/table system with booktabs, tabularx, and smart placement
 - **Lists** – Multiple environments with refined bullets and optimal spacing
 - **Accessibility** – WCAG 2.1 AA compliant colors with semantic emphasis commands
@@ -134,6 +133,7 @@ pytest -q
 2. **Edit main.tex**:
    ```latex
    \documentclass[11pt]{article}
+   \usepackage[backend=biber,style=authoryear]{biblatex}
    \usepackage{lanepaper}
    \addbibresource{references.bib}
    
@@ -202,11 +202,11 @@ Create a professional title page with mathematical spacing:
 
 ### Citations and Bibliography
 
-**The document owns its bibliography.** Since issue #48 the package does not
-load `biblatex`, `natbib`, `hyperref`, `cleveref`, `babel` or `appendix`. It
-configures `hyperref` and `appendix` if you load them (ADR-0003); since v3
-(issue #84) `cleveref` is fully document-owned — the package neither loads nor
-configures it. Nothing here dictates your load order or your citation style.
+**The document owns its bibliography.** The package does not load `biblatex`,
+`natbib`, `hyperref`, `cleveref`, `babel` or `appendix`. Bibliography,
+cross-reference and appendix packages are entirely document-owned. If loaded,
+lanepaper only applies its link styling to `hyperref` and its caption width to
+`longtable`; nothing here dictates your citation style.
 
 Load biblatex with whatever options you want:
 
@@ -224,9 +224,8 @@ Those are the options the package used to impose on every document; `demo/preamb
 carries them so the demo renders as before. Change any of them freely — that is
 the point of the change.
 
-The `nobiblatex` and `natbib` options are **deprecated and do nothing**: there is
-no automatic loading left to disable. They are still accepted, with a warning,
-so existing documents do not fail on an unknown option.
+The removed `nobiblatex` and `natbib` package options raise LaTeX's `Unknown
+option` error. Load the bibliography package you need in the document instead.
 
 For legacy natbib-based documents, use the dedicated preamble:
 
@@ -321,48 +320,42 @@ your-paper/
 
 ### Package Options
 
-Load the style with options:
+`\usepackage{lanepaper}` is the only public load path, and it takes two
+options:
 
 ```latex
-\usepackage{lanepaper}           % Standard (all features)
-\usepackage[grid]{lanepaper}     % Show grid overlay (baseline + quantum lines)
-\usepackage[minimal]{lanepaper}  % Essential features only
-\usepackage[draft]{lanepaper}    % Draft mode
+\usepackage{lanepaper}             % Standard
+\usepackage[optical]{lanepaper}    % Add the sourced optical refinements
+\usepackage[nocolor]{lanepaper}    % Grayscale hierarchy, no chroma
 ```
 
-Available options:
-- `grid` / `nogrid` – Show/hide the grid overlay (true-baseline and quantum lines)
-- `minimal` – Load only essential features
-- `natbib` – **Deprecated, inert.** The package no longer loads a bibliography package; load `natbib` yourself
-- `draft` – Enable draft-mode diagnostics, including draft-mode `microtype`
-- `nobiblatex` – **Deprecated, inert.** There is no automatic biblatex loading left to disable
-- `subsectionbarriers` / `nosubsectionbarriers` – Enable/disable automatic float barriers before subsections
-- `nocolor` – Disable all custom colors
+- `optical` – Optical refinements that have a stated source but are not safe
+  to impose on every document. Currently runt control: the last line of a
+  paragraph is made to reach at least a third of the measure (Hochuli,
+  *Detail in Typography*), at the cost of rebreaking the paragraph. Widow and
+  orphan protection is *not* here — that is a default every document gets.
+- `nocolor` – Converts the palette through xcolor's gray model. Chroma goes;
+  the grayscale hierarchy between heading levels stays.
 
-Note: `\usepackage[minimal]{lanepaper}` and
-`\usepackage{lnpminimal}` are distinct surfaces.
-The former uses the main package with reduced module loading; the latter loads the
-separate lightweight package.
+Anything else is rejected with LaTeX's own `Unknown option` error. v3 removed
+the v2 template modes — `grid`, `minimal`, `draft`, `natbib`, `nobiblatex`
+and the subsection-barrier pair — without aliases. See
+[ADR-0006](docs/adr/0006-one-public-entry-point-and-a-narrow-v3-interface.md).
 
-### Modular Architecture
+### Internal Modules
 
-The style system is fully modularized:
+The `lnp*.sty` files are internal owners, not entry points. Loading one
+directly is unsupported: they assume `lanepaper` has already set up the
+options and load order, and they may be merged or renamed without notice.
 
-**Core modules** (automatically loaded):
-- `lnpcolors` – Professional color palette
-- `lnpdimensions` – Grid system and spacing
-- `lnpfonts` – Font configuration
-- `lnpheadings` – Section heading styles
-- `lnplists` – List typography
-- `lnpmicrotype` – Enhanced character protrusion, expansion, and spacing
-
-**Optional modules**:
-- `lnpparagraphs` – Advanced paragraph formatting
-- `lnphochuli` – Advanced optical adjustments
-
-Load optional modules such as `lnpparagraphs` before `lanepaper`.
-Loading `lnpparagraphs` after `lanepaper` is unsupported unless the reverse
-order is fully guarded.
+| Module | Owns |
+|---|---|
+| `lnpcolors` | The semantic colour palette |
+| `lnpdimensions` | Page geometry and the 13.2pt spacing quantum |
+| `lnpfonts` | The Pagella / newpxmath / Inconsolata stack |
+| `lnpheadings` | Section heading typography |
+| `lnplists` | List typography |
+| `lnpmicrotype` | Character protrusion, expansion and spacing |
 
 ---
 
@@ -379,13 +372,15 @@ The template uses a carefully selected font stack:
 
 ### Spacing Quantum
 
-All vertical spacing follows a 13.2pt quantum (a spacing unit — the body
-baseline measures 16.32pt):
+The package states nearly all of its vertical spacing in multiples of one
+13.2pt quantum (a spacing unit — the body baseline measures 16.32pt). It is
+an internal implementation value, not a grid API: there is no public
+`\gridunit` length and no grid helpers. A document that wants a specific
+gap writes it:
 
 ```latex
-\vspace{\gridunit}        % 13.2pt (1 unit)
-\vspace{\halfgridunit}    % 6.6pt (0.5 units)
-\vspace{2\gridunit}       % 26.4pt (2 units)
+\vspace{13.2pt}   % One quantum
+\vspace{6.6pt}    % Half a quantum
 ```
 
 ### Emphasis
@@ -485,12 +480,12 @@ $\lvert x\rvert < \epsilon$    % Absolute value
 
 ### Color Customization
 
-Override colors before loading the style:
+The document owns custom colours:
 
 ```latex
-\definecolor{linknavy}{RGB}{0,0,255}      % Custom link color
-\definecolor{sectioncolor}{RGB}{0,0,0}    % Black headings
 \usepackage{lanepaper}
+\definecolor{myaccent}{RGB}{0,0,255}
+\newcommand{\myaccenttext}[1]{\textcolor{myaccent}{#1}}
 ```
 
 ### Layout Modifications
@@ -498,9 +493,9 @@ Override colors before loading the style:
 Adjust margins and spacing:
 
 ```latex
-\geometry{margin=2in}                      % Wider margins
-\setlength{\parindent}{2em}               % Larger indent
 \usepackage{lanepaper}
+\geometry{margin=2in}                      % Wider margins
+\setlength{\parindent}{2em}                % Larger indent
 ```
 
 ### Creating Extensions
@@ -509,7 +504,7 @@ Add custom commands in your preamble:
 
 ```latex
 % After loading lanepaper
-\newcommand{\mycommand}[1]{\textcolor{linknavy}{\textbf{#1}}}
+\newcommand{\mycommand}[1]{\textcolor{myaccent}{\textbf{#1}}}
 \newenvironment{myenv}{\begin{quote}}{\end{quote}}
 ```
 
@@ -534,11 +529,8 @@ make clean        # Clear temporary files
 make              # Full rebuild
 ```
 
-**Font issues**:
-```latex
-% Use minimal mode for compatibility
-\usepackage[minimal]{lanepaper}
-```
+**Font issues**: check that TeX Gyre Pagella, `newpxmath` and `zi4` are
+installed (`make check-deps`).
 
 ### Platform-Specific Notes
 
@@ -622,16 +614,18 @@ make lint         # chktex, then the math-spacing checker
 \begin{articleabstract}, \articlekeywords{}, \articlejel{}
 ```
 
-**References**:
+**Document-owned bibliography and reference commands**:
 ```latex
 \textcite{}, \autocite{}, \cref{}, \Cref{}
 ```
 
-**Environments**:
+**Standard and package environments**:
 ```latex
 itemize, enumerate, quote, quotation
-gridtable, landscapetable, documentAppendices
+table, figure, documentAppendices
 ```
+
+The demo's landscape helpers are example-local, not package APIs.
 
 ### Dependencies
 

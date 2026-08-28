@@ -150,9 +150,13 @@ run_compatibility_probe() {
     test_latex_file "$tex_file"
 }
 
-# Run compatibility probes for API entry points that are contract-sensitive.
+# v3 (issue #85) deleted the standalone-module and preload probes that used to
+# live here: they asserted a contract the package no longer makes. They were
+# not replaced -- the option and layout contracts are asserted once, in
+# tests/test_option_contracts.py, and duplicating them here would mean two
+# places to keep in step.
 run_compatibility_probes() {
-    log_info "Running compatibility probes (standalone and preload contracts)"
+    log_info "Running compatibility probes"
     local probe_failures=0
 
     if ! run_compatibility_probe "prelude-natbib-preamble" <<'EOF'
@@ -167,106 +171,6 @@ run_compatibility_probes() {
 \begin{thebibliography}{1}
 \bibitem[Smith(2020)]{smith2020} Smith, A. 2020. Legacy citation style.
 \end{thebibliography}
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ! run_compatibility_probe "main-package-minimal-option" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage[minimal]{lanepaper}
-\begin{document}
-Main package minimal option contract is stable.
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ! run_compatibility_probe "standalone-lnpminimal" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage{lnpminimal}
-\begin{document}
-Minimal style surface compiles standalone.
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ! run_compatibility_probe "standalone-lnplists" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage{lnplists}
-\begin{document}
-\begin{itemize}
-  \item List entry one.
-  \item List entry two.
-  \setlist[itemize,1]{label=\dashmark}
-\end{itemize}
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ! run_compatibility_probe "standalone-lnpfontfeatures" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage{lnpfontfeatures}
-\begin{document}
-\textfigs{123}
-\chemform{E=mc^2}
-\liningfigs{456}
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ! run_compatibility_probe "preload-lnpparagraphs-into-lanepaper" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage{lnpparagraphs}
-\usepackage{lanepaper}
-\begin{document}
-\paragraph{Preload contract}
-This verifies paragraph module preloading compatibility.
-\begin{quote}
-  Modular API contracts should remain stable under preload.
-\end{quote}
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ! run_compatibility_probe "standalone-lnpminimal-units" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage{lnpminimal}
-\begin{document}
-Derived units resolve standalone: \vspace{\halfgridunit}\vspace{\quartergridunit}ok.
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ! run_compatibility_probe "standalone-lnplists-legacy-aliases" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage{lnplists}
-\begin{document}
-Legacy v2.1.0 aliases: \the\listbaselineskip, \the\listhalfbaseline, \the\listquarterbaseline.
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ! run_compatibility_probe "standalone-lnpfontfallbacks" <<'EOF'
-\documentclass[11pt]{article}
-\usepackage{lnpfontfallbacks}
-\begin{document}
-\showfontconfig
-Font fallback standalone surface compiles.
 \end{document}
 EOF
     then

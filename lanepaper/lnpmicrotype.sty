@@ -23,64 +23,37 @@
 
 \ProvidesPackage{lnpmicrotype}[2026/08/12 v1.2 Microtype Configuration]
 
-%% FIX: Make lnpmicrotype standalone-safe while honoring lanepaper draft mode.
-\@ifundefined{iflnp@draft}{\newif\iflnp@draft}{}
+%% FIX (#85): the [draft] option is gone, and with it the \iflnp@draft shim
+%% this module used to declare for standalone loading. One configuration
+%% remains -- final mode -- instead of two branches selecting between
+%% identical option sets bar draft/final.
 \@ifpackageloaded{microtype}{%
   \PackageInfo{lnpmicrotype}{microtype already loaded - using existing package options}%
 }{%
-  \iflnp@draft
-    \PackageInfo{lnpmicrotype}{microtype draft mode active}%
-    \RequirePackage[
-      activate={true,nocompatibility},
-      draft,
-      tracking=true,
-      kerning=true,
-      spacing=true,
-      factor=1050,
-      stretch=15,
-      shrink=15,
-      protrusion=false,
-      verbose=silent
-    ]{microtype}%
-  \else
-    \PackageInfo{lnpmicrotype}{microtype final mode active}%
-    \RequirePackage[
-      activate={true,nocompatibility},
-      final,
-      tracking=true,
-      kerning=true,
-      spacing=true,
-      factor=1050,
-      stretch=15,
-      shrink=15,
-      protrusion=false,
-      verbose=silent
-    ]{microtype}%
-  \fi
+  \RequirePackage[
+    activate={true,nocompatibility},
+    final,
+    tracking=true,
+    kerning=true,
+    spacing=true,
+    factor=1050,
+    stretch=15,
+    shrink=15,
+    protrusion=false,
+    verbose=silent
+  ]{microtype}%
 }
 
 %% FIX: Keep all active microtype setup in this module as the single owner.
-\iflnp@draft
-  \microtypesetup{
-    protrusion=true,
-    expansion=true,
-    kerning=true,
-    tracking=true,
-    spacing=true,
-    babel=true,
-    draft
-  }
-\else
-  \microtypesetup{
-    protrusion=true,
-    expansion=true,
-    kerning=true,
-    tracking=true,
-    spacing=true,
-    babel=true,
-    final
-  }
-\fi
+\microtypesetup{
+  protrusion=true,
+  expansion=true,
+  kerning=true,
+  tracking=true,
+  spacing=true,
+  babel=true,
+  final
+}
 
 %% FIX: Keep active tracking and extra-kerning setup in the microtype module.
 % SMALL CAPS TRACKING OPTIMIZATION (Size & Context Responsive)

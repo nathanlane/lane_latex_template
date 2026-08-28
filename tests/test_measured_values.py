@@ -44,22 +44,22 @@ def pt(value):
 
 
 def test_measured_baseline_and_body_size(tmp_path):
+    # #85 made the quantum private, so this no longer reads the register
+    # directly. The 13.2pt value is still pinned, through the spacing it
+    # produces: \jot below is 6.6pt + a quarter quantum, and \footnotesep is
+    # a quarter quantum.
     values = measure(
         tmp_path,
         "measure-baseline",
-        [
-            ("BASELINESKIP", r"\the\baselineskip"),
-            ("GRIDUNIT", r"\the\gridunit"),
-        ],
+        [("BASELINESKIP", r"\the\baselineskip")],
     )
     # size11.clo sets 10.95pt on 13.6pt; \linespread{1.20} scales the 13.6pt.
     assert abs(pt(values["BASELINESKIP"]) - 16.31996) < 0.01
-    assert abs(pt(values["GRIDUNIT"]) - 13.2) < 0.001
 
 
 def test_measured_jot_is_9pt9(tmp_path):
     values = measure(tmp_path, "measure-jot", [("JOT", r"\the\jot")])
-    # 6.6pt base + unconditional 0.25\gridunit AtBeginDocument addition.
+    # 6.6pt base + an unconditional quarter-quantum AtBeginDocument addition.
     assert abs(pt(values["JOT"]) - 9.9) < 0.01
 
 

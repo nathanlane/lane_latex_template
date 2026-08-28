@@ -34,45 +34,24 @@
 %   - Chicago Manual of Style compliance
 %   - Accessibility standards (WCAG 2.1 AA)
 %
-% VERSION HISTORY:
-%   v1.7 (2026-05-28): Hardened option contracts and microtype module ownership
-%   v1.6 (2025-07-09): Added package options (grid, minimal, natbib, nocolor, draft)
-%   v1.5 (2025-07-02): Modularization - extracted colors, dimensions, fonts modules
-%   v1.4.1 (2025-07-02): Code cleanup - removed unused commands, fixed duplicate loads
-%   v1.4 (2025-07-02): Cross-reference typography optimization with cleveref
-%   v1.3 (2025-07-02): Mathematical typography optimization for Pagella
-%   v1.2 (2025-06-27): Added Chicago-compliant appendix system
-%   v1.1 (2025-06-26): Enhanced bold small caps with weight compensation
-%   v1.0 (2025-06-25): Initial release with typography synthesis
-%
 % TECHNICAL REQUIREMENTS:
-%   - LaTeX 2e (2018/01/01 or later)
+%   - LaTeX 2e (2020/10/01 or later, for format-native \AddToHook)
 %   - pdfTeX only (pdfLaTeX); see the engine guard below
-%   - Modern TeX distribution (TeX Live 2023+, MiKTeX current)
-%
-% DEPENDENCIES:
-%   Core: fontenc, fbb, zi4, newtxmath, mathalfa, microtype
-%   Layout: titlesec, enumitem, caption, geometry  
-%   Advanced: appendix, hyperref
+%   - TeX Live 2025 is the supported production baseline (ADR-0006)
 %
 % USAGE:
-%   \usepackage{lanepaper}                   % Full features
-%   \usepackage[grid]{lanepaper}             % Show grid overlay
-%   \usepackage[minimal]{lanepaper}          % Minimal features only
-%   \usepackage[natbib]{lanepaper}           % Use native natbib support
-%   \usepackage[nocolor]{lanepaper}          % Use black/grayscale colors
-%   \usepackage[draft]{lanepaper}            % Draft mode with visible boxes
-%   or
-%   \input{demo/preamble.tex}  % Recommended with bibliography
+%   \usepackage{lanepaper}                   % The sole public load path
+%   \usepackage[optical]{lanepaper}          % Add the sourced optical refinements
+%   \usepackage[nocolor]{lanepaper}          % Grayscale hierarchy, no chroma
+%
+% The lnp*.sty files are internal owners, not entry points: load lanepaper and
+% nothing else (ADR-0006). The document keeps its own bibliography,
+% cross-reference, hyperref and appendix packages; this package configures
+% those only if they are already loaded (ADR-0003).
 %
 % PACKAGE OPTIONS:
-%   grid/nogrid - Enable/disable the grid overlay (default: nogrid)
-%   minimal     - Load only essential features (dimensions, compilation fixes)
-%   natbib      - Load native natbib support instead of biblatex
-%   nocolor     - Map semantic colors to black/grayscale values
-%   draft       - Draft mode with visible overfull boxes and link borders
-%   nobiblatex  - Disable automatic biblatex loading (if you load it manually)
-%   subsectionbarriers/nosubsectionbarriers - Toggle automatic subsection barriers
+%   optical  - Sourced optical refinements over the defaults (runt control)
+%   nocolor  - Convert the palette to grayscale, keeping its hierarchy
 %
 % DOCUMENTATION:
 %   - API_REFERENCE.md (commands, systems, and typography standards)
@@ -112,105 +91,35 @@
 % PACKAGE OPTIONS
 % ==============================================================================
 %
-% The lanepaper package supports the following options:
+% Two options, and no template modes (ADR-0006). [grid], [minimal], [draft],
+% [natbib], [nobiblatex] and the subsection-barrier pair were v2 surfaces for
+% a template that also shipped alternative entry points; v3 is one package
+% with one load path, so they are removed outright rather than aliased or
+% left inert. A document passing one now gets LaTeX's own "Unknown option".
 %
-% grid/nogrid (default: nogrid)
-%   - grid: Display the grid overlay (true-baseline and quantum lines) for typography debugging
-%   - nogrid: Hide the grid overlay (normal production mode)
-%   - Usage: \usepackage[grid]{lanepaper}
-%   - Effect: Loads gridoverlay module and automatically calls \showgrid
-%
-% minimal (default: off)  
-%   - Load only essential features: dimensions and compilation fixes
-%   - Skips: fonts, headings, lists, and most typography enhancements
-%   - Usage: \usepackage[minimal]{lanepaper}
-%   - Use case: Compatibility mode or when custom typography is needed
-%
-% natbib (default: off)
-%   - Load native natbib author-year citation support
-%   - Usage: \usepackage[natbib]{lanepaper}
-%   - Note: Provides natbib commands, not biblatex command emulation
+% optical (default: off)
+%   - Adds optical refinements that have a stated source but are not safe to
+%     impose on every document. Currently: runt control, capping the last
+%     line's stretch so it reaches at least a third of the measure
+%     (Hochuli, Detail in Typography). Defaults such as widow and orphan
+%     protection are NOT here -- they belong to every document.
+%   - Usage: \usepackage[optical]{lanepaper}
 %
 % nocolor (default: off)
-%   - Map semantic template colors to black/grayscale values
-%   - Affects: headings, links, bullets, and all colored elements
+%   - Converts the semantic palette through xcolor's gray model. Chroma goes;
+%     the grayscale hierarchy between heading levels stays.
 %   - Usage: \usepackage[nocolor]{lanepaper}
-%   - Use case: Accessibility, printing, or journal requirements
-%
-% draft (default: off)
-%   - Enable draft mode with visible overfull boxes
-%   - Shows colored borders around hyperlinks instead of colored text
-%   - Passes draft option to microtype package
-%   - Usage: \usepackage[draft]{lanepaper}
-%   - Use case: Debugging layout issues and overfull boxes
-%
-% nobiblatex (default: off)
-%   - Disable automatic biblatex loading
-%   - Use when you need to load biblatex manually with custom options
-%   - Usage: \usepackage[nobiblatex]{lanepaper}
-%   - Use case: Custom bibliography configuration or using natbib
-%
-% subsectionbarriers/nosubsectionbarriers (default: subsectionbarriers)
-%   - Enable or disable automatic \FloatBarrier insertion before subsections
-%   - Usage: \usepackage[nosubsectionbarriers]{lanepaper}
-%   - Use case: Documents that need freer float movement across subsections
-%
-% Multiple options can be combined:
-%   \usepackage[draft,grid]{lanepaper}
-%   \usepackage[minimal,nocolor]{lanepaper}
+%   - Use case: single-ink printing, or a journal that requires it.
 %
 % ------------------------------------------------------------------------------
 
-% Define boolean flags for package options
-\newif\iflnp@grid
-\newif\iflnp@minimal
-\newif\iflnp@natbib
+\newif\iflnp@optical
 \newif\iflnp@nocolor
-\newif\iflnp@draft
-\newif\iflnp@nobiblatex
-\newif\iflnp@subsectionbarriers
-\lnp@subsectionbarrierstrue
 
-% Declare package options
-\DeclareOption{grid}{\lnp@gridtrue}
-\DeclareOption{nogrid}{\lnp@gridfalse}
-\DeclareOption{minimal}{\lnp@minimaltrue}
-%% Deprecated by #48: this package no longer loads a bibliography package,
-%% so there is nothing for [natbib] or [nobiblatex] to switch. Both are
-%% still accepted so existing documents do not fail on an unknown option.
-\DeclareOption{natbib}{\lnp@natbibtrue}
+\DeclareOption{optical}{\lnp@opticaltrue}
 \DeclareOption{nocolor}{\lnp@nocolortrue}
-%% FIX: Let lnpmicrotype apply draft mode after package options are processed.
-\DeclareOption{draft}{\lnp@drafttrue}
-\DeclareOption{nobiblatex}{\lnp@nobiblatextrue}
-%% FIX: Expose subsection float-barrier behavior as a documented package option.
-\DeclareOption{subsectionbarriers}{\lnp@subsectionbarrierstrue}
-\DeclareOption{nosubsectionbarriers}{\lnp@subsectionbarriersfalse}
 
-% Process options
 \ProcessOptions\relax
-
-%% Deprecation notice for the two bibliography options (#48).
-\iflnp@natbib
-  \PackageWarning{lanepaper}{The [natbib] option is deprecated and does
-    nothing: this package no longer loads a bibliography package. Load natbib
-    in your document instead. See CONVENTIONS.md}%
-\fi
-\iflnp@nobiblatex
-  \PackageWarning{lanepaper}{The [nobiblatex] option is deprecated and does
-    nothing: this package no longer loads biblatex, so there is nothing to
-    disable. See CONVENTIONS.md}%
-\fi
-
-%% FIX: Load inputenc only when needed and never after a user-loaded biblatex
-%% contract to avoid load-order warnings.
-\newcommand{\lnp@maybe@load@inputenc}{%
-  \@ifpackageloaded{inputenc}{}{%
-    \@ifpackageloaded{biblatex}{}{%
-      \RequirePackage[utf8]{inputenc}%
-    }%
-  }%
-}
 
 %% Issue #48 (ADR-0003 rule 2): the bibliography belongs to the document.
 %% This package loaded biblatex with its own option set, which fixed the
@@ -259,38 +168,19 @@
 \RequirePackage{etoolbox} % For \AtBeginEnvironment and hooks
 
 % ==============================================================================
-% MODULAR COMPONENT LOADING
+% INTERNAL MODULE LOADING
 % ==============================================================================
-% Load modular components if not already loaded
-% This allows users to override modules before loading lanepaper
-
-% Always load core modules
-%% FIX: Load local modules by package name to match their \ProvidesPackage names.
-\@ifpackageloaded{lnpcompilationfixes}{}{\RequirePackage{lnpcompilationfixes}}
-\@ifpackageloaded{lnpdimensions}{}{\RequirePackage{lnpdimensions}}
-%% FIX: Always load semantic colors so nocolor and minimal mode share definitions.
-\@ifpackageloaded{lnpcolors}{}{\RequirePackage{lnpcolors}}
-
-% Load essential packages for minimal mode
-\iflnp@minimal
-  % Minimal mode still needs these essential packages
-  \lnp@maybe@load@inputenc
-  \RequirePackage{amsmath}
-  \RequirePackage{textcomp}
-  \RequirePackage{xcolor}
-\else
-  % Full mode loads all modules
-  \@ifpackageloaded{lnpfonts}{}{\RequirePackage{lnpfonts}}
-  \@ifpackageloaded{lnpheadings}{}{\RequirePackage{lnpheadings}}
-  \@ifpackageloaded{lnplists}{}{\RequirePackage{lnplists}}
-\fi
-
-% Load grid overlay if requested
-\iflnp@grid
-  \@ifpackageloaded{lnpgridoverlay}{}{\RequirePackage{lnpgridoverlay}}
-  \showgrid
-\fi
-
+% These are internal owners, not entry points (ADR-0006): a document loads
+% lanepaper and gets all of them. They are required by package name, never by
+% path, so an installed texmf copy resolves the same way as this repository.
+%% FIX (#85): the loads used to be wrapped in \@ifpackageloaded so a document
+%% could preload a module and override it. With one public load path there is
+%% nothing to preload, and the guard only hid load-order mistakes.
+\RequirePackage{lnpdimensions}
+\RequirePackage{lnpcolors}
+\RequirePackage{lnpfonts}
+\RequirePackage{lnpheadings}
+\RequirePackage{lnplists}
 
 % ==============================================================================
 % II. PROFESSIONAL COLOR SYSTEM
@@ -302,7 +192,6 @@
 % DESIGN APPROACH:
 %   - Hierarchical grays for document structure
 %   - Professional blues for external references
-%   - Semantic color commands for consistent usage
 %   - Enhanced contrast for accessibility compliance
 %
 % REFERENCES:
@@ -312,12 +201,10 @@
 %
 % ------------------------------------------------------------------------------
 
-% Color definitions have been moved to lnpcolors.sty
-% This allows easy customization without editing the main package
-% Users can override colors before loading lanepaper:
-%   \definecolor{linknavy}{RGB}{0,0,255}  % Custom blue
-%   %% FIX: Document the renamed public package entry point.
-%   \usepackage{lanepaper}
+% The palette lives in lnpcolors.sty and is private (#85, ADR-0006). xcolor
+% names are one flat global namespace, so the v2 bare names -- textblack,
+% linknavy, sectioncolor -- were exactly what a document or another package
+% would collide with. A document defines and applies its own colours instead.
 
 % RETAINED FRONT-MATTER SMALL CAPS (private)
 % v3 (issue #84) removed the generic public small-caps API (\refinedsc,
@@ -354,7 +241,7 @@
 % ------------------------------------------------------------------------------
 
 %% FIX: Delegate microtype package loading and active tuning to the module.
-\@ifpackageloaded{lnpmicrotype}{}{\RequirePackage{lnpmicrotype}}
+\RequirePackage{lnpmicrotype}
 
 %% FIX: Active microtype tracking and extra-kerning setup lives in lnpmicrotype.
 % Small-caps, code, and emphasis commands rely on lnpmicrotype for tracking/kerning.
@@ -407,13 +294,15 @@
 %
 % ------------------------------------------------------------------------------
 
-% Spacing quantum configuration lives in lnpdimensions.sty
-% The gridunit (13.2pt) and derived spacing values are defined there
+% The 13.2pt spacing quantum lives in lnpdimensions.sty as \lnp@gridunit.
+% It is an internal implementation value (ADR-0005, ADR-0006), not a grid API.
 
-% Butterick's optimal line length: 45-90 characters (2-3 alphabets)
-% Current textwidth with 1.25" margins ≈ 65 chars - optimal
+% Butterick's optimal line length: 45-90 characters (2-3 alphabets).
+% The six-inch measure set in lnpdimensions gives ~65 characters in Pagella.
 
-% Hochuli's detail: prevent widows/orphans more aggressively
+% Hochuli's detail: prevent widows/orphans more aggressively.
+% These are defaults, not refinements: every document wants them, so they are
+% deliberately not behind [optical] (ADR-0006).
 \clubpenalty=10000
 \widowpenalty=10000
 \displaywidowpenalty=10000
@@ -438,45 +327,41 @@
 \@afterindentfalse  % Changed: flush left first paragraphs after headings
 
 % Custom commands for controlling indentation in special contexts
-%% FIX: Use providecommand to keep preload paths where this module was already
-%% loaded from failing on duplicate command definitions.
-\providecommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left paragraph
-\providecommand{\forceindent}{\hspace{\parindent}}        % Force indentation when needed
+%% FIX (#85): these were \providecommand so that a document preloading
+%% lnpparagraphs would not clash. lnpparagraphs is not loaded by anything and
+%% direct module loading is unsupported, so \newcommand is correct again: a
+%% real name collision with another package should error at load time
+%% (CONVENTIONS §8), not be silently swallowed.
+\newcommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left paragraph
+\newcommand{\forceindent}{\hspace{\parindent}}        % Force indentation when needed
 
 % Flexible paragraph style commands for different document needs
 % Paragraph style commands are now in lnpdimensions.sty
 
 % Deprecated spacing commands - use \vspace directly
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
-\providecommand{\compactpar}{\vspace{-\quartergridunit}}  % Legacy support
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
-\providecommand{\loosepars}{\vspace{\quartergridunit}}    % Legacy support
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
-\providecommand{\centeredpar}[1]{%             % Centered paragraph
+\newcommand{\compactpar}{\vspace{-0.25\lnp@gridunit}}  % Legacy support
+\newcommand{\loosepars}{\vspace{0.25\lnp@gridunit}}    % Legacy support
+\newcommand{\centeredpar}[1]{%                 % Centered paragraph
   {\centering\noindent#1\par}%
 }
 
 % Dialogue support for narrative text
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
-\providecommand{\dialogue}[1]{\par\indent #1\par}              % Standard dialogue with full indent
+\newcommand{\dialogue}[1]{\par\indent #1\par}              % Standard dialogue with full indent
 
 % Epigraph environment for quotations at chapter/section beginnings
-%% FIX: Avoid duplicate environment definitions when lnpparagraphs is preloaded.
-\@ifundefined{epigraph}{%
 \newenvironment{epigraph}{%
-  \vspace{\gridunit}%                  % 1 grid unit before
+  \vspace{\lnp@gridunit}%                  % 1 quantum before
   \begin{flushright}%
   \begin{minipage}{0.618\textwidth}% Golden ratio width
   \raggedleft\itshape%
   \setlength{\parindent}{0pt}%
-  \setlength{\parskip}{0.5\gridunit}%      % 0.5 grid units between paragraphs
+  \setlength{\parskip}{0.5\lnp@gridunit}%      % 0.5 quanta between paragraphs
 }{%
   \end{minipage}%
   \end{flushright}%
-  \vspace{\gridunit}%                  % 1 grid unit after
+  \vspace{\lnp@gridunit}%                  % 1 quantum after
   \@afterindentfalse%               % No indent after epigraph
 }
-}{}
 
 % ==============================================================================
 % PROFESSIONAL BLOCK QUOTATION SYSTEM
@@ -491,92 +376,87 @@
 %   - Size: 10.5pt (95% of body) for subtle subordination
 %% FIX: \fontsize{10.5}{13.2} under \linespread{1.20} gives a real 15.84pt
 %   - Leading: 15.84pt measured (13.2pt × \linespread)
-%   - Margins: 26.4pt (2 grid units) optimized for Pagella's width
+%   - Margins: 26.4pt (2 quanta) optimized for Pagella's width
 %   - Color: 15% gray matching paragraph heading hierarchy
-%   - Spacing: 1 grid unit before/after with asymmetric flexibility
+%   - Spacing: 1 quantum before/after with asymmetric flexibility
 %
 % ------------------------------------------------------------------------------
 
-% Define quote gray color for subtle differentiation
-\definecolor{quotegray}{gray}{0.15}  % 15% gray matches paragraph headings
+%% FIX (#85): \lnp@quotegray moved to lnpcolors, the palette's owner.
 
 % STANDARD BLOCK QUOTE
 % For quotations without paragraph breaks
 %% FIX: Use \list with \endlist so quote environments close correctly.
 \renewenvironment{quote}{%
-  \vspace{\gridunit}%     % 1 grid unit before
+  \vspace{\lnp@gridunit}%     % 1 quantum before
   \list{}{%
-    \setlength{\leftmargin}{2\gridunit}%       % 2 grid units (Pagella proportion)
-    \setlength{\rightmargin}{2\gridunit}%      % Symmetric margins
+    \setlength{\leftmargin}{2\lnp@gridunit}%       % 2 quanta (Pagella proportion)
+    \setlength{\rightmargin}{2\lnp@gridunit}%      % Symmetric margins
     \setlength{\topsep}{0pt}%              % Spacing handled explicitly
     \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\gridunit}%            % 0.5 units between paragraphs
+    \setlength{\parsep}{0.5\lnp@gridunit}%            % 0.5 units between paragraphs
     \setlength{\itemsep}{0pt}%
     \setlength{\listparindent}{\parindent}%
     \fontsize{10.5}{13.2}\selectfont%      % 95% size, same leading
-    \color{quotegray}%                     % 15% gray for subtle distinction
+    \color{lnp@quotegray}%                     % 15% gray for subtle distinction
   }%
   \item\relax
 }{%
   \endlist
-  \vspace{\gridunit}%     % 1 grid unit after
+  \vspace{\lnp@gridunit}%     % 1 quantum after
   \@afterindentfalse%                       % No indent after quote
 }
 
 % EXTENDED QUOTATION
 % For quotations with multiple paragraphs
 \renewenvironment{quotation}{%
-  \vspace{\gridunit}%
+  \vspace{\lnp@gridunit}%
   \list{}{%
-    \setlength{\leftmargin}{2\gridunit}%
-    \setlength{\rightmargin}{2\gridunit}%
+    \setlength{\leftmargin}{2\lnp@gridunit}%
+    \setlength{\rightmargin}{2\lnp@gridunit}%
     \setlength{\topsep}{0pt}%
     \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\gridunit}%
+    \setlength{\parsep}{0.5\lnp@gridunit}%
     \setlength{\itemsep}{0pt}%
-    \setlength{\listparindent}{\gridunit}%    % Maintain paragraph indent
+    \setlength{\listparindent}{\lnp@gridunit}%    % Maintain paragraph indent
     \fontsize{10.5}{13.2}\selectfont%
-    \color{quotegray}%
+    \color{lnp@quotegray}%
   }%
   \item\relax
 }{%
   \endlist
-  \vspace{\gridunit}%
+  \vspace{\lnp@gridunit}%
   \@afterindentfalse%
 }
 
 % PROFESSIONAL ATTRIBUTION SYSTEM
 % For quote attributions with em-dash and right alignment
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
-\providecommand{\quoteattribution}[1]{%
-  \par\vspace{0.5\gridunit}%                       % 0.5 grid units
-  \hfill{\fontsize{10}{13.2}\selectfont\color{subsubcolor}--- #1}%
+\newcommand{\quoteattribution}[1]{%
+  \par\vspace{0.5\lnp@gridunit}%                       % 0.5 quanta
+  \hfill{\fontsize{10}{13.2}\selectfont\color{lnp@subsubcolor}--- #1}%
   \par
 }
 
 % EMPHASIS QUOTE (renamed to avoid csquotes conflict)
 % Dramatic presentation for important quotations
-%% FIX: Avoid duplicate environment definitions when lnpparagraphs is preloaded.
-\@ifundefined{emphasisquote}{%
 \newenvironment{emphasisquote}{%
-  \vspace{1.5\gridunit}%     % 1.5 units before
+  \vspace{1.5\lnp@gridunit}%     % 1.5 units before
   \list{}{%
-    \setlength{\leftmargin}{3\gridunit}%       % 3 grid units
-    \setlength{\rightmargin}{3\gridunit}%      % Dramatic inset
+    \setlength{\leftmargin}{3\lnp@gridunit}%       % 3 quanta
+    \setlength{\rightmargin}{3\lnp@gridunit}%      % Dramatic inset
     \setlength{\topsep}{0pt}%
     \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\gridunit}%
+    \setlength{\parsep}{0.5\lnp@gridunit}%
     \setlength{\itemsep}{0pt}%
     \fontsize{12}{15.84}\selectfont%       % Larger for emphasis (1.2× leading)
-    \itshape\color{quotegray}%             % Italic for distinction
+    \itshape\color{lnp@quotegray}%             % Italic for distinction
   }%
   \item\relax
 }{%
   \endlist
-  \vspace{1.5\gridunit}%     % 1.5 units after
+  \vspace{1.5\lnp@gridunit}%     % 1.5 units after
   \@afterindentfalse%
 }
-}{}
 
 % Special handling for environments that should not indent their first paragraph
 \AtBeginEnvironment{itemize}{\parindent=0pt}
@@ -636,26 +516,24 @@
 
 % MINIMAL DROP CAP FOR ACADEMIC USE (USE SPARINGLY)
 % Ultra-conservative 2-line drop cap - same color as body text
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
-\providecommand{\academicdropcap}[2]{%
+\newcommand{\academicdropcap}[2]{%
   \lettrine[%
     lines=2,%               % Modest 2-line height
     lhang=0,%              % No hang into margin
     loversize=0,%          % No size increase
     findent=0pt,%          % No negative indent
     nindent=0.5em%         % Standard following line indent
-  ]{\color{textblack}#1}{#2}% Body text color only
+  ]{\color{lnp@textblack}#1}{#2}% Body text color only
 }
 
 % FIRST LINE SMALL CAPS
 % Elegant first line treatment for section openings
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
 %% FIX(#39): \fontsize{11} is an explicit 11pt, which matches NO named-size sc
 %% list (normalsize resolves to 10.95pt in the 11pt class; microtype matches
 %% sizes exactly), so the {30} WAS effective. \textls[30] preserves it; bare
 %% \lsstyle would fall back to microtype's 50 (30->50). Exercised only by
 %% tests/fixtures/opening-test.tex, so main.tex's raster cannot show this.
-\providecommand{\firstlinesc}[1]{%
+\newcommand{\firstlinesc}[1]{%
   {\fontsize{11}{13.2}\selectfont% Maintain body size
    \textls[30]{\textsc{#1}}}%
 }
@@ -675,10 +553,10 @@
 % Simple space break (recommended for academic use)
 %% FIX: renamed \sectionbreak -> \sectionsep; titlesec executes any defined
 %% \<level>break as a hook during heading construction, so the old name
-%% injected \vspace{2\gridunit} before every \section in place of \@secpenalty.
+%% injected \vspace{2\lnp@gridunit} before every \section in place of \@secpenalty.
 \providecommand{\sectionsep}{}% Check if already defined
 \renewcommand{\sectionsep}{%
-  \vspace{2\gridunit}% 2 grid units of clean space
+  \vspace{2\lnp@gridunit}% 2 quanta of clean space
 }
 
 
@@ -689,30 +567,26 @@
 % ENHANCED SECTION SPACING
 % Additional space after major sections for visual hierarchy
 
-% Deprecated - use \vspace{\gridunit} directly
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
-\providecommand{\majorsectionspace}{\vspace{\gridunit}}
+% Deprecated - use \vspace{\lnp@gridunit} directly
+\newcommand{\majorsectionspace}{\vspace{\lnp@gridunit}}
 %% FIX: Restore legacy section divider command used by existing fixtures.
 \newcommand{\thinrulebreak}{%
-  \par\vspace{\gridunit}%
+  \par\vspace{\lnp@gridunit}%
   \noindent\rule{\textwidth}{0.4pt}%
-  \par\vspace{\gridunit}%
+  \par\vspace{\lnp@gridunit}%
 }
 
 % FIRST PARAGRAPH ENHANCEMENT
 % Special treatment for opening paragraph of sections
-%% FIX: Avoid duplicate environment definitions when lnpparagraphs is preloaded.
-\@ifundefined{openingparagraph}{%
 \newenvironment{openingparagraph}{%
   \noindent%
   \setlength{\parindent}{0pt}% No indent for opening
-  \setlength{\baselineskip}{\gridunit}% Maintain grid
+  \setlength{\baselineskip}{\lnp@gridunit}% Maintain grid
   \fontsize{11}{13.2}\selectfont% Standard size
 }{%
   \par%
-  \setlength{\parindent}{\gridunit}% Restore standard indent
+  \setlength{\parindent}{\lnp@gridunit}% Restore standard indent
 }
-}{}
 
 % ACADEMIC ABSTRACT OPENING
 % Professional treatment for abstract sections
@@ -725,42 +599,33 @@
     {\fontsize{12}{13.2}\selectfont%
      \textls[80]{\textsc{abstract}}}%
   \end{center}
-  \vspace{0.5\gridunit}% 0.5 grid units
+  \vspace{0.5\lnp@gridunit}% 0.5 quanta
 }
 
 
 
-% Grid-perfect additional paragraph spacing options
-% Quarter-grid spacing for dense technical text
-\newcommand{\quartergridparagraphs}{%
-  \setlength{\parindent}{\gridunit}%
-  \setlength{\parskip}{0.25\gridunit plus 0.5pt minus 0.5pt}% 0.25 units flexible
-}
-
-% Third-grid spacing for enhanced readability sections
-\newcommand{\thirdgridparagraphs}{%
-  \setlength{\parindent}{\gridunit}%
-  \setlength{\parskip}{4.4pt plus 0.5pt minus 0.5pt}% 0.33 units flexible
-}
+%% FIX (#85, ADR-0006): \quartergridparagraphs and \thirdgridparagraphs were
+%% removed with the rest of the public grid API. Both set \parindent and
+%% \parskip to quantum fractions, which is exactly the arithmetic v3 stops
+%% exposing; a document that wants those values sets the two lengths itself.
 
 % Typography-aware ornamental paragraph break
 % Provides visual separation without ornaments
 %% FIX: renamed \paragraphbreak -> \paragraphsep; the old name collided with
 %% titlesec's \<level>break hook and made run-in \paragraph fail with
 %% "perhaps a missing \item" (the hook executes the macro mid-heading).
-\providecommand{\paragraphsep}{%
-  \par\vspace{\gridunit}% % 1 grid unit of vertical space
+\newcommand{\paragraphsep}{%
+  \par\vspace{\lnp@gridunit}% % 1 quantum of vertical space
   \noindent%
 }
 
 % Inline sidenote command for margin annotations
 % Aligns to outer margin with proper baseline positioning
-%% FIX: Use providecommand so lnpparagraphs preload remains compatible.
-\providecommand{\sidenote}[1]{%
+\newcommand{\sidenote}[1]{%
   \marginpar{%
     \footnotesize\raggedright%
     \setlength{\parindent}{0pt}%
-    \setlength{\parskip}{0.25\gridunit}%
+    \setlength{\parskip}{0.25\lnp@gridunit}%
     #1%
   }%
 }
@@ -830,8 +695,8 @@
 \newcommand{\lnp@tablecaptionsetup}{%
   \captionsetup{%
     position=above,              % Always above tables
-    aboveskip=0.75\gridunit,     % Effective legacy value after landscape override
-    belowskip=0.5\gridunit,      % Effective legacy value after landscape override
+    aboveskip=0.75\lnp@gridunit,     % Effective legacy value after landscape override
+    belowskip=0.5\lnp@gridunit,      % Effective legacy value after landscape override
     font={normalsize},           % 11pt - same as body text for prominence
     labelfont={bf},              % Bold "Table 1." format
     textfont={}                  % Regular text, black
@@ -843,8 +708,8 @@
 \newcommand{\lnp@figurecaptionsetup}{%
   \captionsetup{%
     position=below,              % Always below figures
-    aboveskip=0.75\gridunit,     % 0.75 units before caption (more space)
-    belowskip=\gridunit,         % 1 grid unit after caption
+    aboveskip=0.75\lnp@gridunit,     % 0.75 units before caption (more space)
+    belowskip=\lnp@gridunit,         % 1 quantum after caption
     font={normalsize},           % 11pt - same as body text for prominence
     labelfont={bf},              % Bold "Figure 1." format
     textfont={}                  % Regular text, black
@@ -885,16 +750,16 @@
 % PENALTIES FOR FLOAT PLACEMENT
 % Discourage problematic float arrangements
 \setlength{\@fptop}{0pt plus 1fil}      % Flexible space at top of float pages
-\setlength{\@fpsep}{\gridunit}\addtolength{\@fpsep}{0pt plus 1fil}   % 1 baseline unit between floats
+\setlength{\@fpsep}{\lnp@gridunit}\addtolength{\@fpsep}{0pt plus 1fil}   % 1 quantum between floats
 \setlength{\@fpbot}{0pt plus 1fil}      % Flexible space at bottom
 
 % REFINED FLOAT SPACING - Tighter for conservative scientific papers
 % All measurements in 13.2pt quantum multiples with minimal flexibility
-\setlength{\floatsep}{\gridunit}\addtolength{\floatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit}        % 1 unit ±0.25 (reduced)
-\setlength{\textfloatsep}{\gridunit}\addtolength{\textfloatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit}    % 1 unit ±0.25 (reduced from 2)
-\setlength{\intextsep}{0.75\gridunit}\addtolength{\intextsep}{0pt plus 0.125\gridunit minus 0pt}         % 0.75 units +0.125/-0 (tighter)
-\setlength{\dblfloatsep}{\gridunit}\addtolength{\dblfloatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit}     % 1 unit ±0.25 (reduced)
-\setlength{\dbltextfloatsep}{\gridunit}\addtolength{\dbltextfloatsep}{0pt plus 0.25\gridunit minus 0.25\gridunit} % 1 unit ±0.25 (reduced from 2)
+\setlength{\floatsep}{\lnp@gridunit}\addtolength{\floatsep}{0pt plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}        % 1 unit ±0.25 (reduced)
+\setlength{\textfloatsep}{\lnp@gridunit}\addtolength{\textfloatsep}{0pt plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}    % 1 unit ±0.25 (reduced from 2)
+\setlength{\intextsep}{0.75\lnp@gridunit}\addtolength{\intextsep}{0pt plus 0.125\lnp@gridunit minus 0pt}         % 0.75 units +0.125/-0 (tighter)
+\setlength{\dblfloatsep}{\lnp@gridunit}\addtolength{\dblfloatsep}{0pt plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}     % 1 unit ±0.25 (reduced)
+\setlength{\dbltextfloatsep}{\lnp@gridunit}\addtolength{\dbltextfloatsep}{0pt plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit} % 1 unit ±0.25 (reduced from 2)
 
 % FLOAT PLACEMENT QUALITY PARAMETERS
 \providecommand{\topfigrule}{\vspace*{0pt}}  % No rule above top figures
@@ -907,29 +772,21 @@
 % across major document divisions while maintaining reading flow.
 
 % AUTOMATIC SECTION BARRIERS
-% Hook into sectioning commands to insert intelligent barriers
+% Both levels clear pending floats before the heading, so a float never drifts
+% past the division it belongs to.
+%% FIX (#85): the [subsectionbarriers]/[nosubsectionbarriers] pair and the
+%% begindocument message reporting which was in force are gone with the rest
+%% of the option surface. The documented default -- barriers on -- is now
+%% simply what the package does, which is why the two levels are identical.
 \let\originalsection\section
 \renewcommand{\section}{%
-  \FloatBarrier  % Clear all pending floats before new section
+  \FloatBarrier
   \originalsection
 }
-
-% CONDITIONAL SUBSECTION BARRIERS
-% Insert barriers only when the explicit package option enables them.
 \let\originalsubsection\subsection
-%% FIX: Make subsection float-barrier behavior explicit; topnumber is not a pending-float test.
 \renewcommand{\subsection}{%
-  \iflnp@subsectionbarriers
-    \FloatBarrier
-  \fi
+  \FloatBarrier
   \originalsubsection
-}
-\AddToHook{begindocument}{%
-  \iflnp@subsectionbarriers
-    \PackageInfo{lanepaper}{subsection float barriers enabled}%
-  \else
-    \PackageInfo{lanepaper}{subsection float barriers disabled}%
-  \fi
 }
 
 % MANUAL BARRIER COMMANDS
@@ -937,9 +794,9 @@
 
 % Soft barrier - allows some float movement
 \newcommand{\softfloatbarrier}{%
-  \vspace{0pt plus \gridunit}  % Flexible space up to 1 grid unit
+  \vspace{0pt plus \lnp@gridunit}  % Flexible space up to 1 quantum
   \FloatBarrier
-  \vspace{0pt plus \gridunit}
+  \vspace{0pt plus \lnp@gridunit}
 }
 
 % Hard barrier - strict float placement
@@ -949,9 +806,9 @@
 
 % Section-end barrier - use before major transitions
 \newcommand{\sectionendfloatbarrier}{%
-  \vspace{\gridunit}  % 1 grid unit space
+  \vspace{\lnp@gridunit}  % 1 quantum space
   \FloatBarrier
-  \vspace{\gridunit}
+  \vspace{\lnp@gridunit}
 }
 
 % HERE-FLOAT ALTERNATIVES
@@ -967,25 +824,25 @@
 
 % Force-here float - uses minipage for absolute placement
 \newcommand{\forceherefigure}[1]{%
-  \vspace{\gridunit}  % Grid space before
+  \vspace{\lnp@gridunit}  % Grid space before
   \noindent\begin{minipage}{\textwidth}
     \centering
     %% FIX: Disable hypcap for floatless captions to avoid ignored-option warnings.
     \captionsetup{hypcap=false}%
     #1
   \end{minipage}
-  \vspace{\gridunit}  % Grid space after
+  \vspace{\lnp@gridunit}  % Grid space after
 }
 
 % Grid-aligned here float
 \newenvironment{herefloat}{%
-  \vspace*{\dimexpr1\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
+  \vspace*{\dimexpr1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit\relax}%  % 1 unit ±0.25
   \begin{center}%
   %% FIX: Disable hypcap for floatless captions to avoid ignored-option warnings.
   \captionsetup{hypcap=false}%
 }{%
   \end{center}%
-  \vspace*{\dimexpr1\gridunit plus 0.25\gridunit minus 0.25\gridunit\relax}%  % 1 unit ±0.25
+  \vspace*{\dimexpr1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit\relax}%  % 1 unit ±0.25
 }
 
 % FLOAT QUALITY METRICS
@@ -1009,12 +866,12 @@
 
 % Add balancing space when page is float-heavy
 \newcommand{\balancefloatpage}{%
-  \vspace{0pt plus 2\gridunit}  % Up to 2 grid units of flexible space
+  \vspace{0pt plus 2\lnp@gridunit}  % Up to 2 quanta of flexible space
 }
 
 % Compensate for large float at top
 \newcommand{\compensatetopfloat}{%
-  \enlargethispage{\gridunit}  % Add 1 grid unit to page
+  \enlargethispage{\lnp@gridunit}  % Add 1 quantum to page
 }
 
 % ENHANCED TABLE CONFIGURATION (moved after package loading)
@@ -1029,8 +886,8 @@
 
 % Caption source for data attribution
 \newcommand{\captionsource}[1]{%
-  \vspace{0.25\gridunit}% 0.25 grid units
-  {\footnotesize\color{subtlegray}\emph{Source:} #1}%
+  \vspace{0.25\lnp@gridunit}% 0.25 quanta
+  {\footnotesize\color{lnp@subtlegray}\emph{Source:} #1}%
 }
 
 % Continued caption for multi-page tables/figures
@@ -1073,15 +930,15 @@
 % TABLE NOTES ENVIRONMENT
 % Placed immediately after \end{tabular} or \end{tabularx}
 \newenvironment{tablenotes}{%
-  \par\vspace{0.25\gridunit}% 0.25 grid units from table bottom
+  \par\vspace{0.25\lnp@gridunit}% 0.25 quanta from table bottom
   \footnotesize% 9pt for notes (Chicago standard)
   \setlength{\parindent}{0pt}% Flush left
-  \setlength{\parskip}{0.25\gridunit}% 0.25 units between note types
+  \setlength{\parskip}{0.25\lnp@gridunit}% 0.25 units between note types
   \raggedright% Left-justified (QJE standard)
   \setlength{\leftskip}{0pt}% Ensure full left alignment
   \setlength{\rightskip}{0pt plus 1fil}% Ragged right edge
 }{%
-  \par\vspace{0.5\gridunit}% 0.5 grid units after notes block
+  \par\vspace{0.5\lnp@gridunit}% 0.5 quanta after notes block
 }
 
 % TABLE NOTE COMMANDS
@@ -1113,15 +970,15 @@
 % FIGURE NOTES ENVIRONMENT
 % Placed immediately after \caption{...}
 \newenvironment{fignotes}{%
-  \par\vspace{-0.25\gridunit}% Tighter spacing for figures (0.25 units less)
+  \par\vspace{-0.25\lnp@gridunit}% Tighter spacing for figures (0.25 units less)
   \footnotesize% 9pt for notes
   \setlength{\parindent}{0pt}% Flush left
-  \setlength{\parskip}{0.25\gridunit}% 0.25 units between note types
+  \setlength{\parskip}{0.25\lnp@gridunit}% 0.25 units between note types
   \raggedright% Left-justified
   \setlength{\leftskip}{0pt}%
   \setlength{\rightskip}{0pt plus 1fil}%
 }{%
-  \par\vspace{0.5\gridunit}% 0.5 grid units after notes
+  \par\vspace{0.5\lnp@gridunit}% 0.5 quanta after notes
 }
 
 % FIGURE NOTE COMMANDS
@@ -1203,14 +1060,14 @@
 % Optimized for Pagella's larger x-height and character proportions
 
 % Grid unit is now defined in lnpdimensions.sty
-% \gridunit = 13.2pt (spacing quantum, not the baseline)
+% \lnp@gridunit = 13.2pt (spacing quantum, not the baseline)
 
 \newlength{\titlespacemajor}
 \newlength{\titlespaceminor}
 \newlength{\titlespaceinter}
-\setlength{\titlespacemajor}{2\gridunit}     % 26.4pt (2.0 quanta)
-\setlength{\titlespaceminor}{1.5\gridunit}   % 19.8pt (1.5 quanta)
-\setlength{\titlespaceinter}{\gridunit}      % 13.2pt (1.0 quantum)
+\setlength{\titlespacemajor}{2\lnp@gridunit}     % 26.4pt (2.0 quanta)
+\setlength{\titlespaceminor}{1.5\lnp@gridunit}   % 19.8pt (1.5 quanta)
+\setlength{\titlespaceinter}{\lnp@gridunit}      % 13.2pt (1.0 quantum)
 
 % TITLE PAGE DIMENSIONS
 % Optimized for Pagella's wider characters
@@ -1224,7 +1081,7 @@
 %% FIX(#39): drop dead \SetTracking{...}{20}; the bold title resolves via the T1
 %% series=b list (lnpmicrotype.sty:140 -> -10), so \lsstyle is render-neutral.
 \newcommand{\articletitle}[1]{%
-  {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{sectioncolor}%
+  {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{lnp@sectioncolor}%
    \lsstyle #1\par}%  % softened navy
   \vspace{\titlespacemajor}%
 }
@@ -1235,21 +1092,21 @@
 %% lnpmicrotype.sty:140 -> -10); scope letterspacing as {\lsstyle #1} so it no
 %% longer bleeds into \footnote{#2} -- the accepted page-1 thanks-footnote fix.
 \newcommand{\articletitlefootnote}[2]{%
-  {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{sectioncolor}%
+  {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{lnp@sectioncolor}%
    {\lsstyle #1}\footnote{#2}\par}%
   \vspace{\titlespacemajor}%
 }
 
 % Alternative compact title for papers with many authors
 \newcommand{\articletitlecompact}[1]{%
-  {\fontsize{16pt}{19.8pt}\selectfont\bfseries #1\par}%  % 1.5 grid units leading
-  \vspace{1.5\gridunit}% 19.8pt (1.5 baseline units)
+  {\fontsize{16pt}{19.8pt}\selectfont\bfseries #1\par}%  % 1.5 quanta leading
+  \vspace{1.5\lnp@gridunit}% 19.8pt (1.5 quanta)
 }
 
 % Compact title with footnote
 \newcommand{\articletitlecompactfootnote}[2]{%
-  {\fontsize{16pt}{19.8pt}\selectfont\bfseries #1\footnote{#2}\par}%  % 1.5 grid units leading
-  \vspace{1.5\gridunit}% 19.8pt (1.5 baseline units)
+  {\fontsize{16pt}{19.8pt}\selectfont\bfseries #1\footnote{#2}\par}%  % 1.5 quanta leading
+  \vspace{1.5\lnp@gridunit}% 19.8pt (1.5 quanta)
 }
 
 % SYSTEMATIC AUTHOR SPACING
@@ -1265,13 +1122,13 @@
 
 % Author formatting - elegant with enhanced small caps
 \newcommand{\articleauthors}[1]{%
-  {\fontsize{13pt}{16pt}\selectfont\color{textblack} #1\par}%  % Near-black for better contrast
+  {\fontsize{13pt}{16pt}\selectfont\color{lnp@textblack} #1\par}%  % Near-black for better contrast
   \vspace{\titlespacemajor}%
 }
 
 % Date line - enhanced visibility with larger small caps
 \newcommand{\articledate}[1]{%
-  {\normalsize\color{subsubcolor}This version: \color{textblack}#1\par}%
+  {\normalsize\color{lnp@subsubcolor}This version: \color{lnp@textblack}#1\par}%
   \vspace{\titlespacemajor}% Golden ratio spacing before abstract
 }
 
@@ -1281,9 +1138,9 @@
   \begin{minipage}{\titlepagewidth}%
   \setlength{\parindent}{0pt}%
   \setlength{\parskip}{0.5\titlespaceinter}%
-  {\normalsize\color{subsubcolor}\lnp@titlesc{Abstract}}\par%
+  {\normalsize\color{lnp@subsubcolor}\lnp@titlesc{Abstract}}\par%
   \vspace{0.8\titlespaceinter}%
-  \small\color{textblack}% 10pt for abstract text, near-black
+  \small\color{lnp@textblack}% 10pt for abstract text, near-black
 }{%
   \end{minipage}%
 }
@@ -1293,7 +1150,7 @@
   \vspace{\titlespaceminor}%
   \begin{minipage}{\titlepagewidth}%
     \setlength{\baselineskip}{1.3\baselineskip}%
-    {\small\color{subsubcolor}\lnp@titlesc{Keywords:}\kern0.5em\color{textblack} #1\par}%
+    {\small\color{lnp@subsubcolor}\lnp@titlesc{Keywords:}\kern0.5em\color{lnp@textblack} #1\par}%
   \end{minipage}\par%
 }
 
@@ -1302,7 +1159,7 @@
   \vspace{0.5\titlespaceminor}%
   \begin{minipage}{\titlepagewidth}%
     \setlength{\baselineskip}{1.3\baselineskip}%
-    {\small\color{subsubcolor}\lnp@titlesc{JEL Classification:}\kern0.5em\color{textblack} #1\par}%
+    {\small\color{lnp@subsubcolor}\lnp@titlesc{JEL Classification:}\kern0.5em\color{lnp@textblack} #1\par}%
   \end{minipage}\par%
 }
 
@@ -1313,9 +1170,9 @@
   \setcounter{footnote}{0}%
   \renewcommand{\thefootnote}{\fnsymbol{footnote}}%
   % Title page needs tighter spacing before footnotes due to centered layout
-  \setlength{\skip\footins}{\gridunit}%
-  \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % 1 grid unit (vs 2 for main)
-  \setlength{\footnotesep}{0.75\gridunit}   % 0.75 grid units - balanced separation
+  \setlength{\skip\footins}{\lnp@gridunit}%
+  \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % 1 quantum (vs 2 for main)
+  \setlength{\footnotesep}{0.75\lnp@gridunit}   % 0.75 quanta - balanced separation
   % Use EXACT same formatting as main document
   \renewcommand{\@makefntext}[1]{%
     \setlength{\parindent}{11.5pt}% Same as main (widened marker box)
@@ -1334,7 +1191,7 @@
   \renewcommand{\footnoterule}{%
     \vspace*{-3pt}% Same as main document
     \textcolor{gray!20}{\hrule width 2in height 0.5pt}% Gray 2in (title specific style)
-    \vspace*{\gridunit}% Same as main: 1 grid unit to first footnote
+    \vspace*{\lnp@gridunit}% Same as main: 1 quantum to first footnote
   }%
 }
 
@@ -1342,9 +1199,9 @@
   \setcounter{footnote}{0}%
   \renewcommand{\thefootnote}{\arabic{footnote}}%
   % Restore main document footnote spacing
-  \setlength{\skip\footins}{2\gridunit}%
-  \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % Back to 2 grid units
-  \setlength{\footnotesep}{0.25\gridunit}   % Back to 0.25 grid units
+  \setlength{\skip\footins}{2\lnp@gridunit}%
+  \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % Back to 2 quanta
+  \setlength{\footnotesep}{0.25\lnp@gridunit}   % Back to 0.25 quanta
   % Restore main document footnote formatting
   \renewcommand{\@makefntext}[1]{%
     \setlength{\parindent}{11.5pt}%
@@ -1362,8 +1219,8 @@
   % Restore standard footnote rule
   \renewcommand{\footnoterule}{%
     \vspace*{-3pt}%
-    \textcolor{textblack}{\hrule width 0.33\textwidth height 0.4pt}%
-    \vspace*{\gridunit}%
+    \textcolor{lnp@textblack}{\hrule width 0.33\textwidth height 0.4pt}%
+    \vspace*{\lnp@gridunit}%
   }%
 }
 
@@ -1382,9 +1239,9 @@
 %   Hanging indent: 11.5pt (fits three-digit old-style markers)
 %
 % SPACING SYSTEM (Grid-compliant):
-%   Rule position: 26.4pt below main text (2 grid units)
-%   Rule to footnote: 13.2pt (1 grid unit)
-%   Between footnotes: 3.3pt (0.25 grid units)
+%   Rule position: 26.4pt below main text (2 quanta)
+%   Rule to footnote: 13.2pt (1 quantum)
+%   Between footnotes: 3.3pt (0.25 quanta)
 %   Rule width: 33% of text measure, 0.4pt thickness
 %
 % REFERENCES:
@@ -1436,24 +1293,24 @@
 
 % Professional grid-aligned spacing per foundry standards
 % Space before footnote block calculated for optimal grid recovery
-\setlength{\skip\footins}{2\gridunit}%
-\addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % 2 grid units to rule
+\setlength{\skip\footins}{2\lnp@gridunit}%
+\addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % 2 quanta to rule
 %% FIX: \footnotesep is not inter-note space — LaTeX inserts it as a floor on
-%% each note's first-line height. 0.25\gridunit = 3.3pt sits below the
+%% each note's first-line height. 0.25\lnp@gridunit = 3.3pt sits below the
 %% footnote strut (~8.4pt at the 12pt footnote baseline), so it is inert;
 %% between-note separation comes from the footnote \baselineskip. Value kept
 %% (any effective value would change rendering); comment corrected.
-\setlength{\footnotesep}{0.25\gridunit}   % inert floor below the footnote strut (~8.4pt)
+\setlength{\footnotesep}{0.25\lnp@gridunit}   % inert floor below the footnote strut (~8.4pt)
 
 % Hochuli: Prevent footnote orphans (footnote split across pages)
 \interfootnotelinepenalty=10000
 
 % Professional footnote rule per foundry specifications
-% Rule at 33% text width, positioned 2 grid units below main text
+% Rule at 33% text width, positioned 2 quanta below main text
 \renewcommand{\footnoterule}{%
   \vspace*{-3pt}% Fine adjustment for rule positioning
-  \textcolor{textblack}{\hrule width 0.33\textwidth height 0.4pt}% 33% width, hairline
-  \vspace*{\gridunit}% 1 grid unit to first footnote baseline
+  \textcolor{lnp@textblack}{\hrule width 0.33\textwidth height 0.4pt}% 33% width, hairline
+  \vspace*{\lnp@gridunit}% 1 quantum to first footnote baseline
 }
 
 % Brown's systematic approach: Consistent footnote numbering
@@ -1755,36 +1612,12 @@
   \AtBeginEnvironment{longtable}{\lnp@tablecaptionsetup}%
 }
 
-% GRID-ALIGNED TABLE ENVIRONMENTS
-% Professional table environments with automatic grid alignment
-
-% Standard table environment
-%% FIX: row heights measure \arraystretch × 16.32pt baseline + 2.2pt
-%% \extrarowheight (e.g. 21.8pt here), not the quantum multiples the old
-%% comments claimed.
-\newenvironment{gridtable}[1][tbp]{%
-  \begin{table}[#1]%
-  \renewcommand{\arraystretch}{1.2}% ~21.8pt rows measured
-}{%
-  \end{table}%
-}
-
-% Compact table environment
-\newenvironment{compactgridtable}[1][tbp]{%
-  \begin{table}[#1]%
-  \renewcommand{\arraystretch}{0.9}% ~16.9pt rows measured
-  \small% Reduce font size for density
-}{%
-  \end{table}%
-}
-
-% Spacious table environment
-\newenvironment{spaciousgridtable}[1][tbp]{%
-  \begin{table}[#1]%
-  \renewcommand{\arraystretch}{1.8}% ~31.6pt rows measured
-}{%
-  \end{table}%
-}
+%% FIX (#85, ADR-0006): the grid table environments (gridtable,
+%% compactgridtable, spaciousgridtable) and the \arraystretch aliases
+%% (\standardgrid, \compactgrid, \spaciousgrid, \customgrid) were removed
+%% with the rest of the public grid API. Each wrapped one
+%% \renewcommand{\arraystretch}{...} inside a standard `table`, which a
+%% document writes for itself.
 
 % REGRESSION TABLE SUPPORT
 % Special environment for regression tables with optimal grid alignment
@@ -1796,170 +1629,34 @@
   \end{table}%
 }
 
-% GRID ALIGNMENT COMMANDS
-% For manual control within existing tables
-
-% Set table to standard spacing (~21.8pt rows measured)
-\newcommand{\standardgrid}{%
-  \renewcommand{\arraystretch}{1.2}%
-}
-
-% Set table to compact spacing (~16.9pt rows measured)
-\newcommand{\compactgrid}{%
-  \renewcommand{\arraystretch}{0.9}%
-}
-
-% Set table to spacious spacing (~31.6pt rows measured)
-\newcommand{\spaciousgrid}{%
-  \renewcommand{\arraystretch}{1.8}%
-}
-
-% Calculate custom grid alignment
-% Usage: \customgrid{1.5} for 1.5 × the baseline as \arraystretch
-\newcommand{\customgrid}[1]{%
-  \renewcommand{\arraystretch}{#1}%
-}
-
-% UNIFIED GRID SPACING SYSTEM
-% Single command for all grid-based spacing needs
-
-% Universal grid spacing command
-% Usage: \gridspace{1} for 1 grid unit, \gridspace{0.5} for half unit
-\newcommand{\gridspace}[1]{%
-  \noalign{\vspace{#1\gridunit}}%
-}
-
-% Deprecated commands - kept for backward compatibility
-\newcommand{\halfbaselinespace}{\gridspace{0.5}}
-\newcommand{\fullbaselinespace}{\gridspace{1}}
-
 % PROFESSIONAL TABLE DEFAULTS
 % Global settings for all tables (can be overridden locally)
 \renewcommand{\arraystretch}{1.2}       % Standard grid alignment by default
 \setlength{\tabcolsep}{8pt}             % Professional column spacing
 
-% ==============================================================================
-% GRID-ALIGNED IMAGE SYSTEM
-% ==============================================================================
-%
-% Commands for keeping image heights in quantum multiples through
-% constraints and automatic adjustment.
-%
-% KEY PRINCIPLES:
-%   - Image heights rounded to nearest grid multiple (13.2pt)
-%   - Compensating space maintains vertical rhythm
-%   - Captions align to grid automatically
-%   - Works with all standard graphics commands
-%
-% REFERENCES:
-%   - Müller-Brockmann, J. (1981). Grid Systems in Graphic Design
-%   - Professional typography standards for images in documents
-%
-% ------------------------------------------------------------------------------
-
-% Round a dimension to nearest grid multiple
-\newcommand{\roundtogrid}[2]{%
-  % #1 = dimension to round
-  % #2 = result dimension register
-  \setlength{#2}{#1}%
-  \setlength{\dimen0}{\gridunit}%
-  \divide#2 by \dimen0
-  \multiply#2 by \dimen0
-  % Check if we need to round up
-  \setlength{\dimen1}{#1}%
-  \advance\dimen1 by -#2
-  \ifdim\dimen1>0.5\gridunit% More than half a grid unit
-    \advance#2 by \gridunit
-  \fi
-}
-
-% Include graphics with grid-aligned height
-\newcommand{\gridincludegraphics}[2][]{%
-  % #1 = optional parameters (width, etc.)
-  % #2 = filename
-  % First, include to measure
-  \sbox0{\includegraphics[#1]{#2}}%
-  % Round height to grid
-  \newdimen\gridheight
-  \roundtogrid{\ht0}{\gridheight}%
-  % Include with adjusted height
-  \includegraphics[#1,height=\gridheight]{#2}%
-}
-
-% Environment for grid-aligned figures
-\newenvironment{gridfigure}[1][tbp]{%
-  \begin{figure}[#1]%
-  \centering%
-}{%
-  \end{figure}%
-}
-
-% Command to add compensating space after image
-\newcommand{\imagegridspace}[1]{%
-  % #1 = actual image height
-  \newdimen\imageactualheight
-  \setlength{\imageactualheight}{#1}%
-  \newdimen\imagegridheight
-  \roundtogrid{\imageactualheight}{\imagegridheight}%
-  \vspace{\dimexpr\imagegridheight-\imageactualheight\relax}%
-}
-
-% Common grid-aligned heights for reference
-% 5 units: 66pt (2.33cm)
-% 10 units: 132pt (4.67cm)
-% 15 units: 198pt (6.99cm)
-% 20 units: 264pt (9.32cm)
+%% FIX (#85, ADR-0006): the grid-aligned image system (\roundtogrid,
+%% \gridincludegraphics, \imagegridspace, gridfigure) was removed. It existed
+%% to round image heights to quantum multiples, which is exactly the public
+%% grid arithmetic v3 retires; \includegraphics inside a standard `figure`
+%% is what remains.
 
 %% Issue #48 (ADR-0003 rule 2): hyperref is configured here, never loaded.
-%% Deferred to \AtBeginDocument because hyperref is conventionally loaded
-%% late -- typically after this package -- so an inline \@ifpackageloaded
-%% would run first and silently configure nothing.
+%% The package's own load hook fires exactly when hyperref loads -- before or
+%% after this package -- and never fires if it is absent. An inline
+%% \@ifpackageloaded would run first and silently configure nothing, because
+%% hyperref is conventionally loaded late.
+%% FIX (#85, ADR-0003): retain only visible link styling. Bookmark numbering,
+%% borders and encoding belong to the document. The old PDF-string fallbacks
+%% covered standard LaTeX or microtype commands; the sole Lanepaper name was
+%% private to front matter, which generates no bookmarks.
 \AddToHook{package/hyperref/after}{%
-  % HYPERREF CONFIGURATION
-  % Professional PDF links with accessibility and print compatibility
-  % All links use enhanced navy blue for consistent visual treatment
   \hypersetup{
     colorlinks=true,
-    linkcolor=black,
-    citecolor=black,
-    urlcolor=black,
-    filecolor=black,
-    bookmarksnumbered=true,
-    pdfborder={0 0 0},
-    pdfencoding=auto
-  }
-
-  % Update hyperref colors after loading colors module
-  % draft / nocolor overrides (was a nested \AtBeginDocument, flattened
-  % in #48 once the whole block became conditional)
-    \iflnp@draft
-      \hypersetup{colorlinks=false,pdfborder={1 1 1}}
-    \else
-      \iflnp@nocolor
-        \hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,filecolor=black}
-      \else
-        \hypersetup{colorlinks=true,linkcolor=linknavy,citecolor=linknavy,urlcolor=linknavy,filecolor=linknavy}
-      \fi
-    \fi
-
-  % PDF STRING COMPATIBILITY
-  % Provide text-only alternatives for PDF bookmarks and metadata
-  \pdfstringdefDisableCommands{%
-    \def\textsc#1{#1}%           % Small caps -> plain text
-    \def\textbf#1{#1}%           % Bold -> plain text
-    \def\textit#1{#1}%           % Italic -> plain text
-    \def\emph#1{#1}%             % Emphasis -> plain text
-    \def\lnp@titlesc#1{#1}%      % Retained front-matter small caps -> plain text
-    %% FIX: #2 is the tracking *amount*; substituting it leaked the number into
-    %% PDF bookmarks ("1 60Identification Strategy"). Substitute nothing.
-    \def\SetTracking#1#2{}%      % Remove tracking commands
-    \def\lsstyle{}%              % Remove letterspacing style
-    \let\\\space%                % Line break -> space
-    \def\hspace#1{ }%            % Horizontal space -> space
-    \def\vspace#1{}%             % Vertical space -> nothing
-    \def\kern#1{}%               % Kern -> nothing
-  \def~{ }%                    % Non-breaking space – space
-  }
+    linkcolor=lnp@linknavy,
+    citecolor=lnp@linknavy,
+    urlcolor=lnp@linknavy,
+    filecolor=lnp@linknavy
+  }%
 }
 
 % Butterick's final polish: Ensure proper page breaking
@@ -1998,16 +1695,16 @@
 % leading binds its rows while \abovedisplayskip separates the block from
 % prose; maths rows carry their own vertical bulk and \lineskip guards
 % collisions. Display rows land on no grid; nothing here aligns to one.
-\abovedisplayskip=1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit    % 19.8pt ±3.3pt
-\belowdisplayskip=1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit    % 19.8pt ±3.3pt
-\abovedisplayshortskip=1\gridunit plus 0.25\gridunit minus 0.25\gridunit  % 13.2pt ±3.3pt
-\belowdisplayshortskip=1\gridunit plus 0.25\gridunit minus 0.25\gridunit  % 13.2pt ±3.3pt
+\abovedisplayskip=1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit    % 19.8pt ±3.3pt
+\belowdisplayskip=1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit    % 19.8pt ±3.3pt
+\abovedisplayshortskip=1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit  % 13.2pt ±3.3pt
+\belowdisplayshortskip=1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit  % 13.2pt ±3.3pt
 
 % Multi-line equation spacing
 %% FIX: the unconditional \AtBeginDocument \addtolength below adds another
-%% 0.25\gridunit, so \jot ships as 9.9pt (measured), not 6.6pt. Value kept;
+%% 0.25\lnp@gridunit, so \jot ships as 9.9pt (measured), not 6.6pt. Value kept;
 %% the claim is corrected here and there.
-\jot=0.5\gridunit  % 0.5 quanta (6.6pt) before the begindocument-hook addition (ships as 9.9pt)
+\jot=0.5\lnp@gridunit  % 0.5 quanta (6.6pt) before the begindocument-hook addition (ships as 9.9pt)
 
 % Optimized script sizes for Pagella readability
 %% FIX: the document body runs at 10.95pt (the class's 11pt option), so the
@@ -2019,29 +1716,16 @@
 %% FIX: applies to EVERY multi-line display (the addition is unconditional),
 %% despite the earlier "numbered equations" claim. In-force \jot = 9.9pt.
 \AddToHook{begindocument}{%
-  \addtolength{\jot}{0.25\gridunit}  % +0.25 quanta: total \jot = 9.9pt
+  \addtolength{\jot}{0.25\lnp@gridunit}  % +0.25 quanta: total \jot = 9.9pt
 }
 
-% MULTI-LINE EQUATION OPTIMIZATION
-% Grid-aware spacing for aligned environments
+% MULTI-LINE EQUATION SPACING
 \setlength{\arraycolsep}{5pt}  % Optimized for Pagella's width
 
-% Custom grid-aligned equation environments
-\newenvironment{grideqnarray}{%
-  \begin{align}%
-  \setlength{\jot}{0.5\gridunit}%  % 0.5 quanta (6.6pt) — overrides the 9.9pt default
-}{%
-  \end{align}%
-}
-
-% Gathered equations with proper spacing
-\newenvironment{gridgather}{%
-  \vspace{0.5\gridunit}%  % 0.5 units before
-  \begin{gather}%
-}{%
-  \end{gather}%
-  \vspace{0.5\gridunit}%  % 0.5 units after
-}
+%% FIX (#85, ADR-0006): the grideqnarray and gridgather environments were
+%% removed with the rest of the public grid API. Each wrapped a standard
+%% amsmath environment in one quantum-fraction adjustment; documents use
+%% `align` and `gather` and set \jot or \vspace themselves if they must.
 
 % OPERATOR AND SYMBOL SPACING
 % Fine-tuned for Pagella's wider proportions
@@ -2063,8 +1747,8 @@
 % Note: Theorem styles require amsthm package which is loaded separately
 % The following would be used with amsthm:
 % \newtheoremstyle{pagellathm}%  % Name
-%   {13.2pt}%                     % Space above (1 grid unit)
-%   {13.2pt}%                     % Space below (1 grid unit)
+%   {13.2pt}%                     % Space above (1 quantum)
+%   {13.2pt}%                     % Space below (1 quantum)
 %   {\itshape}%                   % Body font
 %   {0pt}%                        % Indent amount
 %   {\bfseries}%                  % Theorem head font
@@ -2076,10 +1760,10 @@
 % DISPLAY MATH CENTERING
 % Ensure equations respect the grid
 \g@addto@macro\normalsize{%
-  \setlength{\abovedisplayskip}{1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit}%
-  \setlength{\belowdisplayskip}{1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit}%
-  \setlength{\abovedisplayshortskip}{1\gridunit plus 0.25\gridunit minus 0.25\gridunit}%
-  \setlength{\belowdisplayshortskip}{1\gridunit plus 0.25\gridunit minus 0.25\gridunit}%
+  \setlength{\abovedisplayskip}{1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}%
+  \setlength{\belowdisplayskip}{1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}%
+  \setlength{\abovedisplayshortskip}{1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}%
+  \setlength{\belowdisplayshortskip}{1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}%
 }
 
 % ==============================================================================
@@ -2148,8 +1832,30 @@
 % PARAGRAPH COMPOSITION
 \linepenalty=10            % Standard per-line penalty
 \parfillskip=0pt plus 1fil % Standard paragraph ending
+
+% ------------------------------------------------------------------------------
+% [optical] -- SOURCED REFINEMENTS
+% ------------------------------------------------------------------------------
+% Refinements with a stated source that are not safe to impose by default.
+% Defaults such as the widow and orphan penalties above are deliberately NOT
+% here: every document wants those (ADR-0006).
+%
+% RUNT CONTROL. A paragraph's last line should reach at least a third of the
+% measure; a one- or two-word last line reads as a hole in the block
+% (Hochuli, Detail in Typography, on paragraph endings). The \parfillskip
+% just above is LaTeX's own 0pt plus 1fil, which lets the last line be
+% arbitrarily short at no cost. Capping the stretch makes TeX pay for a runt
+% and rebreak the paragraph instead.
+%
+% It is opt-in because it is a real trade: a paragraph that cannot be
+% rebroken pays in interword spacing or an overfull line, and that is the
+% document's call, not the package's. Assigning it here, at the one site that
+% owns \parfillskip, is what keeps the two from fighting.
+\iflnp@optical
+  \parfillskip=0pt plus 0.7\textwidth
+\fi
 %% FIX: duplicate \parindent assignment removed; lnpdimensions.sty sets the
-%% identical \parindent=\gridunit (13.2pt) and always loads.
+%% identical \parindent=\lnp@gridunit (13.2pt) and always loads.
 
 % RIVER PREVENTION
 %% FIX: \spaceskip is a glue register — its em values resolve at assignment
@@ -2219,10 +1925,9 @@
 %% FIX: Active microtype setup moved to lnpmicrotype to avoid duplicated owners.
 
 % v3 (issue #84) removed the \pdf* emphasis/code bookmark wrappers (\pdfcode,
-% \pdfsc, \pdfemph, \pdfbf, \pdfit, \pdffilepath, \pdfvar). Standard commands
-% used in headings degrade to plain bookmark text through the
-% \pdfstringdefDisableCommands block above; a document needing custom bookmark
-% text uses hyperref's own \texorpdfstring.
+% \pdfsc, \pdfemph, \pdfbf, \pdfit, \pdffilepath, \pdfvar). Bookmark strings
+% are hyperref's business: it already handles the standard commands, and a
+% document needing custom bookmark text uses hyperref's own \texorpdfstring.
 
 % ==============================================================================
 % PARAGRAPH OPTIMIZATION COMMANDS
@@ -2293,7 +1998,7 @@
 % GEOMETRY FOOTER CONFIGURATION
 % Ensures adequate space for page numbers without text collision
 \geometry{
-  footskip=3\gridunit,  % 3 quanta (39.6pt) from text to baseline of page number
+  footskip=3\lnp@gridunit,  % 3 quanta (39.6pt) from text to baseline of page number
   bottom=1.25in     % Maintains existing margin
 }
 
@@ -2306,7 +2011,7 @@
 % Define formatting command for display only
 \newcommand{\lnp@pagenumber}{%
   \fontsize{10}{13.2}\selectfont% Slightly smaller than body (10pt vs 11pt)
-  \textcolor{subtlegray}{% 45% gray for reduced visual weight
+  \textcolor{lnp@subtlegray}{% 45% gray for reduced visual weight
     \oldstylenums{\thepage}% Oldstyle figures from Pagella
   }%
 }
@@ -2342,7 +2047,7 @@
 
 % Add extra space before footer on specific pages
 \newcommand{\protectfooter}{%
-  \vspace{\gridunit}% Add 1 grid unit if content is too close
+  \vspace{\lnp@gridunit}% Add 1 quantum if content is too close
 }
 
 % Force consistent footer position
@@ -2426,8 +2131,7 @@
   \typeout{=== Paperstyle Diagnostics ===}%
   \typeout{LaTeX Version: \fmtversion}%
   \typeout{Document Class: article}%
-  \typeout{Grid Unit: \the\gridunit}%
-  \typeout{Half Grid: \the\halfgridunit}%
+  \typeout{Spacing quantum: \the\lnp@gridunit}%
   \typeout{Font System: TeX Gyre Pagella}%
   \typeout{Math Font: newpxmath}%
   \typeout{Mono Font: Inconsolata (zi4)}%
@@ -2448,7 +2152,7 @@
 \newcommand{\lanepaperinfo}{%
   \begin{description}
     \item[Typography System] TeX Gyre Pagella with newpxmath
-    \item[Grid Unit] \the\gridunit{} (spacing quantum)
+    \item[Spacing quantum] \the\lnp@gridunit{} (internal)
     \item[Microtype] Character protrusion and font expansion active
     \item[Small Caps] Tracking optimized for Pagella
     \item[Lists] Refined bullets with hanging punctuation
@@ -2480,8 +2184,6 @@
 \ifdefmacro{\majorsectionspace}{\robustify{\majorsectionspace}}{}
 \ifdefmacro{\thinrulebreak}{\robustify{\thinrulebreak}}{}
 \ifdefmacro{\abstractopening}{\robustify{\abstractopening}}{}
-\ifdefmacro{\quartergridparagraphs}{\robustify{\quartergridparagraphs}}{}
-\ifdefmacro{\thirdgridparagraphs}{\robustify{\thirdgridparagraphs}}{}
 \ifdefmacro{\paragraphsep}{\robustify{\paragraphsep}}{}
 \ifdefmacro{\sidenote}{\robustify{\sidenote}}{}
 \ifdefmacro{\topfraction}{\robustify{\topfraction}}{}
@@ -2537,17 +2239,7 @@
 \ifdefmacro{\multiplefootnotes}{\robustify{\multiplefootnotes}}{}
 \ifdefmacro{\startappendices}{\robustify{\startappendices}}{}
 \ifdefmacro{\finishappendices}{\robustify{\finishappendices}}{}
-\ifdefmacro{\standardgrid}{\robustify{\standardgrid}}{}
-\ifdefmacro{\compactgrid}{\robustify{\compactgrid}}{}
-\ifdefmacro{\spaciousgrid}{\robustify{\spaciousgrid}}{}
-\ifdefmacro{\customgrid}{\robustify{\customgrid}}{}
-\ifdefmacro{\gridspace}{\robustify{\gridspace}}{}
-\ifdefmacro{\halfbaselinespace}{\robustify{\halfbaselinespace}}{}
-\ifdefmacro{\fullbaselinespace}{\robustify{\fullbaselinespace}}{}
 \ifdefmacro{\arraystretch}{\robustify{\arraystretch}}{}
-\ifdefmacro{\roundtogrid}{\robustify{\roundtogrid}}{}
-\ifdefmacro{\gridincludegraphics}{\robustify{\gridincludegraphics}}{}
-\ifdefmacro{\imagegridspace}{\robustify{\imagegridspace}}{}
 \ifdefmacro{\tightpar}{\robustify{\tightpar}}{}
 \ifdefmacro{\loosepar}{\robustify{\loosepar}}{}
 \ifdefmacro{\riverlesspar}{\robustify{\riverlesspar}}{}

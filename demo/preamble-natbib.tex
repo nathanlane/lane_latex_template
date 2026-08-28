@@ -73,9 +73,10 @@
 \usepackage{url}
 \usepackage{doi}
 
-% Configure URL appearance to match framework colors
+% Configure URL appearance. The package's link colour is private (#85); a
+% document that wants coloured URLs picks its own.
 \urlstyle{same}
-\renewcommand{\UrlFont}{\color{linknavy}\ttfamily}
+\renewcommand{\UrlFont}{\ttfamily}
 
 % Basic DOI formatting (less sophisticated than biblatex version)
 %% FIX: Guard legacy DOI prefix support for TeX Live variants that removed

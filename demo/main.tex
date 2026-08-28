@@ -27,7 +27,7 @@ For a complete guide to all commands and environments:
   \item \textbf{API Reference:} See \texttt{API\_REFERENCE.md} in the root directory
   \item \textbf{Live Examples:} Appendix~\ref{app:api-examples} demonstrates all major commands
   \item \textbf{Reference:} See \texttt{API\_REFERENCE.md} for commands and typography standards
-  \item \textbf{Package Options:} Use \texttt{[grid]}, \texttt{[minimal]}, \texttt{[draft]}, etc.
+  \item \textbf{Package Options:} \texttt{[optical]} and \texttt{[nocolor]}
 \end{itemize}
 
 \section{Quick Start Guide}
@@ -117,9 +117,8 @@ pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
 
 \safeparagraph{Customization} The template uses modular architecture. Override before loading:
 \begin{verbatim}
-\definecolor{linknavy}{RGB}{0,0,255}  % Custom colors
-\geometry{margin=2in}                  % Custom margins  
-\usepackage{lanepaper}             % Then load lanepaper
+\usepackage{lanepaper}   % The sole public load path
+\geometry{margin=2in}    % Override the layout afterwards
 \end{verbatim}
 
 \safeparagraph{Figures and Tables}
@@ -165,8 +164,7 @@ This document demonstrates several features whose spacing is stated in quanta:
 \begin{itemize}
 \item \emph{Sections:} 39.6pt before (3 units), 19.8pt after (1.5 units) with -0.8pt optical adjustment
 \item \emph{Subsections:} 26.4pt before (2 units), 13.2pt after (1 unit) with -0.5pt optical adjustment  
-\item \emph{Tables:} Standard row heights via \texttt{\textbackslash{}begin\{gridtable\}}
-\item \emph{Images:} Heights rounded to quantum multiples via \texttt{\textbackslash{}gridincludegraphics}
+\item \emph{Tables:} Standard row heights via \texttt{\textbackslash{}arraystretch}
 \item \emph{Floats:} 19.8pt separation (1.5 units) between consecutive floats
 \end{itemize}
 
@@ -360,15 +358,16 @@ Following Hochuli's principle that \enquote{color should enhance, never compete 
 
 \emph{Elegant Bold Color System:}
 \begin{itemize}
-\item \emph{Section headings:} \textcolor{sectioncolor}{Softened navy} (RGB 25,50,80) reduces bold impact
-\item \emph{Subsection headings:} \textcolor{subsectioncolor}{Muted midnight} (RGB 40,40,55) for refined hierarchy
-\item \emph{Subsubsection headings:} \textcolor{subsubcolor}{Medium charcoal} (25\% gray) softens bold weight
-\item \emph{Paragraph headings:} \textcolor{paragraphcolor}{Dark gray} (15\% gray) prevents harsh small bold
-\item \emph{Body text:} \textcolor{textblack}{Near-black (5\% gray)} for optimal reading comfort
-\item \emph{All links:} \emph{Enhanced navy blue} (RGB 0,102,180) for consistent visual treatment
+\item \emph{Section headings:} \textcolor[RGB]{25,50,80}{Softened navy} reduces bold impact
+\item \emph{Subsection headings:} \textcolor[RGB]{40,40,55}{Muted midnight} for refined hierarchy
+\item \emph{Subsubsection headings:} \textcolor[gray]{0.25}{Medium charcoal} softens bold weight
+\item \emph{Paragraph headings:} \textcolor[gray]{0.15}{Dark gray} prevents harsh small bold
+\item \emph{Body text:} \textcolor[gray]{0.05}{Near-black} for optimal reading comfort
+\item \emph{All links:} \textcolor[RGB]{0,68,136}{Deep navy} for consistent visual treatment
 \end{itemize}
 
-\emph{Semantic Color Commands:}
+The palette is private to the package (issue~\#85): a document that wants its
+own accent defines and applies one.
 \begin{itemize}
 \item \emph{Subtle emphasis:} \emph{Conservative blue} for rare special emphasis
 \item \emph{Important notes:} \textbf{Restrained red} for critical information
@@ -499,7 +498,8 @@ For tables requiring full text width, use \texttt{tabularx} with \texttt{X} colu
 
 The framework provides specialized table environments with systematic row spacing:
 
-\begin{gridtable}[tbp]
+\begin{table}[tbp]
+  \renewcommand{\arraystretch}{1.2}
   \caption{Table with Standard Row Height (~21.8pt measured)}
   \label{tab:grid-example}
   \centering
@@ -512,16 +512,16 @@ The framework provides specialized table environments with systematic row spacin
     Our Method & 0.94 & 0.92 & 0.93 \\
     \bottomrule
   \end{tabular}
-\end{gridtable}
+\end{table}
 
-\safeparagraph{Grid Table Environments}~ The framework provides three table environments with standard row heights:
+\safeparagraph{Row Heights}~ Row height is \texttt{\textbackslash arraystretch} times the 16.32pt body baseline plus 2.2pt of \texttt{\textbackslash extrarowheight}. The package sets 1.2 globally (~21.8pt); a table that wants denser or looser rows sets its own inside the float:
 \begin{itemize}
-\item \texttt{gridtable} --- Standard rows (~21.8pt measured) for normal data
+\item \texttt{\textbackslash renewcommand\{\textbackslash arraystretch\}\{1.2\}} --- standard rows (~21.8pt) for normal data
 \item \texttt{regressiontable} --- ~21.0pt rows (measured) for statistical results
-\item \texttt{compactgridtable} --- ~16.9pt rows (measured) for dense information
+\item \texttt{\textbackslash renewcommand\{\textbackslash arraystretch\}\{0.9\}} --- ~16.9pt rows for dense information
 \end{itemize}
 
-Each environment automatically sets \texttt{\textbackslash arraystretch} to maintain the standard row height while preserving the professional appearance of booktabs.
+Setting \texttt{\textbackslash arraystretch} inside the float keeps the change local while preserving the professional appearance of booktabs.
 
 \subsection{Multi-Page Tables with LongTable}
 

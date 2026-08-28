@@ -162,20 +162,20 @@
 \newcommand{\fountainpar}[1]{%
   \parshape=5
   0pt \textwidth
-  0.5\gridunit 0.95\textwidth
-  1\gridunit 0.9\textwidth
-  1.5\gridunit 0.85\textwidth
-  2\gridunit 0.8\textwidth
+  0.5\lnp@gridunit 0.95\textwidth
+  1\lnp@gridunit 0.9\textwidth
+  1.5\lnp@gridunit 0.85\textwidth
+  2\lnp@gridunit 0.8\textwidth
   #1\par
 }
 
 % Gradually decreasing indent (inverted fountain)
 \newcommand{\invertfountainpar}[1]{%
   \parshape=5
-  2\gridunit 0.8\textwidth
-  1.5\gridunit 0.85\textwidth
-  1\gridunit 0.9\textwidth
-  0.5\gridunit 0.95\textwidth
+  2\lnp@gridunit 0.8\textwidth
+  1.5\lnp@gridunit 0.85\textwidth
+  1\lnp@gridunit 0.9\textwidth
+  0.5\lnp@gridunit 0.95\textwidth
   0pt \textwidth
   #1\par
 }
@@ -183,12 +183,12 @@
 % Diamond-shaped paragraph
 \newcommand{\diamondpar}[1]{%
   \parshape=7
-  2\gridunit 0.8\textwidth
-  1\gridunit 0.9\textwidth
+  2\lnp@gridunit 0.8\textwidth
+  1\lnp@gridunit 0.9\textwidth
   0pt \textwidth
   0pt \textwidth
-  1\gridunit 0.9\textwidth
-  2\gridunit 0.8\textwidth
+  1\lnp@gridunit 0.9\textwidth
+  2\lnp@gridunit 0.8\textwidth
   0pt \textwidth
   #1\par
 }
