@@ -18,7 +18,7 @@
     \authorspace Second Author\footnote{Testing Institute}}
   \articledate{\today}
   \begin{articleabstract}
-    This document tests all typography features including sophisticated list environments, mathematical typography, professional tables and figures, and the complete citation system. Every feature should compile without errors.
+    This document tests the retained title, list, mathematical, table, figure, and citation typography. Every feature should compile without errors.
   \end{articleabstract}
   \articlekeywords{testing, typography, LaTeX, academic}
   \articlejel{A00, B00, C00}
@@ -31,38 +31,28 @@
 
 \subsection{Standard Lists}
 \begin{itemize}
-\item Professional bullets at 20\% gray
-\item Optimal hanging indent of 1.8em
+\item Professional bullets in the supporting-color role
+\item Hanging indent for aligned wrapped lines
   \begin{itemize}
   \item Nested with en-dash
   \item Progressive indentation
     \begin{itemize}
-    \item Third level with diamond
+    \item Third level with a smaller bullet
     \item Maximum nesting depth
     \end{itemize}
   \end{itemize}
 \end{itemize}
 
-\subsection{Academic Lists}
-\begin{academicitem}
-\item Primary finding with en-dash
-\item Secondary observation
-\item Tertiary conclusion
-\end{academicitem}
+\subsection{Standard Enumerated and Description Lists}
+\begin{enumerate}
+\item First numbered item
+\item Second numbered item
+\end{enumerate}
 
-\subsection{Compact Lists}
-\begin{compactitem}
-\item No spacing between items
-\item Efficient for references
-\item Maximum density
-\end{compactitem}
-
-\subsection{Display Lists}
-\begin{displayitem}
-\item \textbf{Key Result:} Bold items with generous spacing
-\item \textbf{Innovation:} Full baseline between items
-\item \textbf{Impact:} Maximum emphasis
-\end{displayitem}
+\begin{description}
+\item[Scope] Standard structures with package typography
+\item[Surface] One retained inline-list environment
+\end{description}
 
 \subsection{Inline Lists}
 Brief enumeration: \begin{inlineitem}
@@ -107,8 +97,6 @@ f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
 
 Testing citations: \cite{butterick2019practical} emphasizes practical typography. 
 See also \cite{brown2018flexible} for modular scales.
-
-\FloatBarrier
 
 \section{Cross References}
 

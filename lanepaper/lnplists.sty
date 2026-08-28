@@ -47,7 +47,7 @@
 %   1. Standard lists (itemize) - professional gray bullets
 %   2. Enumerated lists - oldstyle figures
 %   3. Description lists - small caps labels
-%   4. Specialized lists - context-specific formatting
+%   4. Inline lists - brief enumerations in running prose
 % ==============================================================================
 
 % LIST SPACING PARAMETERS
@@ -55,7 +55,6 @@
 % Internal lengths now prefixed with \lnp@ to avoid namespace collisions
 \newlength{\lnp@listhalfquantum}
 \newlength{\lnp@listquarterquantum}
-\newlength{\lnp@listquantum}
 \newlength{\lnp@listhangindent}
 \newlength{\lnp@listnestedindent}
 \newlength{\lnp@listlabelsep}
@@ -63,22 +62,9 @@
 % Initialise values
 \setlength{\lnp@listhalfquantum}{0.5\lnp@gridunit}      % 6.6pt
 \setlength{\lnp@listquarterquantum}{0.25\lnp@gridunit}   % 3.3pt
-\setlength{\lnp@listquantum}{\lnp@gridunit}     % 13.2pt; the full-quantum list space (topsep)
 \setlength{\lnp@listhangindent}{26.4pt}       % 2 quanta (optimized for Pagella)
 \setlength{\lnp@listnestedindent}{13.2pt}     % 1 quantum for nested lists
 \setlength{\lnp@listlabelsep}{0.7em}          % Space between bullet and text
-
-% Compatibility aliases (deprecated; will be removed in v2.0)
-\let\listhalfquantum\lnp@listhalfquantum
-\let\listquarterquantum\lnp@listquarterquantum
-\let\listquantum\lnp@listquantum
-% Pre-rename names shipped in v2.1.0; deprecated, kept until the next major
-\let\listhalfbaseline\lnp@listhalfquantum
-\let\listquarterbaseline\lnp@listquarterquantum
-\let\listbaselineskip\lnp@listquantum
-\let\listhangindent\lnp@listhangindent
-\let\listnestedindent\lnp@listnestedindent
-\let\listlabelsep\lnp@listlabelsep
 
 % ==============================================================================
 % BULLET AND MARKER DEFINITIONS
@@ -86,41 +72,17 @@
 % Professional bullet hierarchy with refined typography
 
 % Primary bullet - professional gray for subtlety
-\newcommand{\bulletmark}{%
+\newcommand{\lnp@bulletmark}{%
   \textcolor{lnp@subtlegray}{\raisebox{0.08ex}{\scalebox{0.9}{$\bullet$}}}%
 }
 
-% En-dash for academic lists
-\newcommand{\dashmark}{%
-  \textcolor{lnp@subtlegray}{\textendash}%
-}
-
-% Secondary bullet - smaller for nested lists
-\newcommand{\refinedbullet}{%
+% Smaller bullet for tertiary lists
+\newcommand{\lnp@refinedbullet}{%
   \textcolor{lnp@subtlegray}{\raisebox{0.1ex}{\scalebox{0.75}{$\bullet$}}}%
 }
 
-% Tertiary bullet - diamond for deep nesting
-\newcommand{\diamondmark}{%
-  \textcolor{lnp@subtlegray}{\raisebox{0.05ex}{\scalebox{0.7}{$\diamond$}}}%
-}
-
-% Additional markers for specialized lists
-\newcommand{\squaremark}{%
-  \textcolor{lnp@subtlegray}{\raisebox{0.1ex}{\scalebox{0.65}{$\blacksquare$}}}%
-}
-
-\newcommand{\trianglemark}{%
-  \textcolor{lnp@subtlegray}{\raisebox{0ex}{\scalebox{0.8}{$\triangleright$}}}%
-}
-
-% Subtle bullet for compact lists
-\newcommand{\subtlebullet}{%
-  \textcolor{lightgray}{\raisebox{0.12ex}{\scalebox{0.65}{$\bullet$}}}%
-}
-
 % Refined en-dash with proper spacing
-\newcommand{\refineddash}{%
+\newcommand{\lnp@refineddash}{%
   \textcolor{lnp@subtlegray}{\kern0.05em\textendash\kern0.05em}%
 }
 
@@ -130,7 +92,7 @@
 
 % ITEMIZE CONFIGURATION (Butterick's professional bullets)
 \setlist[itemize,1]{
-  label=\bulletmark,                            % Professional gray bullet
+  label=\lnp@bulletmark,                        % Professional gray bullet
   align=left,
   leftmargin=\lnp@listhangindent,
   labelindent=0pt,
@@ -147,7 +109,7 @@
 
 % Secondary level - refined bullet
 \setlist[itemize,2]{
-  label=\refineddash,                           % En-dash for variety
+  label=\lnp@refineddash,                       % En-dash for hierarchy
   leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
@@ -157,9 +119,9 @@
   partopsep=0pt
 }
 
-% Tertiary level - diamond
+% Tertiary level - smaller bullet
 \setlist[itemize,3]{
-  label=\diamondmark,                           % Diamond for deep nesting
+  label=\lnp@refinedbullet,
   leftmargin=\lnp@listnestedindent,
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
@@ -226,92 +188,6 @@
   after={\vspace{-\parskip}}
 }
 
-% ==============================================================================
-% SPECIALIZED LIST ENVIRONMENTS
-% ==============================================================================
-% Following Brown's systematic approach to different contexts
-
-
-% Compact list for tight spacing (references, brief points)
-\newlist{compactitem}{itemize}{3}
-\setlist[compactitem,1]{
-  label=\subtlebullet,
-  leftmargin=\lnp@listhangindent,
-  labelindent=0pt,
-  labelsep=\lnp@listlabelsep,
-  itemsep=0pt,                                  % No item spacing
-  parsep=0pt,
-  topsep=\lnp@listquarterquantum,                  % Minimal top/bottom
-  partopsep=0pt,
-  nosep                                         % Remove all spacing
-}
-
-% Display list for emphasis (key findings, important points)
-\newlist{displayitem}{itemize}{3}
-\setlist[displayitem,1]{
-  label=\bulletmark,                            % Full black bullet
-  leftmargin=\lnp@listhangindent,
-  labelindent=0pt,
-  labelsep=\lnp@listlabelsep,
-  itemsep=\lnp@listhalfquantum,                    % Generous spacing
-  parsep=0pt,
-  topsep=\lnp@listquantum,                     % Full quantum above/below
-  partopsep=0pt,
-  font=\normalfont\bfseries\color{lnp@textblack}    % Bold items for emphasis
-}
-
-% Academic list with en-dash (following university style guides)
-\newlist{academicitem}{itemize}{3}
-\setlist[academicitem,1]{
-  label=\llap{\refineddash\hspace{0.1em}},    % Refined en-dash
-  leftmargin=\lnp@listhangindent,
-  labelindent=0pt,
-  labelsep=0.5em,
-  itemsep=\lnp@listquarterquantum,
-  parsep=0pt,
-  topsep=\lnp@listhalfquantum,
-  partopsep=0pt
-}
-
-% READABLE LIST (More spacing for enhanced readability)
-\newlist{readableitem}{itemize}{3}
-\setlist[readableitem,1]{
-  label=\llap{\refinedbullet\hspace{0.15em}}, % Refined bullet
-  leftmargin=\lnp@listhangindent,
-  labelindent=0pt,
-  labelsep=0.55em,
-  itemsep=\lnp@listhalfquantum,                  % 0.5 units for readability
-  parsep=0pt,
-  topsep=0.75\lnp@gridunit plus 0.125\lnp@gridunit,     % 9.9pt +1.65pt
-  partopsep=0pt,
-  before={\vspace{-\parskip}\vspace{\lnp@listhalfquantum}},
-  after={\vspace{-\parskip}\vspace{\lnp@listhalfquantum}}
-}
-%% FIX: Define nested readableitem labels so recursive readable lists compile.
-\setlist[readableitem,2]{
-  label=\llap{\refineddash\hspace{0.15em}},
-  leftmargin=\lnp@listhangindent,
-  labelindent=0pt,
-  labelsep=0.55em,
-  itemsep=\lnp@listquarterquantum,
-  parsep=0pt,
-  topsep=\lnp@listhalfquantum,
-  partopsep=0pt
-}
-\setlist[readableitem,3]{
-  label=\llap{\diamondmark\hspace{0.15em}},
-  leftmargin=\lnp@listhangindent,
-  labelindent=0pt,
-  labelsep=0.55em,
-  itemsep=\lnp@listquarterquantum,
-  parsep=0pt,
-  topsep=\lnp@listhalfquantum,
-  partopsep=0pt
-}
-
-% Define the label command for academicitem
-\renewcommand{\labelacademicitemi}{\dashmark}
-
 % INLINE LISTS (Butterick's recommendation for brief items)
 \newlist{inlineitem}{enumerate*}{1}
 \setlist[inlineitem]{
@@ -322,83 +198,6 @@
   before={},
   after={}
 }
-
-% ==============================================================================
-% CUSTOM BULLET COMMANDS
-% ==============================================================================
-% For manual control when needed
-
-\newcommand{\itembullet}{\item[\bulletmark]}
-\newcommand{\itemdash}{\item[\dashmark]}
-\newcommand{\itemdiamond}{\item[\diamondmark]}
-\newcommand{\itemsquare}{\item[\squaremark]}
-\newcommand{\itemtriangle}{\item[\trianglemark]}
-
-% ==============================================================================
-% NESTED LIST SPACING REFINEMENT
-% ==============================================================================
-% Ensures consistent quantum rhythm
-% Adjusted for more traditional spacing (0.5 quanta)
-
-% Remove the quarter-quantum reduction to get full topsep spacing
-% This gives us 6.6pt (0.5 quanta) before/after lists
-% Comment out these lines to restore the original minimal spacing
-%\setlist[itemize]{
-%  before*={\vspace{-\lnp@listquarterquantum}},
-%  after*={\vspace{-\lnp@listquarterquantum}}
-%}
-%\setlist[enumerate]{
-%  before*={\vspace{-\lnp@listquarterquantum}},
-%  after*={\vspace{-\lnp@listquarterquantum}}
-%}
-
-% ==============================================================================
-% LIST SPACING STYLES
-% ==============================================================================
-% Commands to switch between different list spacing approaches
-
-\newcommand{\tightlists}{%
-  % Minimal spacing for dense information
-  \setlist[itemize,1]{itemsep=0pt, topsep=\lnp@listquarterquantum}
-  \setlist[enumerate,1]{itemsep=0pt, topsep=\lnp@listquarterquantum}
-}
-
-\newcommand{\normallists}{%
-  % Default spacing (current settings)
-  \setlist[itemize,1]{itemsep=\lnp@listquarterquantum, topsep=\lnp@listhalfquantum}
-  \setlist[enumerate,1]{itemsep=\lnp@listquarterquantum, topsep=\lnp@listhalfquantum}
-}
-
-\newcommand{\spaciouslists}{%
-  % Generous spacing for readability
-  \setlist[itemize,1]{itemsep=\lnp@listhalfquantum, topsep=\lnp@listquantum}
-  \setlist[enumerate,1]{itemsep=\lnp@listhalfquantum, topsep=\lnp@listquantum}
-}
-
-% ==============================================================================
-% LIST CUSTOMIZATION INTERFACE
-% ==============================================================================
-% User-friendly commands for common list modifications
-
-% Change all bullets to en-dashes
-\newcommand{\dashbullets}{%
-  \setlist[itemize,1]{label=\dashmark}
-}
-
-% Change all bullets to triangles
-\newcommand{\trianglebullets}{%
-  \setlist[itemize,1]{label=\trianglemark}
-}
-
-% Restore default bullets
-\newcommand{\defaultbullets}{%
-  \setlist[itemize,1]{label=\bulletmark}
-}
-
-% ==============================================================================
-% LEGACY SUPPORT
-% ==============================================================================
-% Maintain backward compatibility with simple spacing
 
 % CONSOLIDATED ENVIRONMENT HOOKS
 % ==============================================================================
@@ -414,36 +213,3 @@
 \AtEndEnvironment{itemize}{\@afterindentfalse}
 \AtEndEnvironment{enumerate}{\@afterindentfalse}
 \AtEndEnvironment{description}{\@afterindentfalse}
-\AtEndEnvironment{compactitem}{\@afterindentfalse}
-\AtEndEnvironment{displayitem}{\@afterindentfalse}
-\AtEndEnvironment{academicitem}{\@afterindentfalse}
-\AtEndEnvironment{readableitem}{\@afterindentfalse}
-
-% ==============================================================================
-% ROBUSTNESS (#55)
-% ==============================================================================
-% Every public macro defined above is made robust for moving arguments
-% (section titles, captions, marks, the .aux round-trip) via etoolbox
-% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
-% so a name collision with another package still errors at load time.
-% \ifdefmacro skips names that resolve to registers in this load order.
-\ifdefmacro{\bulletmark}{\robustify{\bulletmark}}{}
-\ifdefmacro{\dashmark}{\robustify{\dashmark}}{}
-\ifdefmacro{\refinedbullet}{\robustify{\refinedbullet}}{}
-\ifdefmacro{\diamondmark}{\robustify{\diamondmark}}{}
-\ifdefmacro{\squaremark}{\robustify{\squaremark}}{}
-\ifdefmacro{\trianglemark}{\robustify{\trianglemark}}{}
-\ifdefmacro{\subtlebullet}{\robustify{\subtlebullet}}{}
-\ifdefmacro{\refineddash}{\robustify{\refineddash}}{}
-\ifdefmacro{\labelacademicitemi}{\robustify{\labelacademicitemi}}{}
-\ifdefmacro{\itembullet}{\robustify{\itembullet}}{}
-\ifdefmacro{\itemdash}{\robustify{\itemdash}}{}
-\ifdefmacro{\itemdiamond}{\robustify{\itemdiamond}}{}
-\ifdefmacro{\itemsquare}{\robustify{\itemsquare}}{}
-\ifdefmacro{\itemtriangle}{\robustify{\itemtriangle}}{}
-\ifdefmacro{\tightlists}{\robustify{\tightlists}}{}
-\ifdefmacro{\normallists}{\robustify{\normallists}}{}
-\ifdefmacro{\spaciouslists}{\robustify{\spaciouslists}}{}
-\ifdefmacro{\dashbullets}{\robustify{\dashbullets}}{}
-\ifdefmacro{\trianglebullets}{\robustify{\trianglebullets}}{}
-\ifdefmacro{\defaultbullets}{\robustify{\defaultbullets}}{}

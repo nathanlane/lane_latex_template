@@ -4,6 +4,31 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Contracted document structures on 2026-08-28 (issue #86). **Breaking, with no
+aliases.**
+
+- **Retained surface.** The complete title family remains, `\sectionopening`
+  is one inline argument, `inlineitem` remains the sole custom list, and the
+  standard `itemize`, `enumerate`, `description`, `quote`, `quotation`,
+  `figure`, `table`, and `\appendix` paths retain their styling or native
+  behavior.
+- **Standard document ownership.** Float placement and appendix sequencing now
+  remain standard LaTeX behavior. `booktabs` stays required and the examples
+  use no vertical rules. `threeparttable` is document-owned: Lanepaper neither
+  loads it nor defines `tablenotes`. Figure notes use the single collision-safe
+  `lanepaperfigurenotes` environment, while longtable caption width remains
+  configured only when the document loads `longtable`.
+- **Removed structures.** Float barriers and wrappers, grid/table/image
+  helpers, appendix orchestration, diagnostic commands, epigraph and ornamental
+  quote helpers, drop caps, sidenotes, decorative break shapes, specialized
+  list environments, and table-note wrappers are deleted without compatibility
+  aliases. Active documentation and fixtures now show only the retained paths;
+  migration replacements are collected in `API_REFERENCE.md`.
+- **Coherence cleanup.** The loaded modules now own their dependencies without
+  duplicate master-file loads; active examples no longer claim unsupported
+  accessibility certification or expose dormant modules, and the retained
+  display-paragraph command uses the private palette name introduced by #85.
+
 Made `\usepackage{lanepaper}` the sole public load path and narrowed the
 package foundations (issue #85, ADR-0006). **Breaking, with no aliases.**
 
@@ -26,9 +51,8 @@ package foundations (issue #85, ADR-0006). **Breaking, with no aliases.**
   `lnpparagraphs` are `\newcommand` again rather than `\providecommand`, and
   the `epigraph`, `emphasisquote` and `openingparagraph` environments lost
   their `\@ifundefined` wrappers, so a genuine name collision errors at load
-  time as CONVENTIONS §8 requires. `\sectionopening`, `\sectionsep` and
-  `\spacebreak` keep their guards: `lnpheadings` is loaded and defines them
-  too, and #86/#87 adjudicate that seam.
+  time as CONVENTIONS §8 requires. Issue #86 subsequently removed those
+  structures and the duplicate `lnpheadings` opening/spacing seam.
 - **The four unloaded v2 modules are untouched.** `lnpfontfallbacks`,
   `lnpfontfeatures` (#29), `lnphochuli` and `lnpparagraphs` (#87) are carried
   over as-is apart from the `\lnp@` rename sweep. This pass did not refactor
@@ -36,8 +60,8 @@ package foundations (issue #85, ADR-0006). **Breaking, with no aliases.**
 - **Options.** Only `[optical]` and `[nocolor]` remain. `[grid]`, `[nogrid]`,
   `[minimal]`, `[draft]`, `[natbib]`, `[nobiblatex]`,
   `[subsectionbarriers]` and `[nosubsectionbarriers]` are removed and now
-  raise LaTeX's own `Unknown option` error. Subsection float barriers keep
-  their documented default (on) unconditionally. `[optical]` is new and
+  raise LaTeX's own `Unknown option` error. Issue #86 subsequently removed the
+  unconditional barriers, leaving standard LaTeX float placement. `[optical]` is new and
   carries sourced refinements that are not safe as defaults — currently
   last-line runt control, capping `\parfillskip`'s stretch so a paragraph's
   last line reaches at least a third of the measure (Hochuli). Widow and

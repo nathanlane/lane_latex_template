@@ -32,7 +32,7 @@
 %   - Mathematical harmony via modular scale (Brown) 
 %   - Micro-typographic excellence (Hochuli)
 %   - Chicago Manual of Style compliance
-%   - Accessibility standards (WCAG 2.1 AA)
+%   - Restrained colour hierarchy
 %
 % TECHNICAL REQUIREMENTS:
 %   - LaTeX 2e (2020/10/01 or later, for format-native \AddToHook)
@@ -46,8 +46,8 @@
 %
 % The lnp*.sty files are internal owners, not entry points: load lanepaper and
 % nothing else (ADR-0006). The document keeps its own bibliography,
-% cross-reference, hyperref and appendix packages; this package configures
-% those only if they are already loaded (ADR-0003).
+% cross-reference, and appendix packages. Only visible hyperref and longtable
+% typography is configured if those packages are loaded (ADR-0003).
 %
 % PACKAGE OPTIONS:
 %   optical  - Sourced optical refinements over the defaults (runt control)
@@ -186,17 +186,16 @@
 % II. PROFESSIONAL COLOR SYSTEM
 % ==============================================================================
 %
-% Implements Hochuli's principle: "Color should enhance, never compete with, 
-% typography" with accessibility-compliant colors meeting WCAG 2.1 AA standards.
+% Implements Hochuli's principle: "Color should enhance, never compete with,
+% typography" through a restrained semantic hierarchy.
 %
 % DESIGN APPROACH:
 %   - Hierarchical grays for document structure
 %   - Professional blues for external references
-%   - Enhanced contrast for accessibility compliance
+%   - Restraint: colour supports rather than replaces semantic structure
 %
 % REFERENCES:
 %   - Hochuli, J. (1987). Detail in Typography. Hyphen Press.
-%   - W3C (2018). Web Content Accessibility Guidelines 2.1. W3C.
 %   - Stone, M. (2006). A Field Guide to Digital Color. A K Peters.
 %
 % ------------------------------------------------------------------------------
@@ -250,7 +249,8 @@
 %% (0.35em/0.5em) was silently overridden ~2100 lines later (0.33em/0.48em);
 %% the later, in-force values are kept so rendering is unchanged.
 % titlesec now loaded by headings module
-\RequirePackage{enumitem}         % List spacing control
+%% FIX (#86): lnplists owns and loads enumitem; a second master-file load
+%% obscured that module boundary without adding a dependency.
 \RequirePackage{caption}          % Figure/table caption control
 % Mathematical packages are loaded in lnpfonts.sty
 % Math fonts are loaded in lnpfonts.sty
@@ -348,21 +348,6 @@
 % Dialogue support for narrative text
 \newcommand{\dialogue}[1]{\par\indent #1\par}              % Standard dialogue with full indent
 
-% Epigraph environment for quotations at chapter/section beginnings
-\newenvironment{epigraph}{%
-  \vspace{\lnp@gridunit}%                  % 1 quantum before
-  \begin{flushright}%
-  \begin{minipage}{0.618\textwidth}% Golden ratio width
-  \raggedleft\itshape%
-  \setlength{\parindent}{0pt}%
-  \setlength{\parskip}{0.5\lnp@gridunit}%      % 0.5 quanta between paragraphs
-}{%
-  \end{minipage}%
-  \end{flushright}%
-  \vspace{\lnp@gridunit}%                  % 1 quantum after
-  \@afterindentfalse%               % No indent after epigraph
-}
-
 % ==============================================================================
 % PROFESSIONAL BLOCK QUOTATION SYSTEM
 % ==============================================================================
@@ -429,42 +414,9 @@
   \@afterindentfalse%
 }
 
-% PROFESSIONAL ATTRIBUTION SYSTEM
-% For quote attributions with em-dash and right alignment
-\newcommand{\quoteattribution}[1]{%
-  \par\vspace{0.5\lnp@gridunit}%                       % 0.5 quanta
-  \hfill{\fontsize{10}{13.2}\selectfont\color{lnp@subsubcolor}--- #1}%
-  \par
-}
-
-% EMPHASIS QUOTE (renamed to avoid csquotes conflict)
-% Dramatic presentation for important quotations
-\newenvironment{emphasisquote}{%
-  \vspace{1.5\lnp@gridunit}%     % 1.5 units before
-  \list{}{%
-    \setlength{\leftmargin}{3\lnp@gridunit}%       % 3 quanta
-    \setlength{\rightmargin}{3\lnp@gridunit}%      % Dramatic inset
-    \setlength{\topsep}{0pt}%
-    \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\lnp@gridunit}%
-    \setlength{\itemsep}{0pt}%
-    \fontsize{12}{15.84}\selectfont%       % Larger for emphasis (1.2× leading)
-    \itshape\color{lnp@quotegray}%             % Italic for distinction
-  }%
-  \item\relax
-}{%
-  \endlist
-  \vspace{1.5\lnp@gridunit}%     % 1.5 units after
-  \@afterindentfalse%
-}
-
-% Special handling for environments that should not indent their first paragraph
-\AtBeginEnvironment{itemize}{\parindent=0pt}
-\AtBeginEnvironment{enumerate}{\parindent=0pt}
-\AtBeginEnvironment{description}{\parindent=0pt}
+% Special handling for non-list environments that start flush left. Standard
+% list hooks belong to lnplists.sty.
 \AtBeginEnvironment{quote}{\parindent=0pt}
-\AtBeginEnvironment{quotation}{\parindent=\parindent}  % Quotation keeps normal indentation
-\AtBeginEnvironment{emphasisquote}{\parindent=0pt}     % Emphasis quote no indent
 \AtBeginEnvironment{verbatim}{\parindent=0pt}
 \AtBeginEnvironment{figure}{\parindent=0pt}
 \AtBeginEnvironment{table}{\parindent=0pt}
@@ -474,162 +426,29 @@
 \newcommand{\lnp@noindent}{\@afterindentfalse}
 
 % Display environments: flush left paragraph follows
-\AtEndEnvironment{itemize}{\lnp@noindent}
-\AtEndEnvironment{enumerate}{\lnp@noindent}
 \AtEndEnvironment{quote}{\lnp@noindent}
-\AtEndEnvironment{emphasisquote}{\lnp@noindent}
 \AtEndEnvironment{verbatim}{\lnp@noindent}
 \AtEndEnvironment{figure}{\lnp@noindent}
 \AtEndEnvironment{table}{\lnp@noindent}
-% All display and list environments: flush left paragraph follows
-\AtEndEnvironment{description}{\lnp@noindent}
 \AtEndEnvironment{quotation}{\lnp@noindent}
-\AtEndEnvironment{epigraph}{\lnp@noindent}
 
 % ==============================================================================
-% OPTICAL PARAGRAPH REFINEMENTS (Hochuli's Detail in Typography)
+% SECTION OPENING
 % ==============================================================================
-% Advanced paragraph typography for special cases requiring optical adjustments
-
-% Hanging punctuation for paragraphs starting with quotes
-% Hochuli: "Quotation marks should hang into the margin for optical alignment"
-
-% Lettrine/drop cap support moved to headings module
-%% FIX: Load lettrine before defining public drop-cap commands that use it.
-\RequirePackage{lettrine}
-
-% ==============================================================================
-% CONSERVATIVE SECTION OPENING ENHANCEMENTS
-% ==============================================================================
-% Professional treatments for major section breaks in academic articles
-% following conservative typographic principles suitable for scholarly work.
-%
-% DESIGN PHILOSOPHY:
-%   - Understated elegance over decoration
-%   - Professional credibility maintained
-%   - Subtle hierarchy without distraction
-%   - Grid-perfect implementation
-%
-% REFERENCES:
-%   - Bringhurst: "Typography exists to honor content"
-%   - Chicago Manual of Style guidelines for academic publishing
-
-% MINIMAL DROP CAP FOR ACADEMIC USE (USE SPARINGLY)
-% Ultra-conservative 2-line drop cap - same color as body text
-\newcommand{\academicdropcap}[2]{%
-  \lettrine[%
-    lines=2,%               % Modest 2-line height
-    lhang=0,%              % No hang into margin
-    loversize=0,%          % No size increase
-    findent=0pt,%          % No negative indent
-    nindent=0.5em%         % Standard following line indent
-  ]{\color{lnp@textblack}#1}{#2}% Body text color only
-}
-
-% FIRST LINE SMALL CAPS
-% Elegant first line treatment for section openings
-%% FIX(#39): \fontsize{11} is an explicit 11pt, which matches NO named-size sc
-%% list (normalsize resolves to 10.95pt in the 11pt class; microtype matches
-%% sizes exactly), so the {30} WAS effective. \textls[30] preserves it; bare
-%% \lsstyle would fall back to microtype's 50 (30->50). Exercised only by
-%% tests/fixtures/opening-test.tex, so main.tex's raster cannot show this.
-\newcommand{\firstlinesc}[1]{%
-  {\fontsize{11}{13.2}\selectfont% Maintain body size
-   \textls[30]{\textsc{#1}}}%
-}
-
-% SECTION OPENING WITH SMALL CAPS FIRST LINE
-% Professional opening for major sections
-\providecommand{\sectionopening}{}% Check if already defined
-\renewcommand{\sectionopening}[1]{%
+%% FIX (#86): Keep the one-argument opening inline so following prose remains
+%% in the same paragraph; the former helper ended and restarted the paragraph.
+\newcommand{\sectionopening}[1]{%
   \noindent%
-  \firstlinesc{#1}%
-  \par\noindent%
+  {\fontsize{11}{13.2}\selectfont\textls[30]{\textsc{#1}}}%
 }
-
-% MINIMAL SECTION BREAK MARKERS
-% Ultra-conservative options for academic articles
-
-% Simple space break (recommended for academic use)
-%% FIX: renamed \sectionbreak -> \sectionsep; titlesec executes any defined
-%% \<level>break as a hook during heading construction, so the old name
-%% injected \vspace{2\lnp@gridunit} before every \section in place of \@secpenalty.
-\providecommand{\sectionsep}{}% Check if already defined
-\renewcommand{\sectionsep}{%
-  \vspace{2\lnp@gridunit}% 2 quanta of clean space
-}
-
-
-% Alias for consistency
-\providecommand{\spacebreak}{}% Check if already defined
-\renewcommand{\spacebreak}{\sectionsep}
-
-% ENHANCED SECTION SPACING
-% Additional space after major sections for visual hierarchy
-
-% Deprecated - use \vspace{\lnp@gridunit} directly
-\newcommand{\majorsectionspace}{\vspace{\lnp@gridunit}}
-%% FIX: Restore legacy section divider command used by existing fixtures.
-\newcommand{\thinrulebreak}{%
-  \par\vspace{\lnp@gridunit}%
-  \noindent\rule{\textwidth}{0.4pt}%
-  \par\vspace{\lnp@gridunit}%
-}
-
-% FIRST PARAGRAPH ENHANCEMENT
-% Special treatment for opening paragraph of sections
-\newenvironment{openingparagraph}{%
-  \noindent%
-  \setlength{\parindent}{0pt}% No indent for opening
-  \setlength{\baselineskip}{\lnp@gridunit}% Maintain grid
-  \fontsize{11}{13.2}\selectfont% Standard size
-}{%
-  \par%
-  \setlength{\parindent}{\lnp@gridunit}% Restore standard indent
-}
-
-% ACADEMIC ABSTRACT OPENING
-% Professional treatment for abstract sections
-%% FIX(#39): \fontsize{12} is exactly \large in this 11pt class, so it DOES match
-%% the display sc list at lnpmicrotype.sty:90, which also specifies 80. The explicit
-%% \textls[80] is therefore render-identical either way; it is kept because it
-%% states the amount at the point of use and does not declare a global list.
-\newcommand{\abstractopening}{%
-  \begin{center}
-    {\fontsize{12}{13.2}\selectfont%
-     \textls[80]{\textsc{abstract}}}%
-  \end{center}
-  \vspace{0.5\lnp@gridunit}% 0.5 quanta
-}
-
-
 
 %% FIX (#85, ADR-0006): \quartergridparagraphs and \thirdgridparagraphs were
 %% removed with the rest of the public grid API. Both set \parindent and
 %% \parskip to quantum fractions, which is exactly the arithmetic v3 stops
 %% exposing; a document that wants those values sets the two lengths itself.
 
-% Typography-aware ornamental paragraph break
-% Provides visual separation without ornaments
-%% FIX: renamed \paragraphbreak -> \paragraphsep; the old name collided with
-%% titlesec's \<level>break hook and made run-in \paragraph fail with
-%% "perhaps a missing \item" (the hook executes the macro mid-heading).
-\newcommand{\paragraphsep}{%
-  \par\vspace{\lnp@gridunit}% % 1 quantum of vertical space
-  \noindent%
-}
-
-% Inline sidenote command for margin annotations
-% Aligns to outer margin with proper baseline positioning
-\newcommand{\sidenote}[1]{%
-  \marginpar{%
-    \footnotesize\raggedright%
-    \setlength{\parindent}{0pt}%
-    \setlength{\parskip}{0.25\lnp@gridunit}%
-    #1%
-  }%
-}
-
+%% FIX (#86): Remove the ornamental paragraph-break helper; documents state
+%% intentional spacing directly rather than selecting a package-owned shape.
 
 % Generic math-notation helpers removed in v3 (issue #84); documents define the
 % notation they need. Display-math typography is retained below in section XI.
@@ -648,8 +467,8 @@
 %   - Professional formatting with hanging indents
 %
 % FLOAT PLACEMENT:
+%   - Standard LaTeX placement is left unchanged
 %   - Recommended: [tbp] (top, bottom, page) for professional layout
-%   - Use \FloatBarrier to control float placement by section
 %   - Avoid [h] (here) placement in professional documents
 %
 % REFERENCES:
@@ -717,259 +536,11 @@
 }
 \AtBeginEnvironment{figure}{\lnp@figurecaptionsetup}
 
-% ==============================================================================
-% ADVANCED FLOAT PLACEMENT SYSTEM
-% ==============================================================================
-% Implements intelligent float distribution following Müller-Brockmann's grid
-% principles and Bringhurst's page balance philosophy. This system prevents
-% float clustering, maintains visual rhythm, and ensures optimal reading flow.
-%
-% KEY FEATURES:
-%   - Dynamic float distribution algorithm
-%   - Section-aware float barriers
-%   - Grid-perfect placement with baseline alignment
-%   - Visual weight balancing across pages
-%   - Smart "here" float alternatives
-%
-% REFERENCES:
-%   - Müller-Brockmann, J. (1981). Grid Systems in Graphic Design
-%   - Bringhurst, R. (2012). The Elements of Typographic Style
-%   - Tufte, E. (2001). The Visual Display of Quantitative Information
-
-% OPTIMIZED FLOAT PLACEMENT PARAMETERS
-% Fine-tuned for academic documents with mixed text/float content
-\renewcommand{\topfraction}{0.75}       % Reduced from 0.85 to prevent top clustering
-\renewcommand{\bottomfraction}{0.60}    % Reduced from 0.70 for better balance
-\renewcommand{\textfraction}{0.20}      % Increased from 0.15 - min 20% text required
-\renewcommand{\floatpagefraction}{0.70} % Slightly increased for cleaner float pages
-\setcounter{topnumber}{2}               % Reduced from 3 to prevent top-heavy pages
-\setcounter{bottomnumber}{2}            % Kept at 2 for balance
-\setcounter{totalnumber}{3}             % Reduced from 4 to prevent overcrowding
-\setcounter{dbltopnumber}{2}            % Reduced for two-column layouts
-
-% PENALTIES FOR FLOAT PLACEMENT
-% Discourage problematic float arrangements
-\setlength{\@fptop}{0pt plus 1fil}      % Flexible space at top of float pages
-\setlength{\@fpsep}{\lnp@gridunit}\addtolength{\@fpsep}{0pt plus 1fil}   % 1 quantum between floats
-\setlength{\@fpbot}{0pt plus 1fil}      % Flexible space at bottom
-
-% REFINED FLOAT SPACING - Tighter for conservative scientific papers
-% All measurements in 13.2pt quantum multiples with minimal flexibility
-\setlength{\floatsep}{\lnp@gridunit}\addtolength{\floatsep}{0pt plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}        % 1 unit ±0.25 (reduced)
-\setlength{\textfloatsep}{\lnp@gridunit}\addtolength{\textfloatsep}{0pt plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}    % 1 unit ±0.25 (reduced from 2)
-\setlength{\intextsep}{0.75\lnp@gridunit}\addtolength{\intextsep}{0pt plus 0.125\lnp@gridunit minus 0pt}         % 0.75 units +0.125/-0 (tighter)
-\setlength{\dblfloatsep}{\lnp@gridunit}\addtolength{\dblfloatsep}{0pt plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}     % 1 unit ±0.25 (reduced)
-\setlength{\dbltextfloatsep}{\lnp@gridunit}\addtolength{\dbltextfloatsep}{0pt plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit} % 1 unit ±0.25 (reduced from 2)
-
-% FLOAT PLACEMENT QUALITY PARAMETERS
-\providecommand{\topfigrule}{\vspace*{0pt}}  % No rule above top figures
-\providecommand{\botfigrule}{\vspace*{0pt}}  % No rule below bottom figures
-
-% ==============================================================================
-% INTELLIGENT FLOAT BARRIER SYSTEM
-% ==============================================================================
-% Implements section-aware automatic float barriers to prevent float drift
-% across major document divisions while maintaining reading flow.
-
-% AUTOMATIC SECTION BARRIERS
-% Both levels clear pending floats before the heading, so a float never drifts
-% past the division it belongs to.
-%% FIX (#85): the [subsectionbarriers]/[nosubsectionbarriers] pair and the
-%% begindocument message reporting which was in force are gone with the rest
-%% of the option surface. The documented default -- barriers on -- is now
-%% simply what the package does, which is why the two levels are identical.
-\let\originalsection\section
-\renewcommand{\section}{%
-  \FloatBarrier
-  \originalsection
-}
-\let\originalsubsection\subsection
-\renewcommand{\subsection}{%
-  \FloatBarrier
-  \originalsubsection
-}
-
-% MANUAL BARRIER COMMANDS
-% For fine-grained control when automatic barriers aren't sufficient
-
-% Soft barrier - allows some float movement
-\newcommand{\softfloatbarrier}{%
-  \vspace{0pt plus \lnp@gridunit}  % Flexible space up to 1 quantum
-  \FloatBarrier
-  \vspace{0pt plus \lnp@gridunit}
-}
-
-% Hard barrier - strict float placement
-\newcommand{\hardfloatbarrier}{%
-  \clearpage  % Force new page if necessary
-}
-
-% Section-end barrier - use before major transitions
-\newcommand{\sectionendfloatbarrier}{%
-  \vspace{\lnp@gridunit}  % 1 quantum space
-  \FloatBarrier
-  \vspace{\lnp@gridunit}
-}
-
-% HERE-FLOAT ALTERNATIVES
-% Smart placement commands that degrade gracefully
-
-% Try-here float - attempts here placement with a top fallback
-\newcommand{\tryherefigure}[1]{%
-  %% FIX: Use [ht] directly to avoid LaTeX rewriting bare [h] at compile time.
-  \begin{figure}[ht]
-    #1
-  \end{figure}
-}
-
-% Force-here float - uses minipage for absolute placement
-\newcommand{\forceherefigure}[1]{%
-  \vspace{\lnp@gridunit}  % Grid space before
-  \noindent\begin{minipage}{\textwidth}
-    \centering
-    %% FIX: Disable hypcap for floatless captions to avoid ignored-option warnings.
-    \captionsetup{hypcap=false}%
-    #1
-  \end{minipage}
-  \vspace{\lnp@gridunit}  % Grid space after
-}
-
-% Grid-aligned here float
-\newenvironment{herefloat}{%
-  \vspace*{\dimexpr1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit\relax}%  % 1 unit ±0.25
-  \begin{center}%
-  %% FIX: Disable hypcap for floatless captions to avoid ignored-option warnings.
-  \captionsetup{hypcap=false}%
-}{%
-  \end{center}%
-  \vspace*{\dimexpr1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit\relax}%  % 1 unit ±0.25
-}
-
-% FLOAT QUALITY METRICS
-% Commands to help diagnose float placement issues
-
-% Show float statistics
-\newcommand{\showfloatstats}{%
-  \typeout{Float Statistics:}%
-  \typeout{  Top floats on this page: \the\value{topnumber}}%
-  \typeout{  Bottom floats on this page: \the\value{bottomnumber}}%
-  \typeout{  Total floats on this page: \the\value{totalnumber}}%
-}
-
-% Mark problematic float placement
-\newcommand{\floatwarning}[1]{%
-  \marginpar{\color{red}\tiny Float: #1}%
-}
-
-% VISUAL BALANCE HELPERS
-% Commands to maintain visual weight distribution
-
-% Add balancing space when page is float-heavy
-\newcommand{\balancefloatpage}{%
-  \vspace{0pt plus 2\lnp@gridunit}  % Up to 2 quanta of flexible space
-}
-
-% Compensate for large float at top
-\newcommand{\compensatetopfloat}{%
-  \enlargethispage{\lnp@gridunit}  % Add 1 quantum to page
-}
-
-% ENHANCED TABLE CONFIGURATION (moved after package loading)
-%% FIX: duplicate \arraystretch{1.2}/\tabcolsep{8pt} defaults removed here;
-%% the identical pair under PROFESSIONAL TABLE DEFAULTS below is canonical.
-
-% LONGTABLE INTEGRATION (moved after package loading)
-
-% ==============================================================================
-% ADVANCED CAPTION COMMANDS
-% ==============================================================================
-
-% Caption source for data attribution
-\newcommand{\captionsource}[1]{%
-  \vspace{0.25\lnp@gridunit}% 0.25 quanta
-  {\footnotesize\color{lnp@subtlegray}\emph{Source:} #1}%
-}
-
-% Continued caption for multi-page tables/figures
-\newcommand{\captioncontinued}{%
-  \captionsetup{list=no}% Don't add to list of tables/figures
-  \caption*{\emph{(continued from previous page)}}%
-}
-
-% Sub-caption configuration for compound figures
-% NOTE: Commented out as subfigure package is not loaded
-% Uncomment and load subfig or subcaption package if needed
-% \captionsetup[subfigure]{
-%   font=scriptsize,            % 8pt for sub-captions
-%   labelfont={bf},            % Bold labels
-%   labelformat=simple,         % Just (a), (b), etc.
-%   labelsep=space,            % Space separator
-%   skip=3.3pt,                % 0.25 units spacing
-%   margin=0pt,                % No extra margins
-%   justification=centering    % Center sub-captions
-% }
-
-% ==============================================================================
-% QJE-STYLE NOTES SYSTEM FOR TABLES AND FIGURES
-% ==============================================================================
-% Professional notes following Quarterly Journal of Economics and American 
-% Economic Review standards with perfect grid alignment and optimal spacing.
-%
-% KEY PRINCIPLES:
-%   - Consistent quantum-multiple spacing (13.2pt system)
-%   - Left-justified text matching QJE/AER style
-%   - Optimal spacing from table/figure content
-%   - Clear visual hierarchy with consistent formatting
-%   - Support for multiple note types (notes, source, significance)
-%
-% REFERENCES:
-%   - Quarterly Journal of Economics style guide
-%   - American Economic Review formatting standards
-%   - Chicago Manual of Style, 17th ed.
-
-% TABLE NOTES ENVIRONMENT
-% Placed immediately after \end{tabular} or \end{tabularx}
-\newenvironment{tablenotes}{%
-  \par\vspace{0.25\lnp@gridunit}% 0.25 quanta from table bottom
-  \footnotesize% 9pt for notes (Chicago standard)
-  \setlength{\parindent}{0pt}% Flush left
-  \setlength{\parskip}{0.25\lnp@gridunit}% 0.25 units between note types
-  \raggedright% Left-justified (QJE standard)
-  \setlength{\leftskip}{0pt}% Ensure full left alignment
-  \setlength{\rightskip}{0pt plus 1fil}% Ragged right edge
-}{%
-  \par\vspace{0.5\lnp@gridunit}% 0.5 quanta after notes block
-}
-
-% TABLE NOTE COMMANDS
-% Each command formats its content with proper emphasis
-\newcommand{\tabnote}[1]{%
-  {\itshape Notes:} #1\par%
-}
-%% FIX: Restore legacy note command aliases used by existing fixtures.
-\newcommand{\tablenote}[1]{\tabnote{#1}}
-
-\newcommand{\tabsource}[1]{%
-  {\itshape Source:} #1\par%
-}
-
-% Significance stars with precise spacing
-\newcommand{\tabstars}{%
-  \textsuperscript{***}\,p\,$<$\,0.01, 
-  \textsuperscript{**}\,p\,$<$\,0.05, 
-  \textsuperscript{*}\,p\,$<$\,0.1\par%
-}
-
-% Alternative significance notation (for robustness checks)
-\newcommand{\tabdaggers}{%
-  \textsuperscript{\textdagger\textdagger\textdagger}\,p\,$<$\,0.01, 
-  \textsuperscript{\textdagger\textdagger}\,p\,$<$\,0.05, 
-  \textsuperscript{\textdagger}\,p\,$<$\,0.1\par%
-}
-
 % FIGURE NOTES ENVIRONMENT
-% Placed immediately after \caption{...}
-\newenvironment{fignotes}{%
+% Placed immediately after \caption{...}.
+%% FIX (#86): Use one package-specific name so threeparttable and documents
+%% retain ownership of their note environments and commands.
+\newenvironment{lanepaperfigurenotes}{%
   \par\vspace{-0.25\lnp@gridunit}% Tighter spacing for figures (0.25 units less)
   \footnotesize% 9pt for notes
   \setlength{\parindent}{0pt}% Flush left
@@ -979,48 +550,6 @@
   \setlength{\rightskip}{0pt plus 1fil}%
 }{%
   \par\vspace{0.5\lnp@gridunit}% 0.5 quanta after notes
-}
-
-% FIGURE NOTE COMMANDS
-\newcommand{\fignote}[1]{%
-  {\itshape Notes:} #1\par%
-}
-\newcommand{\figurenote}[1]{\fignote{#1}}
-
-\newcommand{\figsource}[1]{%
-  {\itshape Source:} #1\par%
-}
-
-% ADDITIONAL NOTE COMMANDS FOR COMPREHENSIVE SUPPORT
-% Sample size notation
-\newcommand{\tabsample}[1]{%
-  {\itshape Sample:} #1\par%
-}
-
-% Variable definitions
-\newcommand{\tabvars}[1]{%
-  {\itshape Variables:} #1\par%
-}
-
-% Estimation method
-\newcommand{\tabmethod}[1]{%
-  {\itshape Method:} #1\par%
-}
-
-% Standard error clustering
-\newcommand{\tabcluster}[1]{%
-  {\itshape Standard errors:} #1\par%
-}
-
-% PANEL LABELS FOR MULTI-PANEL FIGURES/TABLES
-\newcommand{\panellabel}[1]{%
-  \textbf{Panel #1.}\quad%
-}
-
-% SUBFIGURE/SUBTABLE NOTES
-% For when individual panels need separate notes
-\newcommand{\panelnote}[2]{%
-  {\itshape Panel #1:} #2\par%
 }
 
 % ==============================================================================
@@ -1384,154 +913,8 @@
 
 % Section formatting has been moved to lnpheadings.sty
 
-% ==============================================================================
-% IX. CHICAGO-COMPLIANT APPENDIX MANAGEMENT SYSTEM
-% ==============================================================================
-%
-% Professional appendix system implementing Chicago Manual of Style (17th ed.)
-% guidelines with automatic single/multiple appendix detection and formatting.
-% Uses a sophisticated two-pass auxiliary file mechanism for intelligent behavior.
-%
-% AUTOMATIC BEHAVIOR:
-%   Single Appendix:    "Appendix" (no letter designation)
-%   Multiple Appendices: "Appendix A", "Appendix B", etc. with ToC header
-%
-% TECHNICAL IMPLEMENTATION:
-%   - First pass: Counts appendices, writes to auxiliary file
-%   - Second pass: Reads count, applies appropriate formatting
-%   - Backward compatible with legacy \startappendices commands
-%
-% CHICAGO COMPLIANCE:
-%   - Proper capitalization and numbering
-%   - Table of Contents integration
-%   - Consistent cross-referencing format
-%   - Professional typographic treatment
-%
-% REFERENCES:
-%   - University of Chicago Press (2017). Chicago Manual of Style, 17th ed.
-%   - Section 1.57-1.59: Appendix formatting guidelines
-%   - Section 14.57: Appendix citations and references
-%
-% ------------------------------------------------------------------------------
-
-% APPENDIX SYSTEM INITIALIZATION
-% Core package and counter setup
-%% Issue #48 (ADR-0003 rule 2): appendix is detected, not loaded. The
-%% detection below already existed; loading the package here made it
-%% always true. \startappendices falls back to plain \appendix when the
-%% document has not loaded it.
-
-
-% Internal counter for tracking appendices in current document
-\newcounter{appendixcount}
-\setcounter{appendixcount}{0}
-
-% Boolean to track single vs multiple appendices
-\newif\ifmultipleappendices
-\multipleappendicesfalse
-
-% Initialize appendix count variable
-\def\lnp@totalappendices{0}
-
-% Set up appendix count reading at begin document
-\AddToHook{begindocument}{%
-  % Read appendix count from aux file if available
-  \@ifundefined{lnp@totalappendices}{\def\lnp@totalappendices{0}}{}%
-}
-
-% Robust appendix system - Overleaf compatible
-% Uses simple commands that work in all TeX versions
-
-% Create internal flags without @ symbols
-\newif\iflnp@appendixloaded
-\newif\iflnp@sectionsaved
-
-% Check for appendix package at load time
-%% Issue #56: a package hook fires exactly when appendix loads, whether that
-%% is before or after this package, and never fires if it is absent -- so the
-%% \newif default (false) is the correct "not loaded" state.
-\AddToHook{package/appendix/after}{\lnp@appendixloadedtrue}
-
-% Store original section command at package load time
-\let\lnp@origsection\section
-
-%% FIX: Preserve starred and optional \section forms inside appendix wrappers.
-\newcommand{\lnp@appendixsection}{%
-  \@ifstar{\lnp@appendixsectionstar}{\lnp@appendixsectionnostar}%
-}
-\newcommand{\lnp@appendixsectionstar}[1]{%
-  \lnp@origsection*{#1}%
-}
-\newcommand{\lnp@appendixsectionnostar}{%
-  \@ifnextchar[{%
-    \lnp@appendixsectionwithopt
-  }{%
-    \lnp@appendixsectionplain
-  }%
-}
-\def\lnp@appendixsectionwithopt[#1]#2{%
-  \stepcounter{appendixcount}%
-  \lnp@origsection[#1]{#2}%
-}
-\newcommand{\lnp@appendixsectionplain}[1]{%
-  \stepcounter{appendixcount}%
-  \lnp@origsection{#1}%
-}
-
-% Main appendix commands
-\newcommand{\startappendices}{%
-  \clearpage%
-  % Check if appendices package is loaded
-  \iflnp@appendixloaded
-    % Use appendices environment if available
-    \begin{appendices}%
-    \addappheadtotoc%
-  \else
-    % Fallback to basic appendix command
-    \appendix%
-    %% \phantomsection is hyperref's. #48 stopped loading hyperref, so a
-    %% document that does not load it reaches this branch with the command
-    %% undefined -- a fatal error, not merely less styling. Degrade to a
-    %% no-op, which is what hyperref's own documentation recommends.
-    \providecommand{\phantomsection}{}%
-    \phantomsection%
-    \addcontentsline{toc}{section}{Appendices}%
-  \fi
-  % Reset counter for tracking
-  \setcounter{appendixcount}{0}%
-  % Mark that we've saved the section command
-  \lnp@sectionsavedtrue
-  % Redefine section to count appendices
-  \renewcommand{\section}{\lnp@appendixsection}%
-}
-
-% Helper to write appendix count
-% Fix: Avoid @ symbols completely by using standard LaTeX commands
-\newcommand{\lnp@writecount}{%
-  \addtocontents{aux}{\string\gdef\string\lnp@totalappendices{\theappendixcount}}%
-}
-
-\newcommand{\finishappendices}{%
-  % Write count for next run
-  \lnp@writecount
-  % Close appendices environment if used
-  \iflnp@appendixloaded
-    \end{appendices}%
-  \fi
-  % Restore original section command
-  \iflnp@sectionsaved
-    \let\section\lnp@origsection
-    %% FIX: Clear saved-section state after restoring \section.
-    \lnp@sectionsavedfalse
-  \fi
-}
-
-% Legacy environment names for backward compatibility
-\newenvironment{documentAppendices}{%
-  \startappendices%
-}{%
-  \finishappendices%
-}
+%% FIX (#86, ADR-0003): Appendix orchestration is document-owned. Lanepaper
+%% leaves the standard \appendix command and any document-selected package intact.
 
 % ==============================================================================
 % X. CORE FUNCTIONALITY AND INTEGRATION
@@ -1549,7 +932,7 @@
 % HYPERREF CONFIGURATION:
 %   - Professional color scheme matching document palette
 %   - PDF metadata for academic publishing
-%   - Accessibility-compliant link formatting
+%   - Visible link formatting that matches the package palette
 %
 % REFERENCES:
 %   - LaTeX Graphics Companion (2nd ed.)
@@ -1558,15 +941,14 @@
 % ------------------------------------------------------------------------------
 
 % ESSENTIAL PACKAGE LOADING
-% Graphics, tables, and cross-referencing support
-\RequirePackage{graphicx}        % Graphics inclusion and manipulation
+% Table and page-style support
+%% FIX (#86): lnplists owns and loads graphicx for its scaled markers; the
+%% master package no longer owns image helpers or needs a duplicate load.
 \RequirePackage{array}           % Enhanced array and tabular environments
 \RequirePackage{booktabs}        % Professional table design (no vertical rules)
-%% Issue #48 (ADR-0003 rule 2): tabularx and longtable are configured if the
-%% document loads them, never loaded here. See the guarded block below.
+%% Issue #48 (ADR-0003 rule 2): longtable is configured if the document loads
+%% it, never loaded here. See the guarded block below.
 % ltcaption removed - modern longtable handles captions natively
-\RequirePackage{placeins}        % Float barriers for sectional control
-\RequirePackage{csquotes}        % Context-sensitive quotation commands
 \RequirePackage{fancyhdr}        % Custom headers and footers
 %% Issue #48 (ADR-0003 rule 2): hyperref is configured if loaded, never loaded.
 %% Loading hyperref here would dictate load order to every document using this
@@ -1618,16 +1000,6 @@
 %% with the rest of the public grid API. Each wrapped one
 %% \renewcommand{\arraystretch}{...} inside a standard `table`, which a
 %% document writes for itself.
-
-% REGRESSION TABLE SUPPORT
-% Special environment for regression tables with optimal grid alignment
-\newenvironment{regressiontable}[1][tbp]{%
-  \begin{table}[#1]%
-  \renewcommand{\arraystretch}{1.15}% Slightly tighter for regression tables
-  \setlength{\tabcolsep}{6pt}% Tighter columns for multiple models
-}{%
-  \end{table}%
-}
 
 % PROFESSIONAL TABLE DEFAULTS
 % Global settings for all tables (can be overridden locally)
@@ -2111,56 +1483,6 @@
 % Author: Nathan Lane
 %
 % ==============================================================================
-% ==============================================================================
-% DIAGNOSTIC COMMANDS
-% ==============================================================================
-% For debugging and checking configuration
-
-% Create flags for package detection
-\newif\iflnp@microtypeloaded
-\newif\iflnp@biblatexloaded
-
-% Check packages at load time
-\@ifpackageloaded{microtype}{\lnp@microtypeloadedtrue}{\lnp@microtypeloadedfalse}
-%% Issue #56: a package hook reports biblatex correctly in
-%% \lanepaperdiagnostics whichever order the document loads it in. microtype
-%% above stays inline -- this package loads it, so it is always already there.
-\AddToHook{package/biblatex/after}{\lnp@biblatexloadedtrue}
-
-\newcommand{\lanepaperdiagnostics}{%
-  \typeout{=== Paperstyle Diagnostics ===}%
-  \typeout{LaTeX Version: \fmtversion}%
-  \typeout{Document Class: article}%
-  \typeout{Spacing quantum: \the\lnp@gridunit}%
-  \typeout{Font System: TeX Gyre Pagella}%
-  \typeout{Math Font: newpxmath}%
-  \typeout{Mono Font: Inconsolata (zi4)}%
-  \iflnp@microtypeloaded
-    \typeout{Microtype: Loaded}%
-  \else
-    \typeout{Microtype: Not loaded}%
-  \fi
-  \iflnp@biblatexloaded
-    \typeout{Biblatex: Loaded}%
-  \else
-    \typeout{Biblatex: Not loaded}%
-  \fi
-  \typeout{=============================}%
-}
-
-% Show current configuration
-\newcommand{\lanepaperinfo}{%
-  \begin{description}
-    \item[Typography System] TeX Gyre Pagella with newpxmath
-    \item[Spacing quantum] \the\lnp@gridunit{} (internal)
-    \item[Microtype] Character protrusion and font expansion active
-    \item[Small Caps] Tracking optimized for Pagella
-    \item[Lists] Refined bullets with hanging punctuation
-  \end{description}
-}
-
-
-% ==============================================================================
 % ROBUSTNESS (#55)
 % ==============================================================================
 % Every public macro defined above is made robust for moving arguments
@@ -2175,50 +1497,7 @@
 \ifdefmacro{\loosepars}{\robustify{\loosepars}}{}
 \ifdefmacro{\centeredpar}{\robustify{\centeredpar}}{}
 \ifdefmacro{\dialogue}{\robustify{\dialogue}}{}
-\ifdefmacro{\quoteattribution}{\robustify{\quoteattribution}}{}
-\ifdefmacro{\academicdropcap}{\robustify{\academicdropcap}}{}
-\ifdefmacro{\firstlinesc}{\robustify{\firstlinesc}}{}
 \ifdefmacro{\sectionopening}{\robustify{\sectionopening}}{}
-\ifdefmacro{\sectionsep}{\robustify{\sectionsep}}{}
-\ifdefmacro{\spacebreak}{\robustify{\spacebreak}}{}
-\ifdefmacro{\majorsectionspace}{\robustify{\majorsectionspace}}{}
-\ifdefmacro{\thinrulebreak}{\robustify{\thinrulebreak}}{}
-\ifdefmacro{\abstractopening}{\robustify{\abstractopening}}{}
-\ifdefmacro{\paragraphsep}{\robustify{\paragraphsep}}{}
-\ifdefmacro{\sidenote}{\robustify{\sidenote}}{}
-\ifdefmacro{\topfraction}{\robustify{\topfraction}}{}
-\ifdefmacro{\bottomfraction}{\robustify{\bottomfraction}}{}
-\ifdefmacro{\textfraction}{\robustify{\textfraction}}{}
-\ifdefmacro{\floatpagefraction}{\robustify{\floatpagefraction}}{}
-\ifdefmacro{\topfigrule}{\robustify{\topfigrule}}{}
-\ifdefmacro{\botfigrule}{\robustify{\botfigrule}}{}
-\ifdefmacro{\section}{\robustify{\section}}{}
-\ifdefmacro{\subsection}{\robustify{\subsection}}{}
-\ifdefmacro{\softfloatbarrier}{\robustify{\softfloatbarrier}}{}
-\ifdefmacro{\hardfloatbarrier}{\robustify{\hardfloatbarrier}}{}
-\ifdefmacro{\sectionendfloatbarrier}{\robustify{\sectionendfloatbarrier}}{}
-\ifdefmacro{\tryherefigure}{\robustify{\tryherefigure}}{}
-\ifdefmacro{\forceherefigure}{\robustify{\forceherefigure}}{}
-\ifdefmacro{\showfloatstats}{\robustify{\showfloatstats}}{}
-\ifdefmacro{\floatwarning}{\robustify{\floatwarning}}{}
-\ifdefmacro{\balancefloatpage}{\robustify{\balancefloatpage}}{}
-\ifdefmacro{\compensatetopfloat}{\robustify{\compensatetopfloat}}{}
-\ifdefmacro{\captionsource}{\robustify{\captionsource}}{}
-\ifdefmacro{\captioncontinued}{\robustify{\captioncontinued}}{}
-\ifdefmacro{\tabnote}{\robustify{\tabnote}}{}
-\ifdefmacro{\tablenote}{\robustify{\tablenote}}{}
-\ifdefmacro{\tabsource}{\robustify{\tabsource}}{}
-\ifdefmacro{\tabstars}{\robustify{\tabstars}}{}
-\ifdefmacro{\tabdaggers}{\robustify{\tabdaggers}}{}
-\ifdefmacro{\fignote}{\robustify{\fignote}}{}
-\ifdefmacro{\figurenote}{\robustify{\figurenote}}{}
-\ifdefmacro{\figsource}{\robustify{\figsource}}{}
-\ifdefmacro{\tabsample}{\robustify{\tabsample}}{}
-\ifdefmacro{\tabvars}{\robustify{\tabvars}}{}
-\ifdefmacro{\tabmethod}{\robustify{\tabmethod}}{}
-\ifdefmacro{\tabcluster}{\robustify{\tabcluster}}{}
-\ifdefmacro{\panellabel}{\robustify{\panellabel}}{}
-\ifdefmacro{\panelnote}{\robustify{\panelnote}}{}
 \ifdefmacro{\articletitle}{\robustify{\articletitle}}{}
 \ifdefmacro{\articletitlefootnote}{\robustify{\articletitlefootnote}}{}
 \ifdefmacro{\articletitlecompact}{\robustify{\articletitlecompact}}{}
@@ -2237,8 +1516,6 @@
 %% \@currentlabel; protection made a \label in footnote 1 resolve to 2.
 \ifdefmacro{\footnote}{\robustify{\footnote}}{}
 \ifdefmacro{\multiplefootnotes}{\robustify{\multiplefootnotes}}{}
-\ifdefmacro{\startappendices}{\robustify{\startappendices}}{}
-\ifdefmacro{\finishappendices}{\robustify{\finishappendices}}{}
 \ifdefmacro{\arraystretch}{\robustify{\arraystretch}}{}
 \ifdefmacro{\tightpar}{\robustify{\tightpar}}{}
 \ifdefmacro{\loosepar}{\robustify{\loosepar}}{}
@@ -2251,7 +1528,5 @@
 \ifdefmacro{\frontmatterpages}{\robustify{\frontmatterpages}}{}
 \ifdefmacro{\mainmatterpages}{\robustify{\mainmatterpages}}{}
 \ifdefmacro{\unnumberedpage}{\robustify{\unnumberedpage}}{}
-\ifdefmacro{\lanepaperdiagnostics}{\robustify{\lanepaperdiagnostics}}{}
-\ifdefmacro{\lanepaperinfo}{\robustify{\lanepaperinfo}}{}
 
 \endinput

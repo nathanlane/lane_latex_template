@@ -376,12 +376,12 @@ own accent defines and applies one.
 
 \emph{List Typography Colors:}
 \begin{itemize}
-\item \emph{Bullet symbols:} Professional gray (20\% gray) for optimal visibility without dominating text
-\item \emph{Description labels:} Small caps in 15\% gray for subtle distinction
-\item \emph{Footnote rules:} Light gray (45\%) for gentle separation
+\item \emph{Bullet symbols:} A supporting gray that remains subordinate to text
+\item \emph{Description labels:} Small caps in the paragraph-heading role
+\item \emph{Footnote rules:} The supporting-text gray for gentle separation
 \end{itemize}
 
-This systematic approach ensures accessibility compliance (WCAG 2.1 AA) while maintaining Butterick's emphasis on content primacy over decorative elements. The bullet color at 20\% gray (80\% black) was specifically chosen after testing showed that lighter values appeared too subtle, particularly with larger bullet symbols.
+The restrained palette maintains Butterick's emphasis on content primacy over decorative elements. Color reinforces hierarchy; it does not carry meaning by itself.
 
 \section{Paragraph Indentation}
 
@@ -412,13 +412,14 @@ Figures should be placed using the \texttt{figure} environment with appropriate 
     \vspace{2cm}}}
   \caption{Professional Figure Example with Proper Caption Placement}
   \label{fig:professional-example}
-  \begin{fignotes}
-    \fignote{This figure demonstrates the enhanced caption styling with 11pt font size for better prominence. The data shown represents a hypothetical analysis of typography effectiveness across different document types.}
-    \figsource{Author's calculations based on typography framework analysis.}
-  \end{fignotes}
+  \begin{lanepaperfigurenotes}
+    \emph{Notes:} This figure demonstrates the enhanced caption styling with 11pt font size for better prominence. The data shown represents a hypothetical analysis of typography effectiveness across different document types.
+
+    \emph{Source:} Author's calculations based on typography framework analysis.
+  \end{lanepaperfigurenotes}
 \end{figure}
 
-\safeparagraph{Figure Best Practices}~ Notice how Figure~\ref{fig:professional-example} demonstrates proper caption placement \emph{below} the figure content. The caption uses our systematic 10pt sizing (derived from 11pt base ÷ 1.1) with hanging indent formatting for optimal readability.
+\safeparagraph{Figure Best Practices}~ Notice how Figure~\ref{fig:professional-example} demonstrates proper caption placement \emph{below} the figure content. The caption uses the body size, a bold label, and ragged-right text across the float width.
 
 \subsection{Graphics Inclusion}
 
@@ -438,33 +439,34 @@ Professional figure inclusion follows this pattern:
 \item \emph{Resolution:} Minimum 300 DPI for print quality
 \item \emph{Format:} PDF or EPS for vector graphics, PNG for photographs
 \item \emph{Fonts:} Consistent with document typography (11pt minimum)
-\item \emph{Colors:} Following our accessibility-compliant palette
+\item \emph{Colors:} Restrained and legible, with meaning preserved without color
 \end{itemize}
 
 \subsection{Professional Table Design}
 
-Tables demonstrate the power of \texttt{booktabs} package with no vertical rules, creating clean, readable presentations of data. The framework provides table environments with quantum-derived spacing.
+Tables demonstrate the power of \texttt{booktabs} with no vertical rules, creating clean, readable presentations of data. Lanepaper styles captions and row spacing on the standard table environment.
 
 \begin{table}[tbp]
   \caption{Sample Data Table Using Booktabs Design Principles}
   \label{tab:sample-data}
   \centering
-  \begin{tabular}{@{}lrrr@{}}
-    \toprule
-    Method & Accuracy & Precision & Recall \\
-    \midrule
-    Baseline & 0.72*** & 0.68** & 0.71*** \\
-                & (0.03) & (0.04) & (0.03) \\
-    Enhanced Model & 0.85*** & 0.82*** & 0.87*** \\
-                   & (0.02) & (0.03) & (0.02) \\
-    Our Approach & 0.91*** & 0.89*** & 0.93*** \\
-                 & (0.01) & (0.02) & (0.01) \\
-    \bottomrule
-  \end{tabular}
-  \begin{tablenotes}
-    \tabnote{Standard errors in parentheses. All models trained on the same dataset with 10-fold cross-validation. The baseline uses default hyperparameters while enhanced models include parameter tuning.}
-    \tabstars
-  \end{tablenotes}
+  \begin{threeparttable}
+    \begin{tabular}{@{}lrrr@{}}
+      \toprule
+      Method & Accuracy & Precision & Recall \\
+      \midrule
+      Baseline & 0.72*** & 0.68** & 0.71*** \\
+                  & (0.03) & (0.04) & (0.03) \\
+      Enhanced Model & 0.85*** & 0.82*** & 0.87*** \\
+                     & (0.02) & (0.03) & (0.02) \\
+      Our Approach & 0.91*** & 0.89*** & 0.93*** \\
+                   & (0.01) & (0.02) & (0.01) \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+      \item \emph{Notes:} Standard errors in parentheses. All models use the same dataset with 10-fold cross-validation. *** $p < 0.01$, ** $p < 0.05$, * $p < 0.1$.
+    \end{tablenotes}
+  \end{threeparttable}
 \end{table}
 
 \safeparagraph{Table Conventions}~ Table~\ref{tab:sample-data} shows proper caption placement \emph{above} the table content, following Chicago Manual of Style guidelines. The booktabs design uses only horizontal rules (\texttt{\textbackslash{}toprule}, \texttt{\textbackslash{}midrule}, \texttt{\textbackslash{}bottomrule}) for professional appearance.
@@ -486,17 +488,16 @@ For tables requiring full text width, use \texttt{tabularx} with \texttt{X} colu
     Method C & Novel algorithm with adaptive parameter tuning and memory efficiency & 89 & 38 & 0.91 \\
     \bottomrule
   \end{tabularx}
-  \begin{tablenotes}
-    \tabnote{Runtime measured on Intel Core i7-9700K @ 3.6GHz with 32GB RAM. Memory usage represents peak allocation during execution.}
-    \tabsource{Performance benchmarks from internal testing suite, Q2 2025.}
-  \end{tablenotes}
+  {\footnotesize
+  \emph{Notes:} Runtime measured on Intel Core i7-9700K @ 3.6GHz with 32GB RAM. Memory usage represents peak allocation during execution.\par
+  \emph{Source:} Performance benchmarks from internal testing suite, Q2 2025.\par}
 \end{table}
 
 \safeparagraph{TabularX Benefits}~ The \texttt{X} column type automatically adjusts width to fill available space while maintaining proper text justification, as demonstrated in the Description column of Table~\ref{tab:extended-results}.
 
 \subsection{Tables with Standard Row Heights}
 
-The framework provides specialized table environments with systematic row spacing:
+Standard tables receive the package's row spacing and can override it locally:
 
 \begin{table}[tbp]
   \renewcommand{\arraystretch}{1.2}
@@ -517,7 +518,7 @@ The framework provides specialized table environments with systematic row spacin
 \safeparagraph{Row Heights}~ Row height is \texttt{\textbackslash arraystretch} times the 16.32pt body baseline plus 2.2pt of \texttt{\textbackslash extrarowheight}. The package sets 1.2 globally (~21.8pt); a table that wants denser or looser rows sets its own inside the float:
 \begin{itemize}
 \item \texttt{\textbackslash renewcommand\{\textbackslash arraystretch\}\{1.2\}} --- standard rows (~21.8pt) for normal data
-\item \texttt{regressiontable} --- ~21.0pt rows (measured) for statistical results
+\item \texttt{\textbackslash renewcommand\{\textbackslash arraystretch\}\{1.15\}} --- ~21.0pt rows for statistical results
 \item \texttt{\textbackslash renewcommand\{\textbackslash arraystretch\}\{0.9\}} --- ~16.9pt rows for dense information
 \end{itemize}
 
@@ -552,7 +553,7 @@ For tables spanning multiple pages, use \texttt{longtable} with proper header an
 \end{longtable}
 \end{verbatim}
 
-\subsection{Float Control with FloatBarrier}
+\subsection{Standard Float Placement}
 
 Use \texttt{\textbackslash{}clearpage} to control float placement by section:
 
@@ -566,12 +567,11 @@ Use \texttt{\textbackslash{}clearpage} to control float placement by section:
 
 \safeparagraph{When to Use clearpage} Insert \texttt{\textbackslash{}clearpage} before major section breaks to prevent figures and tables from drifting beyond their contextual sections. This is particularly important in academic papers where figures should appear near their discussion.
 
-\safeparagraph{Professional Float Placement} Our framework configures optimal float placement defaults:
+\safeparagraph{Professional Float Placement} Standard LaTeX float placement remains in control:
 \begin{itemize}
 \item \emph{Preferred placement:} \texttt{[tbp]} allows top, bottom, or dedicated float pages
 \item \emph{Avoid:} \texttt{[h]} (here) placement, which can create poor layout
-\item \emph{Multiple floats:} Maximum 3 top floats, 2 bottom floats per page
-\item \emph{Page composition:} Minimum 15\% text content per page
+\item \emph{Forced flush:} \texttt{\textbackslash{}clearpage} prints pending floats before continuing
 \end{itemize}
 
 \subsection{Quotation Integration}
@@ -586,46 +586,33 @@ The \texttt{csquotes} package provides context-sensitive quotation handling:
 
 \safeparagraph{Smart Quotation Example} The framework automatically handles nested quotations: \enquote{He said, \enquote{The results are very promising according to our analysis.}}
 
-% Demonstrate FloatBarrier usage
+% Flush pending standard floats before the next major example.
 \clearpage
 
-\section{Sophisticated List Typography}
+\section{List Typography}
 
-This framework implements advanced list typography synthesizing principles from Matthew Butterick, Tim Brown, and Jost Hochuli. The system provides multiple list styles optimized for different academic contexts, with precise hanging indents, quantum-multiple spacing, and sophisticated bullet symbols.
+This framework styles the standard list environments and provides one inline list for brief enumerations.
 
 \subsection{Standard Lists with Professional Bullets}
 
-Our default itemize environment uses subtle gray bullets with optimal hanging indents:
+Our default itemize environment uses subtle gray bullets with hanging indents:
 
 \begin{itemize}
-\item \emph{Professional bullets:} The framework uses 20\% gray bullets for optimal visibility while maintaining professional appearance
-\item \emph{Precise hanging indent:} 1.8em indentation optimized for Pagella's wider characters ensures clean alignment
+\item \emph{Professional bullets:} The supporting-color role keeps markers subordinate to the text
+\item \emph{Precise hanging indent:} The list measure keeps wrapped lines aligned cleanly
 \item \emph{Quantum integration:} Vertical space values derive from the 13.2pt quantum
-\item \emph{Nested list progression:} Secondary levels use en-dash, tertiary use diamond symbols
+\item \emph{Nested list progression:} Secondary levels use en-dashes and tertiary levels use smaller bullets
   \begin{itemize}
   \item En-dash at second level follows Butterick's recommendation for professional documents
   \item Progressive indentation of 1.2em per level maintains readability
   \item Professional gray coloring continues throughout hierarchy
     \begin{itemize}
-    \item Diamond symbols at third level provide clear visual distinction
+    \item Smaller bullets at third level provide clear visual distinction
     \item Maintains consistent spacing through all nesting levels
     \item Maximum three levels recommended for optimal comprehension
     \end{itemize}
   \end{itemize}
 \end{itemize}
-
-\subsection{Academic Lists with En-Dash}
-
-Following university style guide conventions, the \texttt{academicitem} environment uses en-dash as the primary marker:
-
-\begin{academicitem}
-\item \emph{Research methodology:} Systematic literature review across multiple databases
-\item \emph{Data collection:} Primary sources from institutional archives
-\item \emph{Analysis framework:} Mixed-methods approach combining quantitative and qualitative techniques
-\item \emph{Validation process:} Peer review and expert consultation
-\end{academicitem}
-
-The en-dash (\textendash) provides a more sophisticated appearance than bullets while maintaining professional restraint—particularly suitable for formal academic contexts.
 
 \subsection{Enumerated Lists with Oldstyle Figures}
 
@@ -646,32 +633,6 @@ Numbered lists use oldstyle figures for classical typography:
 \item \emph{Spacing scale:} Spacing stays on the quantum scale throughout
 \end{enumerate}
 
-\subsection{Compact Lists for Dense Information}
-
-The \texttt{compactitem} environment removes inter-item spacing for reference lists or brief points:
-
-\begin{compactitem}
-\item Butterick (2019): Practical Typography principles
-\item Brown (2018): Modular scale methodology  
-\item Hochuli (1987): Micro-typographic refinements
-\item Bringhurst (2012): Classical typography foundations
-\item Chicago Manual of Style (2017): Academic conventions
-\end{compactitem}
-
-This compact style maintains the hanging indent while eliminating vertical space, ideal for bibliographic lists or brief enumerations where space efficiency matters.
-
-\subsection{Display Lists for Emphasis}
-
-The \texttt{displayitem} environment creates prominent lists with generous spacing:
-
-\begin{displayitem}
-\item \textbf{Primary Finding:} The synthesis of three typographic philosophies creates superior academic documents through systematic application of proven principles
-\item \textbf{Key Innovation:} Mathematical spacing relationships via modular scale ensure visual harmony throughout the document hierarchy
-\item \textbf{Practical Impact:} Improved readability leads to better comprehension and retention of academic content
-\end{displayitem}
-
-Display lists use full black bullets, bold text, and full quantum spacing (13.2pt) between items—reserved for highlighting crucial findings or conclusions.
-
 \subsection{Description Lists with Small Caps}
 
 Professional term definitions using hanging format:
@@ -683,7 +644,7 @@ Professional term definitions using hanging format:
 \item[Tracking] The uniform adjustment of spacing between letters, measured in thousandths of an em, used here for small caps optimization
 \end{description}
 
-The description environment uses small caps labels in 15\% gray, creating sophisticated distinction without excessive emphasis.
+The description environment uses small caps in the paragraph-heading color role, creating distinction without excessive emphasis.
 
 \subsection{Inline Lists for Brief Enumerations}
 
@@ -695,11 +656,11 @@ Different list styles can be combined for complex hierarchical information:
 
 \begin{enumerate}
 \item \emph{Primary research phase}
-  \begin{academicitem}
+  \begin{itemize}
   \item Literature review and theoretical framework development
   \item Research question refinement and hypothesis formulation
   \item Methodology selection and validation
-  \end{academicitem}
+  \end{itemize}
   
 \item \emph{Data collection phase}
   \begin{itemize}
@@ -709,38 +670,15 @@ Different list styles can be combined for complex hierarchical information:
   \end{itemize}
   
 \item \emph{Analysis and dissemination}
-  \begin{compactitem}
+  \begin{itemize}
   \item Statistical analysis using R and Python
   \item Qualitative coding with NVivo
   \item Manuscript preparation following journal guidelines
   \item Conference presentations and peer review
-  \end{compactitem}
+  \end{itemize}
 \end{enumerate}
 
-\subsection{Technical Implementation Details}
-
-\safeparagraph{Spacing Mathematics} All list spacing derives from the quantum:
-\begin{compactitem}
-\item Full quantum: 13.2pt
-\item Half quantum: 6.6pt (for list separation)
-\item Quarter quantum: 3.3pt (for item spacing)
-\end{compactitem}
-
-\safeparagraph{Measurement System} Horizontal measurements use em-based units:
-\begin{compactitem}
-\item Hanging indent: 1.8em (optimized for Pagella)
-\item Label separation: 0.7em (bullet to text)
-\item Nested indent: 1.2em (per level)
-\end{compactitem}
-
-\safeparagraph{Color Palette} Sophisticated grayscale progression:
-\begin{compactitem}
-\item Body text: 5\% gray (near-black)
-\item Bullet symbols: 20\% gray (professional visibility)
-\item Description labels: 15\% gray (dark gray)
-\end{compactitem}
-
-% Demonstrate FloatBarrier usage
+% Flush pending standard floats before the next major example.
 \clearpage
 
 \section{Professional Citation System}
@@ -913,9 +851,9 @@ The systematic relationships ensure consistency while the classical indentation 
 
 The framework serves as a foundation that can be adapted to specific institutional requirements while maintaining the core principles of hierarchical clarity, systematic relationships, and typographic excellence.
 
-\subsection{Appendix System Integration}
+\subsection{Appendix Integration}
 
-This template includes a professional appendix management system that demonstrates best practices for organizing supplementary material.
+This template uses LaTeX's standard appendix structure to organize supplementary material.
 The appendices showcase how the typography system maintains consistency across main text and supplementary content:
 
 \begin{itemize}
@@ -924,15 +862,14 @@ The appendices showcase how the typography system maintains consistency across m
   \item \textbf{Appendix~\ref{app:api-examples}:} Comprehensive API examples demonstrating all commands
 \end{itemize}
 
-\safeparagraph{Key Features} The appendix system provides automatic numbering, table of contents integration, and consistent cross-referencing.
+\safeparagraph{Key Features} The standard \texttt{\textbackslash appendix} command provides lettered numbering and works with ordinary cross-references.
 All appendix elements follow the same typographic standards as the main document, ensuring visual unity throughout the publication.
 For practical examples of using the template's commands and environments, see Appendix~\ref{app:api-examples}.
 % --- Appendices ---
-\startappendices
+\appendix
   \input{appendices/main_appendix.tex}
   \input{appendices/tech_appendix.tex}
   \input{appendices/api_examples.tex}
-\finishappendices
 
 \printbibliography
 

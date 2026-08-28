@@ -15,9 +15,9 @@ This template applies classic typographic principles to create scholarly article
 - **Optical Refinements** – The `[optical]` option adds sourced refinements over the defaults, currently last-line runt control (`\parfillskip`)
 - **Dynamic Title Page** – Mathematical spacing with golden ratio proportions
 - **Document-owned Citations** – load and configure `biblatex` or `natbib` in your document; lanepaper does not load either
-- **Floats** – Comprehensive figure/table system with booktabs, tabularx, and smart placement
-- **Lists** – Multiple environments with refined bullets and optimal spacing
-- **Accessibility** – WCAG 2.1 AA compliant colors with semantic emphasis commands
+- **Floats** – Standard figure/table environments with styled captions and required booktabs rules
+- **Lists and Quotes** – Styled standard environments plus one inline list for brief enumerations
+- **Color Hierarchy** – restrained roles for text, headings, supporting elements, and links
 - **Local Build Workflow** – Verified with local `latexmk`, `chktex`, and pytest gates
 
 ---
@@ -266,7 +266,7 @@ Recent work \autocite{smith2023} found...  % Recent work (Smith 2023) found...
 \end{figure}
 ```
 
-**Professional table** (note caption placement):
+**Professional table** (note caption placement and absence of vertical rules):
 ```latex
 \begin{table}[tbp]
   \caption{Regression Results}
@@ -280,12 +280,12 @@ Recent work \autocite{smith2023} found...  % Recent work (Smith 2023) found...
       & (0.1)  & (0.1)  \\
     \bottomrule
   \end{tabular}
-  \begin{tablenotes}
-    \tabnote{Standard errors in parentheses}
-    \tabstars
-  \end{tablenotes}
 \end{table}
 ```
+
+For table notes, load `threeparttable` in the document and use its native
+`threeparttable` and `tablenotes` environments. `lanepaper` neither loads that
+package nor changes `tablenotes`.
 
 ### Cross-References
 
@@ -438,22 +438,21 @@ Follow Chicago Manual of Style guidelines:
 - Placement: Use `[tbp]`, avoid `[h]`
 - References: Always use `\cref{}` or `\Cref{}`
 
-### Appendix Management
+### Appendices
 
-Professional appendix system with automatic formatting:
+Use standard LaTeX appendix mode:
 
 ```latex
-\begin{documentAppendices}
-  \input{appendices/main_appendix.tex}
-  \input{appendices/tech_appendix.tex}
-\end{documentAppendices}
+\appendix
+\section{Main Appendix}
+\input{appendices/main_appendix.tex}
+
+\section{Technical Appendix}
+\input{appendices/tech_appendix.tex}
 ```
 
-Features:
-- Automatic numbering (A, B, C...)
-- Smart detection (single vs. multiple)
-- Full cross-reference support
-- Consistent typography
+Load an appendix package yourself if the document needs features beyond
+standard `\appendix` behavior.
 
 ### Mathematical Typography
 
@@ -612,6 +611,8 @@ make lint         # chktex, then the math-spacing checker
 ```latex
 \articletitle{}, \articleauthors{}, \articledate{}
 \begin{articleabstract}, \articlekeywords{}, \articlejel{}
+\sectionopening{Opening words} continuing in the same paragraph
+\appendix
 ```
 
 **Document-owned bibliography and reference commands**:
@@ -621,8 +622,8 @@ make lint         # chktex, then the math-spacing checker
 
 **Standard and package environments**:
 ```latex
-itemize, enumerate, quote, quotation
-table, figure, documentAppendices
+itemize, enumerate, description, quote, quotation
+table, figure, inlineitem, lanepaperfigurenotes
 ```
 
 The demo's landscape helpers are example-local, not package APIs.
@@ -635,9 +636,11 @@ Package-loaded typography dependencies:
 - `booktabs` – Professional tables
 - `microtype` – Microtypography
 
-Document-owned (load them yourself; the demo does):
+Document-owned (load them yourself when needed):
 - `biblatex` – Bibliography
 - `cleveref` – Smart cross-references
+- `threeparttable` – Table-note structure
+- `appendix` – Optional appendix features beyond standard `\appendix`
 
 ---
 
@@ -744,7 +747,7 @@ Use this comprehensive checklist to ensure your academic paper meets the highest
 - [ ] Section hierarchy follows logical progression
 - [ ] Modular appendix organization with separate files
 - [ ] Consistent labeling conventions throughout
-- [ ] Professional appendix system used (`documentAppendices`)
+- [ ] Standard `\appendix` structure used consistently
 - [ ] Table of contents reflects document structure accurately
 
 #### Version Control and Collaboration

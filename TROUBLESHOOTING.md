@@ -177,20 +177,21 @@ expected to coincide. See
    \bsc{text}    % Wrong - may leak spacing
    ```
 
-2. **Float accumulation**: Add barriers before sections:
+2. **Float accumulation**: Flush pending floats before a major section:
    ```latex
-   \FloatBarrier
+   \clearpage
    \section{New Section}
    ```
 
 ### Lists Too Tight/Loose
 
 **Solutions**:
-1. Use appropriate list environment:
+1. Use a standard list environment:
    ```latex
-   \begin{itemize}      % Standard with 6.6pt spacing
-   \begin{compactitem}  % No spacing between items
-   \begin{displayitem}  % Generous spacing
+   \begin{itemize}
+     \item First point
+     \item Second point
+   \end{itemize}
    ```
 
 2. Custom spacing:
@@ -203,16 +204,11 @@ expected to coincide. See
 ### Figures/Tables Drifting Too Far
 
 **Solutions**:
-1. Use `\FloatBarrier` before new sections
+1. Use `\clearpage` before a major section when all pending floats must print
 2. Adjust placement options:
    ```latex
    \begin{figure}[tbp]  % Standard
    \begin{figure}[htbp] % Include 'here' option
-   ```
-3. Use specialized commands:
-   ```latex
-   \tryherefigure{...}    % Attempts here placement
-   \forceherefigure{...}  % Forces here placement
    ```
 
 ### Wide Tables Not Fitting
@@ -355,7 +351,7 @@ grep -c 'Underfull \\hbox' main.log
 |---------|-----------|
 | Missing package | `tlmgr install [package]` |
 | Bad citations | `make clean && make` |
-| Float drift | Add `\FloatBarrier` |
+| Float drift | Use `[tbp]`; use `\clearpage` before a major section if needed |
 | Overfull hbox | Add `\sloppy` or hyphenation |
 | Grid misalignment | Use `\vspace{13.2pt}` |
 | Font missing | `tlmgr install tex-gyre` |

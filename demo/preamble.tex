@@ -28,16 +28,19 @@
 % Compatibility definitions removed - using vanilla biblatex
 
 % ------------------------------------------------------------------------------
-% CORE TYPOGRAPHY SYSTEM WITH INTEGRATED BIBLIOGRAPHY
+% CORE TYPOGRAPHY SYSTEM AND DOCUMENT-OWNED PACKAGES
 % ------------------------------------------------------------------------------
-% Since #48 lanepaper does not load biblatex; this file does, above.
 %% FIX: Load the renamed package by package name to match \ProvidesPackage.
 \usepackage{lanepaper}
 
-%% Issue #48 (ADR-0003): the package configures these but no longer loads them.
-%% The Template owns them. Order matters: hyperref before cleveref.
+%% Issue #48 (ADR-0003): the Template owns these document-level packages.
+%% Lanepaper configures only Hyperref link styling and longtable caption width
+%% if present. Order matters between hyperref and cleveref.
 %% The bibliography is the document's since #48. These are the options the
 %% package used to apply on its own; change them freely, that is the point.
+%% FIX (#86): The document loads csquotes before biblatex now that Lanepaper
+%% no longer supplies quotation-package dependencies.
+\usepackage{csquotes}
 \usepackage[
   backend=biber,
   style=authoryear,
@@ -52,9 +55,9 @@
   isbn=false
 ]{biblatex}
 \usepackage[english]{babel}  % language and hyphenation patterns
-\usepackage{appendix}    % appendices environment used by \startappendices
 \usepackage{hyperref}    % PDF links and metadata; load late, before cleveref
 \usepackage{cleveref}    % cross-references; must follow hyperref
+\usepackage{threeparttable} % document-owned table notes
 \usepackage{tabularx}    % full-width tables
 \usepackage{longtable}   % multi-page tables
 \usepackage{pdflscape}   % landscape pages
@@ -85,15 +88,14 @@
 %    - Optimized monospace integration (Inconsolata/zi4)
 %    - Systematic spacing quantum (13.2pt; body baseline measures 16.32pt)
 %
-% 2. PROFESSIONAL APPENDIX SYSTEM
-%    - Automatic single/multiple appendix detection
-%    - Chicago Manual of Style compliance
+% 2. STANDARD APPENDIX STRUCTURE
+%    - Standard \appendix numbering
 %    - Enhanced cross-referencing with cleveref
 %    - Modular file organization
 %
 % 3. ACADEMIC STANDARDS
 %    - Chicago 17th edition citations
-%    - Accessibility compliance (WCAG 2.1 AA)
+%    - Restrained color hierarchy
 %    - Production-ready PDF output
 %    - Git-friendly workflow
 %

@@ -149,7 +149,6 @@ tlmgr install fnpct                   # Footnote punctuation management
 tlmgr install geometry           # Page layout
 tlmgr install fancyhdr          # Headers and footers
 tlmgr install titlesec         # Section formatting
-tlmgr install appendix          # Appendix support
 tlmgr install titletoc         # Table of contents control
 
 # Graphics and tables
@@ -171,13 +170,12 @@ tlmgr install biblatex-chicago  # Chicago style (optional)
 tlmgr install xcolor           # Color support
 tlmgr install hyperref         # Hyperlinks
 tlmgr install cleveref         # Smart references
-tlmgr install csquotes         # Context-sensitive quotes
+tlmgr install csquotes         # Demo bibliography quotation support
 tlmgr install enumitem         # List customization
 tlmgr install caption          # Caption customization
 tlmgr install subcaption       # Subfigures and subtables
 
 # Float and rotation support
-tlmgr install placeins         # Float barriers
 tlmgr install rotating         # Rotation support
 tlmgr install pdflscape        # PDF landscape pages
 tlmgr install afterpage        # Execute after page break
@@ -194,10 +192,10 @@ tlmgr install collection-latexrecommended collection-fontsrecommended \
 # Individual packages
 tlmgr install tex-gyre tex-gyre-math inconsolata newpx mathalpha \
   microtype letterspace fnpct textcomp \
-  geometry fancyhdr titlesec appendix titletoc \
+  geometry fancyhdr titlesec titletoc \
   graphicx booktabs tabularx longtable ltcaption adjustbox array multirow \
   biblatex biber xcolor hyperref cleveref csquotes enumitem \
-  caption subcaption placeins rotating pdflscape afterpage \
+  caption subcaption rotating pdflscape afterpage \
   amsmath amssymb mathtools etoolbox xstring ifthen
 ```
 
@@ -250,9 +248,9 @@ mpm --install=tgpagella
 
 ### Checking for Problems
 
-Run the diagnostic command:
+Compile a minimal package probe:
 ```bash
-pdflatex -interaction=nonstopmode "\RequirePackage{lanepaper}\lanepaperdiagnostics\stop"
+pdflatex -interaction=nonstopmode probe.tex
 ```
 
 ### Getting Help
