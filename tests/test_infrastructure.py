@@ -25,6 +25,9 @@ def tracked_active_source_files():
         path = ROOT / rel_path
         if rel_path.startswith(("archive/", "docs/archive/")):
             continue
+        # FIX (#29): Intentional deletions remain in git ls-files until commit.
+        if not path.is_file():
+            continue
         if rel_path == "Makefile" or rel_path.endswith(ACTIVE_SOURCE_SUFFIXES):
             yield rel_path, path
 

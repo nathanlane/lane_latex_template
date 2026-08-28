@@ -8,7 +8,7 @@ make clean    # remove generated output, the PDF included
 make help     # list every target
 ```
 
-Requires TeX Live 2020+ with `tgpagella`, `inconsolata`, `newpx`, `mathalfa`,
+Requires TeX Live 2020+ with `tgpagella`, `inconsolata`, `newpx`, `mathalfa`, `boondox`,
 and `booktabs`. Verify your installation with `make check-deps`.
 
 ## Pre-commit Gates

@@ -24,6 +24,7 @@ required_packages=(
   amsmath
   amssymb
   array
+  boondox
   booktabs
   calc
   caption
@@ -37,14 +38,11 @@ required_packages=(
   graphicx
   iftex
   inputenc
-  letterspace
   lettrine
   mathalfa
   microtype
   newpxmath
   ragged2e
-  scalefnt
-  textcase
   textcomp
   tgpagella
   tikz
@@ -61,6 +59,14 @@ for pkg in "${required_packages[@]}"; do
   if [[ "$pkg" == "biber" ]]; then
     if ! command -v biber >/dev/null 2>&1; then
       echo "Missing binary: biber"
+      missing=1
+    fi
+    continue
+  fi
+  # FIX (#29): mathalfa's boondox selection needs a font metric, not boondox.sty.
+  if [[ "$pkg" == "boondox" ]]; then
+    if ! kpsewhich "BOONDOX-r-ds.tfm" >/dev/null 2>&1; then
+      echo "Missing font metric: BOONDOX-r-ds.tfm (TeX package: boondox)"
       missing=1
     fi
     continue

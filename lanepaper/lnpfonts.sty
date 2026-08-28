@@ -45,9 +45,9 @@
 \RequirePackage[cal=boondoxo,bb=boondox,frak=boondox]{mathalfa}
 
 % SUPPORTING PACKAGES
-\RequirePackage{scalefnt}     % For precise bold small caps scaling
-\RequirePackage{letterspace}  % For \lsstyle letterspacing
-\RequirePackage{textcase}     % For \MakeTextUppercase
+%% FIX (#29): microtype owns tracking; its standalone letterspace package must
+%% not be co-loaded. The deleted font-feature module was the only consumer of
+%% scalefnt and textcase.
 \RequirePackage{textcomp}     % For improved monospace characters
 
 % FONT CHARACTERISTICS (for reference)

@@ -91,11 +91,9 @@
 % SECTION FORMATTING
 % ==============================================================================
 
-% Sections: Bold with sophisticated color and tracking
+% Sections: Bold with sophisticated color
 % OPTIMIZED: Perfect grid alignment without optical adjustments
-%% FIX: \SetTracking is global and lnpmicrotype's series=b rule annuls it on bold
-%% headings, so the +80 was dead code that also churned the tracking list
-%% document-wide on every heading (122 override messages per build).
+%% FIX (#29): Upstream Microtype defaults leave ordinary bold headings untracked.
 \titleformat{\section}
   {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{lnp@sectioncolor}}  % 18pt bold, softened navy
   {\thesection}
@@ -106,9 +104,9 @@
   {1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}  % 1.5 units ±0.25 (reduced from 2)
   {1\lnp@gridunit plus 0.125\lnp@gridunit minus 0pt}    % 1 unit +0.125/-0 (unchanged)
 
-% Subsections: Bold with moderate tracking and midnight blue
+% Subsections: Bold with midnight blue
 % OPTIMIZED: 19.8pt leading (1.5 quanta) for perfect alignment
-%% FIX: same global-tracking conflict as \section; the +60 never took effect.
+%% FIX (#29): The removed custom tables no longer assign bold tracking.
 \titleformat{\subsection}
   {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{lnp@subsectioncolor}}  % 14pt bold, muted midnight
   {\thesubsection}
@@ -151,15 +149,14 @@
 % ALTERNATIVE PARAGRAPH STYLES
 % ==============================================================================
 
-% Alternative: Bold small caps paragraph with extensive tracking
+% Alternative: Bold small caps paragraph with restrained tracking
 % For users who prefer small caps but need strong contrast
 \newcommand{\paragraphsc}{
   \titleformat{\paragraph}[runin]
-    %% FIX(#39): drop dead \SetTracking{encoding=*}{120}; bold text resolves via
-    %% the T1 series=b list (lnpmicrotype.sty:140 -> -10), which annuls the {120}
-    %% (measured: orig == bare), so \lsstyle alone is render-neutral, no message.
+    %% FIX (#29): \scshape selects the sole +50 tracking rule. Ordinary bold
+    %% headings remain untracked; no size- or weight-specific table is needed.
     {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\scshape\color{lnp@paragraphcolor}%
-     \lsstyle}  % 11pt bold small caps
+     \lsstyle}  % 11pt bold small caps, +5% tracking
     %% FIX: same run-in zero-separation bug as the default \paragraph.
     {}
     {0em}

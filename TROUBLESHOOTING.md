@@ -237,7 +237,7 @@ examples. They are not `lanepaper` package APIs.
 
 **Solution**: The template already implements:
 - Softened colors for bold headings
-- Generous tracking (6-8%)
+- No added letterspacing on bold headings — upstream microtype assigns none
 - This is the intended design
 
 ### Hyphenation Problems
@@ -272,12 +272,34 @@ examples. They are not `lanepaper` package APIs.
 
 ### Microtype Warnings
 
-**Symptoms**: "Unknown slot number" warnings
+**Symptoms**: `Package microtype Info:` lines in the log; occasionally an
+"Unknown slot number" warning
 
-**Solution**: These are harmless and can be ignored. To suppress:
-```latex
-\usepackage[verbose=silent]{microtype}
+**Solution**: Read them rather than silencing them. `lanepaper` loads microtype
+with `protrusion`, `expansion`, and `tracking` enabled and no other options, so
+every normal build reports its settings:
+
+```text
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: Automatic font expansion enabled (level 2),
+Package microtype Info: Tracking enabled.
+Package microtype Info: Using default tracking set `smallcaps'.
 ```
+
+That is the expected output, not a fault. Microtype uses its shipped Pagella
+protrusion table (`mt-ppl.cfg`, reached through microtype's own `qpl` -> `ppl`
+alias) and its default expansion. The package adds only +50 tracking for Pagella
+small caps.
+
+Because the package authors no font tables of its own, a real microtype warning
+now points at a real problem — a missing font, an unexpected encoding, or a
+package loaded in the wrong order. "Unknown slot number" in particular means a
+protrusion or tracking rule met a font it does not describe; check which font is
+selected at that point instead of hiding the message.
+
+Do not add `verbose=silent`. It suppresses the diagnostics above together with
+the warning you would want to read.
 
 ### Babel Language Warnings
 
