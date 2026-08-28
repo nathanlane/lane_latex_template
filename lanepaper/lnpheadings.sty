@@ -173,7 +173,9 @@
 % Alternative: Display-style paragraph for maximum distinction
 \newcommand{\displayparagraph}[1]{%
   \vspace{18pt}% Consistent with paragraph spacing
-  {\normalfont\fontsize{11.5}{13.2}\color{paragraphgray}\scshape\bfseries #1}%
+  %% FIX (#86): Use the private palette name retained by lnpcolors; the v2
+  %% bare name was removed in #85 and made this command fail when called.
+  {\normalfont\fontsize{11.5}{13.2}\color{lnp@paragraphcolor}\scshape\bfseries #1}%
   \vspace{6pt}% Half baseline unit
   \par\noindent
 }
@@ -188,35 +190,6 @@
 }
 
 % ==============================================================================
-% SECTION BREAK COMMANDS
-% ==============================================================================
-
-% Professional treatments for major section breaks in academic articles
-\providecommand{\sectionopening}{}
-\renewcommand{\sectionopening}[1]{%
-  \par\vspace{2\lnp@gridunit}%
-  \begin{center}
-    {\fontsize{14pt}{19.8pt}\selectfont\itshape #1}%
-  \end{center}
-  \vspace{\lnp@gridunit}%
-  \noindent
-}
-
-% Simple section break - clean space only
-%% FIX: renamed \sectionbreak -> \sectionsep; titlesec executes any defined
-%% \<level>break as a hook inside heading construction, so the old name
-%% injected \vspace{2\lnp@gridunit} before every \section instead of \@secpenalty.
-\providecommand{\sectionsep}{}
-\renewcommand{\sectionsep}{%
-  \par\vspace{2\lnp@gridunit}% 2 quanta of clean space
-  \noindent
-}
-
-% Alias for compatibility
-\providecommand{\spacebreak}{}
-\renewcommand{\spacebreak}{\sectionsep}
-
-% ==============================================================================
 % WIDOW AND ORPHAN CONTROL FOR HEADINGS
 % ==============================================================================
 
@@ -226,29 +199,8 @@
 %% widow/orphan penalties (10000) live in lanepaper.sty, which is the only
 %% way this module is loaded (#85).
 
-% Note: Environment hooks moved to individual modules to avoid conflicts
-% - List environment hooks are handled by lists.sty
-% - Paragraph environment hooks are handled by paragraphs.sty
-% This prevents "missing \item" errors when using \paragraph commands
-
-% ==============================================================================
-% LETTRINE SUPPORT
-% ==============================================================================
-
-% Drop cap configuration for section openings
-\@ifpackageloaded{lettrine}{%
-  \renewcommand{\LettrineFontHook}{\color{lnp@sectioncolor}}  % Match section color
-  \setcounter{DefaultLines}{3}         % Three-line drop caps
-  \renewcommand{\DefaultLoversize}{0}  % No descender adjustment
-  \renewcommand{\DefaultLraise}{0}     % No baseline adjustment
-  \setlength{\DefaultNindent}{0em}     % No additional indent
-  \setlength{\DefaultSlope}{0em}       % No slope for italics
-}{}
-
-% First line treatment for section openings
-\newcommand{\firstline}[1]{%
-  {\scshape\MakeUppercase{#1}}%
-}
+% List hooks live in lnplists.sty; quote and paragraph handling lives in the
+% package owner. Keeping those hooks out of the heading module avoids conflicts.
 
 % ==============================================================================
 % DEFAULT SECTION SPACING
@@ -271,7 +223,3 @@
 \ifdefmacro{\paragraphsc}{\robustify{\paragraphsc}}{}
 \ifdefmacro{\displayparagraph}{\robustify{\displayparagraph}}{}
 \ifdefmacro{\safeparagraph}{\robustify{\safeparagraph}}{}
-\ifdefmacro{\sectionopening}{\robustify{\sectionopening}}{}
-\ifdefmacro{\sectionsep}{\robustify{\sectionsep}}{}
-\ifdefmacro{\spacebreak}{\robustify{\spacebreak}}{}
-\ifdefmacro{\firstline}{\robustify{\firstline}}{}

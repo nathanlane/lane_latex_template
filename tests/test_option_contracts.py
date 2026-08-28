@@ -286,31 +286,139 @@ def test_no_bibliography_package_is_loaded(tmp_path):
     assert "natbib.sty" not in log_text
 
 
-def test_bare_package_survives_without_hyperref(tmp_path):
-    r"""#48 regression guard.
+def test_removed_document_structures_are_gone(tmp_path):
+    """Issue #86: documents own orchestration; Lanepaper owns typography."""
+    removed = (
+        "epigraph",
+        "emphasisquote",
+        "quoteattribution",
+        "openingparagraph",
+        "academicdropcap",
+        "firstlinesc",
+        "sectionsep",
+        "spacebreak",
+        "majorsectionspace",
+        "thinrulebreak",
+        "paragraphsep",
+        "abstractopening",
+        "sidenote",
+        "softfloatbarrier",
+        "hardfloatbarrier",
+        "sectionendfloatbarrier",
+        "tryherefigure",
+        "forceherefigure",
+        "herefloat",
+        "showfloatstats",
+        "floatwarning",
+        "balancefloatpage",
+        "compensatetopfloat",
+        "captionsource",
+        "captioncontinued",
+        "regressiontable",
+        "tablenotes",
+        "tabnote",
+        "tablenote",
+        "tabsource",
+        "tabstars",
+        "tabdaggers",
+        "fignotes",
+        "fignote",
+        "figurenote",
+        "figsource",
+        "tabsample",
+        "tabvars",
+        "tabmethod",
+        "tabcluster",
+        "panellabel",
+        "panelnote",
+        "startappendices",
+        "finishappendices",
+        "documentAppendices",
+        "lanepaperdiagnostics",
+        "lanepaperinfo",
+        "academicitem",
+        "compactitem",
+        "displayitem",
+        "readableitem",
+        "bulletmark",
+        "dashmark",
+        "refinedbullet",
+        "diamondmark",
+        "squaremark",
+        "trianglemark",
+        "subtlebullet",
+        "refineddash",
+        "itembullet",
+        "itemdash",
+        "itemdiamond",
+        "itemsquare",
+        "itemtriangle",
+        "tightlists",
+        "normallists",
+        "spaciouslists",
+        "dashbullets",
+        "trianglebullets",
+        "defaultbullets",
+        "listhalfquantum",
+        "listquarterquantum",
+        "listquantum",
+        "listhalfbaseline",
+        "listquarterbaseline",
+        "listbaselineskip",
+        "listhangindent",
+        "listnestedindent",
+        "listlabelsep",
+    )
+    seen = probe_names(tmp_path, "removed-document-structures", removed)
+    assert [name for name, visible in seen.items() if visible] == []
 
-    \startappendices' fallback branch calls \phantomsection, which is
-    hyperref's. While the package loaded hyperref unconditionally that was
-    always defined; once it stopped, a bare document hit a fatal undefined
-    control sequence rather than merely losing styling.
-    """
+
+def test_sectionopening_is_one_inline_paragraph(tmp_path):
+    """The one-argument opening styles text without ending the paragraph."""
+    log_text = probe(
+        tmp_path,
+        "inline-section-opening",
+        r"""
+        \newcount\lnptestparagraphs
+        \everypar{\global\advance\lnptestparagraphs by 1}
+        \sectionopening{Opening text} continues in the same paragraph.\par
+        \typeout{LNP_PARAGRAPHS=\the\lnptestparagraphs}
+        """,
+    )
+    assert "LNP_PARAGRAPHS=1" in log_text
+
+
+def test_threeparttable_owns_tablenotes(tmp_path):
+    """Issue #86: Lanepaper neither loads nor redefines threeparttable APIs."""
     result, log_text = compile_latex(
         tmp_path,
-        "bare-appendices-contract",
+        "threeparttable-contract",
         r"""
         \documentclass[11pt]{article}
+        \usepackage{threeparttable}
         \usepackage{lanepaper}
         \begin{document}
-        Body.
-        \startappendices
-        \section{An appendix}
-        Text.
-        \finishappendices
+        \begin{table}[tbp]
+          \caption{Document-owned table notes}
+          \centering
+          \begin{threeparttable}
+            \begin{tabular}{@{}lc@{}}
+              \toprule
+              Item & Value \\
+              \midrule
+              A & 1 \\
+              \bottomrule
+            \end{tabular}
+            \begin{tablenotes}
+              \item Notes are owned by threeparttable.
+            \end{tablenotes}
+          \end{threeparttable}
+        \end{table}
         \end{document}
         """,
     )
     assert_compiles(result, log_text)
-    assert "Undefined control sequence" not in log_text
+    assert "Command \\tablenotes already defined" not in log_text
 
 
 def test_plain_ref_does_not_emit_package_warning(tmp_path):

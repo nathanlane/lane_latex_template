@@ -13,10 +13,11 @@ set -o pipefail
 # unconditional \RequirePackage in lanepaper/*.sty; lnp* modules resolve via
 # TEXINPUTS and are checked by the build.
 #
-# NOT listed, deliberately: hyperref, cleveref, biblatex, babel, appendix,
-# longtable and tabularx are configure-if-loaded (ADR-0003 rule 2) and the
-# document supplies them; pdflscape, rotating and adjustbox moved to the demo
-# with the landscape wrappers. courier, mathpazo, mathptmx and palatino are
+# NOT listed, deliberately: hyperref and longtable are configure-if-loaded
+# (ADR-0003 rule 2), while cleveref, biblatex, babel, appendix, threeparttable,
+# tabularx, csquotes, and placeins are document-owned. pdflscape, rotating and
+# adjustbox moved to the demo with the landscape wrappers. courier, mathpazo,
+# mathptmx and palatino are
 # font fallbacks loaded only inside \IfFileExists, so their absence is not a
 # missing dependency.
 required_packages=(
@@ -26,7 +27,6 @@ required_packages=(
   booktabs
   calc
   caption
-  csquotes
   enumitem
   eso-pic
   etoolbox
@@ -42,7 +42,6 @@ required_packages=(
   mathalfa
   microtype
   newpxmath
-  placeins
   ragged2e
   scalefnt
   textcase

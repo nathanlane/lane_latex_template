@@ -75,12 +75,6 @@ For professional section openings:
 % First line in small caps
 \sectionopening{This opening line appears in elegant small caps,}
 continuing with normal text for the rest of the paragraph.
-
-% Opening paragraph without indent
-\begin{openingparagraph}
-The first paragraph after a heading appears flush left,
-following classical typography conventions.
-\end{openingparagraph}
 \end{verbatim}
 
 \subsection{Special Characters and Symbols}
@@ -109,9 +103,9 @@ Professional spacing for all symbols:
 
 \subsection{List Environments}
 
-\subsubsection{Academic List Styles}
+\subsubsection{Styled Standard Lists}
 
-The template provides multiple list environments:
+The template styles the standard list environments and provides an inline list:
 
 \safeparagraph{Standard Lists} Default itemize with refined bullets:
 \begin{itemize}
@@ -120,32 +114,9 @@ The template provides multiple list environments:
 \item Third point maintaining baseline grid
 \end{itemize}
 
-\safeparagraph{Academic Lists} Using en-dash markers:
-\begin{academicitem}
-\item Primary research finding
-\item Secondary observation
-\item Tertiary conclusion
-\end{academicitem}
-
-\safeparagraph{Compact Lists}
-No spacing between items:
-\begin{compactitem}
-\item Butterick (2019)
-\item Brown (2018)
-\item Hochuli (1987)
-\end{compactitem}
-
-\safeparagraph{Display Lists}
-Bold items with emphasis:
-\begin{displayitem}
-\item \textbf{Key Result:} Significant improvement in readability
-\item \textbf{Innovation:} Novel typography system
-\item \textbf{Impact:} Enhanced academic communication
-\end{displayitem}
-
 \safeparagraph{Inline Lists}
 For brief enumerations:
-The primary colors are (i) red, (ii) green, and (iii) blue, forming the RGB color model.
+The primary colors are \begin{inlineitem}\item red\item green\item blue\end{inlineitem}, forming the RGB color model.
 
 \subsection{Quotation Environments}
 
@@ -180,18 +151,19 @@ Note: For block quotes, use the standard \texttt{quote} environment or see the m
 
 \subsubsection{Table Notes}
 
-Professional notes following QJE style:
+Load \texttt{threeparttable} in the document when a table needs notes:
 
 \begin{verbatim}
-\begin{tablenotes}
-  \tabnote{All values in constant 2020 dollars}
-  \tabvars{GDP = Gross Domestic Product, CPI = Consumer Price Index}
-  \tabmethod{OLS regression with year fixed effects}
-  \tabcluster{Standard errors clustered at state level}
-  \tabsample{N = 1,234 observations from 50 states}
-  \tabsource{Federal Reserve Economic Data (FRED)}
-  \tabstars  % Adds: ***p<0.01, **p<0.05, *p<0.1
-\end{tablenotes}
+\begin{threeparttable}
+  \begin{tabular}{@{}lr@{}}
+    \toprule
+    Item & Value \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}
+    \item \emph{Notes:} All values in constant 2020 dollars.
+  \end{tablenotes}
+\end{threeparttable}
 \end{verbatim}
 
 \subsection{Mathematical Commands}
@@ -272,22 +244,13 @@ Switch between paragraph styles:
 
 \centeredpar{This paragraph appears centered on the page.}
 
-% Note: \quoteparagraph requires loading the lnphochuli module
-% Example: "When we consider the evidence carefully, we find that typography significantly impacts comprehension and retention of academic material."
-
-\subsubsection{Dialogue Formatting}
-
-% Note: Dialogue commands require additional modules or custom definitions
-% Example dialogue:
-% \speaker{Alice}{I believe we should adopt the new typography system.}
-% \speaker{Bob}{I agree. The improvements in readability are substantial.}
-
 \subsection{Complete Example Document}
 
 Here's a minimal complete document using the template:
 
 \begin{verbatim}
 \documentclass[11pt]{article}
+\usepackage[backend=biber,style=authoryear]{biblatex}
 \usepackage{lanepaper}
 \addbibresource{references.bib}
 

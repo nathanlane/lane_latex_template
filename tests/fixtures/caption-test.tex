@@ -2,12 +2,13 @@
 %% FIX: Use the renamed package file; legacy package file is no longer shipped.
 \usepackage{lanepaper}
 \usepackage{lipsum}
+\usepackage{threeparttable}
 
 \begin{document}
 
 \section{Caption System Test Suite}
 
-This document demonstrates the refined caption system optimized for TeX Gyre Pagella with perfect baseline grid alignment.
+This document demonstrates caption typography and quantum-derived spacing optimized for TeX Gyre Pagella.
 
 \subsection{Table Captions (Above Content)}
 
@@ -17,36 +18,42 @@ Tables follow Chicago Manual of Style with captions placed above the content.
   \caption{Economic Growth Rates by Region, 1960–1990}
   \label{tab:growth-rates}
   \centering
-  \begin{tabular}{@{}lcccc@{}}
-    \toprule
-    Country & 1960–1970 & 1970–1980 & 1980–1990 & Average \\
-    \midrule
-    Japan & 10.5\% & 4.5\% & 4.0\% & 6.3\% \\
-    South Korea & 8.6\% & 7.0\% & 8.5\% & 8.0\% \\
-    Taiwan & 9.2\% & 9.5\% & 7.7\% & 8.8\% \\
-    Singapore & 8.8\% & 8.5\% & 6.5\% & 7.9\% \\
-    \bottomrule
-  \end{tabular}
-  \captionsource{World Bank Development Indicators (2023)}
-  \tablenote{Note: Growth rates are annual averages calculated using constant 2010 USD. All figures are seasonally adjusted.}
+  \begin{threeparttable}
+    \begin{tabular}{@{}lcccc@{}}
+      \toprule
+      Country & 1960–1970 & 1970–1980 & 1980–1990 & Average \\
+      \midrule
+      Japan & 10.5\% & 4.5\% & 4.0\% & 6.3\% \\
+      South Korea & 8.6\% & 7.0\% & 8.5\% & 8.0\% \\
+      Taiwan & 9.2\% & 9.5\% & 7.7\% & 8.8\% \\
+      Singapore & 8.8\% & 8.5\% & 6.5\% & 7.9\% \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+      \item \emph{Notes:} Growth rates are annual averages calculated using constant 2010 USD. All figures are seasonally adjusted.
+      \item \emph{Source:} World Bank Development Indicators (2023).
+    \end{tablenotes}
+  \end{threeparttable}
 \end{table}
 
 \subsection{Figure Captions (Below Content)}
 
-Figures follow Chicago style with captions below the content. Note the elegant small caps labels and en-dash separator.
+Figures follow Chicago style with captions below the content. Labels are bold and separated from the text by a period.
 
 \begin{figure}[tbp]
   \centering
   \rule{0.8\textwidth}{0.4\textwidth}% Placeholder for figure
-  \caption{Export Composition by Technology Level for Selected Economies. This is a longer caption that demonstrates the hanging indent for multi-line captions, which improves readability and creates a professional appearance.}
+  \caption{Export Composition by Technology Level for Selected Economies. This longer caption demonstrates full-width, ragged-right treatment across multiple lines.}
   \label{fig:export-comp}
-  \figurenote{The technology classification follows Lall (2000). High-tech exports include electronics, pharmaceuticals, and aerospace products.}
+  \begin{lanepaperfigurenotes}
+    \emph{Notes:} The technology classification follows Lall (2000). High-tech exports include electronics, pharmaceuticals, and aerospace products.
+  \end{lanepaperfigurenotes}
 \end{figure}
 
 \subsection{Multi-line Caption Test}
 
 \begin{table}[tbp]
-  \caption{This is a very long table caption that will span multiple lines to demonstrate the hanging indent feature. The caption system automatically handles long captions with proper justification and elegant formatting that maintains readability while preserving the visual hierarchy of the document.}
+  \caption{This is a very long table caption that spans multiple lines to demonstrate the full-width, ragged-right caption treatment while preserving the document hierarchy.}
   \centering
   \begin{tabular}{@{}lcc@{}}
     \toprule
@@ -59,24 +66,23 @@ Figures follow Chicago style with captions below the content. Note the elegant s
   \end{tabular}
 \end{table}
 
-\subsection{Caption Width Demonstration}
+\subsection{Caption Measure Demonstration}
 
 \lipsum[1]
 
 \begin{figure}[tbp]
   \centering
   \rule{0.5\textwidth}{0.3\textwidth}
-  \caption{Caption width is set to 85\% of text width following Bringhurst's principle that captions should be narrower than body text for improved readability}
+  \caption{Captions use the full float width with a bold label and ragged-right text}
   \label{fig:width-demo}
 \end{figure}
 
 \subsection{Grid Alignment Verification}
 
-The spacing system ensures perfect grid alignment:
+The spacing system uses quantum-derived caption separation:
 \begin{itemize}
-\item Tables: 13.2pt (1 unit) before caption, 6.6pt (0.5 units) after
-\item Figures: 6.6pt (0.5 units) before caption, 13.2pt (1 unit) after
-\item Total space maintained at 19.8pt (1.5 grid units)
+\item Tables: 9.9pt (0.75 quantum) before caption, 6.6pt (0.5 quantum) after
+\item Figures: 9.9pt (0.75 quantum) before caption, 13.2pt (1 quantum) after
 \end{itemize}
 
 \begin{table}[tbp]
@@ -86,9 +92,9 @@ The spacing system ensures perfect grid alignment:
     \toprule
     Spacing Element & Grid Units \\
     \midrule
-    Before table caption & 1.0 \\
+    Before table caption & 0.75 \\
     After table caption & 0.5 \\
-    Before figure caption & 0.5 \\
+    Before figure caption & 0.75 \\
     After figure caption & 1.0 \\
     \bottomrule
   \end{tabular}
@@ -99,7 +105,7 @@ The spacing system ensures perfect grid alignment:
 \begin{figure}[tbp]
   \centering
   \rule{0.6\textwidth}{0.3\textwidth}
-  \caption{Labels use bold small caps in 25\% gray (subsubcolor) while caption text uses near-black for optimal readability}
+  \caption{Labels use bold text while the caption inherits the document text color}
 \end{figure}
 
 \end{document}

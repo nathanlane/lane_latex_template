@@ -49,7 +49,7 @@ for another engine without changing the font stack first.
 | The package a document loads | `lanepaper` | `\usepackage{lanepaper}` |
 | Every other `.sty` file | `lnp` + role | `lnpcolors.sty`, `lnpfonts.sty` |
 | Every internal macro | `\lnp@` + role | `\lnp@listhalfbaseline` |
-| Public commands | **no prefix** | `\tightlists`, `\spacioussections` |
+| Public commands | **no prefix** | `\sectionopening`, `\spacioussections` |
 
 `lnp` abbreviates `lanepaper`, and the same abbreviation names both the module
 files and the internal macros so the two agree. It is deliberately short
@@ -133,8 +133,10 @@ notice. A prefix-free macro is public: it is part of the contract, it belongs
 in `API_REFERENCE.md`, and removing or changing its signature is a breaking
 change.
 
-The package's own diagnostic entry points carry the full package name because
-that is what a user types: `\lanepaperdiagnostics`, `\lanepaperinfo`.
+Public names should describe the document operation, as in `\sectionopening`
+and the retained `\articletitle` family. Package-specific environment names use
+the `lanepaper` stem when collision avoidance matters, as in
+`lanepaperfigurenotes`.
 
 **Known gap, unowned by any issue.** Prefix-free public names are safe inside
 one repository but weak in a shared texmf tree, where `\centeredpar`,
@@ -146,11 +148,11 @@ settling before CTAN submission.
 
 Every message names its package and states a remedy.
 
-| Macro | Use when | Current uses |
-|-------|----------|--------------|
-| `\PackageError` | The document cannot produce correct output | 2 |
-| `\PackageWarning` | Output is produced but something was substituted or skipped | 10 |
-| `\PackageInfo` | Log-only detail a user did not ask for | 13 |
+| Macro | Use when |
+|-------|----------|
+| `\PackageError` | The document cannot produce correct output |
+| `\PackageWarning` | Output is produced but something was substituted or skipped |
+| `\PackageInfo` | Log-only detail a user did not ask for |
 
 The engine guard is the worked example: it names the package, says what is
 wrong, and ends with `Compile with pdflatex.` A message that states a problem
@@ -195,10 +197,9 @@ covers it in four directions.
 ## 7. The `%% FIX:` comment convention
 
 `%% FIX:` marks a deliberate, non-obvious decision that must not be
-"simplified" away. It appears **84** times across `lanepaper/`. Treat one as
-you would a test: if you are about to remove the code it guards, find out why
-it is there first. Add one when you make a choice whose reason is not evident
-from the code.
+"simplified" away. Treat one as you would a test: if you are about to remove
+the code it guards, find out why it is there first. Add one when you make a
+choice whose reason is not evident from the code.
 
 ## 8. Robustness
 
@@ -210,8 +211,8 @@ with another package still errors at load time — and every module ends with a
 `ROBUSTNESS (#55)` block that applies etoolbox `\robustify` (e-TeX
 `\protected`) to each public macro, guarded by `\ifdefmacro` for names that
 resolve to registers in some load orders. A new public macro is not done until
-its name is in that block. **181** macros are robustified across the 11
-`.sty` files; re-measure rather than copying that number.
+its name is in that block. Re-measure the active set rather than copying a
+historical count.
 
 Robustness does not make formatting valid inside PDF bookmark strings. A
 `\pdfstringdefDisableCommands` block used to supply plain-text fallbacks;
@@ -234,8 +235,8 @@ block in #48 inverted a `\crefname` precedence that had held for a year, because
 two `\AtBeginDocument` hooks set the same name and the later registration won.
 It changed rendered output and no test caught it — only raster comparison did.
 
-The package uses `\AddToHook{begindocument}` at **5** sites and package hooks at
-**4**. Nothing depends on registration order any more, so there is no
+The package uses format-native begin-document and package hooks. Nothing
+depends on registration order any more, so there is no
 `\DeclareHookRule` anywhere; adding rules for hooks that touch disjoint state
 would be noise, not safety.
 
@@ -245,13 +246,13 @@ would be noise, not safety.
 #48 implemented it. Three rules for any dependency:
 
 1. **Load** what implementing the typography requires.
-2. **Configure if loaded**, never load, anything the document is entitled to
-   own: `hyperref`, `biblatex`, `babel`, `appendix`, `longtable`, `tabularx`.
-3. **Neither** — delete it, or move it to the document. The landscape and
-   rotation conveniences went this way, taking `pdflscape`, `rotating` and
-   `adjustbox` with them; v3 (issue #84) moved `cleveref` here too, so
-   cross-references are fully document-owned and the package no longer
-   configures cleveref.
+2. **Configure if loaded**, never load, only a dependency with retained,
+   visible typography: `hyperref` link colours and `longtable` caption width.
+3. **Neither** — delete it, or move it to the document. Bibliography,
+   cross-reference, language, appendix, table-note, float-barrier, landscape,
+   and rotation packages are document-owned. This includes `biblatex`,
+   `natbib`, `cleveref`, `babel`, `appendix`, `threeparttable`, `placeins`,
+   `pdflscape`, `rotating`, and `adjustbox`.
 
 A style package that loads `hyperref` dictates load order to every document
 using it. That is gone: **the package no longer imposes any load order.**
@@ -266,22 +267,13 @@ rule must respect:
   `\@ifpackageloaded` is simply wrong here: `hyperref` is conventionally loaded
   late, usually after this package, so the check runs first and configures
   nothing.
-- **Never call a command the optional package owns without a guard.**
-  `\startappendices` called `\phantomsection`, which is hyperref's; it was
-  always defined while the package loaded hyperref, and became a fatal
-  undefined control sequence for a bare document. `\providecommand` it.
-- **Distinguish a path the document chose from one it did not.**
-  `\phantomsection` sat on `\startappendices`' fallback branch, which a bare
-  document reaches without asking, so it is guarded with `\providecommand`: a
-  document that never loaded the optional package must not hit an undefined
-  control sequence from a fallback path. (v3, issue #84, removed the cleveref
-  wrappers — `\refpage`, `\pref`, `\seeref`, `\seealso` and friends — that used
-  to illustrate the opposite, deliberately-unguarded case; the package now ships
-  no cleveref-dependent command.)
-- **Dropping a package can change line breaking.** The measured `\spaceskip`
-  values in this package were tuned with `babel` loaded. Without it, every
-  line of `tests/fixtures/opening-test.tex` re-breaks. Documents wanting the
-  measured typography should load `babel`.
+- **Never call a command the optional package owns outside its hook.** The
+  `longtable` hook is the only place that touches `\LTcapwidth` or the
+  `longtable` environment. A document that does not load the package cannot
+  encounter either name.
+- **Dropping a package can change line breaking.** Documents needing a
+  particular language's hyphenation should load and configure `babel`
+  themselves.
 
 `[natbib]` and `[nobiblatex]` were kept declared-but-inert by #48 so existing
 documents got a warning rather than an "Unknown option" error. v3 (#85) removed

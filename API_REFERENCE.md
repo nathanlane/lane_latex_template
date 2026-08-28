@@ -16,17 +16,16 @@ Complete reference for all commands, environments, and options provided by the `
 10. [Cross-Reference Commands](#cross-reference-commands)
 11. [Paragraph Commands](#paragraph-commands)
 12. [Color Commands](#color-commands)
-13. [Footnote Commands](#footnote-commands)
-14. [Quick Reference Card](#quick-reference-card)
-15. [Bibliography and citations](#bibliography-and-citations)
-16. [The font system](#the-font-system)
-17. [The colour system](#the-colour-system)
-18. [Page layout and dimensions](#page-layout-and-dimensions)
-19. [The heading system](#the-heading-system)
-20. [The list system](#the-list-system)
-21. [How the package is put together](#how-the-package-is-put-together)
-22. [Typography standards](#typography-standards)
-23. [Removed in v3](#removed-in-v3)
+13. [Quick Reference Card](#quick-reference-card)
+14. [Bibliography and citations](#bibliography-and-citations)
+15. [The font system](#the-font-system)
+16. [The colour system](#the-colour-system)
+17. [Page layout and dimensions](#page-layout-and-dimensions)
+18. [The heading system](#the-heading-system)
+19. [The list system](#the-list-system)
+20. [How the package is put together](#how-the-package-is-put-together)
+21. [Typography standards](#typography-standards)
+22. [Removed in v3](#removed-in-v3)
 
 ## Package Options
 
@@ -93,6 +92,13 @@ Fixed 16pt title for papers with many authors.
 
 ```latex
 \articletitlecompact{A Short Title for a Paper with Many Authors}
+```
+
+#### `\articletitlecompactfootnote{title}{footnote}`
+Fixed 16pt title with an acknowledgment footnote.
+
+```latex
+\articletitlecompactfootnote{A Compact Title}{We thank the reviewers.}
 ```
 
 ### Author and Metadata Commands
@@ -168,43 +174,13 @@ Professional abstract environment.
 
 ### Section Opening Styles
 
-#### `\sectionopening{first line}{rest of paragraph}`
-First line in small caps.
+#### `\sectionopening{opening text}`
+Styles its one argument in small caps at the start of a paragraph. Following
+text stays in that same paragraph.
 
 ```latex
-\sectionopening{This opening line appears in small caps,} while the rest 
+\sectionopening{This opening text appears in small caps,} while the rest
 of the paragraph continues in normal text.
-```
-
-#### `openingparagraph` environment
-First paragraph with no indentation.
-
-```latex
-\begin{openingparagraph}
-The opening paragraph after a heading has no first-line indent.
-\end{openingparagraph}
-```
-
-### Section Breaks
-
-#### `\sectionsep`
-Insert 2 grid units of white space.
-(Formerly `\sectionbreak`; renamed because titlesec executes any defined `\<level>break` as a heading hook.)
-
-### Drop Caps
-
-#### `\dropcap{letter}{text}`
-Two-line drop cap.
-
-```latex
-\dropcap{W}{hen we consider} the importance of typography...
-```
-
-#### `\academicdropcap{letter}{text}`
-Conservative drop cap for academic use.
-
-```latex
-\academicdropcap{T}{his introduction} begins with a minimal drop cap...
 ```
 
 ## Spacing Commands
@@ -285,40 +261,8 @@ Small caps labels in gray.
 \end{description}
 ```
 
-### Special List Environments
-
-#### `academicitem`
-En-dash lists for academic style.
-
-```latex
-\begin{academicitem}
-  \item First finding
-  \item Second observation
-\end{academicitem}
-```
-
-#### `compactitem`
-No spacing between items.
-
-```latex
-\begin{compactitem}
-  \item Compact item one
-  \item Compact item two
-\end{compactitem}
-```
-
-#### `displayitem`
-Bold items with generous spacing.
-
-```latex
-\begin{displayitem}
-  \item \textbf{Key Result:} Important finding
-  \item \textbf{Innovation:} Novel contribution
-\end{displayitem}
-```
-
 #### `inlineitem`
-Inline lists with semicolons.
+The one package-specific list: inline parenthetical letters joined by semicolons.
 
 ```latex
 The colors are: \begin{inlineitem}
@@ -326,16 +270,6 @@ The colors are: \begin{inlineitem}
   \item green
   \item blue
 \end{inlineitem}.
-```
-
-#### `readableitem`
-Enhanced spacing (0.5 grid units).
-
-```latex
-\begin{readableitem}
-  \item More breathing room
-  \item Better for dense content
-\end{readableitem}
 ```
 
 ## Quotation Environments
@@ -348,7 +282,7 @@ Standard block quote (10.5pt, gray, indented).
 ```latex
 \begin{quote}
 Typography is the visual component of the written word.
-\quoteattribution{Matthew Butterick}
+\hfill--- Matthew Butterick
 \end{quote}
 ```
 
@@ -363,24 +297,9 @@ Second paragraph with maintained formatting.
 \end{quotation}
 ```
 
-#### `emphasisquote`
-Large italic quote for emphasis.
-
-```latex
-\begin{emphasisquote}
-Typography exists to honor content.
-\quoteattribution{Robert Bringhurst}
-\end{emphasisquote}
-```
-
-### Quote Commands
-
-#### `\quoteattribution{name}`
-Right-aligned attribution with em-dash.
-
 ## Table and Figure Environments
 
-### Enhanced Table Environments
+### Standard Tables
 
 Row height is `\arraystretch` times the 16.32pt body baseline plus 2.2pt of
 `\extrarowheight`. The package sets `\arraystretch` to 1.2 globally
@@ -404,27 +323,28 @@ environments, which did only that, were removed in v3.
 \end{table}
 ```
 
-#### `regressiontable`
-19.8pt rows for regression results.
-
 ### Table Notes
 
-#### `tablenotes` environment
-Professional notes following QJE style.
+Table notes are document-owned. Load `threeparttable` and use its native
+`threeparttable` and `tablenotes` environments; Lanepaper neither loads that
+package nor defines or redefines its commands.
 
 ```latex
-\begin{tablenotes}
-  \tabnote{General methodology notes}
-  \tabvars{GDP in billions, CPI base 2020}
-  \tabmethod{OLS with fixed effects}
-  \tabcluster{Clustered at state level}
-  \tabsample{N = 1,234}
-  \tabsource{World Bank (2023)}
-  \tabstars  % Standard significance stars
-\end{tablenotes}
+\usepackage{threeparttable}
+% In the table:
+\begin{threeparttable}
+  \begin{tabular}{@{}lr@{}}
+    \toprule
+    Item & Value \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}
+    \item \emph{Notes:} General methodology notes.
+  \end{tablenotes}
+\end{threeparttable}
 ```
 
-### Figure Commands
+### Standard Figures
 
 Figures are standard. The v3 contraction removed `gridfigure` and
 `\gridincludegraphics`, which rounded image heights to quantum multiples:
@@ -437,14 +357,16 @@ Figures are standard. The v3 contraction removed `gridfigure` and
 \end{figure}
 ```
 
-#### `fignotes` environment
-Notes for figures.
+#### `lanepaperfigurenotes` environment
+Typesets flush-left figure notes in footnote size. It is the only
+Lanepaper-owned figure-note surface.
 
 ```latex
-\begin{fignotes}
-  \fignote{Description of the figure}
-  \figsource{Data: Federal Reserve}
-\end{fignotes}
+\begin{lanepaperfigurenotes}
+  \emph{Notes:} Description of the figure.
+
+  \emph{Source:} Federal Reserve.
+\end{lanepaperfigurenotes}
 ```
 
 ## Mathematical Commands
@@ -468,8 +390,6 @@ For aligned equations, use the standard LaTeX environments:
   \sum_{n=1}^{\infty} a_n
 \end{gather}
 ```
-
-*Note: Grid-specific equation environments may be added in future versions.*
 
 ## Cross-Reference Commands
 
@@ -558,19 +478,6 @@ A document that wants its own colours defines and applies them itself:
 \textcolor{myaccent}{Important heading}
 ```
 
-## Footnote Commands
-
-### Special Footnote Commands
-
-#### `\sidenote{text}`
-Margin note in footnote size.
-
-```latex
-Important point.\sidenote{This appears in the margin.}
-```
-
----
-
 ## Quick Reference Card
 
 ### Most Common Commands
@@ -590,10 +497,13 @@ Important point.\sidenote{This appears in the margin.}
 % Lists
 \begin{itemize}
 \begin{enumerate}
-\begin{academicitem}
+\begin{inlineitem}...\end{inlineitem}
 
 % Quotes
-\begin{quote}...\quoteattribution{Author}\end{quote}
+\begin{quote}...\end{quote}
+
+% Figure notes
+\begin{lanepaperfigurenotes}...\end{lanepaperfigurenotes}
 
 % References (document loads cleveref)
 \cref{label}
@@ -1131,12 +1041,6 @@ The module provides four spacing presets:
 
 ### Special Commands
 
-#### Section Breaks
-```latex
-\sectionsep  % Add 2 grid units of space
-\spacebreak  % Alias for \sectionsep
-```
-
 #### Safe Paragraph Heading
 For Overleaf compatibility:
 ```latex
@@ -1277,22 +1181,14 @@ Inline paragraph heading style...
 \subsubsection{Data Structures}
 ```
 
-#### Book Chapter
-```latex
-\spacioussections
-
-\section{The Beginning}
-\sectionsep
-\section{The Middle}
-\sectionsep
-\section{The End}
-```
-
 ## The list system
 
 ### Overview
 
-The lists module (`lists.sty`) implements sophisticated list typography with multiple styles, quantum-derived spacing, and professional aesthetics.
+The internal lists module styles LaTeX's standard `itemize`, `enumerate`, and
+`description` environments with the package palette, hanging indents, and
+quantum-derived spacing. It also provides `inlineitem` for short enumerations
+within running prose.
 
 ### List Types
 
@@ -1330,45 +1226,6 @@ The lists module (`lists.sty`) implements sophisticated list typography with mul
 \end{description}
 ```
 
-#### Specialized List Environments
-
-##### Compact Lists
-Minimal spacing for dense information:
-```latex
-\begin{compactitem}
-\item Reference one
-\item Reference two
-\item Reference three
-\end{compactitem}
-```
-
-##### Display Lists
-Emphasized items with generous spacing:
-```latex
-\begin{displayitem}
-\item \textbf{Key Finding:} Important result
-\item \textbf{Innovation:} Novel contribution
-\end{displayitem}
-```
-
-##### Academic Lists
-En-dash bullets following university style:
-```latex
-\begin{academicitem}
-\item First scholarly point
-\item Second scholarly point
-\end{academicitem}
-```
-
-##### Readable Lists
-Enhanced spacing for improved readability:
-```latex
-\begin{readableitem}
-\item First point with breathing room
-\item Second point clearly separated
-\end{readableitem}
-```
-
 ##### Inline Lists
 For brief enumerations within text:
 ```latex
@@ -1378,37 +1235,6 @@ The three principles are:
 \item consistency  
 \item precision
 \end{inlineitem}.
-```
-
-### List Customization
-
-#### Global Spacing Commands
-
-Change spacing for all lists:
-```latex
-\tightlists      % Minimal spacing
-\normallists     % Default spacing (restore)
-\spaciouslists   % Generous spacing
-```
-
-#### Bullet Style Commands
-
-Change bullet appearance globally:
-```latex
-\dashbullets      % Switch to en-dashes
-\trianglebullets  % Switch to triangles
-\defaultbullets   % Restore gray bullets
-```
-
-#### Manual Bullet Control
-```latex
-\begin{itemize}
-\itembullet First item with bullet
-\itemdash Second item with dash
-\itemdiamond Third item with diamond
-\itemsquare Fourth item with square
-\itemtriangle Fifth item with triangle
-\end{itemize}
 ```
 
 ### Spacing System
@@ -1427,7 +1253,7 @@ All list spacing uses the 13.2pt spacing quantum:
 #### Bullet Hierarchy
 1. **Level 1**: Gray bullet (scaled 90%)
 2. **Level 2**: Gray en-dash
-3. **Level 3**: Gray diamond (scaled 70%)
+3. **Level 3**: Smaller gray bullet
 
 #### Number Styles
 - **Level 1**: Oldstyle figures with period
@@ -1436,8 +1262,6 @@ All list spacing uses the 13.2pt spacing quantum:
 
 #### Label Formatting
 - **Description**: Small caps with 15% gray
-- **Display**: Bold text
-- **Academic**: Regular text with en-dash
 
 ### Advanced Usage
 
@@ -1450,18 +1274,6 @@ All list spacing uses the 13.2pt spacing quantum:
   leftmargin=2em,
   itemsep=6.6pt
 }
-```
-
-#### Mixed List Styles
-```latex
-\begin{itemize}
-\item Regular item
-\begin{compactitem}  % Switch to compact
-\item Nested compact item
-\item Another compact item
-\end{compactitem}
-\item Back to regular spacing
-\end{itemize}
 ```
 
 #### Resuming Lists
@@ -1492,18 +1304,6 @@ Lists after headings automatically have appropriate spacing:
 No indent here due to list above.
 ```
 
-#### In Quotations
-```latex
-\begin{quote}
-Key principles include:
-\begin{compactitem}
-\item Brevity
-\item Clarity
-\item Precision
-\end{compactitem}
-\end{quote}
-```
-
 ### Best Practices
 
 #### Choosing List Types
@@ -1523,43 +1323,26 @@ Key principles include:
 - Explaining concepts
 - Creating glossaries
 
-#### Spacing Guidelines
-
-**Use compact lists for:**
-- References
-- Brief items
-- Space-constrained areas
-
-**Use display lists for:**
-- Key findings
-- Important points
-- Executive summaries
-
-**Use readable lists for:**
-- Detailed explanations
-- Teaching materials
-- When clarity is paramount
-
 ### Common Patterns
 
 #### References List
 ```latex
-\begin{compactitem}
+\begin{itemize}
 \item Butterick, M. (2019). \emph{Practical Typography}.
 \item Brown, T. (2018). \emph{Flexible Typographic Systems}.
 \item Hochuli, J. (1987). \emph{Detail in Typography}.
-\end{compactitem}
+\end{itemize}
 ```
 
 #### Methodology Steps
 ```latex
 \begin{enumerate}
 \item Data collection
-  \begin{academicitem}
+  \begin{itemize}
   \item Survey design
   \item Participant recruitment
   \item Response validation
-  \end{academicitem}
+  \end{itemize}
 \item Analysis
 \item Interpretation
 \end{enumerate}
@@ -1628,11 +1411,12 @@ For complete module documentation, see [`CONVENTIONS.md` section 3](CONVENTIONS.
 
 ##### List Typography Module
 
-`lnplists.sty` gives you carefully tuned list environments spaced in 13.2pt quantum multiples and a bullet hierarchy that follows Butterick & Hochuli’s guidance.
+`lnplists.sty` styles the standard list environments and owns the one
+package-specific `inlineitem` environment.
 
 * Level 1 • Professional grey bullet  
 * Level 2 – en-dash  
-* Level 3 ◆ diamond
+* Level 3 • smaller grey bullet
 
 Example:
 ```latex
@@ -1645,15 +1429,11 @@ Example:
 \end{itemize}
 ```
 
-You can customise markers or spacing—for instance, switch the top-level bullet to a dash:
+Use enumitem's document-owned options for one-off customisation:
 ```latex
-\setlist[itemize,1]{label=\dashmark}
-```
-
-Bullet symbol commands:
-```latex
-\refinedbullet    % 75% scaled bullet, in the palette's subtle grey
-\refineddash      % En-dash with micro-kern, same grey
+\begin{itemize}[itemsep=0pt]
+  \item A dense list
+\end{itemize}
 ```
 
 ##### Paragraph Spacing Commands
@@ -1819,55 +1599,17 @@ Rule specs: 33% width, 0.4pt thickness, text color
 \titlefootnotereset    % Returns to numbers
 ```
 
-### Chicago-Compliant Appendix System
+### Standard Appendices, Figures, and Tables
 
-#### How the appendix system works
-
-Professional appendix management with automatic single/multiple detection:
+Lanepaper leaves appendix orchestration to the document. Use standard LaTeX:
 
 ```latex
-\begin{documentAppendices}
-  \input{appendices/first.tex}
-  \input{appendices/second.tex}
-\end{documentAppendices}
+\appendix
+\section{Supplementary Results}
 ```
 
-#### Automatic Behavior
-
-**Multiple Appendices (2+):**
-- Table of Contents: "Appendices" section header
-- Numbering: "Appendix A", "Appendix B", etc.
-- Cross-references: Full "Appendix A" format
-
-**Single Appendix (1):**
-- Table of Contents: Direct appendix entry
-- Numbering: "Appendix" (no letter)
-- Cross-references: Simple "Appendix" format
-
-#### Implementation Details
-
-The system uses a two-pass auxiliary file mechanism:
-
-1. **First Pass**: Counts appendices and writes count to `.aux` file
-2. **Second Pass**: Reads count and formats accordingly
-3. **Detection Logic**: `\ifnum\lnp@totalappendices>1`
-
-#### Usage Patterns
-
-```latex
-% Standard usage
-\begin{documentAppendices}
-  \input{appendices/main_appendix.tex}
-  \input{appendices/tech_appendix.tex}
-\end{documentAppendices}
-
-% Legacy compatibility
-\startappendices
-  \input{appendices/main_appendix.tex}
-\finishappendices
-```
-
-### Professional Figures and Tables
+Figures and tables remain the standard LaTeX floats. Lanepaper applies caption
+typography but does not wrap placement or insert float barriers.
 
 #### Figure Management
 
@@ -1877,10 +1619,11 @@ The system uses a two-pass auxiliary file mechanism:
   \includegraphics[width=0.8\textwidth]{figures/example.pdf}
   \caption{Professional Caption Below Figure}
   \label{fig:example}
-  \begin{fignotes}
-    \fignote{Description of what the figure shows}
-    \figsource{Data source or image attribution}
-  \end{fignotes}
+  \begin{lanepaperfigurenotes}
+    \emph{Notes:} Description of what the figure shows.
+
+    \emph{Source:} Data source or image attribution.
+  \end{lanepaperfigurenotes}
 \end{figure}
 ```
 
@@ -1902,12 +1645,11 @@ The system uses a two-pass auxiliary file mechanism:
                & (0.01) & (0.02) & (0.01) \\
     \bottomrule
   \end{tabular}
-  \begin{tablenotes}
-    \tabnote{Standard errors in parentheses}
-    \tabstars  % ***p<0.01, **p<0.05, *p<0.1
-  \end{tablenotes}
 \end{table}
 ```
+
+Tables use `booktabs` without vertical rules. If a table needs notes, load
+`threeparttable` in the document and use its native environments.
 
 #### Tables with Standard Row Heights
 
@@ -1918,64 +1660,11 @@ The system uses a two-pass auxiliary file mechanism:
   % Content
 \end{table}
 
-% Regression tables (19.8pt rows)
-\begin{regressiontable}[tbp]
-  % For statistical results with standard errors
-\end{regressiontable}
-
 % Compact tables (~16.9pt rows measured)
 \begin{table}[tbp]
   \renewcommand{\arraystretch}{0.9}
   % For dense information
 \end{table}
-```
-
-#### QJE-Style Notes System
-
-```latex
-% Table notes
-\begin{tablenotes}
-  \tabnote{General description}
-  \tabvars{Variable definitions}
-  \tabmethod{Methodology used}
-  \tabcluster{Standard error clustering}
-  \tabsample{Sample size and period}
-  \tabsource{Data source}
-  \tabstars  % Significance levels
-  \tabdaggers  % Alternative: †p<0.10, ††p<0.05
-\end{tablenotes}
-
-% Figure notes
-\begin{fignotes}
-  \fignote{Figure description}
-  \figsource{Source attribution}
-\end{fignotes}
-
-% Panel labels
-\panellabel{A}  % Bold panel label
-\panelnote{A}{Panel-specific note}
-```
-
-#### Float Management
-
-```latex
-% Intelligent barriers
-\FloatBarrier           % Standard barrier
-\softfloatbarrier       % Flexible with grid spacing
-\hardfloatbarrier       % Force new page if needed
-\sectionendfloatbarrier % Before major transitions
-
-% Here-float alternatives
-\tryherefigure{...}     % Attempts [h], falls back to [tbp]
-\forceherefigure{...}   % Absolute placement
-\begin{herefloat}
-  % Standard-row-height here placement
-\end{herefloat}
-
-% Visual balance
-\balancefloatpage       % Adds flexible space
-\compensatetopfloat     % Adds grid unit after large floats
-\showfloatstats         % Debug placement in log
 ```
 
 ### Compatibility
@@ -1990,14 +1679,8 @@ The system uses a two-pass auxiliary file mechanism:
 `tgpagella`, `zi4`, `newpxmath`, `mathalfa`, `microtype`,
 `enumitem`, `caption`, `geometry`
 
-Cross-references are document-owned since v3 (issue #84): load and configure
-`cleveref` yourself if you want it. `appendix` is configured if the document
-loads it.
-
-For appendix count issues, delete auxiliary files and recompile:
-```bash
-latexmk -C main.tex  # or: rm *.aux *.out *.toc && pdflatex main.tex && pdflatex main.tex
-```
+Cross-references, appendix packages, and `threeparttable` are document-owned:
+load and configure them yourself if needed.
 
 `Package fontaxes Warning: Axis 'shape' not supported` is harmless and expected.
 
@@ -2035,28 +1718,8 @@ Half quantum: 6.6pt
 Quarter quantum: 3.3pt
 ```
 
-#### Appendix Counter Logic
-
-```latex
-% Two-pass auxiliary file mechanism
-\newcounter{appendixcount}
-\newcommand{\lnp@writeappendixcount}{%
-  \immediate\write\@auxout{%
-    \string\gdef\string\lnp@totalappendices{\theappendixcount}%
-  }%
-}
-
-% Conditional formatting based on count
-\ifnum\lnp@totalappendices>1\relax
-  \multipleappendicestrue
-\else
-  \multipleappendicesfalse
-\fi
-```
-
 #### Performance Considerations
 
-- **Compilation Speed**: Two-pass system requires `pdflatex` twice for appendix detection
 - **Memory Usage**: Microtype and font loading increase memory requirements
 - **Compatibility**: Tested with TeX Live 2022, 2025, 2026 (see [`README.md`](README.md) for details); MiKTeX not verified
 
@@ -2741,7 +2404,7 @@ spacing quantum is private.
 | `lnpcompilationfixes.sty` (module), `\fitwide`, `\showoverfulls`, `\hideoverfulls` | `\resizebox`, `\overfullrule` |
 | `[grid]`, `[nogrid]`, `[minimal]`, `[draft]` | nothing; the modes are gone |
 | `[natbib]`, `[nobiblatex]` | load `natbib` or `biblatex` in the document |
-| `[subsectionbarriers]`, `[nosubsectionbarriers]` | nothing; barriers are always on |
+| `[subsectionbarriers]`, `[nosubsectionbarriers]` | nothing; use standard float placement or load `placeins` in the document |
 | `\gridunit`, `\halfgridunit`, `\quartergridunit`, `\threequartergridunit`, `\onehalfgridunit`, `\doublegridunit`, `\triplegridunit` | the length itself: `13.2pt`, `6.6pt`, `3.3pt`, `9.9pt`, `19.8pt`, `26.4pt`, `39.6pt` |
 | `\gridmult`, `\gridmath`, `\gridspace`, `\halfbaselinespace`, `\fullbaselinespace` | `\vspace{...}` with the length |
 | `\roundtogrid`, `\gridincludegraphics`, `\imagegridspace`, `gridfigure` | `\includegraphics` in a standard `figure` |
@@ -2761,3 +2424,28 @@ The package also stopped forcing `letterpaper`: `\documentclass[a4paper]`
 now really produces A4, with the six-inch measure kept and centred.
 
 Cleveref is no longer configured by the package: a document that wants abbreviated names or parenthetical styles loads and configures cleveref itself. The title-page small caps this package still uses internally is private (`\lnp@titlesc`) and unchanged.
+
+### Document structures (issue #86)
+
+v3 keeps standard LaTeX structures and removes package wrappers, orchestration,
+diagnostics, and ornamental alternatives. No aliases are provided.
+
+| Removed | Use instead |
+|---------|-------------|
+| `epigraph`, `emphasisquote`, `\quoteattribution` | standard `quote` or `quotation`; write attribution text directly |
+| `openingparagraph`, `\firstlinesc`, `\abstractopening` | ordinary paragraphs; `\sectionopening{...}` is the retained inline opening |
+| `\academicdropcap` and drop-cap support | ordinary paragraph text or a document-selected package |
+| `\sectionsep`, `\spacebreak`, `\majorsectionspace`, `\thinrulebreak`, `\paragraphsep` | explicit document-owned spacing where needed |
+| `\sidenote` | `\marginpar` or a document-selected sidenote package |
+| `academicitem`, `compactitem`, `displayitem`, `readableitem` | standard `itemize`, `enumerate`, or `description` |
+| public marker, bullet-switching, list-spacing, and list-length helpers | enumitem options owned by the document |
+| float barriers, here-float wrappers, balance helpers, and float diagnostics | standard `figure`/`table`; load `placeins` if wanted |
+| `regressiontable`, caption helpers, panel helpers, and table-note commands | standard `table`; load `threeparttable` for table notes |
+| `tablenotes` defined by Lanepaper | threeparttable's native `tablenotes` environment |
+| `fignotes`, `\fignote`, `\figurenote`, `\figsource` | `lanepaperfigurenotes` with ordinary text inside |
+| `\startappendices`, `\finishappendices`, `documentAppendices` | standard `\appendix` or a package loaded by the document |
+| `\lanepaperdiagnostics`, `\lanepaperinfo` | ordinary LaTeX logs and package inspection tools |
+
+`booktabs` remains required and tables use horizontal rules without vertical
+rules. If the document loads `longtable`, Lanepaper still sets its caption
+width and applies the table-caption typography through a package hook.
