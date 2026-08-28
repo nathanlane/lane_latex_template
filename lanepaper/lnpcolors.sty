@@ -15,81 +15,45 @@
 %% This work consists of the files in lanepaper/.
 %%
 % ==============================================================================
-% LNPCOLORS.STY - Professional Color System Module
+% LNPCOLORS.STY - Semantic Colour Palette
 % ==============================================================================
-% Extracted from lanepaper.sty for modular customization
-% Maintains full compatibility with existing documents
+% Internal to lanepaper (ADR-0006). Every colour is \lnp@-prefixed: xcolor
+% names live in one flat global namespace, and bare names like `textblack` or
+% `linknavy` are exactly the ones a document or another package will collide
+% with. Documents restyle their own text; they do not reach in here.
 % ==============================================================================
 
 \ProvidesPackage{lnpcolors}[2026/08/12 v1.1 Professional Color System]
-\RequirePackage{etoolbox} % for \robustify (#55)
 
 \RequirePackage{xcolor}
 
-% PRIMARY HIERARCHY COLORS
-% Systematic grayscale progression for document structure
+% PRIMARY HIERARCHY COLOURS
+% A restrained palette: near-black body text, a softened navy for the top two
+% heading levels, and a grey ladder for everything subordinate.
+\definecolor{lnp@textblack}{gray}{0.05}          % Near-black body text
+\definecolor{lnp@sectioncolor}{RGB}{25,50,80}    % Softened navy, top level
+\definecolor{lnp@subsectioncolor}{RGB}{40,40,55} % Muted midnight, second level
+\definecolor{lnp@subsubcolor}{gray}{0.25}        % Medium charcoal
+\definecolor{lnp@paragraphcolor}{gray}{0.15}     % Dark grey; bold at small sizes
+\definecolor{lnp@subtlegray}{gray}{0.45}         % Captions, footnote rules, bullets
+\definecolor{lnp@quotegray}{gray}{0.15}          % Block quotations
+\definecolor{lnp@linknavy}{RGB}{0,68,136}        % Link theme colour for Pagella
 
-% Bold Color System: Softened palette for bold typography
-%% FIX: Allow standalone module loading while honoring lanepaper's nocolor flag.
-\@ifundefined{iflnp@nocolor}{\newif\iflnp@nocolor}{}
+%% FIX (#85): [nocolor] used to \definecolor every name as gray 0, which did
+%% not just remove chroma -- it flattened the hierarchy, so section,
+%% subsection, subsubsection and body all printed identical black. Converting
+%% the same palette through xcolor's gray model removes chroma and nothing
+%% else: the grey steps above are already grey, so they pass through
+%% untouched, and the two navies land on distinct dark greys.
 \iflnp@nocolor
-  \definecolor{textblack}{gray}{0}
-  \definecolor{sectioncolor}{gray}{0}
-  \definecolor{subsectioncolor}{gray}{0}
-  \definecolor{subsubcolor}{gray}{0}
-  \definecolor{paragraphcolor}{gray}{0}
-  \definecolor{subtlegray}{gray}{0}
-  \definecolor{bulletgray}{gray}{0}
-  \definecolor{dashgray}{gray}{0}
-  \definecolor{circlegray}{gray}{0}
-  \definecolor{linknavy}{gray}{0}
-  \definecolor{linkdark}{gray}{0}
-  \definecolor{internalgray}{gray}{0}
-  \definecolor{codecolor}{gray}{0}
-  \definecolor{commentgray}{gray}{0}
-  \definecolor{emphasisblue}{gray}{0}
-  \definecolor{warningred}{gray}{0}
-\else
-  \definecolor{textblack}{gray}{0.05}       % Near-black for optimal reading (slightly warmer than pure black)
-  \definecolor{sectioncolor}{RGB}{25,50,80}  % Softened navy - reduces bold impact while maintaining distinction
-  \definecolor{subsectioncolor}{RGB}{40,40,55}  % Muted midnight blue - secondary level
-  \definecolor{subsubcolor}{gray}{0.25}      % Medium charcoal - softer than near-black for bold
-  \definecolor{paragraphcolor}{gray}{0.15}   % Dark gray - prevents harsh black bold at small sizes
-  \definecolor{subtlegray}{gray}{0.45}      % Captions, footnote rules (refined from generic gray)
-  \definecolor{bulletgray}{gray}{0.25}      % Refined gray for bullets (75% black)
-  \definecolor{dashgray}{gray}{0.30}       % Slightly lighter for en-dashes (70% black)
-  \definecolor{circlegray}{gray}{0.35}     % Lightest for nested circles (65% black)
-
-  % Professional link colors optimized for Pagella
-  \definecolor{linknavy}{RGB}{0,68,136}     % Deeper, more dignified blue for Pagella
-  \definecolor{linkdark}{RGB}{0,51,102}      % Darker variant for visited links
-  \definecolor{internalgray}{RGB}{80,80,80}    % Medium gray for internal references (improved contrast)
-
-  % Code typography color harmony
-  \definecolor{codecolor}{RGB}{25,25,25}    % Balanced monospace color (was rgb 0.1,0.1,0.1)
-  \definecolor{commentgray}{gray}{0.35}     % For code comments if needed
-
-  % Academic emphasis colors (restrained palette following Butterick's principles)
-  \definecolor{emphasisblue}{RGB}{0,34,68}  % Deeper blue matching Pagella's gravitas
-  \definecolor{warningred}{RGB}{140,30,30}  % Conservative red for important notes (minimal use)
+  \colorlet{lnp@textblack}[gray]{lnp@textblack}
+  \colorlet{lnp@sectioncolor}[gray]{lnp@sectioncolor}
+  \colorlet{lnp@subsectioncolor}[gray]{lnp@subsectioncolor}
+  \colorlet{lnp@subsubcolor}[gray]{lnp@subsubcolor}
+  \colorlet{lnp@paragraphcolor}[gray]{lnp@paragraphcolor}
+  \colorlet{lnp@subtlegray}[gray]{lnp@subtlegray}
+  \colorlet{lnp@quotegray}[gray]{lnp@quotegray}
+  \colorlet{lnp@linknavy}[gray]{lnp@linknavy}
 \fi
 
-% SEMANTIC COLOR COMMANDS
-% Use these in documents for consistency
-\newcommand{\maincolor}{\color{textblack}}
-\newcommand{\secondarycolor}{\color{subtlegray}}
-\newcommand{\accentcolor}{\color{linknavy}}
-\newcommand{\codeaccent}{\color{codecolor}}
-
-% ==============================================================================
-% ROBUSTNESS (#55)
-% ==============================================================================
-% Every public macro defined above is made robust for moving arguments
-% (section titles, captions, marks, the .aux round-trip) via etoolbox
-% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
-% so a name collision with another package still errors at load time.
-% \ifdefmacro skips names that resolve to registers in this load order.
-\ifdefmacro{\maincolor}{\robustify{\maincolor}}{}
-\ifdefmacro{\secondarycolor}{\robustify{\secondarycolor}}{}
-\ifdefmacro{\accentcolor}{\robustify{\accentcolor}}{}
-\ifdefmacro{\codeaccent}{\robustify{\codeaccent}}{}
+\endinput

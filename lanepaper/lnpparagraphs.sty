@@ -27,7 +27,7 @@
 \RequirePackage{lettrine}  % For drop caps
 \RequirePackage{etoolbox}  % For environment hooks
 
-% Ensure dimensions are loaded for grid units
+% Ensure dimensions are loaded for the spacing quantum
 \@ifpackageloaded{lnpdimensions}{}{%
   \RequirePackage{lnpdimensions}%
 }
@@ -69,16 +69,16 @@
 % For quotations at chapter/section beginnings
 
 \newenvironment{epigraph}{%
-  \vspace{\gridunit}%                       % 1 grid unit before
+  \vspace{\lnp@gridunit}%                       % 1 quantum before
   \begin{flushright}%
   \begin{minipage}{0.618\textwidth}%        % Golden ratio width
   \raggedleft\itshape%
   \setlength{\parindent}{0pt}%
-  \setlength{\parskip}{0.5\gridunit}%      % 0.5 grid units between paragraphs
+  \setlength{\parskip}{0.5\lnp@gridunit}%      % 0.5 quanta between paragraphs
 }{%
   \end{minipage}%
   \end{flushright}%
-  \vspace{\gridunit}%                       % 1 grid unit after
+  \vspace{\lnp@gridunit}%                       % 1 quantum after
   \@afterindentfalse%                       % No indent after epigraph
 }
 
@@ -91,75 +91,75 @@
 % - Brown: Systematic relationships with modular scale
 
 % Define quote gray color
-\definecolor{quotegray}{gray}{0.15}  % 15% gray matches paragraph headings
+\definecolor{lnp@quotegray}{gray}{0.15}  % 15% gray matches paragraph headings
 
 % STANDARD BLOCK QUOTE
 %% FIX: Use \list with \endlist so quote environments close correctly.
 \renewenvironment{quote}{%
-  \vspace{\gridunit}%                       % 1 grid unit before
+  \vspace{\lnp@gridunit}%                       % 1 quantum before
   \list{}{%
-    \setlength{\leftmargin}{2\gridunit}%   % 2 grid units
-    \setlength{\rightmargin}{2\gridunit}%  % Symmetric margins
+    \setlength{\leftmargin}{2\lnp@gridunit}%   % 2 quanta
+    \setlength{\rightmargin}{2\lnp@gridunit}%  % Symmetric margins
     \setlength{\topsep}{0pt}%
     \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\gridunit}%     % 0.5 units between paragraphs
+    \setlength{\parsep}{0.5\lnp@gridunit}%     % 0.5 units between paragraphs
     \setlength{\itemsep}{0pt}%
     \setlength{\listparindent}{\parindent}%
     \fontsize{10.5}{13.2}\selectfont%      % 95% size, same leading
-    \color{quotegray}%                     % 15% gray
+    \color{lnp@quotegray}%                     % 15% gray
   }%
   \item\relax
 }{%
   \endlist
-  \vspace{\gridunit}%                      % 1 grid unit after
+  \vspace{\lnp@gridunit}%                      % 1 quantum after
   \@afterindentfalse%                      % No indent after quote
 }
 
 % EXTENDED QUOTATION
 \renewenvironment{quotation}{%
-  \vspace{\gridunit}%
+  \vspace{\lnp@gridunit}%
   \list{}{%
-    \setlength{\leftmargin}{2\gridunit}%
-    \setlength{\rightmargin}{2\gridunit}%
+    \setlength{\leftmargin}{2\lnp@gridunit}%
+    \setlength{\rightmargin}{2\lnp@gridunit}%
     \setlength{\topsep}{0pt}%
     \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\gridunit}%
+    \setlength{\parsep}{0.5\lnp@gridunit}%
     \setlength{\itemsep}{0pt}%
-    \setlength{\listparindent}{\gridunit}% % Maintain paragraph indent
+    \setlength{\listparindent}{\lnp@gridunit}% % Maintain paragraph indent
     \fontsize{10.5}{13.2}\selectfont%
-    \color{quotegray}%
+    \color{lnp@quotegray}%
   }%
   \item\relax
 }{%
   \endlist
-  \vspace{\gridunit}%
+  \vspace{\lnp@gridunit}%
   \@afterindentfalse%
 }
 
 % PROFESSIONAL ATTRIBUTION
 \newcommand{\quoteattribution}[1]{%
-  \par\vspace{0.5\gridunit}%               % 0.5 grid units
-  \hfill{\fontsize{10}{13.2}\selectfont\color{subsubcolor}--- #1}%
+  \par\vspace{0.5\lnp@gridunit}%               % 0.5 quanta
+  \hfill{\fontsize{10}{13.2}\selectfont\color{lnp@subsubcolor}--- #1}%
   \par
 }
 
 % EMPHASIS QUOTE
 \newenvironment{emphasisquote}{%
-  \vspace{1.5\gridunit}%                   % 1.5 units before
+  \vspace{1.5\lnp@gridunit}%                   % 1.5 units before
   \list{}{%
-    \setlength{\leftmargin}{3\gridunit}%  % 3 grid units
-    \setlength{\rightmargin}{3\gridunit}% % Dramatic inset
+    \setlength{\leftmargin}{3\lnp@gridunit}%  % 3 quanta
+    \setlength{\rightmargin}{3\lnp@gridunit}% % Dramatic inset
     \setlength{\topsep}{0pt}%
     \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\gridunit}%
+    \setlength{\parsep}{0.5\lnp@gridunit}%
     \setlength{\itemsep}{0pt}%
     \fontsize{12}{15.84}\selectfont%       % Larger for emphasis
-    \itshape\color{quotegray}%             % Italic
+    \itshape\color{lnp@quotegray}%             % Italic
   }%
   \item\relax
 }{%
   \endlist
-  \vspace{1.5\gridunit}%                   % 1.5 units after
+  \vspace{1.5\lnp@gridunit}%                   % 1.5 units after
   \@afterindentfalse%
 }
 
@@ -192,7 +192,7 @@
 
 % Configure lettrine for drop caps
 \@ifpackageloaded{lettrine}{%
-  \renewcommand{\LettrineFontHook}{\color{sectioncolor}}
+  \renewcommand{\LettrineFontHook}{\color{lnp@sectioncolor}}
   \setcounter{DefaultLines}{3}
   \renewcommand{\DefaultLoversize}{0}
   \renewcommand{\DefaultLraise}{0}
@@ -208,7 +208,7 @@
     loversize=0,%          % No size increase
     findent=0pt,%          % No negative indent
     nindent=0.5em%         % Standard following line indent
-  ]{\color{textblack}#1}{#2}%
+  ]{\color{lnp@textblack}#1}{#2}%
 }
 
 % FIRST LINE SMALL CAPS
@@ -233,7 +233,7 @@
 %% as a hook it executes inside heading construction.
 \providecommand{\sectionsep}{}
 \renewcommand{\sectionsep}{%
-  \vspace{2\gridunit}% 2 grid units of clean space
+  \vspace{2\lnp@gridunit}% 2 quanta of clean space
 }
 
 \providecommand{\spacebreak}{}
@@ -260,7 +260,7 @@
 %% old name collided with titlesec's \<level>break hook and made run-in
 %% \paragraph fail with "perhaps a missing \item".
 \providecommand{\paragraphsep}{%
-  \par\vspace{\gridunit}% 1 grid unit of vertical space
+  \par\vspace{\lnp@gridunit}% 1 quantum of vertical space
   \noindent%
 }
 
@@ -270,18 +270,18 @@
   \marginpar{%
     \footnotesize\raggedright%
     \setlength{\parindent}{0pt}%
-    \setlength{\parskip}{0.25\gridunit}%
+    \setlength{\parskip}{0.25\lnp@gridunit}%
     #1%
   }%
 }
 
 % Legacy support commands
 %% FIX: Use providecommand so this legacy helper remains preload-safe.
-\providecommand{\compactpar}{\vspace{-\quartergridunit}}
+\providecommand{\compactpar}{\vspace{-0.25\lnp@gridunit}}
 %% FIX: Use providecommand so preload order with lanepaper stays compatible.
-\providecommand{\loosepars}{\vspace{\quartergridunit}}
+\providecommand{\loosepars}{\vspace{0.25\lnp@gridunit}}
 %% FIX: Use providecommand so preload order with lanepaper stays compatible.
-\providecommand{\majorsectionspace}{\vspace{\gridunit}}
+\providecommand{\majorsectionspace}{\vspace{\lnp@gridunit}}
 
 
 % ==============================================================================

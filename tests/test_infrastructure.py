@@ -237,9 +237,8 @@ def test_configure_if_loaded_uses_package_hooks():
 
 def test_entry_points_require_a_format_new_enough_for_hooks():
     """\\AddToHook is format-native from 2020-10-01; the floor must say so."""
-    for name in ("lanepaper", "lnpminimal"):
-        source = (ROOT / "lanepaper" / f"{name}.sty").read_text(encoding="utf-8")
-        assert "\\NeedsTeXFormat{LaTeX2e}[2020/10/01]" in source, name
+    source = (ROOT / "lanepaper" / "lanepaper.sty").read_text(encoding="utf-8")
+    assert "\\NeedsTeXFormat{LaTeX2e}[2020/10/01]" in source
 
 
 def test_build_lua_declares_no_test_files():

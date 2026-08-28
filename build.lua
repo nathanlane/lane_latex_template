@@ -13,7 +13,7 @@
   each l3build default is wrong for this repository:
 
     sourcefiles   default matches *.dtx, *.ins and dated .sty names; the
-                  sources here are 14 plain, hand-written .sty files
+                  sources here are 11 plain, hand-written .sty files
     unpackfiles   there is no .ins -- the .dtx/.ins scaffold was deleted in
                   issue #49. Unpack still stages the sources into unpackdir,
                   which is where `install` reads installfiles from.
@@ -45,7 +45,7 @@ textfiles  = {"README.md", "CHANGELOG.md", "LICENSE"}
 ctanreadme = "README.md"
 
 -- `l3build tag <version>` stamps one version and date into every
--- \ProvidesPackage. That is the whole point of adopting it: the 14 modules
+-- \ProvidesPackage. That is the whole point of adopting it: the modules
 -- had drifted to three different version namespaces (v1.1, v1.2, v2.0) while
 -- the repository was tagged v2.1.0.
 tagfiles = {"*.sty"}
@@ -80,17 +80,18 @@ uploadconfig = {
   uploader   = "Nathan Lane",
   license    = "lppl1.3c",
   ctanPath   = "/macros/latex/contrib/lanepaper",
-  summary    = "Academic typography for LaTeX: baseline grid, Pagella fonts, refined headings, lists and spacing",
+  summary    = "Academic typography for LaTeX: a spacing quantum, Pagella fonts, refined headings, lists and spacing",
   description = [[
-    lanepaper is a pdfLaTeX package for academic papers. It sets a baseline
-    grid with most vertical spacing in multiples of a single quantum, a TeX
-    Gyre Pagella text and newpx maths pairing, and a heading, list, float and
-    footnote system tuned to that grid. Optional modules add Hochuli-style
-    optical refinements and a visual grid overlay for proofing.
+    lanepaper is a pdfLaTeX package for academic papers. It states most
+    vertical spacing in multiples of a single 13.2pt quantum, pairs TeX Gyre
+    Pagella text with newpx maths, and tunes headings, lists, floats and
+    footnotes to that scale. \usepackage{lanepaper} is the only load path; it
+    takes two options, [optical] for sourced optical refinements and [nocolor]
+    for a grayscale palette.
 
-    It styles what a document already loads rather than loading it: biblatex,
-    natbib, hyperref, cleveref, longtable and appendix are configured only if
-    present.
+    Bibliography, cross-reference and appendix packages are document-owned.
+    If present, lanepaper only applies narrow link styling to hyperref and
+    sets longtable's caption width.
   ]],
   home       = "https://github.com/nathanlane/lane_latex_template",
   repository = "https://github.com/nathanlane/lane_latex_template",

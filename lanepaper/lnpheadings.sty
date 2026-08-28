@@ -27,17 +27,10 @@
 \RequirePackage{titlesec}         % Custom section formatting
 \RequirePackage{etoolbox}         % For \AtBeginEnvironment
 
-% Ensure colors are loaded
-\@ifpackageloaded{lnpcolors}{}{%
-  % Silently load colors module if not already loaded
-  \RequirePackage{lnpcolors}%
-}
-
-% Ensure dimensions are loaded for grid units
-\@ifpackageloaded{lnpdimensions}{}{%
-  % Silently load dimensions module if not already loaded
-  \RequirePackage{lnpdimensions}%
-}
+%% FIX (#85): lanepaper.sty loads lnpdimensions and lnpcolors before this
+%% module and owns the order, so the \@ifpackageloaded fallbacks that made
+%% standalone loading half-work are gone. This module uses \lnp@gridunit and
+%% the \lnp@ colour palette and assumes both are already there.
 
 % ==============================================================================
 % SECTION HIERARCHY DESIGN
@@ -69,29 +62,29 @@
 \newcommand{\spacioussections}{%
   % Original generous spacing (2 units before, 1 after)
   \titlespacing*{\section}{0pt}
-    {2\gridunit plus 0.25\gridunit minus 0.25\gridunit}
-    {1\gridunit plus 0.125\gridunit minus 0pt}
+    {2\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}
+    {1\lnp@gridunit plus 0.125\lnp@gridunit minus 0pt}
 }
 
 \newcommand{\moderatesections}{%
   % Moderate spacing (1.5 units before, 1 after) - DEFAULT
   \titlespacing*{\section}{0pt}
-    {1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit}
-    {1\gridunit plus 0.125\gridunit minus 0pt}
+    {1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}
+    {1\lnp@gridunit plus 0.125\lnp@gridunit minus 0pt}
 }
 
 \newcommand{\compactsections}{%
   % Compact spacing (1 unit before, 1 after)
   \titlespacing*{\section}{0pt}
-    {1\gridunit plus 0.25\gridunit minus 0.25\gridunit}
-    {1\gridunit plus 0.125\gridunit minus 0pt}
+    {1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}
+    {1\lnp@gridunit plus 0.125\lnp@gridunit minus 0pt}
 }
 
 \newcommand{\tightsections}{%
   % Tight academic spacing (1 unit before, 0.5 after)
   \titlespacing*{\section}{0pt}
-    {1\gridunit plus 0.25\gridunit minus 0.125\gridunit}
-    {0.5\gridunit plus 0.125\gridunit minus 0pt}
+    {1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.125\lnp@gridunit}
+    {0.5\lnp@gridunit plus 0.125\lnp@gridunit minus 0pt}
 }
 
 % ==============================================================================
@@ -104,39 +97,39 @@
 %% headings, so the +80 was dead code that also churned the tracking list
 %% document-wide on every heading (122 override messages per build).
 \titleformat{\section}
-  {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{sectioncolor}}  % 18pt bold, softened navy
+  {\normalfont\fontsize{18}{26.4}\selectfont\bfseries\color{lnp@sectioncolor}}  % 18pt bold, softened navy
   {\thesection}
   {1em}
   {}  % No optical compensation - achieve alignment through leading
 \titlespacing*{\section}
   {0pt}
-  {1.5\gridunit plus 0.25\gridunit minus 0.25\gridunit}  % 1.5 units ±0.25 (reduced from 2)
-  {1\gridunit plus 0.125\gridunit minus 0pt}    % 1 unit +0.125/-0 (unchanged)
+  {1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.25\lnp@gridunit}  % 1.5 units ±0.25 (reduced from 2)
+  {1\lnp@gridunit plus 0.125\lnp@gridunit minus 0pt}    % 1 unit +0.125/-0 (unchanged)
 
 % Subsections: Bold with moderate tracking and midnight blue
-% OPTIMIZED: 19.8pt leading (1.5 grid units) for perfect alignment
+% OPTIMIZED: 19.8pt leading (1.5 quanta) for perfect alignment
 %% FIX: same global-tracking conflict as \section; the +60 never took effect.
 \titleformat{\subsection}
-  {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{subsectioncolor}}  % 14pt bold, muted midnight
+  {\normalfont\fontsize{14}{19.8}\selectfont\bfseries\color{lnp@subsectioncolor}}  % 14pt bold, muted midnight
   {\thesubsection}
   {0.85em}
   {}  % No optical compensation - proper leading ensures alignment
 \titlespacing*{\subsection}
   {0pt}
-  {1.5\gridunit plus 0.25\gridunit minus 0.125\gridunit}  % 1.5 units ±0.25/0.125 (reduced from 2)
-  {0.75\gridunit plus 0.125\gridunit minus 0pt}      % 0.75 units +0.125/-0 (tighter)
+  {1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.125\lnp@gridunit}  % 1.5 units ±0.25/0.125 (reduced from 2)
+  {0.75\lnp@gridunit plus 0.125\lnp@gridunit minus 0pt}      % 0.75 units +0.125/-0 (tighter)
 
 % Subsubsections: Bold with charcoal color for softer impact
-% OPTIMIZED: Single grid unit leading for tight alignment
+% OPTIMIZED: Single quantum leading for tight alignment
 \titleformat{\subsubsection}
-  {\normalfont\fontsize{12}{13.2}\selectfont\bfseries\color{subsubcolor}}  % 12pt bold, charcoal
+  {\normalfont\fontsize{12}{13.2}\selectfont\bfseries\color{lnp@subsubcolor}}  % 12pt bold, charcoal
   {\thesubsubsection}
   {0.7em}
   {}
 \titlespacing*{\subsubsection}
   {0pt}
-  {1.5\gridunit plus 0.25\gridunit minus 0.125\gridunit}  % 1.5 units ±0.25/0.125
-  {0.5\gridunit plus 0.125\gridunit minus 0pt}      % 0.5 units +0.125/-0 (reduced from 0.75)
+  {1.5\lnp@gridunit plus 0.25\lnp@gridunit minus 0.125\lnp@gridunit}  % 1.5 units ±0.25/0.125
+  {0.5\lnp@gridunit plus 0.125\lnp@gridunit minus 0pt}      % 0.5 units +0.125/-0 (reduced from 0.75)
 
 % Paragraphs: Bold italic for contrast without blockiness
 % OPTIMIZED: Exact body text size and leading for perfect integration
@@ -145,13 +138,13 @@
 %% separation ("RobustnessEstimates"); titlesec drives run-in separation from
 %% the after-value, so set it to 0.75em and drop the tie.
 \titleformat{\paragraph}[runin]
-  {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{paragraphcolor}}  % 11pt bold italic, dark gray
+  {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{lnp@paragraphcolor}}  % 11pt bold italic, dark gray
   {}
   {0em}
   {}
 \titlespacing*{\paragraph}
   {0pt}
-  {1\gridunit plus 0.25\gridunit minus 0.125\gridunit}  % 1 unit ±0.25/0.125
+  {1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.125\lnp@gridunit}  % 1 unit ±0.25/0.125
   {0.75em}  % Run-in separation from following text
 
 % ==============================================================================
@@ -165,7 +158,7 @@
     %% FIX(#39): drop dead \SetTracking{encoding=*}{120}; bold text resolves via
     %% the T1 series=b list (lnpmicrotype.sty:140 -> -10), which annuls the {120}
     %% (measured: orig == bare), so \lsstyle alone is render-neutral, no message.
-    {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\scshape\color{paragraphcolor}%
+    {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\scshape\color{lnp@paragraphcolor}%
      \lsstyle}  % 11pt bold small caps
     %% FIX: same run-in zero-separation bug as the default \paragraph.
     {}
@@ -173,7 +166,7 @@
     {}
   \titlespacing*{\paragraph}
     {0pt}
-    {1\gridunit plus 0.25\gridunit minus 0.125\gridunit}  % 1 unit ±0.25/0.125
+    {1\lnp@gridunit plus 0.25\lnp@gridunit minus 0.125\lnp@gridunit}  % 1 unit ±0.25/0.125
     {0.75em}  % Run-in separation from following text
 }
 
@@ -188,9 +181,9 @@
 % Safe paragraph command for Overleaf compatibility
 % Use this if standard \paragraph causes "missing \item" errors
 \newcommand{\safeparagraph}[1]{%
-  \par\vspace{\gridunit}% 1 grid unit before
-  {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{paragraphcolor}#1}%
-  \par\vspace{0.5\gridunit}% 0.5 grid units after
+  \par\vspace{\lnp@gridunit}% 1 quantum before
+  {\normalfont\fontsize{11}{13.2}\selectfont\bfseries\itshape\color{lnp@paragraphcolor}#1}%
+  \par\vspace{0.5\lnp@gridunit}% 0.5 quanta after
   \noindent
 }
 
@@ -201,21 +194,21 @@
 % Professional treatments for major section breaks in academic articles
 \providecommand{\sectionopening}{}
 \renewcommand{\sectionopening}[1]{%
-  \par\vspace{2\gridunit}%
+  \par\vspace{2\lnp@gridunit}%
   \begin{center}
     {\fontsize{14pt}{19.8pt}\selectfont\itshape #1}%
   \end{center}
-  \vspace{\gridunit}%
+  \vspace{\lnp@gridunit}%
   \noindent
 }
 
 % Simple section break - clean space only
 %% FIX: renamed \sectionbreak -> \sectionsep; titlesec executes any defined
 %% \<level>break as a hook inside heading construction, so the old name
-%% injected \vspace{2\gridunit} before every \section instead of \@secpenalty.
+%% injected \vspace{2\lnp@gridunit} before every \section instead of \@secpenalty.
 \providecommand{\sectionsep}{}
 \renewcommand{\sectionsep}{%
-  \par\vspace{2\gridunit}% 2 grid units of clean space
+  \par\vspace{2\lnp@gridunit}% 2 quanta of clean space
   \noindent
 }
 
@@ -230,9 +223,8 @@
 % Prevent isolated section headings
 \@secpenalty=-1000           % Encourage breaks before sections
 %% FIX: \clubpenalty/\widowpenalty restatements removed — the canonical
-%% widow/orphan penalties (10000) live in lanepaper.sty. Note: standalone
-%% use of this module gets LaTeX's defaults (150); load lnpcompilationfixes
-%% for protection outside the full package.
+%% widow/orphan penalties (10000) live in lanepaper.sty, which is the only
+%% way this module is loaded (#85).
 
 % Note: Environment hooks moved to individual modules to avoid conflicts
 % - List environment hooks are handled by lists.sty
@@ -245,7 +237,7 @@
 
 % Drop cap configuration for section openings
 \@ifpackageloaded{lettrine}{%
-  \renewcommand{\LettrineFontHook}{\color{sectioncolor}}  % Match section color
+  \renewcommand{\LettrineFontHook}{\color{lnp@sectioncolor}}  % Match section color
   \setcounter{DefaultLines}{3}         % Three-line drop caps
   \renewcommand{\DefaultLoversize}{0}  % No descender adjustment
   \renewcommand{\DefaultLraise}{0}     % No baseline adjustment

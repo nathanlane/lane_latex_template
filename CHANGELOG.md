@@ -4,6 +4,85 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Made `\usepackage{lanepaper}` the sole public load path and narrowed the
+package foundations (issue #85, ADR-0006). **Breaking, with no aliases.**
+
+- **Entry points.** `lnpminimal.sty` and `lnpgridoverlay.sty` are deleted, and
+  so is `lnpcompilationfixes.sty`; nothing in it survived scrutiny. Its widow,
+  orphan, `\raggedbottom` and float-spacing values were standalone fallbacks
+  that the canonical block in `lanepaper.sty` already overrode; its
+  `\PassOptionsToPackage{uniquename=init}{biblatex}` pre-configured a package
+  the document owns (ADR-0003 rule 2); its `\hyphenation` exceptions were
+  measured to change nothing (the demo still builds with zero overfull boxes);
+  and `\fitwide`, `\showoverfulls` and `\hideoverfulls` were wrappers over
+  `\resizebox` and `\overfullrule`. The remaining `lnp*.sty` files are
+  internal owners: loading one directly is unsupported. The standalone
+  scaffolding is gone from the six modules `lanepaper` actually loads — the
+  `\@ifpackageloaded{lnpcolors}`/`{lnpdimensions}` dependency fallbacks in
+  `lnpheadings` and `lnplists`, the `\@ifundefined{iflnp@nocolor}` shim in
+  `lnpcolors`, the `\@ifundefined{iflnp@draft}` shim in `lnpmicrotype`, and
+  the `\@ifpackageloaded` wrappers around the module loads themselves. In
+  `lanepaper.sty`, definitions whose only duplicate owner was the unloaded
+  `lnpparagraphs` are `\newcommand` again rather than `\providecommand`, and
+  the `epigraph`, `emphasisquote` and `openingparagraph` environments lost
+  their `\@ifundefined` wrappers, so a genuine name collision errors at load
+  time as CONVENTIONS §8 requires. `\sectionopening`, `\sectionsep` and
+  `\spacebreak` keep their guards: `lnpheadings` is loaded and defines them
+  too, and #86/#87 adjudicate that seam.
+- **The four unloaded v2 modules are untouched.** `lnpfontfallbacks`,
+  `lnpfontfeatures` (#29), `lnphochuli` and `lnpparagraphs` (#87) are carried
+  over as-is apart from the `\lnp@` rename sweep. This pass did not refactor
+  them and they still duplicate definitions held in `lanepaper.sty`.
+- **Options.** Only `[optical]` and `[nocolor]` remain. `[grid]`, `[nogrid]`,
+  `[minimal]`, `[draft]`, `[natbib]`, `[nobiblatex]`,
+  `[subsectionbarriers]` and `[nosubsectionbarriers]` are removed and now
+  raise LaTeX's own `Unknown option` error. Subsection float barriers keep
+  their documented default (on) unconditionally. `[optical]` is new and
+  carries sourced refinements that are not safe as defaults — currently
+  last-line runt control, capping `\parfillskip`'s stretch so a paragraph's
+  last line reaches at least a third of the measure (Hochuli). Widow and
+  orphan protection stays a default for every document.
+- **The spacing quantum is private.** `\gridunit` is now `\lnp@gridunit`, and
+  the derived lengths (`\halfgridunit` … `\triplegridunit`), the arithmetic
+  helpers (`\gridmult`, `\gridmath`, `\gridspace`, `\halfbaselinespace`,
+  `\fullbaselinespace`, `\roundtogrid`), the grid image system
+  (`\gridincludegraphics`, `\imagegridspace`, `gridfigure`), the grid table
+  environments (`gridtable`, `compactgridtable`, `spaciousgridtable`), the
+  `\arraystretch` aliases (`\standardgrid`, `\compactgrid`, `\spaciousgrid`,
+  `\customgrid`), the quantum-fraction paragraph switchers
+  (`\quartergridparagraphs`, `\thirdgridparagraphs`) and the quantum-fraction
+  display wrappers (`grideqnarray`, `gridgather`) are removed. Documents write
+  the length they mean, and use amsmath's `align` and `gather` directly.
+- **Paper size.** `\geometry` no longer forces `letterpaper`, so
+  `\documentclass[a4paper]{article}` really produces A4. What the package
+  fixes is the six-inch measure and its centring (`textwidth=6in`,
+  `hcentering`, `vmargin=1.25in`). The established US Letter page is byte-for-
+  byte unchanged: 433.62pt text width, 614.295pt text height, 18.0675pt
+  `\oddsidemargin`, −18.9325pt `\topmargin`.
+- **Colours are namespaced and private.** All eight used colours are
+  `\lnp@`-prefixed; the bare `textblack`, `linknavy`, `sectioncolor`, … names
+  are gone, as are `\maincolor`, `\secondarycolor`, `\accentcolor` and
+  `\codeaccent` and the nine colours nothing used. `[nocolor]` changed
+  meaning: it converts the palette through xcolor's gray model instead of
+  redefining every name as gray 0, so the grayscale hierarchy between heading
+  levels survives where v2 flattened it to one black.
+- **Hyperref is now only the visible link theme.** One `\hypersetup` instead
+  of three, naming `\lnp@linknavy` once (`[nocolor]` greys it in the palette
+  itself). `bookmarksnumbered`, `pdfborder` and `pdfencoding` are removed:
+  under ADR-0003 rule 2 a bookmark-tree policy, a link-border policy and a
+  PDF-string encoding choice are the document's, not this package's. The
+  `\pdfstringdefDisableCommands` block is deleted rather than narrowed —
+  every command in it (`\textsc`, `\textbf`, `\textit`, `\emph`,
+  `\SetTracking`, `\lsstyle`, `\\`, `\hspace`, `\vspace`, `\kern`, `~`)
+  belongs to standard LaTeX or microtype and is hyperref's own business, and
+  the single Lanepaper name in it, `\lnp@titlesc`, is private to abstract,
+  keywords and JEL front matter, which generates no bookmarks. No retained
+  Lanepaper command can reach a bookmark, so the block guarded nothing.
+- Obsolete standalone-module and preload probes were deleted from
+  `tests/run-tests.sh` rather than replaced: the option and layout contracts
+  are asserted once, in `tests/test_option_contracts.py`, at the `lanepaper`
+  boundary.
+
 Contracted the public API for v3 (issue #84, ADR-0006). The generic writing,
 emphasis, code, punctuation, symbol, currency, fraction, spacing, math, and
 reference helpers were removed rather than kept as compatibility aliases,

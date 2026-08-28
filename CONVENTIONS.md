@@ -20,11 +20,11 @@ fixes it. Nothing here should be read as a description of compliance.
 `lanepaper/*.sty` — measured at 0 occurrences. Do not introduce them.
 
 The format floor is **2020/10/01**, the release that made `\AddToHook`
-format-native; both entry points declare it.
+format-native; the entry point declares it.
 
-Options are `\newif` + `\DeclareOption` + `\ProcessOptions`: the 8 option
-flags are declared at `lanepaper/lanepaper.sty:166-176` and the options
-themselves at `179-195`. (The file holds 13 `\newif` in total; the other 5 are
+Options are `\newif` + `\DeclareOption` + `\ProcessOptions`: the 2 option
+flags are declared at `lanepaper/lanepaper.sty:116-117` and the options
+themselves at `119-120`. (The file holds 7 `\newif` in total; the other 5 are
 internal state, not options.) Guards are `\@ifpackageloaded` and
 `\@ifundefined`.
 
@@ -38,9 +38,9 @@ for packaging and release; pytest is the test harness.
 `utf8` `inputenc`, `newpxmath`, `mathalfa`, `zi4`, Type1 `tgpagella` — with no
 `fontspec` path, and `microtype` font expansion is unsupported on XeTeX.
 
-Both documented entry points (`lanepaper`, `lnpminimal`) carry an engine guard
-that stops the run with one `\PackageError` naming the package. Do not add a
-compatibility layer for another engine without changing the font stack first.
+The single entry point (`lanepaper`) carries an engine guard that stops the run
+with one `\PackageError` naming the package. Do not add a compatibility layer
+for another engine without changing the font stack first.
 
 ## 3. Naming
 
@@ -66,47 +66,61 @@ deliberately in exchange for matching what a CTAN reviewer expects. See
 
 Use `\lnp@` for internal lengths, temporary variables, helper commands,
 counters, and boxes — anything with a generic name. Do not prefix environment
-names or colour definitions; LaTeX and `xcolor` manage those namespaces.
+names; LaTeX manages that namespace.
+
+**Colour definitions are prefixed too**, and this reverses what this file said
+before #85. `xcolor` does *not* manage a per-package namespace: every
+`\definecolor` lands in one flat global pool, so `textblack`, `linknavy` and
+`sectioncolor` were exactly the names another package or the document would
+collide with. The `lnp@` prefix is a collision-avoidance and privacy
+convention (ADR-0006), not `\makeatletter` access control: xcolor resolves
+colour string names independently of that catcode setting. Documents must not
+use the package's private palette names.
 
 The prefix is not a licence to be vague: name for the job, not the type.
 `\lnp@listitemspacing` says what it controls; `\lnp@temp` says nothing and will
 collide with the next person's `\lnp@temp`. Group related definitions together
 so the set is visible at once.
 
-When a public name has to change, keep the old one as an alias and mark it in
-the same line that defines it, so the removal is findable later:
+**No compatibility aliases before v3 ships.** The rule here used to be that a
+renamed public name kept the old one as a `\let` alias. ADR-0006 reverses that
+for the v3 contraction: there is no released public v3 contract yet, so a name
+this pre-release work removes or renames gets a migration note in
+`API_REFERENCE.md`'s "Removed in v3" table and nothing else. An inert alias
+would preserve exactly the surface the contraction exists to remove.
 
-```latex
-% Compatibility alias — DEPRECATED, remove in the next major release
-\let\oldname\newname
-```
+Once v3 is published the contract is real, and a later public rename is a
+breaking change that needs an explicit deprecation decision — recorded where
+the change is proposed, not improvised at the definition site. Do not build a
+compatibility framework in advance of that decision.
 
-Entry points are loaded directly by a document: `lanepaper`, `lnpminimal`,
-`lnpgridoverlay`. Everything else is a module, loaded by `lanepaper` **by
-package name, never by path**.
+**There is exactly one entry point, `lanepaper`** (ADR-0006, #85). It loads
+every module **by package name, never by path**, in the order below. Loading a
+module directly is unsupported: some assume `lanepaper` has already declared
+option flags or settled the load order, and any module that happens to compile
+alone is not a separate contract. #85 removed the standalone dependency
+fallbacks from `lnpheadings` and `lnplists` and the option-flag shims from
+`lnpcolors` and `lnpmicrotype`.
 
 | Module | Purpose | Requires |
 |---|---|---|
-| `lnpcolors.sty` | Professional Color System | xcolor |
-| `lnpcompilationfixes.sty` | Simple Compilation Fixes | — |
-| `lnpdimensions.sty` | Page Layout and Spacing | geometry |
-| `lnpfontfallbacks.sty` | Font Fallback System | amssymb, courier, mathpazo, mathptmx, newpxmath, palatino, tgpagella, zi4 |
-| `lnpfontfeatures.sty` | Font Features Module | textcomp |
+| `lnpdimensions.sty` | Page geometry and the spacing quantum | geometry |
+| `lnpcolors.sty` | Semantic colour palette | xcolor |
 | `lnpfonts.sty` | Font System Configuration | amsmath, amssymb, fontenc, inputenc, letterspace, mathalfa, newpxmath, scalefnt, textcase, textcomp, tgpagella, zi4 |
-| `lnpgridoverlay.sty` **(entry point)** | Visual Grid Overlay System | calc, eso-pic, tikz, xcolor |
 | `lnpheadings.sty` | Heading Typography System | etoolbox, lnpcolors, lnpdimensions, titlesec |
-| `lnphochuli.sty` | Hochuli Optical Refinements | lnpdimensions, microtype, ragged2e |
 | `lnplists.sty` | List Typography System | enumitem, etoolbox, graphicx, lnpcolors, lnpdimensions |
 | `lnpmicrotype.sty` | Microtype Configuration | microtype |
-| `lnpminimal.sty` **(entry point)** | Minimal Typography | amsmath, amssymb, array, booktabs, caption, enumitem, etoolbox, fontenc, geometry, graphicx, iftex, inputenc, tgpagella, titlesec, xcolor, zi4 |
-| `lnpparagraphs.sty` | Paragraph Typography | etoolbox, lettrine, lnpcolors, lnpdimensions |
 
-Loading a module on its own works where its own `\RequirePackage` line covers
-its dependencies; the table above is generated from those lines, not
-maintained by hand. Module resolution depends on `TEXINPUTS`
-covering `./lanepaper`, which the `Makefile`, `.latexmkrc`, `compile.sh`, and
-the test scripts all set; once installed into a texmf tree that is no longer
-needed.
+Four v2 files are still in `lanepaper/` and are **not loaded by anything**:
+`lnpfontfallbacks.sty`, `lnpfontfeatures.sty` (#29 deletes them),
+`lnphochuli.sty` and `lnpparagraphs.sty` (#87 folds or deletes them). They are
+carried over untouched apart from the `\lnp@` rename sweep — #85 did **not**
+refactor them, and their contents still duplicate definitions that live in
+`lanepaper.sty`. Do not build on them.
+
+Module resolution depends on `TEXINPUTS` covering `./lanepaper`, which the
+`Makefile`, `.latexmkrc`, `compile.sh`, and the test scripts all set; once
+installed into a texmf tree that is no longer needed.
 
 `tests/test_infrastructure.py` fails the build if a retired name reappears in
 an active source file: the pre-2025 path-based layout, the `llt*` package
@@ -165,12 +179,11 @@ any rename.
 break would otherwise emit a space.
 
 **Glue values start with a coefficient, never a bare register.** In
-`\abovedisplayskip=\gridunit plus 3.3pt`, TeX copies the register and ends
+`\abovedisplayskip=\lnp@gridunit plus 3.3pt`, TeX copies the register and ends
 the assignment — `plus 3.3pt` leaks into the document as text. Write
-`1\gridunit plus 0.25\gridunit`; the coefficient form is scanned as a
+`1\lnp@gridunit plus 0.25\lnp@gridunit`; the coefficient form is scanned as a
 dimension, after which `plus`/`minus` parse. Point literals never had this
-trap, so it appeared only when spacing moved to `\gridunit` terms
-(ADR-0005).
+trap, so it appeared only when spacing moved to quantum terms (ADR-0005).
 
 Document source style — as opposed to package code — is covered by
 [`CONTRIBUTING.md`](CONTRIBUTING.md) and enforced by
@@ -182,7 +195,7 @@ covers it in four directions.
 ## 7. The `%% FIX:` comment convention
 
 `%% FIX:` marks a deliberate, non-obvious decision that must not be
-"simplified" away. It appears **116** times across `lanepaper/`. Treat one as
+"simplified" away. It appears **84** times across `lanepaper/`. Treat one as
 you would a test: if you are about to remove the code it guards, find out why
 it is there first. Add one when you make a choice whose reason is not evident
 from the code.
@@ -197,12 +210,16 @@ with another package still errors at load time — and every module ends with a
 `ROBUSTNESS (#55)` block that applies etoolbox `\robustify` (e-TeX
 `\protected`) to each public macro, guarded by `\ifdefmacro` for names that
 resolve to registers in some load orders. A new public macro is not done until
-its name is in that block. **372** macros are robustified across the 14
-modules; re-measure rather than copying that number.
+its name is in that block. **181** macros are robustified across the 11
+`.sty` files; re-measure rather than copying that number.
 
-Robustness does not make formatting valid inside PDF bookmark strings — the
-`\pdfstringdefDisableCommands` block in `lanepaper.sty` supplies plain-text
-fallbacks for that, and stays. `tests/fixtures/robustness-test.tex` is the
+Robustness does not make formatting valid inside PDF bookmark strings. A
+`\pdfstringdefDisableCommands` block used to supply plain-text fallbacks;
+#85 deleted it, because every command in it belonged to standard LaTeX or
+microtype — which hyperref already handles — and the one Lanepaper name,
+`\lnp@titlesc`, is private to front matter that generates no bookmarks. If a
+retained public macro ever does need to cross into a bookmark, that is when a
+substitution earns its place back. `tests/fixtures/robustness-test.tex` is the
 contract: package macros in a section title, a caption, a footnote, and PDF
 bookmarks, compiled twice.
 
@@ -217,8 +234,8 @@ block in #48 inverted a `\crefname` precedence that had held for a year, because
 two `\AtBeginDocument` hooks set the same name and the later registration won.
 It changed rendered output and no test caught it — only raster comparison did.
 
-The package uses `\AddToHook{begindocument}` at **6** sites and package hooks at
-**5**. Nothing depends on registration order any more, so there is no
+The package uses `\AddToHook{begindocument}` at **5** sites and package hooks at
+**4**. Nothing depends on registration order any more, so there is no
 `\DeclareHookRule` anywhere; adding rules for hooks that touch disjoint state
 would be noise, not safety.
 
@@ -266,9 +283,11 @@ rule must respect:
   line of `tests/fixtures/opening-test.tex` re-breaks. Documents wanting the
   measured typography should load `babel`.
 
-`[natbib]` and `[nobiblatex]` are **deprecated** and inert: with no bibliography
-package loaded there is nothing for them to switch. They remain declared so
-existing documents get a warning rather than an "Unknown option" error.
+`[natbib]` and `[nobiblatex]` were kept declared-but-inert by #48 so existing
+documents got a warning rather than an "Unknown option" error. v3 (#85) removed
+them with the rest of the option surface: the contraction is deliberately
+breaking, so an inert option is worse than an honest error. `[optical]` and
+`[nocolor]` are the whole option surface now (ADR-0006).
 
 ## 10. Lint policy
 
@@ -286,7 +305,7 @@ probes for support before passing it.
 ## 11. Versioning
 
 Git tags are semantic (`v2.1.0`). `\ProvidesPackage` strings are LaTeX
-date+version and are *not* the same number: currently 14 modules at `v1.1`, one
+date+version and are *not* the same number: currently 9 modules at `v1.1`, one
 at `v1.2`, and `lanepaper.sty` at `v2.0`.
 
 Keep the LaTeX date+version form. Every `\ProvidesPackage` date is synced on

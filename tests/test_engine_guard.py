@@ -17,10 +17,10 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# The two surfaces a user is told to load. README calls them "distinct
-# surfaces": lnpminimal is not reached through lanepaper.sty, so guarding only
-# the main package would leave it exposed. Every other .sty is internal.
-ENTRY_POINTS = ("lanepaper", "lnpminimal")
+# The one surface a user is told to load. v3 (issue #85) deleted the other
+# two entry points, so the guard has exactly one place to be. Every other .sty
+# is an internal module reached only through lanepaper.
+ENTRY_POINTS = ("lanepaper",)
 
 OTHER_ENGINES = ("xelatex", "lualatex")
 

@@ -16,18 +16,17 @@ Complete reference for all commands, environments, and options provided by the `
 10. [Cross-Reference Commands](#cross-reference-commands)
 11. [Paragraph Commands](#paragraph-commands)
 12. [Color Commands](#color-commands)
-13. [Grid System Commands](#grid-system-commands)
-14. [Footnote Commands](#footnote-commands)
-15. [Quick Reference Card](#quick-reference-card)
-16. [Bibliography and citations](#bibliography-and-citations)
-17. [The font system](#the-font-system)
-18. [The colour system](#the-colour-system)
-19. [Page layout and dimensions](#page-layout-and-dimensions)
-20. [The heading system](#the-heading-system)
-21. [The list system](#the-list-system)
-22. [How the package is put together](#how-the-package-is-put-together)
-23. [Typography standards](#typography-standards)
-24. [Removed in v3](#removed-in-v3)
+13. [Footnote Commands](#footnote-commands)
+14. [Quick Reference Card](#quick-reference-card)
+15. [Bibliography and citations](#bibliography-and-citations)
+16. [The font system](#the-font-system)
+17. [The colour system](#the-colour-system)
+18. [Page layout and dimensions](#page-layout-and-dimensions)
+19. [The heading system](#the-heading-system)
+20. [The list system](#the-list-system)
+21. [How the package is put together](#how-the-package-is-put-together)
+22. [Typography standards](#typography-standards)
+23. [Removed in v3](#removed-in-v3)
 
 ## Package Options
 
@@ -39,15 +38,21 @@ Complete reference for all commands, environments, and options provided by the `
 
 ### Available Options
 
+`\usepackage{lanepaper}` is the sole public load path (ADR-0006), and it takes
+two options. Anything else is rejected with LaTeX's own `Unknown option`
+error; see [Removed in v3](#removed-in-v3).
+
 | Option | Default | Description |
 |--------|---------|-------------|
-| `grid` | off | Display grid overlay (true-baseline and quantum lines) for typography debugging |
-| `nogrid` | **on** | Hide grid overlay (normal mode) |
-| `minimal` | off | Load only essential features (dimensions, compilation fixes) |
-| `natbib` | off | Use natbib compatibility mode instead of biblatex |
-| `nocolor` | off | Disable all custom colors (black text only) |
-| `draft` | off | Enable draft mode with visible overfull boxes |
-| `nobiblatex` | off | Disable automatic biblatex loading |
+| `optical` | off | Sourced optical refinements over the defaults; currently last-line runt control |
+| `nocolor` | off | Convert the palette through xcolor's gray model, keeping its hierarchy |
+
+`optical` is for refinements with a stated source that are not safe to impose
+on every document. Runt control caps `\parfillskip`'s stretch so a paragraph's
+last line reaches at least a third of the measure (Hochuli, *Detail in
+Typography*); the cost is that a paragraph which cannot be rebroken pays in
+interword spacing instead. Widow and orphan protection is deliberately *not*
+behind this option — it is a default every document gets.
 
 ### Examples
 
@@ -55,14 +60,14 @@ Complete reference for all commands, environments, and options provided by the `
 % Standard usage
 \usepackage{lanepaper}
 
-% Show grid for debugging
-\usepackage[grid]{lanepaper}
+% Sourced optical refinements
+\usepackage[optical]{lanepaper}
 
-% Minimal mode for compatibility
-\usepackage[minimal]{lanepaper}
+% Single-ink printing
+\usepackage[nocolor]{lanepaper}
 
-% Multiple options
-\usepackage[draft,grid]{lanepaper}
+% Both
+\usepackage[optical,nocolor]{lanepaper}
 ```
 
 ## Title Page Commands
@@ -186,15 +191,6 @@ The opening paragraph after a heading has no first-line indent.
 Insert 2 grid units of white space.
 (Formerly `\sectionbreak`; renamed because titlesec executes any defined `\<level>break` as a heading hook.)
 
-#### `\asteriskbreak`
-Three centered asterisks for thematic breaks.
-
-```latex
-\sectionsep
-% or
-\asteriskbreak
-```
-
 ### Drop Caps
 
 #### `\dropcap{letter}{text}`
@@ -213,24 +209,22 @@ Conservative drop cap for academic use.
 
 ## Spacing Commands
 
-### Grid Units
+### The Spacing Quantum
 
-| Command | Size | Description |
-|---------|------|-------------|
-| `\gridunit` | 13.2pt | Spacing quantum (not the document baseline, which measures 16.32pt) |
-| `\halfgridunit` | 6.6pt | Half grid unit |
-| `\quartergridunit` | 3.3pt | Quarter grid unit |
-| `\onehalfgridunit` | 19.8pt | 1.5 grid units |
-| `\doublegridunit` | 26.4pt | 2 grid units |
-| `\triplegridunit` | 39.6pt | 3 grid units |
-
-### Usage
+Nearly all of the package's vertical spacing is a multiple of one **13.2pt
+quantum**. It is an internal implementation value, not an API: v3 removed
+`\gridunit` and its derived lengths and helpers (see
+[Removed in v3](#removed-in-v3)). A document states the space it wants:
 
 ```latex
-\vspace{\gridunit}        % Add one grid unit of vertical space
-\vspace{2\gridunit}       % Add two grid units
-\vspace{\halfgridunit}    % Add half a grid unit
+\vspace{13.2pt}   % One quantum
+\vspace{26.4pt}   % Two quanta
+\vspace{6.6pt}    % Half a quantum
 ```
+
+The quantum is not the baseline: the body sets 10.95pt on a **16.32pt**
+baseline (`\linespread{1.20}` scaling the class's 13.6pt under the `11pt`
+option). See [ADR-0004](docs/adr/0004-baseline-grid-is-a-spacing-quantum.md).
 
 ### Special Spacing Commands
 
@@ -388,12 +382,16 @@ Right-aligned attribution with em-dash.
 
 ### Enhanced Table Environments
 
-#### `gridtable`
-Table with the standard quantum-derived row height.
+Row height is `\arraystretch` times the 16.32pt body baseline plus 2.2pt of
+`\extrarowheight`. The package sets `\arraystretch` to 1.2 globally
+(~21.8pt rows); a table that wants denser or looser rows sets its own inside
+the float. The v2 `gridtable`, `compactgridtable` and `spaciousgridtable`
+environments, which did only that, were removed in v3.
 
 ```latex
-\begin{gridtable}[tbp]
-  \caption{Table with Standard Row Height}
+\begin{table}[tbp]
+  \renewcommand{\arraystretch}{0.9}   % ~16.9pt rows
+  \caption{Dense Table}
   \centering
   \begin{tabular}{lrr}
     \toprule
@@ -403,43 +401,11 @@ Table with the standard quantum-derived row height.
     B & 20.3 & 200 \\
     \bottomrule
   \end{tabular}
-\end{gridtable}
+\end{table}
 ```
 
 #### `regressiontable`
 19.8pt rows for regression results.
-
-#### `compacttable`
-9.9pt rows for dense data.
-
-### Landscape Tables
-
-#### `landscapetable`
-Full-page landscape table.
-
-```latex
-\begin{landscapetable}[tbp]
-  \caption{Wide Regression Results}
-  \begin{tabular}{l*{10}{c}}
-    % Wide table content
-  \end{tabular}
-\end{landscapetable}
-```
-
-#### `rotatedtable`
-90-degree rotated table.
-
-#### `fittable`
-Auto-scaled table to fit width.
-
-```latex
-\begin{fittable}[tbp]{1.2\textwidth}
-  \caption{Scaled Table}
-  \begin{tabular}{l*{15}{c}}
-    % Table content
-  \end{tabular}
-\end{fittable}
-```
 
 ### Table Notes
 
@@ -460,19 +426,16 @@ Professional notes following QJE style.
 
 ### Figure Commands
 
-#### `gridfigure`
-Figure with height rounded to a quantum multiple.
+Figures are standard. The v3 contraction removed `gridfigure` and
+`\gridincludegraphics`, which rounded image heights to quantum multiples:
 
 ```latex
-\begin{gridfigure}[tbp]
+\begin{figure}[tbp]
   \centering
-  \gridincludegraphics[width=0.8\textwidth]{figure.pdf}
-  \caption{Figure with quantum-rounded height}
-\end{gridfigure}
+  \includegraphics[width=0.8\textwidth]{figure.pdf}
+  \caption{A figure}
+\end{figure}
 ```
-
-#### `landscapefigure`
-Full-page landscape figure.
 
 #### `fignotes` environment
 Notes for figures.
@@ -544,12 +507,6 @@ No indent, 6.6pt spacing.
 #### `\hybridparagraphs`
 9.9pt indent, 3.3pt spacing.
 
-#### `\quartergridparagraphs`
-13.2pt indent, 3.3pt flexible spacing.
-
-#### `\thirdgridparagraphs`
-13.2pt indent, 4.4pt flexible spacing.
-
 ### Special Paragraph Commands
 
 #### `\noindentpar`
@@ -566,21 +523,12 @@ Centered paragraph block.
 ```
 
 #### `\compactpar` *(deprecated)*
-Pulls the following paragraph 3.3pt closer (subtracts one `\quartergridunit`).
-Retained for backward compatibility only; use `\vspace` directly in new
-documents.
+Pulls the following paragraph 3.3pt closer (a quarter quantum). Retained for
+backward compatibility only; use `\vspace` directly in new documents.
 
 #### `\loosepars` *(deprecated)*
-Adds 3.3pt before the following paragraph (one `\quartergridunit`). Retained
-for backward compatibility only; use `\vspace` directly in new documents.
-
-#### `\quoteparagraph{text}` *(requires lnphochuli module)*
-Paragraph with hanging opening quote.
-
-```latex
-% Requires: \usepackage{lnphochuli}
-\quoteparagraph{"When we examine the evidence..."}
-```
+Adds 3.3pt before the following paragraph (a quarter quantum). Retained for
+backward compatibility only; use `\vspace` directly in new documents.
 
 ### Dialogue Commands
 
@@ -595,77 +543,20 @@ Note: `\rapidexchange` and `\speaker` are not implemented.
 
 ## Color Commands
 
-### Predefined Colors
+The semantic palette is implementation-private. It provides visible roles for
+body text, headings, supporting elements and, when the document loads
+`hyperref`, links. v3 removed the palette's public names and helper commands.
 
-| Color | Usage |
-|-------|-------|
-| `textblack` | Near-black body text |
-| `linknavy` | Professional blue links |
-| `sectioncolor` | Section headings |
-| `subsectioncolor` | Subsection headings |
-| `bulletgray` | List bullets |
-| `subtlegray` | Page numbers |
-| `quotegray` | Block quotes |
+`[nocolor]` converts the palette through xcolor's gray model. Chroma goes; the
+grayscale hierarchy between heading levels stays, because the grey steps are
+already grey and pass through unchanged.
 
-## Grid System Commands
-
-### The spacing quantum
-
-All vertical spacing in the package is a multiple of a **13.2pt quantum**. The
-quantum is not the baseline: the body sets 10.95pt on a **16.32pt** baseline
-(`\linespread{1.20}` scaling the class's 13.6pt, under the `11pt` option). The
-two are often confused, and the distinction was settled deliberately —
-see [ADR-0004](docs/adr/0004-baseline-grid-is-a-spacing-quantum.md).
-
-| Fraction | Length |
-|---|---|
-| 1.5 quanta | 19.8pt |
-| full quantum | 13.2pt |
-| 0.75 quanta | 9.9pt |
-| half quantum | 6.6pt |
-| quarter quantum | 3.3pt |
-
-The leading is roughly 149% of the body size, on the generous side of the
-Bringhurst and Butterick bands. That suits TeX Gyre Pagella's large x-height, a
-~77-character measure, and math-dense text.
-
-
-### Grid Display
-
-#### `\showgrid`
-Display the baseline-grid overlay (lines at the real \baselineskip).
-
-#### `\hidegrid`
-Hide the grid overlay.
-
-### Quantum-Spacing Commands
-
-#### `\gridincludegraphics[options]{file}`
-Include graphics with height rounded to a quantum multiple.
+A document that wants its own colours defines and applies them itself:
 
 ```latex
-\gridincludegraphics[width=0.8\textwidth]{figure.pdf}
+\definecolor{myaccent}{RGB}{0,100,0}
+\textcolor{myaccent}{Important heading}
 ```
-
-#### `\vspacegrid{units}`
-Add vertical space in whole quanta.
-
-```latex
-\vspacegrid{2}  % Add 2 grid units
-```
-
-#### `\halfbaselinespace`
-Insert half baseline space in tables.
-- **Height:** 6.6pt (0.5 grid units)
-- **Usage:** `\halfbaselinespace` between table sections
-
-#### `\fullbaselinespace`
-Insert full baseline space.
-- **Height:** 13.2pt (1 quantum)
-
-#### `\baselinespace{multiplier}`
-Custom baseline space.
-- **Example:** `\baselinespace{1.5}` → 19.8pt
 
 ## Footnote Commands
 
@@ -708,9 +599,9 @@ Important point.\sidenote{This appears in the margin.}
 \cref{label}
 \Cref{label}
 
-% Spacing
-\vspace{\gridunit}
-\vspace{\halfgridunit}
+% Spacing (the quantum is private; write the length)
+\vspace{13.2pt}
+\vspace{6.6pt}
 ```
 
 ---
@@ -926,10 +817,8 @@ Enhanced symbol sets from mathalfa:
 
 ### Usage
 
-#### Using the fonts
-```latex
-\RequirePackage{lnpfonts}
-```
+#### Loading the fonts
+The fonts module is loaded by `lanepaper`; a document does not load it.
 
 #### Font Commands
 
@@ -995,110 +884,41 @@ $\mathfrak{g}$ % Fraktur
 
 ### Overview
 
-The colors module (`lnpcolors.sty`) provides a sophisticated color system with semantic naming, professional aesthetics, and accessibility compliance.
+`lnpcolors.sty` owns the semantic palette. Its names and definitions are not
+public API. v3 removed the palette's public names and helper commands.
 
-### Color Philosophy
+### Colour Philosophy
 
-Based on three principles:
-1. **Restraint**: Limited palette for professional appearance
-2. **Hierarchy**: Colors reinforce document structure
-3. **Accessibility**: WCAG AA compliant contrast ratios
+The visible roles are restrained and hierarchical:
 
-### Color Palette
+| Visible role | Applied to |
+|---|---|
+| Primary text | Body text and title-page text |
+| Heading levels | Section and subsection hierarchy |
+| Supporting text | Captions, bullets, footnote rules and quotations |
+| Links | Hyperref links, when the document loads `hyperref` |
 
-#### Text Colors
-```latex
-textblack    % RGB(25,25,25)    - Softened black for reduced eye strain
-textgray     % RGB(102,102,102) - 40% gray for secondary text
-lightgray    % RGB(179,179,179) - 70% gray for subtle elements
-darkgray     % RGB(64,64,64)    - 25% gray for emphasis
-```
+### The `[nocolor]` Option
 
-#### Heading Colors
-```latex
-sectioncolor    % RGB(25,50,80)   - Softened navy
-subsectioncolor % RGB(40,40,55)   - Muted midnight
-subsubcolor     % RGB(64,64,64)   - Medium charcoal
-paragraphcolor  % RGB(89,89,89)   - Dark gray
-```
+`[nocolor]` converts the palette through xcolor's gray model. Chroma goes; the
+hierarchy stays, because the grey steps above are already grey and pass
+through unchanged, and the two navies land on distinct dark greys.
 
-#### Functional Colors
-```latex
-linkcolor       % RGB(0,102,180)  - Professional blue
-citecolor       % RGB(0,102,180)  - Same as links
-codecolor       % RGB(51,51,51)   - Dark gray for code
-quotegray       % gray!15         - 15% gray for quotes
-subtlegray      % gray!85         - Very dark gray
-```
+The v2 option instead redefined every name as gray 0, which flattened section,
+subsection, subsubsection and body to the same black.
 
-### Usage
+### Using Colour in a Document
 
-#### Using the colours
-```latex
-\RequirePackage{lnpcolors}
-```
-
-#### Applying Colors
-```latex
-% Text coloring
-\textcolor{textgray}{Secondary text}
-\textcolor{sectioncolor}{Important heading}
-
-% In other commands
-\color{quotegray}  % Switch color
-```
-
-#### Color in Document Elements
-
-The colors are automatically applied to:
-- Section headings (sectioncolor, subsectioncolor, etc.)
-- Hyperlinks (linkcolor)
-- Citations (citecolor)
-- Code snippets (codecolor)
-- Block quotes (quotegray)
-
-### Accessibility
-
-All color combinations meet WCAG AA standards:
-
-| Text Color | Background | Contrast Ratio | Rating |
-|------------|------------|----------------|---------|
-| textblack | white | 17.4:1 | AAA |
-| textgray | white | 4.1:1 | AA |
-| sectioncolor | white | 9.7:1 | AAA |
-| linkcolor | white | 4.8:1 | AA |
-
-### Customization
-
-#### Redefining Colors
-```latex
-% Load module first
-\RequirePackage{lnpcolors}
-
-% Then redefine
-\definecolor{sectioncolor}{RGB}{0,100,0}  % Green sections
-```
-
-#### Adding New Colors
-```latex
-% After loading module
-\definecolor{mycolor}{RGB}{100,50,150}
-```
-
-### Color Commands
-
-#### Semantic Text Commands
-The module provides semantic commands for common uses:
+The document owns its own colours:
 
 ```latex
-\emphcolor{text}     % Uses sectioncolor
-\metacolor{text}     % Uses darkgray
-\codecolor{text}     % Uses codecolor
+\definecolor{myaccent}{RGB}{0,100,0}
+\textcolor{myaccent}{An emphasised phrase}
 ```
 
 ### Design Guidelines
 
-#### When to Use Color
+#### When to Use Colour
 
 **Do:**
 - Reinforce hierarchy
@@ -1110,57 +930,12 @@ The module provides semantic commands for common uses:
 - Create "rainbow" documents
 - Override semantic meaning
 
-#### Color Hierarchy
+#### Colour Hierarchy
 
-1. **Black text**: Primary content
-2. **Section colors**: Major divisions
-3. **Gray variations**: Supporting elements
-4. **Blue**: Interactive elements only
-
-### Technical Details
-
-#### Color Model
-- Primary model: RGB
-- Gray definitions: Percentage-based
-- Full xcolor syntax supported
-
-#### Package Options
-```latex
-% Load with xcolor options
-\RequirePackage[dvipsnames]{lnpcolors}
-```
-
-### Compatibility
-
-- Works with all LaTeX engines
-- Full xcolor compatibility
-- Printer-friendly gray fallbacks
-- Screen and print optimized
-
-### Examples
-
-#### Custom Link Colors
-```latex
-% Make links dark green
-\definecolor{linkcolor}{RGB}{0,100,0}
-```
-
-#### Highlighted Text
-```latex
-% Create highlight color
-\definecolor{highlight}{RGB}{255,255,200}
-\newcommand{\highlight}[1]{%
-  \colorbox{highlight}{#1}%
-}
-```
-
-#### Conditional Colors
-```latex
-% Different colors for draft/final
-\ifdraft
-  \definecolor{sectioncolor}{RGB}{200,0,0}  % Red in draft
-\fi
-```
+1. **Primary text**: Main content
+2. **Heading levels**: Major divisions
+3. **Supporting text**: Captions, quotations and notes
+4. **Links**: Interactive elements when the document loads `hyperref`
 
 ## Page layout and dimensions
 
@@ -1174,178 +949,99 @@ The dimensions module (`lnpdimensions.sty`) manages page geometry and implements
 - **Base unit**: 13.2pt spacing quantum (nominal 11pt × 1.20; the actual baseline measures 16.32pt)
 - **Grid philosophy**: All vertical spacing in multiples of base unit
 - **Purpose**: Spacing values drawn from one quantum scale
-
-#### Grid Units
-```latex
-\gridunit         % 13.2pt (1 unit)
-\halfgridunit     % 6.6pt (0.5 units)
-\quartergridunit  % 3.3pt (0.25 units)
-```
+- **Private**: the quantum is internal to the package. v3 removed the public
+  `\gridunit`, its derived lengths and every grid helper (ADR-0006); a
+  document writes the length it wants.
 
 ### Page Geometry
 
+The class picks the sheet; the package picks the measure. `\geometry` no
+longer names a paper size, so `\documentclass[a4paper]{article}` really does
+produce A4 — in v2 the module forced `letterpaper` and silently overrode it.
+What the package fixes is the six-inch measure and its centring.
+
 #### Default Layout
-- **Page size**: US Letter (8.5 × 11 inches)
-- **Margins**: 1.25 inches all sides
-- **Text width**: ~6 inches (optimal 65 characters/line)
-- **Text height**: ~8.5 inches
+- **Page size**: whatever the class selects (US Letter by default, A4 with `[a4paper]`)
+- **Text width**: 6 inches, horizontally centred (~65 characters/line)
+- **Vertical margins**: 1.25 inches head and foot
+- **Text height**: 8.5 inches on US Letter
 
 #### Geometry Settings
 ```latex
-% Current settings (US Letter)
 \geometry{
-  letterpaper,
-  left=1.25in,
-  right=1.25in,
-  top=1.25in,
-  bottom=1.25in,
-  headsep=\gridunit,
-  footskip=26.4pt  % 2 grid units
+  textwidth=6in,       % Butterick's optimal measure
+  hcentering,          % Equal side margins on whatever sheet is set
+  vmargin=1.25in,      % Head and foot margins
+  marginparwidth=1in
 }
 ```
 
+On US Letter this gives exactly the established page: (8.5in − 6in)/2 = 1.25in
+side margins, 8.5in of text height.
+
 ### Usage
 
-#### Using the layout
+#### Selecting the paper size
 ```latex
-\RequirePackage{lnpdimensions}
+\documentclass[11pt,a4paper]{article}
+\usepackage{lanepaper}
 ```
 
-#### Spacing Commands
-
-##### Adding Vertical Space
+#### Custom margins
 ```latex
-\halfbaselinespace    % Add 6.6pt (0.5 units)
-\fullbaselinespace    % Add 13.2pt (1 unit)
-\gridspace{2}         % Add 2 grid units (26.4pt)
+\usepackage{lanepaper}
+\geometry{margin=1in}   % Override afterwards
 ```
 
-##### Custom Spacing
+#### Vertical space
 ```latex
-% Add 1.5 grid units
-\vspace{1.5\gridunit}
-
-% Flexible spacing
-\vspace{\gridunit plus \quartergridunit minus \quartergridunit}
+\vspace{13.2pt}   % One quantum
+\vspace{26.4pt}   % Two quanta
+\vspace{6.6pt}    % Half a quantum
 ```
 
 #### Paragraph Styles
 
-The module provides three paragraph formatting styles:
+Three paragraph formatting styles:
 
 ```latex
 \classicalparagraphs  % Default: 13.2pt indent, 0pt spacing
-\modernparagraphs     % Modern: 0pt indent, 6.6pt spacing  
+\modernparagraphs     % Modern: 0pt indent, 6.6pt spacing
 \hybridparagraphs     % Hybrid: 9.9pt indent, 3.3pt spacing
 ```
 
 ##### Classical (Default)
-- First-line indent: 13.2pt (1 grid unit)
+- First-line indent: 13.2pt (1 quantum)
 - Paragraph spacing: 0pt
 - Flush left after headings
 
 ##### Modern
 - First-line indent: 0pt
-- Paragraph spacing: 6.6pt (0.5 units)
+- Paragraph spacing: 6.6pt (0.5 quanta)
 - Visual separation through spacing
 
 ##### Hybrid
-- First-line indent: 9.9pt (0.75 units)
-- Paragraph spacing: 3.3pt (0.25 units)
+- First-line indent: 9.9pt (0.75 quanta)
+- Paragraph spacing: 3.3pt (0.25 quanta)
 - Balanced approach
-
-### Grid Development Tools
-
-#### Visualizing the Grid
-```latex
-% In document preamble
-\usepackage{lnpdimensions}
-\usepackage{lnpgridoverlay}
-
-% In document
-\showgrid  % Display grid lines
-\hidegrid  % Hide grid lines
-```
-
-#### Quantum-Sized Elements
-```latex
-% Manual quantum spacing (coefficient form: a bare register truncates glue)
-\vspace{1\gridunit minus 0.25\gridunit}  % One quantum, shrinkable
-```
-
-### Page Layout Options
-
-#### A4 Paper
-```latex
-% Before loading module
-\PassOptionsToPackage{a4paper}{geometry}
-\RequirePackage{lnpdimensions}
-```
-
-#### Custom Margins
-```latex
-% Load module first
-\RequirePackage{lnpdimensions}
-
-% Then adjust
-\geometry{margin=1in}
-```
-
-#### Two-Column Layout
-```latex
-\documentclass[twocolumn]{article}
-\usepackage{lnpdimensions}
-% Grid system adapts automatically
-```
-
-### Advanced Features
-
-#### Grid Calculations
-```latex
-% Derive lengths from the quantum
-\newlength{\myheight}
-\setlength{\myheight}{10\gridunit}  % 132pt
-
-% Conditional spacing
-\ifdim\pagetotal<20\gridunit
-  \vspace{\gridunit}
-\fi
-```
-
-#### Custom Grid Unit
-```latex
-% Must set before loading module
-\newlength{\gridunit}
-\setlength{\gridunit}{12pt}  % Custom grid
-\RequirePackage{lnpdimensions}
-```
 
 ### Best Practices
 
 #### Staying on the Quantum Scale
 
-1. **Use quantum units** for all vertical spacing
+1. **Use quantum multiples** for vertical spacing: 3.3, 6.6, 13.2, 19.8, 26.4pt
 2. **Avoid arbitrary dimensions** like `\vspace{1cm}`
-3. **Test with grid overlay** during development
-4. **Account for line height** in custom environments
+3. **Account for line height** in custom environments
 
 #### Common Patterns
 ```latex
 % Section spacing
-\vspace{2\gridunit}  % Major break
-\vspace{\gridunit}   % Standard break
-\vspace{\halfgridunit}  % Minor break
-
-% Float spacing
-\setlength{\floatsep}{\gridunit}
-\setlength{\textfloatsep}{1.5\gridunit}
+\vspace{26.4pt}   % Major break
+\vspace{13.2pt}   % Standard break
+\vspace{6.6pt}    % Minor break
 ```
 
 ### Troubleshooting
-
-#### Off-Scale Spacing
-- Check for spacing not stated in quanta
-- Use `\showgrid` to visualize line positions
 
 #### Page Overfull/Underfull
 - Adjust flexible spacing
@@ -1354,23 +1050,14 @@ The module provides three paragraph formatting styles:
 
 ### Examples
 
-#### Grid-Perfect Figure
-```latex
-\begin{figure}[tb]
-  \centering
-  \includegraphics[height=10\gridunit]{image}
-  \caption{Figure with quantum-rounded height}
-\end{figure}
-```
-
 #### Custom Environment
 ```latex
-\newenvironment{gridquote}{%
-  \vspace{\gridunit}%
+\newenvironment{spacedquote}{%
+  \vspace{13.2pt}%
   \begin{quote}%
 }{%
   \end{quote}%
-  \vspace{\gridunit}%
+  \vspace{13.2pt}%
 }
 ```
 
@@ -1398,10 +1085,8 @@ The headings module (`lnpheadings.sty`) provides sophisticated section and headi
 
 ### Usage
 
-#### Using the headings
-```latex
-\RequirePackage{lnpheadings}
-```
+#### Loading the headings
+The headings module is loaded by `lanepaper`; a document does not load it.
 
 #### Standard Commands
 ```latex
@@ -1498,20 +1183,11 @@ First paragraphs after headings are automatically flush left (no indent).
 - Subsubsections: Normal tracking
 - Small caps: Context-dependent (3-12%)
 
-#### Color Application
-All heading colors are defined in the colors module:
-- `sectioncolor`: RGB(25,50,80)
-- `subsectioncolor`: RGB(40,40,55)
-- `subsubcolor`: RGB(64,64,64)
-- `paragraphcolor`: RGB(89,89,89)
+#### Colour Application
+Heading colours are internal to the colours module and provide the visible
+hierarchy described in [The colour system](#the-colour-system).
 
 ### Customization
-
-#### Changing Heading Colors
-```latex
-% After loading module
-\definecolor{sectioncolor}{RGB}{0,100,0}  % Green sections
-```
 
 #### Modifying Spacing
 ```latex
@@ -1531,8 +1207,8 @@ All heading colors are defined in the colors module:
   {}
 \titlespacing*{\subparagraph}
   {0pt}
-  {\halfgridunit}
-  {\quartergridunit}
+  {6.6pt}
+  {3.3pt}
 ```
 
 ### Integration with Document Classes
@@ -1572,12 +1248,9 @@ Use `\safeparagraph{Title}` instead of `\paragraph{Title}`
 - Verify consistent spacing style
 - Look for `\paragraph` placement
 
-#### Color Not Applying
-Ensure colors module is loaded:
-```latex
-\RequirePackage{lnpcolors}
-\RequirePackage{lnpheadings}
-```
+#### Colour Not Applying
+Ensure `lanepaper` itself is loaded; it loads the colours and headings modules
+in the right order.
 
 ### Examples
 
@@ -1773,9 +1446,9 @@ All list spacing uses the 13.2pt spacing quantum:
 % Create a new list type
 \newlist{mylist}{itemize}{3}
 \setlist[mylist,1]{
-  label=\textcolor{sectioncolor}{$\star$},
+  label=$\star$,
   leftmargin=2em,
-  itemsep=\halfgridunit
+  itemsep=6.6pt
 }
 ```
 
@@ -1927,46 +1600,27 @@ Key principles include:
 #### Module Structure
 
 ```
-lanepaper.sty (main package)
-├── Core Modules (automatically loaded):
-│   ├── lnpcompilationfixes.sty        - Common LaTeX warning fixes
-│   ├── lnpfonts.sty                   - Font configuration (Pagella, Inconsolata, math)
-│   ├── lnpcolors.sty                  - Professional color system
-│   ├── lnpdimensions.sty              - Grid system and spacing definitions
-│   ├── lnpheadings.sty                - Section heading styles with colors
-│   ├── lnplists.sty                   - List typography with refined bullets
-│   └── lnpmicrotype.sty               - Enhanced character protrusion and expansion
-│
-└── Optional Enhancement Modules:
-    ├── lnpparagraphs.sty              - Advanced paragraph formatting
-    ├── lnphochuli.sty                 - Optical adjustments; kerning pairs and last-line control apply on load; ligature suppression and hanging-quote commands are opt-in
-    ├── lnpfontfeatures.sty            - Full Pagella feature access
-    └── lnpfontfallbacks.sty           - Compatibility mode
+lanepaper.sty (the sole public entry point)
+└── Internal modules, loaded in this order:
+    ├── lnpdimensions.sty   - Page geometry and the 13.2pt spacing quantum
+    ├── lnpcolors.sty       - The semantic colour palette
+    ├── lnpfonts.sty        - Pagella, Inconsolata, newpxmath, mathalfa
+    ├── lnpheadings.sty     - Section heading styles
+    ├── lnplists.sty        - List typography and refined bullets
+    └── lnpmicrotype.sty    - Character protrusion, expansion and spacing
 ```
 
-#### Using Individual Modules
+`lnpparagraphs.sty`, `lnphochuli.sty`, `lnpfontfeatures.sty` and
+`lnpfontfallbacks.sty` are carried over from v2, are not loaded, and are not
+supported; issues #29 and #87 fold or delete them.
 
-Load only the features you need:
+#### Module Configuration
 
-```latex
-% Just the professional color system
-\RequirePackage{lnpcolors}
-
-% Or just the heading styles
-\RequirePackage{lnpheadings}
-```
-
-#### Custom Module Configuration
-
-Load modules with custom settings before the main package:
+The modules are internal and are not loaded directly (ADR-0006). Configure the
+package by overriding after loading it:
 
 ```latex
-% Custom grid unit
-\newlength{\gridunit}
-\setlength{\gridunit}{12pt}
-\RequirePackage{lnpdimensions}
-
-% Then load main package
+% Load main package
 \usepackage{lanepaper}
 ```
 
@@ -1998,8 +1652,8 @@ You can customise markers or spacing—for instance, switch the top-level bullet
 
 Bullet symbol commands:
 ```latex
-\refinedbullet    % 75% scaled bullet, subtlegray
-\refineddash      % En-dash with micro-kern, subtlegray
+\refinedbullet    % 75% scaled bullet, in the palette's subtle grey
+\refineddash      % En-dash with micro-kern, same grey
 ```
 
 ##### Paragraph Spacing Commands
@@ -2010,8 +1664,6 @@ Paragraph style switchers (indent and parskip per command):
 \classicalparagraphs      % 13.2pt indent, 0pt parskip (default)
 \modernparagraphs         % 0pt indent, 6.6pt parskip
 \hybridparagraphs         % 9.9pt indent, 3.3pt parskip
-\quartergridparagraphs    % 13.2pt indent, 3.3pt parskip
-\thirdgridparagraphs      % 13.2pt indent, 4.4pt parskip
 ```
 
 ### Title Page System
@@ -2025,7 +1677,7 @@ Systematic commands for professional title pages following economics paper conve
 \thispagestyle{empty}
 \titlefootnotesetup              % Switch to symbolic footnotes
 \begin{center}
-  \vspace*{\gridunit}
+  \vspace*{13.2pt}
   \articletitle{Your Title Here}
   % Or with acknowledgments:
   % \articletitlefootnote{Your Title Here}{We thank colleagues for helpful comments.}
@@ -2045,7 +1697,7 @@ Systematic commands for professional title pages following economics paper conve
 
 **Standard Title (18pt):**
 ```latex
-\articletitle{The Economic Impact of Policy:\\[0.3\gridunit]
+\articletitle{The Economic Impact of Policy:\\[4pt]
 Evidence from East Asia}
 ```
 
@@ -2080,7 +1732,7 @@ These commands allow authors to add acknowledgments, funding information, or oth
 **For 5+ Authors (two-line layout):**
 ```latex
 \articleauthors{%
-  Author One\footnote{...} \quad Author Two\footnote{...} \quad Author Three\footnote{...}\\[0.3\gridunit]
+  Author One\footnote{...} \quad Author Two\footnote{...} \quad Author Three\footnote{...}\\[4pt]
   Author Four\footnote{...} \quad Author Five\footnote{...}
 }
 ```
@@ -2260,10 +1912,11 @@ The system uses a two-pass auxiliary file mechanism:
 #### Tables with Standard Row Heights
 
 ```latex
-% Standard rows (~21.8pt measured: \arraystretch 1.2 × 16.32pt + 2.2pt)
-\begin{gridtable}[tbp]
-  % Content with automatic \arraystretch
-\end{gridtable}
+% Standard rows (~21.8pt measured: \arraystretch 1.2 × 16.32pt + 2.2pt).
+% 1.2 is the package default, so a plain table already has them.
+\begin{table}[tbp]
+  % Content
+\end{table}
 
 % Regression tables (19.8pt rows)
 \begin{regressiontable}[tbp]
@@ -2271,31 +1924,10 @@ The system uses a two-pass auxiliary file mechanism:
 \end{regressiontable}
 
 % Compact tables (~16.9pt rows measured)
-\begin{compactgridtable}[tbp]
+\begin{table}[tbp]
+  \renewcommand{\arraystretch}{0.9}
   % For dense information
-\end{compactgridtable}
-```
-
-#### Landscape and Rotation Support
-
-```latex
-% Wide regression tables
-\begin{landscapetable}[tbp]
-  \caption{Wide Regression Results}
-  \begin{tabular}{l*{10}{c}}
-    % Content for 10+ columns
-  \end{tabular}
-\end{landscapetable}
-
-% Rotated correlation matrices
-\begin{rotatedtable}[tbp]
-  % 90-degree rotation
-\end{rotatedtable}
-
-% Auto-scaled tables
-\begin{fittable}[tbp]{1.2\textwidth}
-  % Automatically scaled to fit
-\end{fittable}
+\end{table}
 ```
 
 #### QJE-Style Notes System
@@ -2392,15 +2024,15 @@ For troubleshooting, see [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
 #### Baseline Grid Mathematics
 
 The body baseline is **16.32pt** (`\linespread{1.20}` scales the class's 13.6pt
-baseline: 13.6 × 1.20 = 16.32pt). The **13.2pt spacing quantum** (`\gridunit`) is
-a separate unit used for most vertical spacing — it is not the baseline pitch.
+baseline: 13.6 × 1.20 = 16.32pt). The **13.2pt spacing quantum** is a separate,
+internal unit used for most vertical spacing — it is not the baseline pitch.
 See [ADR-0004](docs/adr/0004-baseline-grid-is-a-spacing-quantum.md) for the derivation.
 
 ```latex
 Body baseline: 16.32pt  (document leading)
-Spacing quantum (\gridunit): 13.2pt
-Half quantum (\halfgridunit): 6.6pt
-Quarter quantum (\quartergridunit): 3.3pt
+Spacing quantum: 13.2pt
+Half quantum: 6.6pt
+Quarter quantum: 3.3pt
 ```
 
 #### Appendix Counter Logic
@@ -3094,5 +2726,38 @@ v3 is a deliberate breaking contraction (issue #84, [ADR-0006](docs/adr/0006-one
 | `\mathbinx`, `\mathrelx`, `\dint`, `\ssup`, `\ssub`, `\lim` | standard amsmath (`\lim` restored) |
 | `\refpage`, `\pref`, `\seeref`, `\seealso` (and capitalized forms) | configure and use cleveref's `\cref`/`\Cref`/`\cpageref` |
 | `\pdfcode`, `\pdfsc`, `\pdfemph`, `\pdfbf`, `\pdfit`, `\pdffilepath`, `\pdfvar` | hyperref's `\texorpdfstring` |
+
+### Entry points, options, the grid API and the colour API (issue #85)
+
+`\usepackage{lanepaper}` is the sole public load path. The other two entry
+points were deleted, direct loading of an `lnp*.sty` module is unsupported,
+the option surface is down to `[optical]` and `[nocolor]`, and the 13.2pt
+spacing quantum is private.
+
+| Removed | Use instead |
+|---------|-------------|
+| `lnpminimal.sty` (entry point) | `\usepackage{lanepaper}` |
+| `lnpgridoverlay.sty` (entry point), `\showgrid`, `\hidegrid` | nothing; it was a development overlay |
+| `lnpcompilationfixes.sty` (module), `\fitwide`, `\showoverfulls`, `\hideoverfulls` | `\resizebox`, `\overfullrule` |
+| `[grid]`, `[nogrid]`, `[minimal]`, `[draft]` | nothing; the modes are gone |
+| `[natbib]`, `[nobiblatex]` | load `natbib` or `biblatex` in the document |
+| `[subsectionbarriers]`, `[nosubsectionbarriers]` | nothing; barriers are always on |
+| `\gridunit`, `\halfgridunit`, `\quartergridunit`, `\threequartergridunit`, `\onehalfgridunit`, `\doublegridunit`, `\triplegridunit` | the length itself: `13.2pt`, `6.6pt`, `3.3pt`, `9.9pt`, `19.8pt`, `26.4pt`, `39.6pt` |
+| `\gridmult`, `\gridmath`, `\gridspace`, `\halfbaselinespace`, `\fullbaselinespace` | `\vspace{...}` with the length |
+| `\roundtogrid`, `\gridincludegraphics`, `\imagegridspace`, `gridfigure` | `\includegraphics` in a standard `figure` |
+| `gridtable`, `compactgridtable`, `spaciousgridtable` | `\renewcommand{\arraystretch}{...}` in a standard `table` |
+| `\standardgrid`, `\compactgrid`, `\spaciousgrid`, `\customgrid` | `\renewcommand{\arraystretch}{...}` |
+| `\quartergridparagraphs`, `\thirdgridparagraphs` | set `\parindent` and `\parskip` yourself |
+| `grideqnarray`, `gridgather` | amsmath's `align` and `gather` |
+| colour names `textblack`, `sectioncolor`, `subsectioncolor`, `subsubcolor`, `paragraphcolor`, `subtlegray`, `quotegray`, `linknavy` | `\definecolor` your own; the palette is private |
+| `\maincolor`, `\secondarycolor`, `\accentcolor`, `\codeaccent` | `\color`/`\textcolor` with your own colour |
+
+`[optical]` is new: it carries the sourced refinements that are not safe as
+defaults, currently last-line runt control. `[nocolor]` changed meaning — it
+now converts the palette through xcolor's gray model instead of flattening
+every colour to black, so the grayscale hierarchy survives.
+
+The package also stopped forcing `letterpaper`: `\documentclass[a4paper]`
+now really produces A4, with the six-inch measure kept and centred.
 
 Cleveref is no longer configured by the package: a document that wants abbreviated names or parenthetical styles loads and configures cleveref itself. The title-page small caps this package still uses internally is private (`\lnp@titlesc`) and unchanged.

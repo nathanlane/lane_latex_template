@@ -82,20 +82,13 @@ Keep extra folders to an absolute minimum.  Empty dirs should contain a `.gitkee
 
 ## 3  LaTeX Quick Start
 
-1. In your document preamble load the template style, then register the bibliography:
-
-   ```latex
-   \usepackage{lanepaper} % master template; auto-loads default biblatex
-   \addbibresource{references.bib}
-   ```
-
-   For custom `biblatex` options, load `biblatex` yourself and disable the
-   template's automatic bibliography loading:
+1. The document owns its bibliography: load `biblatex`, then `lanepaper`, and
+   register the bibliography resource:
 
    ```latex
    \usepackage[backend=biber,style=authoryear]{biblatex}
+   \usepackage{lanepaper}
    \addbibresource{references.bib}
-   \usepackage[nobiblatex]{lanepaper}
    ```
 2. Compile with `latexmk -pdf -synctex=1 main.tex`.
 3. Obey Chicago author-date citation style (`\textcite`, `\autocite`).

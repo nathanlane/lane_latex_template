@@ -24,24 +24,16 @@
 \ProvidesPackage{lnplists}[2026/08/12 v1.1 List Typography System]
 
 % Dependencies
-%% FIX: Declare graphics support because standalone marker rendering uses
-%% \scalebox for size-tuned list symbols.
+%% FIX: List markers use \scalebox, so their owner declares graphicx.
 \RequirePackage{graphicx}         % Marker scaling with \scalebox
-%% FIX: Declare environment-hook support for standalone module loading.
-\RequirePackage{etoolbox}         % Environment hooks used in standalone mode
+%% FIX: List hooks use etoolbox, so their owner declares it.
+\RequirePackage{etoolbox}         % Environment hooks
 \RequirePackage{enumitem}         % List spacing control
 
-% Ensure colors are loaded
-\@ifpackageloaded{lnpcolors}{}{%
-  % Silently load colors module if not already loaded
-  \RequirePackage{lnpcolors}%
-}
-
-% Ensure dimensions are loaded for grid units
-\@ifpackageloaded{lnpdimensions}{}{%
-  % Silently load dimensions module if not already loaded
-  \RequirePackage{lnpdimensions}%
-}
+%% FIX (#85): lanepaper.sty loads lnpdimensions and lnpcolors before this
+%% module and owns the order, so the \@ifpackageloaded fallbacks that made
+%% standalone loading half-work are gone. This module uses \lnp@gridunit and
+%% the \lnp@ colour palette and assumes both are already there.
 
 % ==============================================================================
 % LIST DESIGN SYSTEM
@@ -69,11 +61,11 @@
 \newlength{\lnp@listlabelsep}
 
 % Initialise values
-\setlength{\lnp@listhalfquantum}{0.5\gridunit}      % 6.6pt
-\setlength{\lnp@listquarterquantum}{0.25\gridunit}   % 3.3pt  
-\setlength{\lnp@listquantum}{\gridunit}     % 13.2pt; the full-quantum list space (topsep)
-\setlength{\lnp@listhangindent}{26.4pt}       % 2 grid units (optimized for Pagella)
-\setlength{\lnp@listnestedindent}{13.2pt}     % 1 grid unit for nested lists
+\setlength{\lnp@listhalfquantum}{0.5\lnp@gridunit}      % 6.6pt
+\setlength{\lnp@listquarterquantum}{0.25\lnp@gridunit}   % 3.3pt
+\setlength{\lnp@listquantum}{\lnp@gridunit}     % 13.2pt; the full-quantum list space (topsep)
+\setlength{\lnp@listhangindent}{26.4pt}       % 2 quanta (optimized for Pagella)
+\setlength{\lnp@listnestedindent}{13.2pt}     % 1 quantum for nested lists
 \setlength{\lnp@listlabelsep}{0.7em}          % Space between bullet and text
 
 % Compatibility aliases (deprecated; will be removed in v2.0)
@@ -95,31 +87,31 @@
 
 % Primary bullet - professional gray for subtlety
 \newcommand{\bulletmark}{%
-  \textcolor{subtlegray}{\raisebox{0.08ex}{\scalebox{0.9}{$\bullet$}}}%
+  \textcolor{lnp@subtlegray}{\raisebox{0.08ex}{\scalebox{0.9}{$\bullet$}}}%
 }
 
 % En-dash for academic lists
 \newcommand{\dashmark}{%
-  \textcolor{subtlegray}{\textendash}%
+  \textcolor{lnp@subtlegray}{\textendash}%
 }
 
 % Secondary bullet - smaller for nested lists
 \newcommand{\refinedbullet}{%
-  \textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.75}{$\bullet$}}}%
+  \textcolor{lnp@subtlegray}{\raisebox{0.1ex}{\scalebox{0.75}{$\bullet$}}}%
 }
 
 % Tertiary bullet - diamond for deep nesting
 \newcommand{\diamondmark}{%
-  \textcolor{subtlegray}{\raisebox{0.05ex}{\scalebox{0.7}{$\diamond$}}}%
+  \textcolor{lnp@subtlegray}{\raisebox{0.05ex}{\scalebox{0.7}{$\diamond$}}}%
 }
 
 % Additional markers for specialized lists
 \newcommand{\squaremark}{%
-  \textcolor{subtlegray}{\raisebox{0.1ex}{\scalebox{0.65}{$\blacksquare$}}}%
+  \textcolor{lnp@subtlegray}{\raisebox{0.1ex}{\scalebox{0.65}{$\blacksquare$}}}%
 }
 
 \newcommand{\trianglemark}{%
-  \textcolor{subtlegray}{\raisebox{0ex}{\scalebox{0.8}{$\triangleright$}}}%
+  \textcolor{lnp@subtlegray}{\raisebox{0ex}{\scalebox{0.8}{$\triangleright$}}}%
 }
 
 % Subtle bullet for compact lists
@@ -129,7 +121,7 @@
 
 % Refined en-dash with proper spacing
 \newcommand{\refineddash}{%
-  \textcolor{subtlegray}{\kern0.05em\textendash\kern0.05em}%
+  \textcolor{lnp@subtlegray}{\kern0.05em\textendash\kern0.05em}%
 }
 
 % ==============================================================================
@@ -222,7 +214,7 @@
 % DESCRIPTION LIST CONFIGURATION
 % Professional hanging format for term definitions
 \setlist[description]{
-  font=\normalfont\scshape\color{paragraphcolor}, % Small caps terms
+  font=\normalfont\scshape\color{lnp@paragraphcolor}, % Small caps terms
   labelindent=0pt,
   labelsep=\lnp@listlabelsep,
   leftmargin=\lnp@listhangindent,
@@ -265,7 +257,7 @@
   parsep=0pt,
   topsep=\lnp@listquantum,                     % Full quantum above/below
   partopsep=0pt,
-  font=\normalfont\bfseries\color{textblack}    % Bold items for emphasis
+  font=\normalfont\bfseries\color{lnp@textblack}    % Bold items for emphasis
 }
 
 % Academic list with en-dash (following university style guides)
@@ -290,7 +282,7 @@
   labelsep=0.55em,
   itemsep=\lnp@listhalfquantum,                  % 0.5 units for readability
   parsep=0pt,
-  topsep=0.75\gridunit plus 0.125\gridunit,     % 9.9pt +1.65pt
+  topsep=0.75\lnp@gridunit plus 0.125\lnp@gridunit,     % 9.9pt +1.65pt
   partopsep=0pt,
   before={\vspace{-\parskip}\vspace{\lnp@listhalfquantum}},
   after={\vspace{-\parskip}\vspace{\lnp@listhalfquantum}}
@@ -349,7 +341,7 @@
 % Adjusted for more traditional spacing (0.5 quanta)
 
 % Remove the quarter-quantum reduction to get full topsep spacing
-% This gives us 6.6pt (0.5 grid units) before/after lists
+% This gives us 6.6pt (0.5 quanta) before/after lists
 % Comment out these lines to restore the original minimal spacing
 %\setlist[itemize]{
 %  before*={\vspace{-\lnp@listquarterquantum}},

@@ -36,67 +36,232 @@ def assert_compiles(result, log_text):
     assert result.returncode == 0, result.stdout + result.stderr + log_text
 
 
-def test_nocolor_maps_semantic_colors_to_black(tmp_path):
+REMOVED_OPTIONS = (
+    "grid",
+    "nogrid",
+    "minimal",
+    "draft",
+    "natbib",
+    "nobiblatex",
+    "subsectionbarriers",
+    "nosubsectionbarriers",
+)
+
+# The three v2 entry points a document could load directly. v3 (issue #85)
+# leaves \usepackage{lanepaper} as the sole public load path.
+REMOVED_ENTRY_POINTS = ("lnpminimal", "lnpgridoverlay", "lnpcompilationfixes")
+
+
+def probe(tmp_path, name, body, class_options="11pt", options=""):
+    """Compile a document that loads the package and runs `body` in it."""
     result, log_text = compile_latex(
         tmp_path,
-        "nocolor-contract",
+        name,
         r"""
-        \documentclass[11pt]{article}
-        \usepackage[nocolor]{lanepaper}
-        \makeatletter
-        \newcommand{\showcolorhex}[2]{%
-          \convertcolorspec{named}{#1}{HTML}{#2}%
-        }
-        \makeatother
+        \documentclass[%s]{article}
+        \usepackage%s{lanepaper}
         \begin{document}
-        \showcolorhex{sectioncolor}{\lnpsectionhex}
-        \showcolorhex{linknavy}{\lnplinkhex}
-        \typeout{LNP_SECTION_HEX=\lnpsectionhex}
-        \typeout{LNP_LINK_HEX=\lnplinkhex}
-        \section{No Color}
-        Body text.
+        %s
+        Body.
         \end{document}
-        """,
+        """
+        % (class_options, options, body),
     )
     assert_compiles(result, log_text)
-    assert "LNP_SECTION_HEX=000000" in log_text
-    assert "LNP_LINK_HEX=000000" in log_text
+    return log_text
 
 
-def test_minimal_nocolor_compiles(tmp_path):
-    result, log_text = compile_latex(
+def probe_names(tmp_path, name, names):
+    r"""Report which of `names` a *document* can see after loading the package.
+
+    Each entry is a control sequence spelled without its backslash.
+    """
+    log_text = probe(
         tmp_path,
-        "minimal-nocolor-contract",
-        r"""
-        \documentclass[11pt]{article}
-        \usepackage[minimal,nocolor]{lanepaper}
-        \begin{document}
-        \typeout{LNP_MINIMAL_NOCOLOR_OK}
-        Minimal no-color contract.
-        \end{document}
-        """,
+        name,
+        "\n".join(
+            rf"\ifcsname {n}\endcsname\typeout{{LNP_SEE-{n}=yes}}"
+            rf"\else\typeout{{LNP_SEE-{n}=no}}\fi"
+            for n in names
+        ),
     )
-    assert_compiles(result, log_text)
-    assert "LNP_MINIMAL_NOCOLOR_OK" in log_text
+    seen = {}
+    for n in names:
+        match = re.search(rf"LNP_SEE-{re.escape(n)}=(yes|no)", log_text)
+        assert match, f"probe {n} missing from log"
+        seen[n] = match.group(1) == "yes"
+    return seen
 
 
-def test_draft_option_reports_microtype_draft_mode(tmp_path):
-    result, log_text = compile_latex(
+def measure_dimens(tmp_path, name, dimens, class_options="11pt"):
+    """Compile a probe and return the named registers as floats in points."""
+    log_text = probe(
         tmp_path,
-        "draft-contract",
-        r"""
-        \documentclass[11pt]{article}
-        \usepackage[draft]{lanepaper}
-        \begin{document}
-        Draft mode contract.
-        \end{document}
+        name,
+        "\n".join(rf"\typeout{{LNP_DIM-{d}=\the\{d}}}" for d in dimens),
+        class_options=class_options,
+    )
+    out = {}
+    for d in dimens:
+        match = re.search(rf"LNP_DIM-{d}=(-?[0-9.]+)pt", log_text)
+        assert match, f"probe {d} missing from log"
+        out[d] = float(match.group(1))
+    return out
+
+
+def test_only_optical_and_nocolor_options_are_accepted(tmp_path):
+    """ADR-0006: [optical] and [nocolor] are the whole option surface."""
+    log_text = probe(
+        tmp_path,
+        "retained-options-contract",
+        r"\typeout{LNP_RETAINED_OPTIONS_OK}",
+        options="[optical,nocolor]",
+    )
+    assert "LNP_RETAINED_OPTIONS_OK" in log_text
+    assert "Unknown option" not in log_text
+
+
+@pytest.mark.parametrize("option", REMOVED_OPTIONS)
+def test_removed_options_are_rejected_without_aliases(tmp_path, option):
+    """v3 removes the template modes outright: no alias, no inert acceptance.
+
+    [natbib] and [nobiblatex] were kept declared-but-inert by #48 so existing
+    documents got a warning instead of an error. v3 is a deliberate breaking
+    contraction, so they now fail like any other unknown option.
+    """
+    _, log_text = compile_latex(
+        tmp_path,
+        f"{option}-removed-contract",
+        rf"""
+        \documentclass[11pt]{{article}}
+        \usepackage[{option}]{{lanepaper}}
+        \begin{{document}}
+        Body.
+        \end{{document}}
         """,
     )
-    assert_compiles(result, log_text)
-    assert re.search(
-        r"Package (lanepaper|lnpmicrotype) Info: microtype draft mode active",
-        log_text,
+    assert f"Unknown option `{option}'" in log_text.replace("\n", "")
+
+
+@pytest.mark.parametrize("package", REMOVED_ENTRY_POINTS)
+def test_removed_entry_points_cannot_be_loaded(tmp_path, package):
+    """Issue #85: lanepaper is the sole public load path."""
+    _, log_text = compile_latex(
+        tmp_path,
+        f"{package}-entrypoint-contract",
+        rf"""
+        \documentclass[11pt]{{article}}
+        \usepackage{{{package}}}
+        \begin{{document}}
+        Body.
+        \end{{document}}
+        """,
     )
+    assert f"File `{package}.sty' not found" in log_text
+
+
+def test_optical_option_tightens_the_last_line(tmp_path):
+    r"""[optical] is reserved for sourced refinements; runt control is the
+    first (Hochuli: a last line should reach at least a third of the measure).
+
+    \parfillskip's stretch is the observable: the default keeps LaTeX's
+    infinite fil, [optical] caps it at a fraction of \textwidth.
+    """
+    log_text = probe(
+        tmp_path,
+        "parfillskip-optical",
+        r"\typeout{LNP_PARFILL=\the\parfillskip}"
+        "\n"
+        r"\typeout{LNP_MEASURE=\the\textwidth}",
+        options="[optical]",
+    )
+    stretch = re.search(r"LNP_PARFILL=(.+)", log_text).group(1).strip()
+    measure = float(re.search(r"LNP_MEASURE=([0-9.]+)pt", log_text).group(1))
+    # A capped stretch, not LaTeX's infinite fil.
+    assert "fil" not in stretch, stretch
+    plus = float(re.search(r"plus ([0-9.]+)pt", stretch).group(1))
+    assert 0.5 * measure < plus < 0.9 * measure
+
+
+def test_default_last_line_is_standard_latex(tmp_path):
+    """Without [optical] the package leaves \\parfillskip alone."""
+    log_text = probe(
+        tmp_path,
+        "parfillskip-plain",
+        r"\typeout{LNP_PARFILL=\the\parfillskip}",
+    )
+    assert "LNP_PARFILL=0.0pt plus 1.0fil" in log_text, log_text
+
+
+def test_spacing_quantum_is_private_and_grid_helpers_are_gone(tmp_path):
+    """ADR-0006: the 13.2pt quantum is an implementation value, not an API.
+
+    Only the absence of the public names is asserted. What the quantum is
+    called internally, and what it measures, are implementation details this
+    suite deliberately does not reach for; the spacing it produces is covered
+    by the measured-value tests.
+    """
+    seen = probe_names(
+        tmp_path,
+        "private-quantum-contract",
+        [
+            "gridunit",
+            "halfgridunit",
+            "quartergridunit",
+            "threequartergridunit",
+            "onehalfgridunit",
+            "doublegridunit",
+            "triplegridunit",
+            "gridmult",
+            "gridmath",
+            "gridspace",
+            "halfbaselinespace",
+            "fullbaselinespace",
+            "roundtogrid",
+            "gridincludegraphics",
+            "imagegridspace",
+            "standardgrid",
+            "compactgrid",
+            "spaciousgrid",
+            "customgrid",
+            "showgrid",
+            "hidegrid",
+            "quartergridparagraphs",
+            "thirdgridparagraphs",
+            # Environments: \newenvironment defines a control sequence of the
+            # same name, so the same probe answers for them.
+            "grideqnarray",
+            "gridgather",
+        ],
+    )
+    assert [name for name, visible in seen.items() if visible] == []
+
+
+@pytest.mark.parametrize(
+    "class_options,paper_width",
+    [("11pt", 614.295), ("11pt,a4paper", 597.50787)],
+)
+def test_class_paper_is_honored_with_a_centered_six_inch_measure(
+    tmp_path, class_options, paper_width
+):
+    """Issue #85: the class picks the sheet; the package picks the measure.
+
+    v2 forced letterpaper in \\geometry, so [a4paper] silently produced a
+    Letter page. The six-inch text block and its centering are the invariant.
+    """
+    dims = measure_dimens(
+        tmp_path,
+        "paper-" + class_options.replace(",", "-"),
+        ["paperwidth", "textwidth", "oddsidemargin"],
+        class_options=class_options,
+    )
+    assert abs(dims["paperwidth"] - paper_width) < 0.01
+    # 6in at 72.27pt/in.
+    assert abs(dims["textwidth"] - 433.62) < 0.01
+    # \oddsidemargin is measured from a 1in reference, so a centered block
+    # sits at (paperwidth - textwidth)/2 - 1in.
+    expected = (dims["paperwidth"] - dims["textwidth"]) / 2 - 72.26999
+    assert abs(dims["oddsidemargin"] - expected) < 0.02
 
 
 def test_no_bibliography_package_is_loaded(tmp_path):
@@ -119,31 +284,6 @@ def test_no_bibliography_package_is_loaded(tmp_path):
     assert_compiles(result, log_text)
     assert "biblatex.sty" not in log_text
     assert "natbib.sty" not in log_text
-
-
-@pytest.mark.parametrize("option", ["natbib", "nobiblatex"])
-def test_deprecated_bibliography_options_are_accepted_and_inert(tmp_path, option):
-    """Both options are deprecated by #48 but must not break existing documents.
-
-    They stay declared so a document passing one gets a warning rather than
-    LaTeX's "Unknown option" error, and neither loads anything.
-    """
-    result, log_text = compile_latex(
-        tmp_path,
-        f"{option}-deprecated-contract",
-        rf"""
-        \documentclass[11pt]{{article}}
-        \usepackage[{option}]{{lanepaper}}
-        \begin{{document}}
-        Deprecated option accepted.
-        \end{{document}}
-        """,
-    )
-    assert_compiles(result, log_text)
-    assert "Unknown option" not in log_text
-    assert "deprecated" in log_text
-    assert "natbib.sty" not in log_text
-    assert "biblatex.sty" not in log_text
 
 
 def test_bare_package_survives_without_hyperref(tmp_path):
@@ -188,45 +328,6 @@ def test_plain_ref_does_not_emit_package_warning(tmp_path):
     )
     assert_compiles(result, log_text)
     assert "Direct \\ref usage detected" not in log_text
-
-
-def test_subsection_barriers_are_explicitly_reported(tmp_path):
-    result, log_text = compile_latex(
-        tmp_path,
-        "barrier-contract",
-        r"""
-        \documentclass[11pt]{article}
-        \usepackage{lanepaper}
-        \begin{document}
-        \section{One}
-        \subsection{Two}
-        Body text.
-        \end{document}
-        """,
-    )
-    assert_compiles(result, log_text)
-    assert re.search(
-        r"Package lanepaper Info: subsection float barriers (enabled|disabled)",
-        log_text,
-    )
-
-
-def test_nosubsectionbarriers_reports_disabled_mode(tmp_path):
-    result, log_text = compile_latex(
-        tmp_path,
-        "no-subsection-barrier-contract",
-        r"""
-        \documentclass[11pt]{article}
-        \usepackage[nosubsectionbarriers]{lanepaper}
-        \begin{document}
-        \section{One}
-        \subsection{Two}
-        Body text.
-        \end{document}
-        """,
-    )
-    assert_compiles(result, log_text)
-    assert "Package lanepaper Info: subsection float barriers disabled" in log_text
 
 
 def test_footmisc_option_passthrough_no_clash(tmp_path):
