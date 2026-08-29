@@ -314,15 +314,34 @@
 
 % Prevent isolated section headings
 \@secpenalty=-1000           % Encourage breaks before sections
-\interfootnotelinepenalty=10000  % Prevent footnote splitting
+%% FIX (#87): \interfootnotelinepenalty=10000 removed. The kernel default is
+%% 100 (latex.ltx) and article.cls leaves it alone; forcing 10000 made a
+%% footnote indivisible, so a long note near a page end pushed itself whole
+%% onto the next page rather than splitting as LaTeX intends. Page-splitting
+%% of footnotes is the kernel's call, not the package's.
 
 % CLASSICAL PARAGRAPH INDENTATION SYSTEM
 % Implements Bringhurst and Hochuli's principles for first paragraph handling
-% First paragraphs after headings, lists, and breaks remain flush left
-
-% Classical typography: first paragraphs after headings are flush left
-\let\@afterindentfalse\@afterindenttrue
-\@afterindentfalse  % Changed: flush left first paragraphs after headings
+% First paragraphs after headings, lists, and breaks remain flush left.
+%
+%% FIX (#87): this block did the opposite of what it says. The pair
+%%   \let\@afterindentfalse\@afterindenttrue
+%%   \@afterindentfalse
+%% is the indentfirst idiom: after the \let, every later \@afterindentfalse
+%% means \@afterindenttrue, so the first paragraph after a heading was
+%% indented a full \parindent (measured: 13.2pt against the text margin),
+%% while three comments here claimed it was flush left.
+%%
+%% Nothing needs to replace it. Headings come from titlesec, and all nine
+%% \titlespacing declarations in lnpheadings.sty use the starred form, which
+%% already suppresses indentation of the following paragraph. The \let was
+%% overriding titlesec's own mechanism; removing it lets that mechanism work.
+%%
+%% Measured over the demo: 34 of 36 pages shift, every changed line by one
+%% \parindent (-13.2pt, varying to -13.8pt with microtype protrusion on the
+%% opening letter), and the word count is unchanged. Headings move too --
+%% they were rendering 13.2pt right of the 0pt left indent their own
+%% \titlespacing* declares, and now sit where it says.
 
 % Custom commands for controlling indentation in special contexts
 %% FIX (#85): these were \providecommand so that a document preloading
@@ -825,8 +844,10 @@
 %% (any effective value would change rendering); comment corrected.
 \setlength{\footnotesep}{0.25\lnp@gridunit}   % inert floor below the footnote strut (~8.4pt)
 
-% Hochuli: Prevent footnote orphans (footnote split across pages)
-\interfootnotelinepenalty=10000
+%% FIX (#87): second \interfootnotelinepenalty=10000 removed (the first was at
+%% the penalty block above). This was the assignment actually in force. The
+%% kernel default of 100 now stands, so a long footnote splits across pages as
+%% LaTeX intends instead of moving whole to the next page.
 
 % Professional footnote rule per foundry specifications
 % Rule at 33% text width, positioned 2 quanta below main text
