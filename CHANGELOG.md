@@ -4,6 +4,13 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Deleted the two unloaded v2 modules and their dead documentation (issue #87).
+
+- Removed `lnphochuli.sty` and `lnpparagraphs.sty`.
+- Removed the deleted paragraph-style switchers from live documentation and
+  updated module ownership to reflect the block-quotation system in
+  `lnpdimensions.sty`.
+
 Simplified fonts, numerals, and Microtype on 2026-08-28 (issue #29).
 This intentionally adopts upstream typography and may change line breaks or
 optical appearance.

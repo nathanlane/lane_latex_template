@@ -416,17 +416,6 @@ Reference range.
 
 ## Paragraph Commands
 
-### Paragraph Style Switching
-
-#### `\classicalparagraphs`
-13.2pt indent, no spacing (default).
-
-#### `\modernparagraphs`
-No indent, 6.6pt spacing.
-
-#### `\hybridparagraphs`
-9.9pt indent, 3.3pt spacing.
-
 ### Special Paragraph Commands
 
 #### `\noindentpar`
@@ -911,30 +900,10 @@ side margins, 8.5in of text height.
 \vspace{6.6pt}    % Half a quantum
 ```
 
-#### Paragraph Styles
+#### Paragraph Formatting
 
-Three paragraph formatting styles:
-
-```latex
-\classicalparagraphs  % Default: 13.2pt indent, 0pt spacing
-\modernparagraphs     % Modern: 0pt indent, 6.6pt spacing
-\hybridparagraphs     % Hybrid: 9.9pt indent, 3.3pt spacing
-```
-
-##### Classical (Default)
-- First-line indent: 13.2pt (1 quantum)
-- Paragraph spacing: 0pt
-- Flush left after headings
-
-##### Modern
-- First-line indent: 0pt
-- Paragraph spacing: 6.6pt (0.5 quanta)
-- Visual separation through spacing
-
-##### Hybrid
-- First-line indent: 9.9pt (0.75 quanta)
-- Paragraph spacing: 3.3pt (0.25 quanta)
-- Balanced approach
+The template's default paragraph formatting is configured by `lanepaper`.
+Document-owned changes should set `\parindent` and `\parskip` directly.
 
 ### Best Practices
 
@@ -1384,17 +1353,13 @@ No indent here due to list above.
 ```
 lanepaper.sty (the sole public entry point)
 └── Internal modules, loaded in this order:
-    ├── lnpdimensions.sty   - Page geometry and the 13.2pt spacing quantum
+    ├── lnpdimensions.sty   - Page geometry, spacing quantum, and block quotations
     ├── lnpcolors.sty       - The semantic colour palette
     ├── lnpfonts.sty        - Pagella, Inconsolata, newpxmath, mathalfa
     ├── lnpheadings.sty     - Section heading styles
     ├── lnplists.sty        - List typography and refined bullets
     └── lnpmicrotype.sty    - Upstream protrusion/expansion; small-caps tracking
 ```
-
-`lnpparagraphs.sty` and `lnphochuli.sty` are carried over from v2, are not
-loaded, and are not supported; issue #87 folds or deletes them. Issue #29
-deleted the former font-feature and fallback modules.
 
 #### Module Configuration
 
@@ -1437,13 +1402,8 @@ Use enumitem's document-owned options for one-off customisation:
 
 ##### Paragraph Spacing Commands
 
-Paragraph style switchers (indent and parskip per command):
-
-```latex
-\classicalparagraphs      % 13.2pt indent, 0pt parskip (default)
-\modernparagraphs         % 0pt indent, 6.6pt parskip
-\hybridparagraphs         % 9.9pt indent, 3.3pt parskip
-```
+The default paragraph formatting is configured by `lanepaper`.
+Set `\parindent` and `\parskip` directly for document-owned changes.
 
 ### Title Page System
 
@@ -2409,6 +2369,7 @@ spacing quantum is private.
 | `gridtable`, `compactgridtable`, `spaciousgridtable` | `\renewcommand{\arraystretch}{...}` in a standard `table` |
 | `\standardgrid`, `\compactgrid`, `\spaciousgrid`, `\customgrid` | `\renewcommand{\arraystretch}{...}` |
 | `\quartergridparagraphs`, `\thirdgridparagraphs` | set `\parindent` and `\parskip` yourself |
+| `\classicalparagraphs`, `\modernparagraphs`, `\hybridparagraphs` | set `\parindent` and `\parskip` yourself |
 | `grideqnarray`, `gridgather` | amsmath's `align` and `gather` |
 | colour names `textblack`, `sectioncolor`, `subsectioncolor`, `subsubcolor`, `paragraphcolor`, `subtlegray`, `quotegray`, `linknavy` | `\definecolor` your own; the palette is private |
 | `\maincolor`, `\secondarycolor`, `\accentcolor`, `\codeaccent` | `\color`/`\textcolor` with your own colour |

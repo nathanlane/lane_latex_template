@@ -35,7 +35,7 @@ The package is `lanepaper`; its modules use the `lnp` prefix:
 
 - Main style: `lanepaper` (`lanepaper/lanepaper.sty`)
 - Modules: `lnpcolors`, `lnpfonts`, `lnpdimensions`, `lnpheadings`,
-  `lnplists`, `lnpmicrotype`, `lnpparagraphs`, `lnphochuli`, etc.
+  `lnplists`, `lnpmicrotype`.
 
 Load packages by name, not by path:
 

@@ -321,11 +321,11 @@
 %% of footnotes is the kernel's call, not the package's.
 
 % Custom commands for controlling indentation in special contexts
-%% FIX (#85): these were \providecommand so that a document preloading
-%% lnpparagraphs would not clash. lnpparagraphs is not loaded by anything and
-%% direct module loading is unsupported, so \newcommand is correct again: a
-%% real name collision with another package should error at load time
-%% (CONVENTIONS §8), not be silently swallowed.
+%% FIX (#85, #87): these were \providecommand so that a document preloading
+%% lnpparagraphs would not clash. That module was deleted in #87 and direct
+%% module loading is unsupported, so \newcommand is correct: a real name
+%% collision with another package should error at load time (CONVENTIONS §8),
+%% not be silently swallowed.
 \newcommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left paragraph
 \newcommand{\forceindent}{\hspace{\parindent}}        % Force indentation when needed
 

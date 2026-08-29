@@ -309,15 +309,11 @@ and loading one directly is unsupported.
 | Module | Owns |
 |---|---|
 | `lnpcolors.sty` | The semantic colour palette, all names `lnp@`-prefixed |
-| `lnpdimensions.sty` | Page geometry and the 13.2pt spacing quantum |
+| `lnpdimensions.sty` | Page geometry, the 13.2pt spacing quantum, and block quotations |
 | `lnpfonts.sty` | Pagella, Inconsolata, newpxmath, mathalfa |
 | `lnpheadings.sty` | Section heading styles and their colour hierarchy |
 | `lnplists.sty` | List typography and refined bullets |
 | `lnpmicrotype.sty` | Upstream Pagella protrusion and expansion; small-caps tracking |
-
-The package carries `lnpparagraphs.sty` and `lnphochuli.sty` from v2. They are
-not loaded and not supported; issue #87 folds or deletes them. Issue #29
-deleted the former font-feature and fallback modules.
 
 Customisation happens in the document, after loading:
 

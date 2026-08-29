@@ -230,14 +230,14 @@ Use the standard LaTeX emphasis commands:
 
 \subsection{Paragraph Styles}
 
-\subsubsection{Style Switching}
+\subsubsection{Paragraph Formatting}
 
-Switch between paragraph styles:
+Set document-owned paragraph lengths directly:
 
 \begin{verbatim}
-\classicalparagraphs   % 13.2pt indent, no spacing (default)
-\modernparagraphs      % No indent, 6.6pt spacing
-\hybridparagraphs      % 9.9pt indent, 3.3pt spacing
+\setlength{\parindent}{13.2pt} % Indented paragraphs
+\setlength{\parskip}{0pt}     % No paragraph spacing
+% Set other values directly in the document.
 \end{verbatim}
 
 \subsubsection{Special Paragraphs}

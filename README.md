@@ -356,7 +356,7 @@ options and load order, and they may be merged or renamed without notice.
 | Module | Owns |
 |---|---|
 | `lnpcolors` | The semantic colour palette |
-| `lnpdimensions` | Page geometry and the 13.2pt spacing quantum |
+| `lnpdimensions` | Page geometry, the 13.2pt spacing quantum, and block quotations |
 | `lnpfonts` | The Pagella / newpxmath / Inconsolata stack |
 | `lnpheadings` | Section heading typography |
 | `lnplists` | List typography |
