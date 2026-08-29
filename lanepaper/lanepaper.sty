@@ -146,7 +146,7 @@
 % ==============================================================================
 % 
 % This section configures the three-font typography system:
-% 1. Text: TeX Gyre Pagella (Palatino-based) with full OpenType features
+% 1. Text: Type 1 TeX Gyre Pagella (Palatino-based)
 % 2. Mathematics: newpxmath perfectly harmonized with Pagella  
 % 3. Monospace: Inconsolata (zi4) scaled for Pagella integration
 %
@@ -209,10 +209,10 @@
 % v3 (issue #84) removed the generic public small-caps API (\refinedsc,
 % \elegantsc, \meta, \regsc, ...). Only the title-page small caps consumed by
 % the retained front matter survives; it is now private and visually unchanged.
-%% FIX(#39): explicit \fontsize{11pt} matches no named-size sc list, so {50} was
-%% effective; \textls[50] reproduces the original (like \abstractopening above).
+%% FIX (#29): Small caps inherit the single +50 rule in lnpmicrotype; keeping
+%% the selection here prevents ordinary bold or lowercase text from tracking.
 \newcommand{\lnp@titlesc}[1]{%
-  {\fontsize{11pt}{13pt}\selectfont\scshape\textls[50]{#1}}%
+  {\fontsize{11pt}{13pt}\selectfont\scshape\lsstyle #1}%
 }
 
 % Special-character, symbol, and emphasis helpers removed in v3 (issue #84);
@@ -224,14 +224,13 @@
 % ==============================================================================
 %
 % Implements Hochuli's micro-typographic principles for exceptional text quality.
-% Uses the microtype package with Pagella-specific optimizations for character
-% protrusion, font expansion, and intelligent tracking.
+% Uses microtype's shipped Pagella protrusion and default expansion settings,
+% plus one sourced small-caps tracking rule.
 %
 % CORE PRINCIPLES:
-%   - Enhanced character protrusion for optical edge alignment
-%   - Conservative word spacing flexibility for natural reading
-%   - Typeface-specific tracking adjustments
-%   - Contextual kerning for problematic letter pairs
+%   - Upstream Pagella character protrusion for optical edge alignment
+%   - Upstream default font expansion
+%   - Restrained 5% tracking for small caps only
 %
 % REFERENCES:
 %   - Thành, H. T. (2000). Micro-typographic extensions to TeX. TUGboat 21(4).
@@ -242,8 +241,7 @@
 %% FIX: Delegate microtype package loading and active tuning to the module.
 \RequirePackage{lnpmicrotype}
 
-%% FIX: Active microtype tracking and extra-kerning setup lives in lnpmicrotype.
-% Small-caps, code, and emphasis commands rely on lnpmicrotype for tracking/kerning.
+% Small caps rely on lnpmicrotype for their one tracking rule.
 
 %% FIX: duplicate \spaceskip/\xspaceskip assignments removed. The pair here
 %% (0.35em/0.5em) was silently overridden ~2100 lines later (0.33em/0.48em);
@@ -439,7 +437,7 @@
 %% in the same paragraph; the former helper ended and restarted the paragraph.
 \newcommand{\sectionopening}[1]{%
   \noindent%
-  {\fontsize{11}{13.2}\selectfont\textls[30]{\textsc{#1}}}%
+  {\fontsize{11}{13.2}\selectfont\scshape\lsstyle #1}%
 }
 
 %% FIX (#85, ADR-0006): \quartergridparagraphs and \thirdgridparagraphs were
@@ -606,23 +604,20 @@
 % TITLE FORMATTING COMMANDS
 % Following Brown's modular scale with Hochuli's precise spacing
 
-% Main title command - elegant with refined tracking
-%% FIX(#39): drop dead \SetTracking{...}{20}; the bold title resolves via the T1
-%% series=b list (lnpmicrotype.sty:140 -> -10), so \lsstyle is render-neutral.
+% Main title command - ordinary bold, without letterspacing
+%% FIX (#29): Upstream Microtype defaults leave ordinary bold titles untracked.
 \newcommand{\articletitle}[1]{%
   {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{lnp@sectioncolor}%
-   \lsstyle #1\par}%  % softened navy
+   #1\par}%  % softened navy
   \vspace{\titlespacemajor}%
 }
 
 % Title with footnote for acknowledgments/thanks
 % Usage: \articletitlefootnote{Title}{Footnote text}
-%% FIX(#39): drop dead \SetTracking{...}{20} (title resolves via T1 series=b,
-%% lnpmicrotype.sty:140 -> -10); scope letterspacing as {\lsstyle #1} so it no
-%% longer bleeds into \footnote{#2} -- the accepted page-1 thanks-footnote fix.
+%% FIX (#29): Keep the title and its footnote outside generic tracking rules.
 \newcommand{\articletitlefootnote}[2]{%
   {\fontsize{22pt}{26.4pt}\selectfont\bfseries\color{lnp@sectioncolor}%
-   {\lsstyle #1}\footnote{#2}\par}%
+   #1\footnote{#2}\par}%
   \vspace{\titlespacemajor}%
 }
 
@@ -708,9 +703,8 @@
     \noindent
     \makebox[11.5pt][l]{%
       \fontsize{6}{7}\selectfont  % Same as main
-      %% FIX(#39): 6pt roman marker matches no tracking list, so its {50} was
-      %% effective; \textls[50] preserves it (fixed \makebox -> raster-neutral).
-      \textls[50]{\@thefnmark}% Same as main
+      %% FIX (#29): Symbolic title-footnote marks are not small caps.
+      \@thefnmark% Symbolic title-footnote marks are not letterspaced.
     }%
     \fontsize{8.5}{10}\selectfont % Back to normal leading
     \spaceskip=0.35em plus 0.175em minus 0.14em  % Same as main
@@ -726,7 +720,9 @@
 
 \newcommand{\titlefootnotereset}{%
   \setcounter{footnote}{0}%
-  \renewcommand{\thefootnote}{\arabic{footnote}}%
+  %% FIX (#29): Restore the package's oldstyle body-footnote numbering after
+  %% the title page instead of silently switching subsequent notes to lining.
+  \renewcommand{\thefootnote}{\oldstylenums{\arabic{footnote}}}%
   % Restore main document footnote spacing
   \setlength{\skip\footins}{2\lnp@gridunit}%
   \addtolength{\skip\footins}{0pt plus 2pt minus 1pt}  % Back to 2 quanta
@@ -737,9 +733,8 @@
     \noindent
     \makebox[11.5pt][l]{%
       \fontsize{6}{7}\selectfont
-      %% FIX(#39): 6pt roman marker matches no tracking list, so its {50} was
-      %% effective; \textls[50] preserves it (fixed \makebox -> raster-neutral).
-      \textls[50]{\@thefnmark}% Regular tracking
+      %% FIX (#29): Oldstyle body-footnote marks use their native spacing.
+      \@thefnmark
     }%
     \fontsize{8.5}{10}\selectfont % Back to 8.5pt/10pt
     \spaceskip=0.35em plus 0.175em minus 0.14em
@@ -763,7 +758,7 @@
 % - Hochuli: Precise spacing, hanging indents, and baseline alignment
 %
 % SIZING HIERARCHY (Optimized for Pagella per foundry standards):
-%   Superscript: 6pt (70% of footnote size) with +50 units tracking
+%   Superscript: 6pt (70% of footnote size) with native oldstyle spacing
 %   Footnote text: 8.5pt (77% of body); actual footnote leading is 12pt
 %   Hanging indent: 11.5pt (fits three-digit old-style markers)
 %
@@ -797,8 +792,8 @@
 
 % Butterick's size relationships with systematic proportions
 \renewcommand\@makefntext[1]{%
-  %% FIX: marker box widened 7pt -> 11.5pt. Measured at the marker's 6pt/+50
-  %% tracking, Pagella's tabular old-style digits are 3.6pt each:
+  %% FIX: marker box widened 7pt -> 11.5pt. At the marker's 6pt size,
+  %% Pagella's tabular old-style digits are 3.6pt each:
   %% \oldstylenums{99} = 7.2pt already overflowed the 7pt box (hidden by
   %% \hfuzz=0.2pt; PDF extraction concatenated marker and word, e.g.
   %% "16Our"), and \oldstylenums{999} = 10.8pt overprinted the note text.
@@ -806,11 +801,10 @@
   \setlength{\parindent}{11.5pt}%
   \noindent
   \makebox[11.5pt][l]{%
-    % Foundry spec: 6pt superscript with tracking
+    % Foundry spec: 6pt superscript
     \fontsize{6}{7}\selectfont
-    %% FIX(#39): 6pt roman marker matches no tracking list, so its {50} was
-    %% effective; \textls[50] preserves it (fixed \makebox -> raster-neutral).
-    \textls[50]{\@thefnmark}% +50 units tracking
+    %% FIX (#29): Oldstyle footnote marks use native spacing, not generic tracking.
+    \@thefnmark
   }%
   %% FIX: \linespread{1.20} scales this 10pt leading to a real 12pt footnote
   %% baseline (measured); the "10pt" claim was wrong in three directions.

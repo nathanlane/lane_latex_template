@@ -4,6 +4,24 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Simplified fonts, numerals, and Microtype on 2026-08-28 (issue #29).
+This intentionally adopts upstream typography and may change line breaks or
+optical appearance.
+
+- Deleted the unloaded `lnpfontfeatures` and `lnpfontfallbacks` modules, their
+  public figure-style and fallback machinery, and the two fixtures that
+  asserted the removed authored protrusion tables.
+- Replaced custom protrusion, expansion, kerning, spacing, bold-tracking, and
+  size-responsive tracking tables with Microtype's shipped `qpl` to `ppl`
+  alias, Palatino protrusion, default expansion, and one +50 small-caps rule.
+- Removed `verbose=silent`, the incompatible standalone `letterspace` load,
+  and unused `scalefnt` and `textcase` dependencies. Microtype warnings are no
+  longer hidden. The dependency check and installation docs now include the
+  `boondox` font metrics required by the existing `mathalfa` configuration.
+- Default Pagella text uses its lining tabular numerals. Oldstyle tabular
+  numerals remain private to page numbers, top-level enumerate labels, and
+  body-footnote marks; all other tracking uses native or upstream defaults.
+
 Contracted document structures on 2026-08-28 (issue #86). **Breaking, with no
 aliases.**
 

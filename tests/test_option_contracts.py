@@ -457,7 +457,7 @@ def test_footmisc_option_passthrough_no_clash(tmp_path):
 
 def test_footnote_marker_box_fits_three_digits(tmp_path):
     # Measure the widest marker (\oldstylenums{999}) at the marker's exact
-    # spec (6pt, +50 tracking) and assert it fits the \@makefntext box.
+    # spec (6pt, native spacing) and assert it fits the \@makefntext box.
     # (An earlier overfull-hbox assertion passed even pre-fix because
     # \hfuzz=0.2pt hid the 0.2pt two-digit overflow.)
     result, log_text = compile_latex(
@@ -470,7 +470,7 @@ def test_footnote_marker_box_fits_three_digits(tmp_path):
         \begin{document}
         \makeatletter
         \settowidth{\markwidth}{\fontsize{6}{7}\selectfont
-          \SetTracking{encoding={T1,OT1}}{50}\lsstyle\oldstylenums{999}}
+          \oldstylenums{999}}
         \typeout{LNP_MARK999=\the\markwidth}
         \makeatother
         Text.\footnote{A footnote.}

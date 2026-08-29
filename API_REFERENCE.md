@@ -694,7 +694,7 @@ The fonts module (`lnpfonts.sty`) configures a professional three-font typograph
 #### Text Font: TeX Gyre Pagella
 - Based on Palatino with enhanced features
 - Superior small caps design
-- Oldstyle figures for text
+- Lining tabular figures by default
 - Larger x-height requiring adjusted leading
 
 #### Mathematics Font: newpxmath
@@ -714,10 +714,11 @@ The fonts module (`lnpfonts.sty`) configures a professional three-font typograph
 - Optimized tracking for readability
 - Available in regular and bold weights
 
-#### Oldstyle Figures
-- Proportional oldstyle figures in text
-- Lining figures in tables
-- Proper figure selection by context
+#### Numeral Figures
+- Default text and tables use Pagella's lining tabular figures
+- Oldstyle tabular figures are private to page numbers, top-level list labels,
+  and body-footnote marks
+- The package exposes no numeral-style API
 
 #### Mathematical Symbols
 Enhanced symbol sets from mathalfa:
@@ -1082,10 +1083,8 @@ First paragraphs after headings are automatically flush left (no indent).
 ### Typography Details
 
 #### Tracking (Letter Spacing)
-- Bold headings follow the microtype module's global `series=b` rule (per-heading
-  `\SetTracking` was removed: it is global and was annulled by that rule)
-- Subsubsections: Normal tracking
-- Small caps: Context-dependent (3-12%)
+- Ordinary text and headings use upstream spacing
+- Pagella small caps use one +50 tracking rule
 
 #### Colour Application
 Heading colours are internal to the colours module and provide the visible
@@ -1390,12 +1389,12 @@ lanepaper.sty (the sole public entry point)
     ├── lnpfonts.sty        - Pagella, Inconsolata, newpxmath, mathalfa
     ├── lnpheadings.sty     - Section heading styles
     ├── lnplists.sty        - List typography and refined bullets
-    └── lnpmicrotype.sty    - Character protrusion, expansion and spacing
+    └── lnpmicrotype.sty    - Upstream protrusion/expansion; small-caps tracking
 ```
 
-`lnpparagraphs.sty`, `lnphochuli.sty`, `lnpfontfeatures.sty` and
-`lnpfontfallbacks.sty` are carried over from v2, are not loaded, and are not
-supported; issues #29 and #87 fold or delete them.
+`lnpparagraphs.sty` and `lnphochuli.sty` are carried over from v2, are not
+loaded, and are not supported; issue #87 folds or deletes them. Issue #29
+deleted the former font-feature and fallback modules.
 
 #### Module Configuration
 
@@ -1691,18 +1690,17 @@ For troubleshooting, see [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
 #### Microtype Configuration
 
 ```latex
-% Hochuli's optimal settings for Pagella
-\usepackage[
-  activate={true,nocompatibility},
-  final,
-  tracking=true,
-  kerning=true,
-  spacing=true,
-  factor=1050,                     % Character protrusion
-  stretch=15,                      % Word spacing flexibility
-  shrink=15
-]{microtype}
+\usepackage[protrusion=true,expansion=true,tracking=true]{microtype}
+\SetTracking[
+  no ligatures={f}
+]{
+  encoding={T1},family={qpl},shape={sc}
+}{50}
 ```
+
+Microtype maps Pagella's `qpl` family to its shipped `ppl` protrusion tables
+and supplies the default expansion table. Lanepaper adds no authored numeric
+protrusion, expansion, kerning, spacing, or generic tracking table.
 
 #### Baseline Grid Mathematics
 
@@ -2414,6 +2412,10 @@ spacing quantum is private.
 | `grideqnarray`, `gridgather` | amsmath's `align` and `gather` |
 | colour names `textblack`, `sectioncolor`, `subsectioncolor`, `subsubcolor`, `paragraphcolor`, `subtlegray`, `quotegray`, `linknavy` | `\definecolor` your own; the palette is private |
 | `\maincolor`, `\secondarycolor`, `\accentcolor`, `\codeaccent` | `\color`/`\textcolor` with your own colour |
+| `lnpfontfeatures.sty`, `lnpfontfallbacks.sty` | nothing; use standard font commands and install the required fonts |
+| `\oldfigs`, `\textfigs`, `\liningfigs`, `\tablefigs`, `\tabularfigs` | default lining tabular figures or explicit `\oldstylenums{...}` in document-owned typography |
+| `\textsup`, `\supfigs`, `\inffigs`, `\chemform` | standard `\textsuperscript`, `\textsubscript`, or math markup |
+| `\nolig`, `\breaklig`, `\shelfful`, `\cufflink`, `\textuppercase`, `\textlowercase` | standard text or document-owned font configuration |
 
 `[optical]` is new: it carries the sourced refinements that are not safe as
 defaults, currently last-line runt control. `[nocolor]` changed meaning — it

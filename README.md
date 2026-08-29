@@ -76,8 +76,13 @@ That's it! You now have a professionally typeset academic paper.
 ### Tested Build Environments
 
 <!-- %% FIX: Remove unsupported external build claims and keep the local toolchain explicit. -->
-Verified locally on August 12, 2026 (all gates: `make lint`, `make build`,
+Verified locally on August 28, 2026 (all gates: `make lint`, `make build`,
 `make check-deps`, `make test`):
+
+- **TeX Live 2024** via TinyTeX, pdfTeX 1.40.26, `latexmk` 4.86a,
+  Biber 2.20, and ChkTeX 1.7.9.
+
+Previously verified:
 
 - **TeX Live 2026** at `/usr/local/texlive/2026`, pdfTeX 1.40.29, using
   `latexmk -pdf -interaction=nonstopmode main.tex`.
@@ -101,7 +106,7 @@ Earlier verification (July 4, 2026): TeX Live 2025, pdfTeX 1.40.28,
 make check-deps
 
 # Install missing packages (if any)
-tlmgr install tgpagella inconsolata newpx mathalfa booktabs
+tlmgr install tgpagella inconsolata newpx mathalfa boondox booktabs
 
 # Test compilation
 make lint
@@ -355,7 +360,7 @@ options and load order, and they may be merged or renamed without notice.
 | `lnpfonts` | The Pagella / newpxmath / Inconsolata stack |
 | `lnpheadings` | Section heading typography |
 | `lnplists` | List typography |
-| `lnpmicrotype` | Character protrusion, expansion and spacing |
+| `lnpmicrotype` | Upstream Pagella protrusion and expansion; small-caps tracking |
 
 ---
 
@@ -368,7 +373,12 @@ The template uses a carefully selected font stack:
 - **Text**: TeX Gyre Pagella (enhanced Palatino)
 - **Math**: newpxmath (harmonized with Pagella)
 - **Code**: Inconsolata (scaled to 96%)
-- **Features**: Real small caps, oldstyle figures, ligatures
+- **Features**: Real small caps, lining tabular figures by default, ligatures
+
+Microtype uses its shipped Pagella protrusion and default expansion tables.
+The package adds only +50 tracking for Pagella small caps. Oldstyle tabular
+figures are private to page numbers, top-level list labels, and body-footnote
+marks.
 
 ### Spacing Quantum
 
@@ -634,7 +644,7 @@ Package-loaded typography dependencies:
 - `tgpagella` – TeX Gyre Pagella fonts
 - `newpxmath` – Mathematics
 - `booktabs` – Professional tables
-- `microtype` – Microtypography
+- `microtype` – Pagella protrusion, default expansion, and small-caps tracking
 
 Document-owned (load them yourself when needed):
 - `biblatex` – Bibliography

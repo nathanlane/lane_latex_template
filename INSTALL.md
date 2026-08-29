@@ -135,11 +135,11 @@ tlmgr install tex-gyre tex-gyre-math  # TeX Gyre Pagella and math support
 tlmgr install inconsolata             # Monospace font (zi4 package)
 tlmgr install newpx                   # newpxmath for mathematics
 tlmgr install mathalpha               # Enhanced mathematical symbols
+tlmgr install boondox                 # Blackboard, calligraphic, and Fraktur fonts
 tlmgr install textcomp                # Additional text symbols
 
 # Typography enhancement
 tlmgr install microtype               # Character protrusion, font expansion
-tlmgr install letterspace             # Letter spacing control (for tracking)
 tlmgr install fnpct                   # Footnote punctuation management
 ```
 
@@ -190,8 +190,8 @@ tlmgr install collection-latexrecommended collection-fontsrecommended \
   collection-bibtexextra collection-mathscience
 
 # Individual packages
-tlmgr install tex-gyre tex-gyre-math inconsolata newpx mathalpha \
-  microtype letterspace fnpct textcomp \
+tlmgr install tex-gyre tex-gyre-math inconsolata newpx mathalpha boondox \
+  microtype fnpct textcomp \
   geometry fancyhdr titlesec titletoc \
   graphicx booktabs tabularx longtable ltcaption adjustbox array multirow \
   biblatex biber xcolor hyperref cleveref csquotes enumitem \
@@ -313,11 +313,11 @@ and loading one directly is unsupported.
 | `lnpfonts.sty` | Pagella, Inconsolata, newpxmath, mathalfa |
 | `lnpheadings.sty` | Section heading styles and their colour hierarchy |
 | `lnplists.sty` | List typography and refined bullets |
-| `lnpmicrotype.sty` | Character protrusion, expansion and spacing |
+| `lnpmicrotype.sty` | Upstream Pagella protrusion and expansion; small-caps tracking |
 
-The package carries `lnpparagraphs.sty`, `lnphochuli.sty`,
-`lnpfontfeatures.sty` and `lnpfontfallbacks.sty` from v2. They are not loaded
-and not supported; issues #29 and #87 fold or delete them.
+The package carries `lnpparagraphs.sty` and `lnphochuli.sty` from v2. They are
+not loaded and not supported; issue #87 folds or deletes them. Issue #29
+deleted the former font-feature and fallback modules.
 
 Customisation happens in the document, after loading:
 
