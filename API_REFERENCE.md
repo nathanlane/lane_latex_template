@@ -902,7 +902,8 @@ side margins, 8.5in of text height.
 
 #### Paragraph Formatting
 
-The template's default paragraph formatting is configured by `lanepaper`.
+`lanepaper` sets `\parindent` to 13.2pt and `\parskip` to 0pt, and leaves the
+first paragraph after a heading flush left (titlesec's starred `\titlespacing*`).
 Document-owned changes should set `\parindent` and `\parskip` directly.
 
 ### Best Practices
@@ -1402,8 +1403,9 @@ Use enumitem's document-owned options for one-off customisation:
 
 ##### Paragraph Spacing Commands
 
-The default paragraph formatting is configured by `lanepaper`.
-Set `\parindent` and `\parskip` directly for document-owned changes.
+`lanepaper` sets `\parindent` to 13.2pt and `\parskip` to 0pt, and the first
+paragraph after a heading is flush left. Set `\parindent` and `\parskip`
+directly for document-owned changes.
 
 ### Title Page System
 
@@ -2374,6 +2376,7 @@ spacing quantum is private.
 | colour names `textblack`, `sectioncolor`, `subsectioncolor`, `subsubcolor`, `paragraphcolor`, `subtlegray`, `quotegray`, `linknavy` | `\definecolor` your own; the palette is private |
 | `\maincolor`, `\secondarycolor`, `\accentcolor`, `\codeaccent` | `\color`/`\textcolor` with your own colour |
 | `lnpfontfeatures.sty`, `lnpfontfallbacks.sty` | nothing; use standard font commands and install the required fonts |
+| `lnphochuli.sty`, `lnpparagraphs.sty` | nothing; their loadable behavior now lives in `lanepaper.sty` and `lnpdimensions.sty` |
 | `\oldfigs`, `\textfigs`, `\liningfigs`, `\tablefigs`, `\tabularfigs` | default lining tabular figures or explicit `\oldstylenums{...}` in document-owned typography |
 | `\textsup`, `\supfigs`, `\inffigs`, `\chemform` | standard `\textsuperscript`, `\textsubscript`, or math markup |
 | `\nolig`, `\breaklig`, `\shelfful`, `\cufflink`, `\textuppercase`, `\textlowercase` | standard text or document-owned font configuration |

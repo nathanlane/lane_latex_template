@@ -38,7 +38,6 @@ required_packages=(
   graphicx
   iftex
   inputenc
-  lettrine
   mathalfa
   microtype
   newpxmath
