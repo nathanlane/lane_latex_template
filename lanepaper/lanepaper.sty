@@ -320,29 +320,6 @@
 %% onto the next page rather than splitting as LaTeX intends. Page-splitting
 %% of footnotes is the kernel's call, not the package's.
 
-% CLASSICAL PARAGRAPH INDENTATION SYSTEM
-% Implements Bringhurst and Hochuli's principles for first paragraph handling
-% First paragraphs after headings, lists, and breaks remain flush left.
-%
-%% FIX (#87): this block did the opposite of what it says. The pair
-%%   \let\@afterindentfalse\@afterindenttrue
-%%   \@afterindentfalse
-%% is the indentfirst idiom: after the \let, every later \@afterindentfalse
-%% means \@afterindenttrue, so the first paragraph after a heading was
-%% indented a full \parindent (measured: 13.2pt against the text margin),
-%% while three comments here claimed it was flush left.
-%%
-%% Nothing needs to replace it. Headings come from titlesec, and all nine
-%% \titlespacing declarations in lnpheadings.sty use the starred form, which
-%% already suppresses indentation of the following paragraph. The \let was
-%% overriding titlesec's own mechanism; removing it lets that mechanism work.
-%%
-%% Measured over the demo: 34 of 36 pages shift, every changed line by one
-%% \parindent (-13.2pt, varying to -13.8pt with microtype protrusion on the
-%% opening letter), and the word count is unchanged. Headings move too --
-%% they were rendering 13.2pt right of the 0pt left indent their own
-%% \titlespacing* declares, and now sit where it says.
-
 % Custom commands for controlling indentation in special contexts
 %% FIX (#85): these were \providecommand so that a document preloading
 %% lnpparagraphs would not clash. lnpparagraphs is not loaded by anything and
@@ -351,9 +328,6 @@
 %% (CONVENTIONS §8), not be silently swallowed.
 \newcommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left paragraph
 \newcommand{\forceindent}{\hspace{\parindent}}        % Force indentation when needed
-
-% Flexible paragraph style commands for different document needs
-% Paragraph style commands are now in lnpdimensions.sty
 
 % Deprecated spacing commands - use \vspace directly
 \newcommand{\compactpar}{\vspace{-0.25\lnp@gridunit}}  % Legacy support
@@ -364,72 +338,6 @@
 
 % Dialogue support for narrative text
 \newcommand{\dialogue}[1]{\par\indent #1\par}              % Standard dialogue with full indent
-
-% ==============================================================================
-% PROFESSIONAL BLOCK QUOTATION SYSTEM
-% ==============================================================================
-%
-% Implements sophisticated block quotation typography following master principles:
-% - Butterick: Visual distinction without jarring contrast
-% - Hochuli: Subtle differentiation through spacing and margins
-% - Brown: Systematic relationships with modular scale
-%
-% DESIGN DECISIONS:
-%   - Size: 10.5pt (95% of body) for subtle subordination
-%% FIX: \fontsize{10.5}{13.2} under \linespread{1.20} gives a real 15.84pt
-%   - Leading: 15.84pt measured (13.2pt × \linespread)
-%   - Margins: 26.4pt (2 quanta) optimized for Pagella's width
-%   - Color: 15% gray matching paragraph heading hierarchy
-%   - Spacing: 1 quantum before/after with asymmetric flexibility
-%
-% ------------------------------------------------------------------------------
-
-%% FIX (#85): \lnp@quotegray moved to lnpcolors, the palette's owner.
-
-% STANDARD BLOCK QUOTE
-% For quotations without paragraph breaks
-%% FIX: Use \list with \endlist so quote environments close correctly.
-\renewenvironment{quote}{%
-  \vspace{\lnp@gridunit}%     % 1 quantum before
-  \list{}{%
-    \setlength{\leftmargin}{2\lnp@gridunit}%       % 2 quanta (Pagella proportion)
-    \setlength{\rightmargin}{2\lnp@gridunit}%      % Symmetric margins
-    \setlength{\topsep}{0pt}%              % Spacing handled explicitly
-    \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\lnp@gridunit}%            % 0.5 units between paragraphs
-    \setlength{\itemsep}{0pt}%
-    \setlength{\listparindent}{\parindent}%
-    \fontsize{10.5}{13.2}\selectfont%      % 95% size, same leading
-    \color{lnp@quotegray}%                     % 15% gray for subtle distinction
-  }%
-  \item\relax
-}{%
-  \endlist
-  \vspace{\lnp@gridunit}%     % 1 quantum after
-  \@afterindentfalse%                       % No indent after quote
-}
-
-% EXTENDED QUOTATION
-% For quotations with multiple paragraphs
-\renewenvironment{quotation}{%
-  \vspace{\lnp@gridunit}%
-  \list{}{%
-    \setlength{\leftmargin}{2\lnp@gridunit}%
-    \setlength{\rightmargin}{2\lnp@gridunit}%
-    \setlength{\topsep}{0pt}%
-    \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\lnp@gridunit}%
-    \setlength{\itemsep}{0pt}%
-    \setlength{\listparindent}{\lnp@gridunit}%    % Maintain paragraph indent
-    \fontsize{10.5}{13.2}\selectfont%
-    \color{lnp@quotegray}%
-  }%
-  \item\relax
-}{%
-  \endlist
-  \vspace{\lnp@gridunit}%
-  \@afterindentfalse%
-}
 
 % Special handling for non-list environments that start flush left. Standard
 % list hooks belong to lnplists.sty.
