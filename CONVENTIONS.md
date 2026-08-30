@@ -104,19 +104,15 @@ fallbacks from `lnpheadings` and `lnplists` and the option-flag shims from
 
 | Module | Purpose | Requires |
 |---|---|---|
-| `lnpdimensions.sty` | Page geometry and the spacing quantum | geometry |
+| `lnpdimensions.sty` | Page geometry, the spacing quantum, and block quotations | geometry |
 | `lnpcolors.sty` | Semantic colour palette | xcolor |
 | `lnpfonts.sty` | Font System Configuration | amsmath, amssymb, boondox fonts, fontenc, inputenc, mathalfa, newpxmath, textcomp, tgpagella, zi4 |
 | `lnpheadings.sty` | Heading Typography System | etoolbox, lnpcolors, lnpdimensions, titlesec |
 | `lnplists.sty` | List Typography System | enumitem, etoolbox, graphicx, lnpcolors, lnpdimensions |
 | `lnpmicrotype.sty` | Microtype Configuration | microtype |
 
-Two v2 files are still in `lanepaper/` and are **not loaded by anything**:
-`lnphochuli.sty` and `lnpparagraphs.sty` (#87 folds or deletes them). They are
-carried over untouched apart from the `\lnp@` rename sweep — #85 did **not**
-refactor them, and their contents still duplicate definitions that live in
-`lanepaper.sty`. Do not build on them. Issue #29 deleted the former
-`lnpfontfallbacks.sty` and `lnpfontfeatures.sty` rather than extending them.
+The block-quotation system in `lnpdimensions.sty` consumes `\lnp@quotegray`
+from `lnpcolors.sty`.
 
 Module resolution depends on `TEXINPUTS` covering `./lanepaper`, which the
 `Makefile`, `.latexmkrc`, `compile.sh`, and the test scripts all set; once
@@ -297,8 +293,8 @@ probes for support before passing it.
 ## 11. Versioning
 
 Git tags are semantic (`v2.1.0`). `\ProvidesPackage` strings are LaTeX
-date+version and are *not* the same number: currently 9 modules at `v1.1`, one
-at `v1.2`, and `lanepaper.sty` at `v2.0`.
+date+version and are *not* the same number: currently 5 modules at `v1.1`,
+`lnpmicrotype.sty` at `v1.3`, and `lanepaper.sty` at `v2.0`.
 
 Keep the LaTeX date+version form. Every `\ProvidesPackage` date is synced on
 release.

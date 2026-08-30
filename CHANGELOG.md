@@ -4,6 +4,20 @@ All notable changes to the Lane LaTeX Template are documented here.
 
 ## Unreleased
 
+Deleted the two unloaded v2 modules and their dead documentation (issue #87).
+
+- Removed `lnphochuli.sty` and `lnpparagraphs.sty`.
+- Two deliberate rendering changes: the first paragraph after a heading is
+  now flush left rather than indented 13.2pt (34 of 36 demo pages shift by
+  one `\parindent`, word count unchanged), and footnotes may again split
+  across pages now that `\interfootnotelinepenalty` is back to the kernel
+  default of 100.
+- Removed the deleted paragraph-style switchers from live documentation and
+  updated module ownership to reflect the block-quotation system in
+  `lnpdimensions.sty`.
+- Documented the title-footnote setup/reset pair and its deliberate restoration
+  of Lanepaper's main footnote style.
+
 Simplified fonts, numerals, and Microtype on 2026-08-28 (issue #29).
 This intentionally adopts upstream typography and may change line breaks or
 optical appearance.

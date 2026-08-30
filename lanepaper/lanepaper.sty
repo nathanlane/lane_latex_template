@@ -314,27 +314,20 @@
 
 % Prevent isolated section headings
 \@secpenalty=-1000           % Encourage breaks before sections
-\interfootnotelinepenalty=10000  % Prevent footnote splitting
-
-% CLASSICAL PARAGRAPH INDENTATION SYSTEM
-% Implements Bringhurst and Hochuli's principles for first paragraph handling
-% First paragraphs after headings, lists, and breaks remain flush left
-
-% Classical typography: first paragraphs after headings are flush left
-\let\@afterindentfalse\@afterindenttrue
-\@afterindentfalse  % Changed: flush left first paragraphs after headings
+%% FIX (#87): \interfootnotelinepenalty=10000 removed. The kernel default is
+%% 100 (latex.ltx) and article.cls leaves it alone; forcing 10000 made a
+%% footnote indivisible, so a long note near a page end pushed itself whole
+%% onto the next page rather than splitting as LaTeX intends. Page-splitting
+%% of footnotes is the kernel's call, not the package's.
 
 % Custom commands for controlling indentation in special contexts
-%% FIX (#85): these were \providecommand so that a document preloading
-%% lnpparagraphs would not clash. lnpparagraphs is not loaded by anything and
-%% direct module loading is unsupported, so \newcommand is correct again: a
-%% real name collision with another package should error at load time
-%% (CONVENTIONS §8), not be silently swallowed.
+%% FIX (#85, #87): these were \providecommand so that a document preloading
+%% lnpparagraphs would not clash. That module was deleted in #87 and direct
+%% module loading is unsupported, so \newcommand is correct: a real name
+%% collision with another package should error at load time (CONVENTIONS §8),
+%% not be silently swallowed.
 \newcommand{\noindentpar}{\noindent\ignorespaces}     % Explicit flush left paragraph
 \newcommand{\forceindent}{\hspace{\parindent}}        % Force indentation when needed
-
-% Flexible paragraph style commands for different document needs
-% Paragraph style commands are now in lnpdimensions.sty
 
 % Deprecated spacing commands - use \vspace directly
 \newcommand{\compactpar}{\vspace{-0.25\lnp@gridunit}}  % Legacy support
@@ -345,72 +338,6 @@
 
 % Dialogue support for narrative text
 \newcommand{\dialogue}[1]{\par\indent #1\par}              % Standard dialogue with full indent
-
-% ==============================================================================
-% PROFESSIONAL BLOCK QUOTATION SYSTEM
-% ==============================================================================
-%
-% Implements sophisticated block quotation typography following master principles:
-% - Butterick: Visual distinction without jarring contrast
-% - Hochuli: Subtle differentiation through spacing and margins
-% - Brown: Systematic relationships with modular scale
-%
-% DESIGN DECISIONS:
-%   - Size: 10.5pt (95% of body) for subtle subordination
-%% FIX: \fontsize{10.5}{13.2} under \linespread{1.20} gives a real 15.84pt
-%   - Leading: 15.84pt measured (13.2pt × \linespread)
-%   - Margins: 26.4pt (2 quanta) optimized for Pagella's width
-%   - Color: 15% gray matching paragraph heading hierarchy
-%   - Spacing: 1 quantum before/after with asymmetric flexibility
-%
-% ------------------------------------------------------------------------------
-
-%% FIX (#85): \lnp@quotegray moved to lnpcolors, the palette's owner.
-
-% STANDARD BLOCK QUOTE
-% For quotations without paragraph breaks
-%% FIX: Use \list with \endlist so quote environments close correctly.
-\renewenvironment{quote}{%
-  \vspace{\lnp@gridunit}%     % 1 quantum before
-  \list{}{%
-    \setlength{\leftmargin}{2\lnp@gridunit}%       % 2 quanta (Pagella proportion)
-    \setlength{\rightmargin}{2\lnp@gridunit}%      % Symmetric margins
-    \setlength{\topsep}{0pt}%              % Spacing handled explicitly
-    \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\lnp@gridunit}%            % 0.5 units between paragraphs
-    \setlength{\itemsep}{0pt}%
-    \setlength{\listparindent}{\parindent}%
-    \fontsize{10.5}{13.2}\selectfont%      % 95% size, same leading
-    \color{lnp@quotegray}%                     % 15% gray for subtle distinction
-  }%
-  \item\relax
-}{%
-  \endlist
-  \vspace{\lnp@gridunit}%     % 1 quantum after
-  \@afterindentfalse%                       % No indent after quote
-}
-
-% EXTENDED QUOTATION
-% For quotations with multiple paragraphs
-\renewenvironment{quotation}{%
-  \vspace{\lnp@gridunit}%
-  \list{}{%
-    \setlength{\leftmargin}{2\lnp@gridunit}%
-    \setlength{\rightmargin}{2\lnp@gridunit}%
-    \setlength{\topsep}{0pt}%
-    \setlength{\partopsep}{0pt}%
-    \setlength{\parsep}{0.5\lnp@gridunit}%
-    \setlength{\itemsep}{0pt}%
-    \setlength{\listparindent}{\lnp@gridunit}%    % Maintain paragraph indent
-    \fontsize{10.5}{13.2}\selectfont%
-    \color{lnp@quotegray}%
-  }%
-  \item\relax
-}{%
-  \endlist
-  \vspace{\lnp@gridunit}%
-  \@afterindentfalse%
-}
 
 % Special handling for non-list environments that start flush left. Standard
 % list hooks belong to lnplists.sty.
@@ -688,7 +615,6 @@
 }
 
 % Title page footnote configuration
-% Saves and restores footnote settings for main document
 % Title pages require tighter spacing due to centered content and visual balance
 \newcommand{\titlefootnotesetup}{%
   \setcounter{footnote}{0}%
@@ -718,6 +644,10 @@
   }%
 }
 
+%% FIX (#87): This reset deliberately restores Lanepaper's main footnote
+%% style instead of the document's pre-title-page settings; it overrides
+%% document-defined \thefootnote, footnote spacing, \@makefntext, and
+%% \footnoterule.
 \newcommand{\titlefootnotereset}{%
   \setcounter{footnote}{0}%
   %% FIX (#29): Restore the package's oldstyle body-footnote numbering after
@@ -825,8 +755,10 @@
 %% (any effective value would change rendering); comment corrected.
 \setlength{\footnotesep}{0.25\lnp@gridunit}   % inert floor below the footnote strut (~8.4pt)
 
-% Hochuli: Prevent footnote orphans (footnote split across pages)
-\interfootnotelinepenalty=10000
+%% FIX (#87): second \interfootnotelinepenalty=10000 removed (the first was at
+%% the penalty block above). This was the assignment actually in force. The
+%% kernel default of 100 now stands, so a long footnote splits across pages as
+%% LaTeX intends instead of moving whole to the next page.
 
 % Professional footnote rule per foundry specifications
 % Rule at 33% text width, positioned 2 quanta below main text

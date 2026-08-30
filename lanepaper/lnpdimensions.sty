@@ -15,14 +15,14 @@
 %% This work consists of the files in lanepaper/.
 %%
 % ==============================================================================
-% LNPDIMENSIONS.STY - Page Layout and Spacing Module
+% LNPDIMENSIONS.STY - Page Layout, Spacing, and Paragraphs Module
 % ==============================================================================
-% Owns the page geometry and the 13.2pt spacing quantum every other module
-% states its vertical spacing in. Internal to lanepaper (ADR-0006).
+% Owns page geometry, paragraph fundamentals, and the 13.2pt spacing quantum
+% every other module states its vertical spacing in. Internal to lanepaper
+% (ADR-0006).
 % ==============================================================================
 
-\ProvidesPackage{lnpdimensions}[2026/08/12 v1.1 Page Layout and Spacing]
-\RequirePackage{etoolbox} % for \robustify (#55)
+\ProvidesPackage{lnpdimensions}[2026/08/12 v1.1 Page Layout, Spacing, and Paragraphs]
 
 \RequirePackage{geometry}
 
@@ -61,31 +61,77 @@
 %% spacing quantum; 13.2pt (~1.2em) is the one deliberate literal (ADR-0005).
 \setlength{\parindent}{13.2pt} % Standard indent (~1.2em); deliberate literal
 
-% PARAGRAPH STYLE COMMANDS
-% Different paragraph indentation styles
-\newcommand{\classicalparagraphs}{%
-  \setlength{\parindent}{1\lnp@gridunit}%          % 1 quantum
-  \setlength{\parskip}{0pt}%
-}
-
-\newcommand{\modernparagraphs}{%
-  \setlength{\parindent}{0pt}%
-  \setlength{\parskip}{0.5\lnp@gridunit plus 1pt minus 1pt}% 0.5 quanta, flexible
-}
-
-\newcommand{\hybridparagraphs}{%
-  \setlength{\parindent}{0.75\lnp@gridunit}%        % 0.75 quanta
-  \setlength{\parskip}{0.25\lnp@gridunit}%         % 0.25 quanta
-}
+%% FIX (#87): Paragraph-mode APIs and their robustness hooks were removed in v3.
+%% FIX (#87): First paragraphs after headings stay flush left through the
+%% starred \titlespacing* declarations in lnpheadings.sty, in both its
+%% unconditional and conditional branches. The old
+%% \let\@afterindentfalse\@afterindenttrue was the indentfirst idiom: it
+%% inverted every later \@afterindentfalse call and indented these paragraphs
+%% by \parindent, while the comments around it claimed flush left. Do not
+%% re-add that override here.
 
 % ==============================================================================
-% ROBUSTNESS (#55)
+% PROFESSIONAL BLOCK QUOTATION SYSTEM
 % ==============================================================================
-% Every public macro defined above is made robust for moving arguments
-% (section titles, captions, marks, the .aux round-trip) via etoolbox
-% \robustify, which applies e-TeX \protected. Definitions stay \newcommand
-% so a name collision with another package still errors at load time.
-% \ifdefmacro skips names that resolve to registers in this load order.
-\ifdefmacro{\classicalparagraphs}{\robustify{\classicalparagraphs}}{}
-\ifdefmacro{\modernparagraphs}{\robustify{\modernparagraphs}}{}
-\ifdefmacro{\hybridparagraphs}{\robustify{\hybridparagraphs}}{}
+%
+% Implements sophisticated block quotation typography following master principles:
+% - Butterick: Visual distinction without jarring contrast
+% - Hochuli: Subtle differentiation through spacing and margins
+% - Brown: Systematic relationships with modular scale
+%
+% DESIGN DECISIONS:
+%   - Size: 10.5pt (95% of body) for subtle subordination
+%% FIX: \fontsize{10.5}{13.2} under \linespread{1.20} gives a real 15.84pt
+%   - Leading: 15.84pt measured (13.2pt × \linespread)
+%   - Margins: 26.4pt (2 quanta) optimized for Pagella's width
+%   - Color: 15% gray matching paragraph heading hierarchy
+%   - Spacing: 1 quantum before/after with asymmetric flexibility
+%
+% ------------------------------------------------------------------------------
+
+%% FIX (#85): \lnp@quotegray moved to lnpcolors, the palette's owner.
+
+% STANDARD BLOCK QUOTE
+% For quotations without paragraph breaks
+%% FIX: Use \list with \endlist so quote environments close correctly.
+\renewenvironment{quote}{%
+  \vspace{\lnp@gridunit}%     % 1 quantum before
+  \list{}{%
+    \setlength{\leftmargin}{2\lnp@gridunit}%       % 2 quanta (Pagella proportion)
+    \setlength{\rightmargin}{2\lnp@gridunit}%      % Symmetric margins
+    \setlength{\topsep}{0pt}%              % Spacing handled explicitly
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0.5\lnp@gridunit}%            % 0.5 units between paragraphs
+    \setlength{\itemsep}{0pt}%
+    \setlength{\listparindent}{\parindent}%
+    \fontsize{10.5}{13.2}\selectfont%      % 95% size, same leading
+    \color{lnp@quotegray}%                     % 15% gray for subtle distinction
+  }%
+  \item\relax
+}{%
+  \endlist
+  \vspace{\lnp@gridunit}%     % 1 quantum after
+  \@afterindentfalse%                       % No indent after quote
+}
+
+% EXTENDED QUOTATION
+% For quotations with multiple paragraphs
+\renewenvironment{quotation}{%
+  \vspace{\lnp@gridunit}%
+  \list{}{%
+    \setlength{\leftmargin}{2\lnp@gridunit}%
+    \setlength{\rightmargin}{2\lnp@gridunit}%
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\parsep}{0.5\lnp@gridunit}%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\listparindent}{\lnp@gridunit}%    % Maintain paragraph indent
+    \fontsize{10.5}{13.2}\selectfont%
+    \color{lnp@quotegray}%
+  }%
+  \item\relax
+}{%
+  \endlist
+  \vspace{\lnp@gridunit}%
+  \@afterindentfalse%
+}

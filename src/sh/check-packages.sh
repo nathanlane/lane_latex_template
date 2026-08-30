@@ -38,11 +38,9 @@ required_packages=(
   graphicx
   iftex
   inputenc
-  lettrine
   mathalfa
   microtype
   newpxmath
-  ragged2e
   textcomp
   tgpagella
   tikz
