@@ -54,10 +54,6 @@ latexindent -l -w demo/*.tex demo/appendices/*.tex   # indentation only
 
 ---
 
-*You may create additional helper scripts, but keep them in `scripts/` and document them in the README.*
-
----
-
 ## 1  Project Philosophy  ⬐ 30 sec read
 
 • Focus on **clarity over cleverness**—both in prose and in code.  

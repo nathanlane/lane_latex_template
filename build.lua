@@ -41,7 +41,7 @@ typesetfiles = {}
 cleanfiles   = {}
 
 -- Shipped alongside the package in the CTAN archive.
-textfiles  = {"README.md", "CHANGELOG.md", "LICENSE"}
+textfiles  = {"README.md", "CHANGELOG.md", "LICENSE", "licenses/LICENSE-MIT.txt"}
 ctanreadme = "README.md"
 
 -- `l3build tag <version>` stamps one version and date into every

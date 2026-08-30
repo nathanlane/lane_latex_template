@@ -329,17 +329,19 @@ make test
 
 # One fixture
 ./tests/run-tests.sh tests/fixtures/minimal.tex
-
-# With verbose output
-VERBOSE=1 ./tests/run-tests.sh
 ```
 
 ### Common Test Failures
 
-**"Page count mismatch"**
-- Expected: ~30 pages for comprehensive test
-- If >50 pages: Check for spacing leaks
-- If <20 pages: Check if content is missing
+**"Compilation failed" or "PDF not created"**
+- Read the corresponding log under `tests/compilation/logs/`.
+- Re-run one fixture with `./tests/run-tests.sh tests/fixtures/<name>.tex`.
+- The shell harness does not compare page counts; inspect rendered output
+  manually when a visual change matters.
+
+**"Found warnings in log"**
+- Read the fixture log and remove unexpected `Warning` or `Error` lines.
+- The harness applies only the explicit exclusions in `tests/run-tests.sh`.
 
 **"Undefined citations"**
 - Ensure test fixture has matching .bib file

@@ -57,8 +57,10 @@ def test_measured_baseline_and_body_size(tmp_path):
     assert abs(pt(values["BASELINESKIP"]) - 16.31996) < 0.01
 
 
-# %% FIX (#88): Pin issue #87's measured paragraph lengths in the existing suite.
-def test_measured_paragraph_lengths_are_issue_87_values(tmp_path):
+# %% FIX (#88): Pin the \parindent and \parskip defaults issue #87 left
+# unchanged; its flush-after-heading and footnote-penalty changes are covered
+# separately.
+def test_measured_paragraph_defaults_remain_stable(tmp_path):
     values = measure(
         tmp_path,
         "measure-paragraph-lengths",

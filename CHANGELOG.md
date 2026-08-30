@@ -41,6 +41,10 @@ Tooling, licensing, and maintainer-documentation hygiene on 2026-08-30 (issue #8
 - Retained issue #87 coverage: paragraph dimensions, heading paragraph
   indentation, and retired paragraph-mode names. This is not a numbered
   criterion.
+- Review follow-ups retained the non-duplicate `tests/test-bibliography.sh`
+  biber probe in pytest, shipped the MIT notice in CTAN text files, corrected
+  the dependency inventory and maintainer commands, and strengthened the
+  issue #87 paragraph coverage.
 
 Simplified fonts, numerals, and Microtype on 2026-08-28 (issue #29).
 This intentionally adopts upstream typography and may change line breaks or

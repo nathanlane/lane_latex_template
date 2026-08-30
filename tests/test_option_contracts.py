@@ -193,6 +193,23 @@ def test_default_last_line_is_standard_latex(tmp_path):
     assert "LNP_PARFILL=0.0pt plus 1.0fil" in log_text, log_text
 
 
+# %% FIX (#88): Keep this wrapper because run-tests.sh does not invoke the
+# manual bibliography script; the two removed wrappers only reran run-tests.sh.
+def test_manual_biblatex_contract_passes():
+    result = subprocess.run(
+        [
+            "bash",
+            "tests/test-bibliography.sh",
+            "tests/fixtures/biblatex-manual-contract.tex",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 # %% FIX (#88): Compare rendered line starts to protect flush-left first paragraphs.
 def test_first_paragraph_after_heading_is_flush_left(tmp_path):
     result, log_text = compile_latex(
@@ -210,22 +227,32 @@ def test_first_paragraph_after_heading_is_flush_left(tmp_path):
         \leavevmode\pdfsavepos
         \write-1{LNP_SECOND_PARAGRAPH_X=\the\pdflastxpos}
         Second paragraph after an ordinary paragraph break.
+        \par
+        \noindent
+        \leavevmode\pdfsavepos
+        \write-1{LNP_EXPLICIT_NOINDENT_X=\the\pdflastxpos}
+        Third paragraph with an explicit noindent command.
         \end{document}
         """,
     )
+
     assert_compiles(result, log_text)
     first = re.search(r"LNP_FIRST_PARAGRAPH_X=(\d+)", log_text)
     second = re.search(r"LNP_SECOND_PARAGRAPH_X=(\d+)", log_text)
-    assert first and second, log_text
+    explicit_noindent = re.search(r"LNP_EXPLICIT_NOINDENT_X=(\d+)", log_text)
+    assert first and second and explicit_noindent, log_text
     first_x = int(first.group(1))
     second_x = int(second.group(1))
+    explicit_noindent_x = int(explicit_noindent.group(1))
     gap = second_x - first_x
+    assert first_x == explicit_noindent_x, log_text
     assert first_x < second_x, log_text
     # 13.2pt expressed in TeX scaled points (sp).
     assert abs(gap - 865075) <= 2, log_text
 
 
-# %% FIX (#88): Keep the retired paragraph-mode API absent from the public surface.
+# %% FIX (#88): Keep these retired public names undefined; this guards the API
+# surface independently of the internal module layout.
 def test_removed_paragraph_mode_switchers_are_undefined(tmp_path):
     seen = probe_names(
         tmp_path,

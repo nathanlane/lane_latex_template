@@ -30,7 +30,7 @@ internal state, not options.) Guards are `\@ifpackageloaded` and
 
 The l3build question is settled and is not reopened here: see
 [ADR-0002](docs/adr/0002-l3build-for-packaging-pytest-for-tests.md). l3build is
-for packaging and release; pytest is the test harness.
+for packaging; GitHub release mechanics are manual; pytest is the test harness.
 
 ## 2. Engine
 
@@ -277,7 +277,7 @@ breaking, so an inert option is worse than an honest error. `[optical]` and
 ## 10. Lint policy
 
 `make lint` runs ChkTeX with these classes suppressed: **W01, W03, W08, W11,
-W13, W18, W24, W36, W39, W42, W46, W48** (the `-n` flags in `AGENTS.md`).
+W13, W18, W24, W36, W39, W42, W46, W48** (the `-n` flags in `Makefile:13`).
 
 They are suppressed because they fire on intentional template constructs, and
 silencing them narrowly is preferred to changing rendered output. **Revisit
@@ -294,7 +294,11 @@ date+version and are *not* the same number: currently 5 modules at `v1.1`,
 `lnpmicrotype.sty` at `v1.3`, and `lanepaper.sty` at `v2.0`.
 
 Keep the LaTeX date+version form. Every `\ProvidesPackage` date is synced on
-release.
+release by running `l3build tag <version>` directly. `make ctan` does not stamp
+the modules before archiving them. The current tree has five modules at `v1.1`,
+`lnpmicrotype.sty` at `v1.3`, and `lanepaper.sty` at `v2.0`; run
+`l3build tag <version>` before `make ctan` when a release archive needs those
+versions synchronized.
 
 ## 12. Licensing
 

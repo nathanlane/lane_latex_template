@@ -116,84 +116,49 @@ failures.
 
 ## Required LaTeX Packages
 
-### Core Typography Packages
-```bash
-# Font packages
-tlmgr install tex-gyre tex-gyre-math  # TeX Gyre Pagella and math support
-tlmgr install inconsolata             # Monospace font (zi4 package)
-tlmgr install newpx                   # newpxmath for mathematics
-tlmgr install mathalpha               # Enhanced mathematical symbols
-tlmgr install boondox                 # Blackboard, calligraphic, and Fraktur fonts
-tlmgr install textcomp                # Additional text symbols
+The lists below are derived from the current `\RequirePackage` and
+`\usepackage` statements. They name LaTeX packages/files; a distribution may
+group several of them under one installable package. Install a missing item
+with `tlmgr install <package-name>` or `mpm --install=<package-name>`.
 
-# Typography enhancement
-tlmgr install microtype               # Character protrusion, font expansion
-tlmgr install fnpct                   # Footnote punctuation management
+### Loaded by `lanepaper/`
+
+The package and its internal modules require:
+
+```text
+amsmath amssymb array booktabs caption enumitem etoolbox fancyhdr footmisc
+geometry graphicx iftex inputenc mathalfa microtype newpxmath textcomp
+tgpagella titlesec xcolor zi4
 ```
 
-### Essential Packages
-```bash
-# Document structure
-tlmgr install geometry           # Page layout
-tlmgr install fancyhdr          # Headers and footers
-tlmgr install titlesec         # Section formatting
-tlmgr install titletoc         # Table of contents control
+### Added by `demo/`
 
-# Graphics and tables
-tlmgr install graphicx          # Graphics inclusion
-tlmgr install booktabs          # Professional tables
-tlmgr install tabularx         # Flexible tables
-tlmgr install longtable        # Multi-page tables
-tlmgr install ltcaption        # Caption support for longtable
-tlmgr install adjustbox        # Box adjustments
-tlmgr install array            # Enhanced arrays and tables
-tlmgr install multirow         # Multi-row cells in tables
+The demo sources add these document-owned packages:
 
-# Bibliography
-tlmgr install biblatex          # Modern bibliography
-tlmgr install biber            # Bibliography backend
-tlmgr install biblatex-chicago  # Chicago style (optional)
-
-# Utilities
-tlmgr install xcolor           # Color support
-tlmgr install hyperref         # Hyperlinks
-tlmgr install cleveref         # Smart references
-tlmgr install csquotes         # Demo bibliography quotation support
-tlmgr install enumitem         # List customization
-tlmgr install caption          # Caption customization
-tlmgr install subcaption       # Subfigures and subtables
-
-# Float and rotation support
-tlmgr install rotating         # Rotation support
-tlmgr install pdflscape        # PDF landscape pages
-tlmgr install afterpage        # Execute after page break
+```text
+adjustbox babel biblatex cleveref csquotes doi hyperref longtable natbib
+pdflscape rotating tabularx threeparttable url
 ```
 
-### Install All Required Packages at Once
+The demo's `biblatex` configuration also requires the `biber` executable.
 
-**TeX Live / MacTeX**:
+### TeX Live / MacTeX installation
+
+The distribution names differ for some LaTeX files: `fontenc`, `inputenc`, and
+`textcomp` come from the LaTeX base; `array`, `longtable`, and `tabularx` come
+from the tools bundle; `graphicx` and `rotating` come from the graphics bundle;
+`tgpagella`, `newpxmath`, and `zi4` are supplied by `tex-gyre`, `newpx`, and
+`inconsolata`. Install the corresponding distribution packages, for example:
+
 ```bash
-# Core collections
-tlmgr install collection-latexrecommended collection-fontsrecommended \
-  collection-bibtexextra collection-mathscience
-
-# Individual packages
-tlmgr install tex-gyre tex-gyre-math inconsolata newpx mathalpha boondox \
-  microtype fnpct textcomp \
-  geometry fancyhdr titlesec titletoc \
-  graphicx booktabs tabularx longtable ltcaption adjustbox array multirow \
-  biblatex biber xcolor hyperref cleveref csquotes enumitem \
-  caption subcaption rotating pdflscape afterpage \
-  amsmath amssymb mathtools etoolbox xstring ifthen
+tlmgr install latex amsmath amsfonts tools graphics booktabs caption enumitem \
+  etoolbox fancyhdr footmisc geometry iftex mathalpha microtype newpx \
+  tex-gyre titlesec xcolor inconsolata adjustbox babel biblatex cleveref \
+  csquotes doi hyperref natbib pdflscape threeparttable url biber
 ```
 
-**MiKTeX** (automatic installation):
-MiKTeX will automatically install packages when first used. To pre-install:
-```bash
-mpm --install=collection-latexrecommended
-mpm --install=tgpagella
-# ... etc
-```
+MiKTeX can install the same dependencies on demand; otherwise use
+`mpm --install=<package-name>` for the corresponding MiKTeX package.
 
 ## Troubleshooting
 
@@ -250,15 +215,11 @@ pdflatex -interaction=nonstopmode probe.tex
 
 ## Minimal Installation
 
-If you're having trouble with the full installation, try the minimal setup:
+For a document that only loads `lanepaper`, install every item in the
+`lanepaper/` list above. The demo and this repository's fixture suite also need
+the packages in the `demo/` list. There is no smaller supported dependency set.
 
-1. **Install only essential packages**:
-   ```bash
-   tlmgr install latex latex-bin latexmk \
-     tgpagella geometry article hyperref
-   ```
-
-2. **Check the package loads on its own**:
+1. **Check the package loads on its own**:
    Create a file `probe.tex`:
    ```latex
    \documentclass[11pt]{article}
@@ -268,7 +229,7 @@ If you're having trouble with the full installation, try the minimal setup:
    \end{document}
    ```
 
-3. **Compile with basic pdflatex**:
+2. **Compile with basic pdflatex**:
    ```bash
    pdflatex probe.tex
    ```

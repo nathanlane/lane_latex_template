@@ -75,29 +75,16 @@ That's it! You now have a professionally typeset academic paper.
 
 ### Tested Build Environments
 
-<!-- %% FIX: Remove unsupported external build claims and keep the local toolchain explicit. -->
-Verified locally on August 28, 2026 (all gates: `make lint`, `make build`,
-`make test`):
+<!-- %% FIX: Keep the documented toolchain tied to the supported CI baseline. -->
+Verified locally on August 30, 2026 using **TeX Live 2025** at
+`/usr/local/texlive/2025` (all gates: `make lint`, `make build`, `make test`):
 
-- **TeX Live 2024** via TinyTeX, pdfTeX 1.40.26, `latexmk` 4.86a,
-  Biber 2.20, and ChkTeX 1.7.9.
-
-Previously verified:
-
-- **TeX Live 2026** at `/usr/local/texlive/2026`, pdfTeX 1.40.29, using
-  `make build`.
-- **TeX Live 2022** at `/Library/TeX/texbin`, pdfTeX 1.40.24, `latexmk` 4.77,
-  Biber 2.17, ChkTeX 1.7.6 (the `make lint` gate probes `-n48` support and
-  drops it on binaries older than ChkTeX 1.7.7).
-
-Earlier verification (July 4, 2026): TeX Live 2025, pdfTeX 1.40.28,
-`latexmk` 4.86a, Biber 2.20.
+- pdfTeX 1.40.28, `latexmk` 4.86a, Biber 2.20, and ChkTeX 1.7.9.
 
 ### Quick Setup
 
 ```bash
-# Install any missing package listed in INSTALL.md.
-tlmgr install tgpagella inconsolata newpx mathalfa boondox booktabs
+# Install missing packages from the authoritative lists in INSTALL.md.
 
 # Test compilation
 make lint

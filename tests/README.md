@@ -20,8 +20,9 @@ bash tests/run-tests.sh tests/fixtures/minimal.tex   # one fixture
 ```
 
 The pytest suite checks package contracts by compiling focused documents and
-reading TeX logs. The shell harness owns fixture compilation; neither retained
-check depends on external PDF-text extraction.
+reading TeX logs; it also invokes the manual biber bibliography probe because
+`run-tests.sh` does not run that script. The shell harness owns bulk fixture
+compilation, and neither retained check depends on external PDF-text extraction.
 
 ## Gates
 
@@ -36,12 +37,12 @@ check depends on external PDF-text extraction.
 ```
 tests/
 ├── run-tests.sh                # shell harness; compiles every fixture
-├── test-bibliography.sh        # bibliography probe
+├── test-bibliography.sh        # bibliography probe invoked by pytest
 ├── test_infrastructure.py      # repository invariants and decision guards
 ├── test_option_contracts.py    # each package option does what it claims
 ├── test_measured_values.py     # computed TeX dimensions
 ├── test_engine_guard.py        # the pdfTeX-only guard, incl. xelatex/lualatex
-├── fixtures/                   # ~30 .tex documents, compiled by run-tests.sh
+├── fixtures/                   # 20 .tex documents, compiled by run-tests.sh
 ├── compilation/                # generated PDFs and logs (git-ignored)
 └── visual/output/              # rendered pages for manual comparison
 ```
