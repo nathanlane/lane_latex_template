@@ -57,6 +57,20 @@ def test_measured_baseline_and_body_size(tmp_path):
     assert abs(pt(values["BASELINESKIP"]) - 16.31996) < 0.01
 
 
+# %% FIX (#88): Pin issue #87's measured paragraph lengths in the existing suite.
+def test_measured_paragraph_lengths_are_issue_87_values(tmp_path):
+    values = measure(
+        tmp_path,
+        "measure-paragraph-lengths",
+        [
+            ("PARINDENT", r"\the\parindent"),
+            ("PARSKIP", r"\the\parskip"),
+        ],
+    )
+    assert abs(pt(values["PARINDENT"]) - 13.2) < 0.01
+    assert abs(pt(values["PARSKIP"])) < 0.01
+
+
 def test_measured_jot_is_9pt9(tmp_path):
     values = measure(tmp_path, "measure-jot", [("JOT", r"\the\jot")])
     # 6.6pt base + an unconditional quarter-quantum AtBeginDocument addition.

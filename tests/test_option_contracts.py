@@ -193,6 +193,48 @@ def test_default_last_line_is_standard_latex(tmp_path):
     assert "LNP_PARFILL=0.0pt plus 1.0fil" in log_text, log_text
 
 
+# %% FIX (#88): Compare rendered line starts to protect flush-left first paragraphs.
+def test_first_paragraph_after_heading_is_flush_left(tmp_path):
+    result, log_text = compile_latex(
+        tmp_path,
+        "first-paragraph-after-heading",
+        r"""
+        \documentclass[11pt]{article}
+        \usepackage{lanepaper}
+        \begin{document}
+        \section{Heading}
+        \leavevmode\pdfsavepos
+        \write-1{LNP_FIRST_PARAGRAPH_X=\the\pdflastxpos}
+        First paragraph after the heading.
+        \par
+        \leavevmode\pdfsavepos
+        \write-1{LNP_SECOND_PARAGRAPH_X=\the\pdflastxpos}
+        Second paragraph after an ordinary paragraph break.
+        \end{document}
+        """,
+    )
+    assert_compiles(result, log_text)
+    first = re.search(r"LNP_FIRST_PARAGRAPH_X=(\d+)", log_text)
+    second = re.search(r"LNP_SECOND_PARAGRAPH_X=(\d+)", log_text)
+    assert first and second, log_text
+    first_x = int(first.group(1))
+    second_x = int(second.group(1))
+    gap = second_x - first_x
+    assert first_x < second_x, log_text
+    # 13.2pt expressed in TeX scaled points (sp).
+    assert abs(gap - 865075) <= 2, log_text
+
+
+# %% FIX (#88): Keep the retired paragraph-mode API absent from the public surface.
+def test_removed_paragraph_mode_switchers_are_undefined(tmp_path):
+    seen = probe_names(
+        tmp_path,
+        "removed-paragraph-mode-switchers",
+        ["classicalparagraphs", "modernparagraphs", "hybridparagraphs"],
+    )
+    assert [name for name, visible in seen.items() if visible] == []
+
+
 def test_spacing_quantum_is_private_and_grid_helpers_are_gone(tmp_path):
     """ADR-0006: the 13.2pt quantum is an implementation value, not an API.
 
