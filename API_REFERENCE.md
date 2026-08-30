@@ -145,17 +145,28 @@ Display JEL classification codes.
 
 ### Title Page Footnote Management
 
-#### `\titlefootnotesetup`
-Switch to symbol footnotes (*, †, ‡) for title page.
-
-#### `\titlefootnotereset`
-Return to numeric footnotes for main text.
+Use these commands as a pair around title-page content. The setup selects
+symbolic title-page marks and tighter title-page spacing. The reset resets the
+counter and deliberately restores Lanepaper's main footnote style: oldstyle
+Arabic marks, main spacing, main footnote text formatting, and the standard
+footnote rule. This is an opinionated reset, not a restoration of the
+document's prior state; it overrides any document-defined `\thefootnote` or
+other footnote formatting that was active before `\titlefootnotesetup`.
 
 ```latex
 \titlefootnotesetup
 % ... title page content ...
 \titlefootnotereset
 ```
+
+#### `\titlefootnotesetup`
+Switch to symbol footnotes (*, †, ‡) and tighter spacing for the title page.
+
+#### `\titlefootnotereset`
+Deliberately restore Lanepaper's main footnote style after the title page,
+including oldstyle Arabic marks, main spacing, formatting, and rule. This
+overrides any document-defined `\thefootnote` or other footnote formatting
+that was active before `\titlefootnotesetup`.
 
 #### `\elegantauthor{name}`
 Individual author name with enhanced small caps.

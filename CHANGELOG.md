@@ -10,6 +10,8 @@ Deleted the two unloaded v2 modules and their dead documentation (issue #87).
 - Removed the deleted paragraph-style switchers from live documentation and
   updated module ownership to reflect the block-quotation system in
   `lnpdimensions.sty`.
+- Documented the title-footnote setup/reset pair and its deliberate restoration
+  of Lanepaper's main footnote style.
 
 Simplified fonts, numerals, and Microtype on 2026-08-28 (issue #29).
 This intentionally adopts upstream typography and may change line breaks or

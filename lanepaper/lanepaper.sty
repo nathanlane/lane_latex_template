@@ -615,7 +615,6 @@
 }
 
 % Title page footnote configuration
-% Saves and restores footnote settings for main document
 % Title pages require tighter spacing due to centered content and visual balance
 \newcommand{\titlefootnotesetup}{%
   \setcounter{footnote}{0}%
@@ -645,6 +644,10 @@
   }%
 }
 
+%% FIX (#87): This reset deliberately restores Lanepaper's main footnote
+%% style instead of the document's pre-title-page settings; it overrides
+%% document-defined \thefootnote, footnote spacing, \@makefntext, and
+%% \footnoterule.
 \newcommand{\titlefootnotereset}{%
   \setcounter{footnote}{0}%
   %% FIX (#29): Restore the package's oldstyle body-footnote numbering after
