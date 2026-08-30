@@ -1,9 +1,8 @@
 """Measured-value regression tests.
 
 These assert the *measured* build values, not the comments — the failure mode
-of the adopter defect report (archived in git history as
-the adopter defect report of 2026-08-11, in git history), where comments claimed 13.2pt
-and the build shipped 16.32pt. If the template
+recorded in the adopter defect report of 2026-08-11 (archived in git history),
+where comments claimed 13.2pt and the build shipped 16.32pt. If the template
 ever makes the 13.2pt grid real (decision (a)), update these expectations
 deliberately; they encode decision (b) in
 docs/adr/0004-baseline-grid-is-a-spacing-quantum.md.
@@ -55,6 +54,22 @@ def test_measured_baseline_and_body_size(tmp_path):
     )
     # size11.clo sets 10.95pt on 13.6pt; \linespread{1.20} scales the 13.6pt.
     assert abs(pt(values["BASELINESKIP"]) - 16.31996) < 0.01
+
+
+# %% FIX (#88): Pin the \parindent and \parskip defaults issue #87 left
+# unchanged; its flush-after-heading and footnote-penalty changes are covered
+# separately.
+def test_measured_paragraph_defaults_remain_stable(tmp_path):
+    values = measure(
+        tmp_path,
+        "measure-paragraph-lengths",
+        [
+            ("PARINDENT", r"\the\parindent"),
+            ("PARSKIP", r"\the\parskip"),
+        ],
+    )
+    assert abs(pt(values["PARINDENT"]) - 13.2) < 0.01
+    assert abs(pt(values["PARSKIP"])) < 0.01
 
 
 def test_measured_jot_is_9pt9(tmp_path):

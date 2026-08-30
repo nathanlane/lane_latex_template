@@ -21,13 +21,10 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      # poppler-utils supplies pdftotext/pdfinfo. Without it the PDF-text
-      # regression assertions in tests/test_regression_harness.py skip silently,
-      # so footnote-mark and appendix-title leakage is caught only locally.
-      - name: Install Python, make, git, and Poppler
+      - name: Install Python, make, and git
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends git make python3 python3-pytest poppler-utils
+          apt-get install -y --no-install-recommends git make python3 python3-pytest
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,9 +36,6 @@ jobs:
       # safe.directory only for its own step, so later steps still need it.
       - name: Mark workspace safe for git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
-      - name: Check package dependencies
-        run: make check-deps
 
       - name: Lint LaTeX sources
         run: make lint

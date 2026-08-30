@@ -18,6 +18,34 @@ Deleted the two unloaded v2 modules and their dead documentation (issue #87).
 - Documented the title-footnote setup/reset pair and its deliberate restoration
   of Lanepaper's main footnote style.
 
+Tooling, licensing, and maintainer-documentation hygiene on 2026-08-30 (issue #88).
+
+- Criterion 1: `make test` runs `python3 -m pytest -q` followed by
+  `bash tests/run-tests.sh` exactly once; the duplicate wrapper
+  `tests/test_regression_harness.py` is gone.
+- Criterion 2: `make lint` is ChkTeX only; `src/sh/validate_latex_style.sh`,
+  `tests/check-spacing-integrity.sh`, and the four spacing meta-tests in
+  `tests/test_infrastructure.py` are gone.
+- Criterion 3: removed the `make check-deps`, `make watch`, and
+  `make release` targets, `compile.sh`, `src/` and its unrelated Python
+  scaffolding, `.github/workflows/release.yml`, and
+  `src/sh/check-packages.sh`.
+- Criterion 4: retained the Lanepaper-owned pdfTeX-only engine failure
+  assertion without coupling it to an unrelated global error count.
+- Criterion 5: removed `SECURITY.md` without adding a replacement policy,
+  suite, threshold, workflow, or gate.
+- Criterion 6: scoped LPPL to `lanepaper/` and documented MIT coverage for the
+  remaining original repository files.
+- Criterion 7: synchronized CI and maintainer documentation with the surviving
+  deterministic commands and corrected the stale harness descriptions.
+- Retained issue #87 coverage: paragraph dimensions, heading paragraph
+  indentation, and retired paragraph-mode names. This is not a numbered
+  criterion.
+- Review follow-ups retained the non-duplicate `tests/test-bibliography.sh`
+  biber probe in pytest, shipped the MIT notice in CTAN text files, corrected
+  the dependency inventory and maintainer commands, and strengthened the
+  issue #87 paragraph coverage.
+
 Simplified fonts, numerals, and Microtype on 2026-08-28 (issue #29).
 This intentionally adopts upstream typography and may change line breaks or
 optical appearance.

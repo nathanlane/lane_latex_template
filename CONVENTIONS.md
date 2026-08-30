@@ -30,7 +30,7 @@ internal state, not options.) Guards are `\@ifpackageloaded` and
 
 The l3build question is settled and is not reopened here: see
 [ADR-0002](docs/adr/0002-l3build-for-packaging-pytest-for-tests.md). l3build is
-for packaging and release; pytest is the test harness.
+for packaging; GitHub release mechanics are manual; pytest is the test harness.
 
 ## 2. Engine
 
@@ -115,7 +115,7 @@ The block-quotation system in `lnpdimensions.sty` consumes `\lnp@quotegray`
 from `lnpcolors.sty`.
 
 Module resolution depends on `TEXINPUTS` covering `./lanepaper`, which the
-`Makefile`, `.latexmkrc`, `compile.sh`, and the test scripts all set; once
+`Makefile`, `.latexmkrc`, and the test scripts all set; once
 installed into a texmf tree that is no longer needed.
 
 `tests/test_infrastructure.py` fails the build if a retired name reappears in
@@ -184,11 +184,8 @@ dimension, after which `plus`/`minus` parse. Point literals never had this
 trap, so it appeared only when spacing moved to quantum terms (ADR-0005).
 
 Document source style — as opposed to package code — is covered by
-[`CONTRIBUTING.md`](CONTRIBUTING.md) and enforced by
-`src/sh/validate_latex_style.sh`. Do not restate it here, and
-do not "simplify" that script's math-spacing check back to a bracket
-expression; it is a depth-tracking scan and `tests/test_infrastructure.py`
-covers it in four directions.
+[`CONTRIBUTING.md`](CONTRIBUTING.md) and checked by ChkTeX through `make lint`.
+Do not restate the document-style policy here.
 
 ## 7. The `%% FIX:` comment convention
 
@@ -280,7 +277,7 @@ breaking, so an inert option is worse than an honest error. `[optical]` and
 ## 10. Lint policy
 
 `make lint` runs ChkTeX with these classes suppressed: **W01, W03, W08, W11,
-W13, W18, W24, W36, W39, W42, W46, W48** (the `-n` flags in `AGENTS.md`).
+W13, W18, W24, W36, W39, W42, W46, W48** (the `-n` flags in `Makefile:13`).
 
 They are suppressed because they fire on intentional template constructs, and
 silencing them narrowly is preferred to changing rendered output. **Revisit
@@ -297,14 +294,21 @@ date+version and are *not* the same number: currently 5 modules at `v1.1`,
 `lnpmicrotype.sty` at `v1.3`, and `lanepaper.sty` at `v2.0`.
 
 Keep the LaTeX date+version form. Every `\ProvidesPackage` date is synced on
-release.
+release by running `l3build tag <version>` directly. `make ctan` does not stamp
+the modules before archiving them. When a release archive needs synchronized
+versions, run `l3build tag <version>` before `make ctan`.
 
 ## 12. Licensing
 
 Every file in `lanepaper/` carries an LPPL 1.3c header naming the maintainer
 and the maintenance status. `tests/test_infrastructure.py` fails if one is
-missing, so a new module cannot skip it. The licensed Work is the contents of
-`lanepaper/` — `demo/`, `docs/`, and `tests/` are not part of what ships.
+missing, so a new module cannot skip it. The LPPL-licensed Work is exactly the
+contents of `lanepaper/`. The root `LICENSE` is the verbatim LPPL text and does
+not broaden that scope; `licenses/LICENSE.txt` is the package-header template.
+
+Every other original project file — including `demo/`, `docs/`, `tests/`, the
+`Makefile`, `build.lua`, and the repository documentation — is MIT, copyright
+2025-2026 Nathan Lane. See `licenses/LICENSE-MIT.txt`.
 
 ## 13. Out of scope
 

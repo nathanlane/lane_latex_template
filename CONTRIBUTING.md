@@ -3,21 +3,21 @@
 ## Building
 
 ```bash
-make          # compile demo/main.tex → main.pdf
+make build    # compile demo/main.tex → main.pdf
 make clean    # remove generated output, the PDF included
 make help     # list every target
 ```
 
 Requires TeX Live 2020+ with `tgpagella`, `inconsolata`, `newpx`, `mathalfa`, `boondox`,
-and `booktabs`. Verify your installation with `make check-deps`.
+and `booktabs`. The required package list is in
+[`INSTALL.md`](INSTALL.md#required-latex-packages).
 
 ## Pre-commit Gates
 
 All three must pass before committing, and they are exactly what CI runs:
 
 ```bash
-make lint     # chktex on demo/*.tex and demo/appendices/*.tex, then the
-              # math-spacing checker (src/sh/validate_latex_style.sh)
+make lint     # ChkTeX on demo/*.tex and demo/appendices/*.tex
 make build    # latexmk full compile → main.pdf
 make test     # python3 -m pytest -q, then bash tests/run-tests.sh
 ```
@@ -25,9 +25,6 @@ make test     # python3 -m pytest -q, then bash tests/run-tests.sh
 `make test` runs both harnesses because issue #51 removed the four separate
 test targets: what CI runs and what you run can no longer drift apart. The
 shell harness is documented in [`tests/README.md`](tests/README.md).
-
-The pytest harness requires `pdftotext` (Poppler) for PDF text assertions; it
-skips those assertions cleanly when `pdftotext` is unavailable.
 
 ## Package Namespace Convention
 
@@ -276,14 +273,9 @@ Before committing LaTeX files:
 Run these checks before finalizing:
 
 ```bash
-# Check for common LaTeX issues
-lacheck main.tex
-
-# Check for style compliance
-chktex main.tex
-
-# Ensure clean compilation
-pdflatex main.tex && echo "Success"
+make lint
+make build
+make test
 ```
 
 ---

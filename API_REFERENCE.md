@@ -660,7 +660,7 @@ pdflatex main
 #### Citation undefined?
 1. Check the citation key matches exactly
 2. Ensure the entry is in `references.bib`
-3. Run full compilation with `make pdf`
+3. Run full compilation with `make build`
 
 #### Switching from natbib?
 The project supports legacy natbib with `preamble-natbib.tex`. To use biblatex (recommended):
@@ -1692,7 +1692,8 @@ Quarter quantum: 3.3pt
 #### Performance Considerations
 
 - **Memory Usage**: Microtype and font loading increase memory requirements
-- **Compatibility**: Tested with TeX Live 2022, 2025, 2026 (see [`README.md`](README.md) for details); MiKTeX not verified
+- **Compatibility**: Verified locally with TeX Live 2025 and pdfTeX (see
+  [`README.md`](README.md) for the toolchain details).
 
 ---
 

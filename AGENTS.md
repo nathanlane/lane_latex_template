@@ -16,7 +16,7 @@
 
 | Command | Purpose | Acceptable exit code |
 |---------|---------|----------------------|
-| `make lint` | chktex over the demo sources, then the math-spacing checker. | 0 |
+| `make lint` | ChkTeX over the demo sources. | 0 |
 | `make build` | Full compile; `main.pdf` must be produced. | 0 |
 | `make test` | `pytest -q`, then the shell harness. | 0 |
 
@@ -30,7 +30,7 @@ If **any** command fails, fix the cause instead of suppressing it.
 `make help` lists all of them. The three that matter here:
 
 * `make build` – the latexmk command above
-* `make lint` – the chktex command above, plus the math-spacing checker
+* `make lint` – ChkTeX over the demo sources
 * `make test` – `pytest -q` then the shell harness, exactly what CI runs
 
 There is no formatting target. Issue #51 deleted the aliases; run the
@@ -54,10 +54,6 @@ latexindent -l -w demo/*.tex demo/appendices/*.tex   # indentation only
 
 ---
 
-*You may create additional helper scripts, but keep them in `scripts/` and document them in the README.*
-
----
-
 ## 1  Project Philosophy  ⬐ 30 sec read
 
 • Focus on **clarity over cleverness**—both in prose and in code.  
@@ -69,11 +65,10 @@ latexindent -l -w demo/*.tex demo/appendices/*.tex   # indentation only
 ## 2  Minimum Repository Layout
 
 ```text
-/                 – root; this file, README.md, main.tex
-/paper/           – LaTeX style + modules (lanepaper.sty, etc.)
-/src/             – code (python/, sh/)
-/data/            – datasets (raw/, processed/)
-/figures/         – generated graphics
+/                 – root; this file, README.md, Makefile
+/lanepaper/       – LaTeX package and internal modules
+/demo/            – demo document sources and appendices
+/tests/           – pytest suite, shell harness, and fixtures
 ```
 
 Keep extra folders to an absolute minimum.  Empty dirs should contain a `.gitkeep`.
@@ -90,7 +85,7 @@ Keep extra folders to an absolute minimum.  Empty dirs should contain a `.gitkee
    \usepackage{lanepaper}
    \addbibresource{references.bib}
    ```
-2. Compile with `latexmk -pdf -synctex=1 main.tex`.
+2. Compile with `make build`.
 3. Obey Chicago author-date citation style (`\textcite`, `\autocite`).
 4. Follow these **non-negotiable typographic rules**:
    • Tables use `booktabs`, no vertical rules.  
@@ -117,7 +112,7 @@ Keep extra folders to an absolute minimum.  Empty dirs should contain a `.gitkee
 
    * bullet explaining what & why (wrap 72)
    ```
-   Examples: `docs: add AGENTS.md`, `style: black-format src/`.
+   Examples: `docs: add AGENTS.md`, `style: format lanepaper/`.
 
 ---
 
@@ -144,4 +139,5 @@ Always prefer **clarity**, **minimalism**, and **reversibility**.
 
 ---
 
-© 2025 Lane LaTeX Template Project.  Licensed under the LaTeX Project Public License v1.3c.
+© 2025-2026 Nathan Lane. `lanepaper/` is LPPL 1.3c; all other original
+repository files are MIT. See `LICENSE` and `licenses/LICENSE-MIT.txt`.

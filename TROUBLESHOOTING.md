@@ -23,8 +23,8 @@ This guide helps resolve common issues with the Lane LaTeX Template.
 **Cause**: stale `.aux`/`.out` files written by a different TeX Live release
 are incompatible across kernel versions.
 
-**Solution**: `latexmk -C main.tex` (or `git clean` of build artifacts), then
-rebuild. Always clean when switching between TeX Live years.
+**Solution**: `make clean`, then `make build` (or `git clean` of build
+artifacts). Always clean when switching between TeX Live years.
 
 ### "Package not found" Error
 
@@ -121,7 +121,7 @@ rebuild. Always clean when switching between TeX Live years.
 1. Run complete compilation:
    ```bash
    make clean
-   make  # or: pdflatex + biber + pdflatex + pdflatex
+   make build
    ```
 
 2. Check biber vs bibtex:
@@ -329,17 +329,19 @@ make test
 
 # One fixture
 ./tests/run-tests.sh tests/fixtures/minimal.tex
-
-# With verbose output
-VERBOSE=1 ./tests/run-tests.sh
 ```
 
 ### Common Test Failures
 
-**"Page count mismatch"**
-- Expected: ~30 pages for comprehensive test
-- If >50 pages: Check for spacing leaks
-- If <20 pages: Check if content is missing
+**"Compilation failed" or "PDF not created"**
+- Read the corresponding log under `tests/compilation/logs/`.
+- Re-run one fixture with `./tests/run-tests.sh tests/fixtures/<name>.tex`.
+- The shell harness does not compare page counts; inspect rendered output
+  manually when a visual change matters.
+
+**"Found warnings in log"**
+- Read the fixture log and remove unexpected `Warning` or `Error` lines.
+- The harness applies only the explicit exclusions in `tests/run-tests.sh`.
 
 **"Undefined citations"**
 - Ensure test fixture has matching .bib file
@@ -352,7 +354,7 @@ VERBOSE=1 ./tests/run-tests.sh
 ### Style Validation
 
 ```bash
-# chktex, then the math-spacing checker
+# ChkTeX over the demo sources
 make lint
 
 # Count overfull and underfull boxes in the last build
@@ -372,7 +374,7 @@ grep -c 'Underfull \\hbox' main.log
 | Problem | Quick Fix |
 |---------|-----------|
 | Missing package | `tlmgr install [package]` |
-| Bad citations | `make clean && make` |
+| Bad citations | `make clean && make build` |
 | Float drift | Use `[tbp]`; use `\clearpage` before a major section if needed |
 | Overfull hbox | Add `\sloppy` or hyphenation |
 | Grid misalignment | Use `\vspace{13.2pt}` |
