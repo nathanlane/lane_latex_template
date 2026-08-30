@@ -20,19 +20,27 @@ Deleted the two unloaded v2 modules and their dead documentation (issue #87).
 
 Tooling, licensing, and maintainer-documentation hygiene on 2026-08-30 (issue #88).
 
-- Criteria 1-2: removed the unused helper tooling and reduced the Makefile to
-  the surviving build, lint, test, cleanup, installation, packaging, and help
-  targets.
-- Criterion 3: made CI use the same ChkTeX-only lint and combined test command
-  as local maintenance.
-- Criterion 4: retained the Lanepaper-owned pdfTeX engine error assertion
-  without coupling it to unrelated global errors.
-- Criterion 5: added regression coverage for issue #87's paragraph dimensions,
-  heading paragraph indentation, and retired paragraph-mode names.
+- Criterion 1: `make test` runs `python3 -m pytest -q` followed by
+  `bash tests/run-tests.sh` exactly once; the duplicate wrapper
+  `tests/test_regression_harness.py` is gone.
+- Criterion 2: `make lint` is ChkTeX only; `src/sh/validate_latex_style.sh`,
+  `tests/check-spacing-integrity.sh`, and the four spacing meta-tests in
+  `tests/test_infrastructure.py` are gone.
+- Criterion 3: removed the `make check-deps`, `make watch`, and
+  `make release` targets, `compile.sh`, `src/` and its unrelated Python
+  scaffolding, `.github/workflows/release.yml`, and
+  `src/sh/check-packages.sh`.
+- Criterion 4: retained the Lanepaper-owned pdfTeX-only engine failure
+  assertion without coupling it to an unrelated global error count.
+- Criterion 5: removed `SECURITY.md` without adding a replacement policy,
+  suite, threshold, workflow, or gate.
 - Criterion 6: scoped LPPL to `lanepaper/` and documented MIT coverage for the
   remaining original repository files.
-- Criterion 7: synchronized maintainer documentation with the surviving
+- Criterion 7: synchronized CI and maintainer documentation with the surviving
   deterministic commands and corrected the stale harness descriptions.
+- Retained issue #87 coverage: paragraph dimensions, heading paragraph
+  indentation, and retired paragraph-mode names. This is not a numbered
+  criterion.
 
 Simplified fonts, numerals, and Microtype on 2026-08-28 (issue #29).
 This intentionally adopts upstream typography and may change line breaks or
