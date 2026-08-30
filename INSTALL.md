@@ -136,11 +136,13 @@ textcomp tgpagella titlesec xcolor zi4
 The demo sources add these document-owned packages:
 
 ```text
-adjustbox babel biblatex cleveref csquotes doi hyperref longtable natbib
+adjustbox babel babel-english biblatex cleveref csquotes doi hyperref longtable natbib
 pdflscape rotating tabularx threeparttable url
 ```
 
-The demo's `biblatex` configuration also requires the `biber` executable.
+The demo's `babel` `english` option loads the separate `babel-english` language
+definition, and its `biblatex` configuration also requires the `biber`
+executable.
 
 ### TeX Live / MacTeX installation
 
@@ -154,7 +156,7 @@ Install the corresponding distribution packages, for example:
 ```bash
 tlmgr install latex amsmath amsfonts tools graphics booktabs boondox caption \
   enumitem etoolbox fancyhdr footmisc geometry iftex mathalpha microtype newpx \
-  tex-gyre titlesec xcolor inconsolata adjustbox babel biblatex cleveref \
+  tex-gyre titlesec xcolor inconsolata adjustbox babel babel-english biblatex cleveref \
   csquotes doi hyperref natbib pdflscape threeparttable url biber
 ```
 
