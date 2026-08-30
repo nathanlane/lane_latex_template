@@ -293,8 +293,8 @@ probes for support before passing it.
 ## 11. Versioning
 
 Git tags are semantic (`v2.1.0`). `\ProvidesPackage` strings are LaTeX
-date+version and are *not* the same number: currently 9 modules at `v1.1`, one
-at `v1.2`, and `lanepaper.sty` at `v2.0`.
+date+version and are *not* the same number: currently 5 modules at `v1.1`,
+`lnpmicrotype.sty` at `v1.3`, and `lanepaper.sty` at `v2.0`.
 
 Keep the LaTeX date+version form. Every `\ProvidesPackage` date is synced on
 release.

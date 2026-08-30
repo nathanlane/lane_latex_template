@@ -41,7 +41,6 @@ required_packages=(
   mathalfa
   microtype
   newpxmath
-  ragged2e
   textcomp
   tgpagella
   tikz
