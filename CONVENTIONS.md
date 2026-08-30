@@ -115,7 +115,7 @@ The block-quotation system in `lnpdimensions.sty` consumes `\lnp@quotegray`
 from `lnpcolors.sty`.
 
 Module resolution depends on `TEXINPUTS` covering `./lanepaper`, which the
-`Makefile`, `.latexmkrc`, `compile.sh`, and the test scripts all set; once
+`Makefile`, `.latexmkrc`, and the test scripts all set; once
 installed into a texmf tree that is no longer needed.
 
 `tests/test_infrastructure.py` fails the build if a retired name reappears in
@@ -184,11 +184,8 @@ dimension, after which `plus`/`minus` parse. Point literals never had this
 trap, so it appeared only when spacing moved to quantum terms (ADR-0005).
 
 Document source style — as opposed to package code — is covered by
-[`CONTRIBUTING.md`](CONTRIBUTING.md) and enforced by
-`src/sh/validate_latex_style.sh`. Do not restate it here, and
-do not "simplify" that script's math-spacing check back to a bracket
-expression; it is a depth-tracking scan and `tests/test_infrastructure.py`
-covers it in four directions.
+[`CONTRIBUTING.md`](CONTRIBUTING.md) and checked by ChkTeX through `make lint`.
+Do not restate the document-style policy here.
 
 ## 7. The `%% FIX:` comment convention
 
@@ -303,8 +300,13 @@ release.
 
 Every file in `lanepaper/` carries an LPPL 1.3c header naming the maintainer
 and the maintenance status. `tests/test_infrastructure.py` fails if one is
-missing, so a new module cannot skip it. The licensed Work is the contents of
-`lanepaper/` — `demo/`, `docs/`, and `tests/` are not part of what ships.
+missing, so a new module cannot skip it. The LPPL-licensed Work is exactly the
+contents of `lanepaper/`. The root `LICENSE` is the verbatim LPPL text and does
+not broaden that scope; `licenses/LICENSE.txt` is the package-header template.
+
+Every other original project file — including `demo/`, `docs/`, `tests/`, the
+`Makefile`, `build.lua`, and the repository documentation — is MIT, copyright
+2025-2026 Nathan Lane. See `licenses/LICENSE-MIT.txt`.
 
 ## 13. Out of scope
 

@@ -13,11 +13,10 @@ packaging (`install`, `tag`, `ctan`, `upload`, `manifest`) and testing
 
 > **v3 revision (2026-08-28).** `build.lua` remains the packaging description
 > and install/CTAN tool if CTAN work later resumes. It does not own the GitHub
-> release: issue #88 must remove `make release` and the tag-triggered workflow
-> before v3 is published manually from an exact CI-green commit. Until then,
-> those legacy release surfaces must not be used. CTAN remains on hold. Testing
-> keeps the existing pytest suite plus shell harness; no replacement suite or
-> release threshold is added.
+> release: issue #88 removed `make release` and the tag-triggered workflow
+> before v3 is published manually from an exact CI-green commit. CTAN remains
+> on hold. Testing keeps the existing pytest suite plus shell harness; no
+> replacement suite or release threshold is added.
 
 ## Packaging: adopt
 
@@ -27,7 +26,7 @@ adoption path, `tag` stamps one version and date into every `\ProvidesPackage`,
 with metadata read from `build.lua` so the submission cannot drift from the
 source. That replaces four scripts we would otherwise write and maintain.
 
-Issue #88 removes the `make release` wrapper before v3. A future CTAN decision
+Issue #88 removed the `make release` wrapper before v3. A future CTAN decision
 may use l3build's packaging commands directly, while GitHub release mechanics
 stay manual and separate.
 
@@ -53,8 +52,8 @@ pdfLaTeX-only.
 
 So `build.lua` declares no test files — a normal configuration — and the v3
 target keeps `make test` as pytest followed by `tests/run-tests.sh`, each as one
-suite. During the transition, pytest still invokes controlled harness fixtures;
-issue #88 removes that duplication after the retained coverage is settled. This
+suite. Issue #88 removed the duplicated harness wrapper after the retained
+pytest coverage was settled. This
 supersedes the l3build migration planned in `docs/PACKAGE_ROADMAP.md` (T-402),
 which is withdrawn. That file was deleted on 2026-08-25 by issue #52; the
 withdrawal stands, and the roadmap is in git history.

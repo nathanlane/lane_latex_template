@@ -19,21 +19,17 @@ bash tests/run-tests.sh                              # shell harness
 bash tests/run-tests.sh tests/fixtures/minimal.tex   # one fixture
 ```
 
-Some pytest checks read text out of a generated PDF. Install Poppler so
-`pdftotext` is available (`brew install poppler` on macOS); without it those
-assertions skip rather than fail.
+The pytest suite checks package contracts by compiling focused documents and
+reading TeX logs. The shell harness owns fixture compilation; neither retained
+check depends on external PDF-text extraction.
 
 ## Gates
 
 | Command | Purpose | Blocking |
 |---------|---------|----------|
-| `make lint` | chktex, then the math-spacing checker | yes |
+| `make lint` | ChkTeX over the demo sources | yes |
 | `make build` | `latexmk -pdf -interaction=nonstopmode demo/main.tex` | yes |
 | `make test` | pytest, then the shell fixture and compatibility harness | yes |
-| `bash tests/check-spacing-integrity.sh main.pdf` | spacing diagnostics for later typography review | no |
-
-`check-spacing-integrity.sh` is diagnostic only. Treat a non-zero result as
-evidence for a future spacing review, not a build failure.
 
 ## Layout
 
@@ -41,11 +37,9 @@ evidence for a future spacing review, not a build failure.
 tests/
 ├── run-tests.sh                # shell harness; compiles every fixture
 ├── test-bibliography.sh        # bibliography probe
-├── check-spacing-integrity.sh  # diagnostic, non-blocking
 ├── test_infrastructure.py      # repository invariants and decision guards
 ├── test_option_contracts.py    # each package option does what it claims
 ├── test_measured_values.py     # computed TeX dimensions
-├── test_regression_harness.py  # PDF-text assertions
 ├── test_engine_guard.py        # the pdfTeX-only guard, incl. xelatex/lualatex
 ├── fixtures/                   # ~30 .tex documents, compiled by run-tests.sh
 ├── compilation/                # generated PDFs and logs (git-ignored)

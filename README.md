@@ -18,7 +18,7 @@ This template applies classic typographic principles to create scholarly article
 - **Floats** – Standard figure/table environments with styled captions and required booktabs rules
 - **Lists and Quotes** – Styled standard environments plus one inline list for brief enumerations
 - **Color Hierarchy** – restrained roles for text, headings, supporting elements, and links
-- **Local Build Workflow** – Verified with local `latexmk`, `chktex`, and pytest gates
+- **Local Build Workflow** – Verified with local `latexmk`, ChkTeX, pytest, and shell-harness gates
 
 ---
 
@@ -34,7 +34,7 @@ edit main.tex         # Your content goes here
 edit references.bib   # Your citations go here
 
 # 3. Compile
-make                  # Creates main.pdf
+make build            # Creates main.pdf
 ```
 
 That's it! You now have a professionally typeset academic paper.
@@ -52,6 +52,7 @@ That's it! You now have a professionally typeset academic paper.
 - **[Advanced Customization](#advanced-customization)** – Modify and extend the template
 - **[Troubleshooting](#troubleshooting)** – Common issues and solutions
 - **[Contributing](#contributing)** – Development guidelines
+- **[Licensing](#licensing)** – License scope and notices
 - **[Technical Reference](#technical-reference)** – Complete API documentation
 - **[Version History](#version-history)** – Updates and changelog
 
@@ -71,13 +72,12 @@ That's it! You now have a professionally typeset academic paper.
   system (`\AddToHook`), and both entry points declare that floor.
 - **Bibliography Backend**: Biber (included with modern distributions)
 - **Build Tool**: Make (optional but recommended)
-- **Regression Test Helper**: `pdftotext` from Poppler for PDF text assertions in the pytest regression harness
 
 ### Tested Build Environments
 
 <!-- %% FIX: Remove unsupported external build claims and keep the local toolchain explicit. -->
 Verified locally on August 28, 2026 (all gates: `make lint`, `make build`,
-`make check-deps`, `make test`):
+`make test`):
 
 - **TeX Live 2024** via TinyTeX, pdfTeX 1.40.26, `latexmk` 4.86a,
   Biber 2.20, and ChkTeX 1.7.9.
@@ -85,16 +85,10 @@ Verified locally on August 28, 2026 (all gates: `make lint`, `make build`,
 Previously verified:
 
 - **TeX Live 2026** at `/usr/local/texlive/2026`, pdfTeX 1.40.29, using
-  `latexmk -pdf -interaction=nonstopmode main.tex`.
+  `make build`.
 - **TeX Live 2022** at `/Library/TeX/texbin`, pdfTeX 1.40.24, `latexmk` 4.77,
   Biber 2.17, ChkTeX 1.7.6 (the `make lint` gate probes `-n48` support and
   drops it on binaries older than ChkTeX 1.7.7).
-
-Poppler is part of the verified local setup (August 24, 2026): `pdftotext`
-26.08.0 and `pdfinfo` on PATH, so the PDF-text assertions in
-`tests/test_regression_harness.py` run rather than skip, and
-`tests/check-spacing-integrity.sh` runs instead of exiting 1. Verified with
-`pytest -q` reporting 0 skipped.
 
 Earlier verification (July 4, 2026): TeX Live 2025, pdfTeX 1.40.28,
 `latexmk` 4.86a, Biber 2.20.
@@ -102,16 +96,13 @@ Earlier verification (July 4, 2026): TeX Live 2025, pdfTeX 1.40.28,
 ### Quick Setup
 
 ```bash
-# Verify your LaTeX installation
-make check-deps
-
-# Install missing packages (if any)
+# Install any missing package listed in INSTALL.md.
 tlmgr install tgpagella inconsolata newpx mathalfa boondox booktabs
 
 # Test compilation
 make lint
 make build
-pytest -q
+make test
 ```
 
 ### Platform Notes
@@ -153,29 +144,24 @@ pytest -q
 
 **Using Make** (recommended):
 ```bash
-make              # Compile the demo document
+make build        # Compile the demo document
 make clean        # Remove generated output, the PDF included
-make watch        # Auto-recompile on changes
+make lint         # Check the demo sources with ChkTeX
+make test         # Run pytest, then the shell harness
 make help         # List every target
 ```
 
 **Repository verification gates**:
 
 ```bash
-chktex -q -n1 -n3 -n8 -n11 -n13 -n18 -n24 -n36 -n39 -n42 -n46 -n48 *.tex
-latexmk -pdf -interaction=nonstopmode main.tex
-pytest -q
+make lint
+make build
+make test
 ```
 
-`tests/check-spacing-integrity.sh main.pdf` is run as a diagnostic in this lane:
-`tests/check-spacing-integrity.sh main.pdf || true`.
-
-**Manual compilation**:
+**Direct compilation of the demo**:
 ```bash
-pdflatex main.tex
-biber main
-pdflatex main.tex
-pdflatex main.tex
+latexmk -pdf -interaction=nonstopmode demo/main.tex
 ```
 
 ---
@@ -535,11 +521,12 @@ mpm --install=[package-name]
 **Compilation errors**:
 ```bash
 make clean        # Clear temporary files
-make              # Full rebuild
+make build        # Full rebuild
 ```
 
 **Font issues**: check that TeX Gyre Pagella, `newpxmath` and `zi4` are
-installed (`make check-deps`).
+installed; see the [Required LaTeX Packages](INSTALL.md#required-latex-packages)
+section in the installation guide.
 
 ### Platform-Specific Notes
 
@@ -589,7 +576,7 @@ See **[CONTRIBUTING.md](CONTRIBUTING.md)** for build instructions, test commands
 
 ```bash
 make test         # pytest, then the shell harness
-make lint         # chktex, then the math-spacing checker
+make lint         # ChkTeX over the demo sources
 ```
 
 ### Pull Request Process
@@ -600,6 +587,19 @@ make lint         # chktex, then the math-spacing checker
 4. Submit PR with clear description
 
 ---
+
+## Licensing
+
+The `lanepaper/` directory is the licensed Work under LPPL 1.3c. The root
+[`LICENSE`](LICENSE) is the verbatim LPPL text, and the LPPL scope is limited
+to those package files; each one carries its LPPL header.
+
+Every other original project file — including `demo/`, `docs/`, `tests/`, the
+`Makefile`, `build.lua`, and the repository documentation — is MIT, copyright
+2025-2026 Nathan Lane. See [`licenses/LICENSE-MIT.txt`](licenses/LICENSE-MIT.txt).
+
+The `licenses/LICENSE.txt` file is only the LPPL header template for the
+package files and does not expand the licensed Work.
 
 ## Technical Reference
 
@@ -688,8 +688,6 @@ If upgrading from an older version:
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
 ---
-
-**License**: LaTeX Project Public License v1.3c
 
 **Credits**: Typography based on principles from Butterick's *Practical Typography*, Brown's *Modular Scale*, and Hochuli's *Detail in Typography*.
 

@@ -18,6 +18,22 @@ Deleted the two unloaded v2 modules and their dead documentation (issue #87).
 - Documented the title-footnote setup/reset pair and its deliberate restoration
   of Lanepaper's main footnote style.
 
+Tooling, licensing, and maintainer-documentation hygiene on 2026-08-30 (issue #88).
+
+- Criteria 1-2: removed the unused helper tooling and reduced the Makefile to
+  the surviving build, lint, test, cleanup, installation, packaging, and help
+  targets.
+- Criterion 3: made CI use the same ChkTeX-only lint and combined test command
+  as local maintenance.
+- Criterion 4: retained the Lanepaper-owned pdfTeX engine error assertion
+  without coupling it to unrelated global errors.
+- Criterion 5: added regression coverage for issue #87's paragraph dimensions,
+  heading paragraph indentation, and retired paragraph-mode names.
+- Criterion 6: scoped LPPL to `lanepaper/` and documented MIT coverage for the
+  remaining original repository files.
+- Criterion 7: synchronized maintainer documentation with the surviving
+  deterministic commands and corrected the stale harness descriptions.
+
 Simplified fonts, numerals, and Microtype on 2026-08-28 (issue #29).
 This intentionally adopts upstream typography and may change line breaks or
 optical appearance.

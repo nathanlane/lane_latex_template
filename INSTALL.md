@@ -43,10 +43,8 @@ failures.
    cd lane_latex_template
    ```
 
-2. **Check your LaTeX installation**:
-   ```bash
-   make check-deps
-   ```
+2. **Review the required package list** in
+   [Required LaTeX Packages](#required-latex-packages) below.
 
 > **Overleaf note (unverified):** the template resolves its modules via
 > `TEXINPUTS` set in `.latexmkrc` (`./lanepaper`). We could not
@@ -66,7 +64,7 @@ failures.
 
 4. **Build the paper**:
    ```bash
-   make
+   make build
    ```
 
 5. **Run the tests**:
@@ -88,11 +86,6 @@ failures.
    brew install make python git
    ```
 
-3. **Install watch tools** (for auto-rebuild):
-   ```bash
-   brew install fswatch
-   ```
-
 ### Linux (Ubuntu/Debian)
 
 1. **Install TeX Live**:
@@ -104,11 +97,6 @@ failures.
 2. **Install build tools**:
    ```bash
    sudo apt-get install make python3 python3-pip git
-   ```
-
-3. **Install watch tools**:
-   ```bash
-   sudo apt-get install inotify-tools
    ```
 
 ### Windows
@@ -287,13 +275,16 @@ If you're having trouble with the full installation, try the minimal setup:
 
 ## Verification
 
-After installation, verify everything works:
+After installation, review the [Required LaTeX Packages](#required-latex-packages)
+section above, then verify everything works:
 
 ```bash
-# Check the required LaTeX packages
-make check-deps
+# Check the required LaTeX packages listed above
+# Install any missing package with tlmgr or mpm.
 
 # Run the full test suite
+make lint
+make build
 make test
 
 # List every target
