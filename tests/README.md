@@ -39,7 +39,7 @@ tests/
 ├── run-tests.sh                # shell harness; compiles every fixture
 ├── test-bibliography.sh        # bibliography probe invoked by pytest
 ├── test_infrastructure.py      # repository invariants and decision guards
-├── test_option_contracts.py    # each package option does what it claims
+├── test_option_contracts.py    # package and document contracts
 ├── test_measured_values.py     # computed TeX dimensions
 ├── test_engine_guard.py        # the pdfTeX-only guard, incl. xelatex/lualatex
 ├── fixtures/                   # 20 .tex documents, compiled by run-tests.sh

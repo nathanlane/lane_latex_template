@@ -295,10 +295,8 @@ date+version and are *not* the same number: currently 5 modules at `v1.1`,
 
 Keep the LaTeX date+version form. Every `\ProvidesPackage` date is synced on
 release by running `l3build tag <version>` directly. `make ctan` does not stamp
-the modules before archiving them. The current tree has five modules at `v1.1`,
-`lnpmicrotype.sty` at `v1.3`, and `lanepaper.sty` at `v2.0`; run
-`l3build tag <version>` before `make ctan` when a release archive needs those
-versions synchronized.
+the modules before archiving them. When a release archive needs synchronized
+versions, run `l3build tag <version>` before `make ctan`.
 
 ## 12. Licensing
 

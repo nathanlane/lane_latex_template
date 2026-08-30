@@ -126,9 +126,9 @@ with `tlmgr install <package-name>` or `mpm --install=<package-name>`.
 The package and its internal modules require:
 
 ```text
-amsmath amssymb array booktabs caption enumitem etoolbox fancyhdr footmisc
-geometry graphicx iftex inputenc mathalfa microtype newpxmath textcomp
-tgpagella titlesec xcolor zi4
+amsmath amssymb array booktabs boondox caption enumitem etoolbox fancyhdr
+fontenc footmisc geometry graphicx iftex inputenc mathalfa microtype newpxmath
+textcomp tgpagella titlesec xcolor zi4
 ```
 
 ### Added by `demo/`
@@ -148,11 +148,12 @@ The distribution names differ for some LaTeX files: `fontenc`, `inputenc`, and
 `textcomp` come from the LaTeX base; `array`, `longtable`, and `tabularx` come
 from the tools bundle; `graphicx` and `rotating` come from the graphics bundle;
 `tgpagella`, `newpxmath`, and `zi4` are supplied by `tex-gyre`, `newpx`, and
-`inconsolata`. Install the corresponding distribution packages, for example:
+`inconsolata`; `boondox` supplies the fonts selected by the `mathalfa` options.
+Install the corresponding distribution packages, for example:
 
 ```bash
-tlmgr install latex amsmath amsfonts tools graphics booktabs caption enumitem \
-  etoolbox fancyhdr footmisc geometry iftex mathalpha microtype newpx \
+tlmgr install latex amsmath amsfonts tools graphics booktabs boondox caption \
+  enumitem etoolbox fancyhdr footmisc geometry iftex mathalpha microtype newpx \
   tex-gyre titlesec xcolor inconsolata adjustbox babel biblatex cleveref \
   csquotes doi hyperref natbib pdflscape threeparttable url biber
 ```
