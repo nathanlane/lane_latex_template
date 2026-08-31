@@ -8,7 +8,7 @@ topic: public-release-prep
 
 ## Objective
 
-Get `lane_latex_template` to publicly releasable. `v2.1.0` is tagged and published as
+Get `lanepaper` (repository renamed from `lane_latex_template`) to publicly releasable. `v2.1.0` is tagged and published as
 latest.
 
 The plan changed twice. A design review on 2026-08-22 reframed the project from "work

@@ -4,6 +4,53 @@ All notable changes to the `lanepaper` package and repository are documented her
 
 ## Unreleased
 
+## v3.0.0 — 2026-08-31
+
+A deliberate breaking contraction. Lanepaper v3 is a typography package, not a
+library of writing shortcuts or a document framework, and the transition is
+recorded in [ADR-0006](docs/adr/0006-one-public-entry-point-and-a-narrow-v3-interface.md)
+and tracked by issue #82.
+
+**No compatibility aliases are provided.** A v2 document needs edits, not a
+flag. [`MIGRATION.md`](MIGRATION.md) maps every removed surface to standard
+LaTeX, a third-party package, or retained v3 behavior, in the order a real
+paper needs them.
+
+What changed, in one place:
+
+- **One public entry point.** `\usepackage{lanepaper}` is the only supported
+  load path. The `lnpminimal` and `lnpgridoverlay` entry points are gone, and
+  loading an `lnp*.sty` module directly is unsupported.
+- **Two options.** `[optical]` and `[nocolor]`. The `[grid]`, `[nogrid]`,
+  `[minimal]`, `[draft]`, `[natbib]`, `[nobiblatex]`, `[subsectionbarriers]`
+  and `[nosubsectionbarriers]` options are removed.
+- **The generic writing API is gone.** Emphasis, code, punctuation, symbol,
+  currency, fraction, spacing, math and reference helpers were removed rather
+  than aliased; standard LaTeX, amsmath and third-party packages own those
+  names again.
+- **The grid and colour APIs are private.** The 13.2pt spacing quantum is an
+  internal implementation value, not a public unit system, and the palette is
+  no longer exposed as public colour names.
+- **Documents own their content packages.** Bibliography, hyperref, cleveref,
+  csquotes and appendix choices belong to the document. Lanepaper configures an
+  already-loaded package only where it owns the resulting typography.
+- **Seven modules, down from seventeen.** `lnphochuli`, `lnpparagraphs`,
+  `lnpfontfeatures`, `lnpfontfallbacks`, `lnpcompilationfixes` and the two
+  grid-locked modules are deleted.
+- **Two deliberate rendering changes.** The first paragraph after a heading is
+  flush left rather than indented, and footnotes may split across pages again.
+  A migrated paper repaginates.
+- **Upstream Microtype defaults.** The custom protrusion and expansion tables
+  are replaced by Pagella's upstream defaults plus one +50 small-caps tracking
+  rule.
+- **Licensing is explicit.** `lanepaper/` is LPPL 1.3c; every other original
+  repository file is MIT.
+
+The supported baseline is pdfTeX with TeX Live 2025. This release is published
+from GitHub; it is not a CTAN submission.
+
+The per-issue detail for the contraction follows.
+
 Curated the v3 showcase and documentation for issue #89.
 
 - Replaced the accumulated demo catalogue with one coherent paper-shaped visual
