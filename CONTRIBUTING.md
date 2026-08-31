@@ -1,4 +1,4 @@
-# Contributing to Lane LaTeX Template
+# Contributing to lanepaper
 
 ## Building
 
@@ -8,16 +8,17 @@ make clean    # remove generated output, the PDF included
 make help     # list every target
 ```
 
-Requires TeX Live 2020+ with `tgpagella`, `inconsolata`, `newpx`, `mathalfa`, `boondox`,
-and `booktabs`. The required package list is in
-[`INSTALL.md`](INSTALL.md#required-latex-packages).
+The verified baseline is TeX Live 2025 with pdfLaTeX, latexmk, Biber, and
+ChkTeX.
+The authoritative package, demo, and tool dependency lists are in
+[README.md](README.md#dependencies).
 
 ## Pre-commit Gates
 
 All three must pass before committing, and they are exactly what CI runs:
 
 ```bash
-make lint     # ChkTeX on demo/*.tex and demo/appendices/*.tex
+make lint     # ChkTeX on the demo sources
 make build    # latexmk full compile → main.pdf
 make test     # python3 -m pytest -q, then bash tests/run-tests.sh
 ```
@@ -34,12 +35,15 @@ The package is `lanepaper`; its modules use the `lnp` prefix:
 - Modules: `lnpcolors`, `lnpfonts`, `lnpdimensions`, `lnpheadings`,
   `lnplists`, `lnpmicrotype`.
 
-Load packages by name, not by path:
+Load only the public package by name:
 
 ```latex
-\usepackage{lanepaper}   % correct
-\usepackage{paper/paperstyle} % wrong — legacy path, do not use
+\usepackage{lanepaper}                  % the sole public load path
+\usepackage[optical,nocolor]{lanepaper} % the two supported options
 ```
+
+Do not load an `lnp*.sty` module directly.
+The modules are internal owners loaded by `lanepaper`.
 
 How package code is written -- naming, message policy, robustness, hooks, lint
 policy, and the rule against `\makeatletter` in a `.sty` -- is in
@@ -115,7 +119,8 @@ This document codifies the LaTeX source code formatting standards for this proje
 ##### Inline Mathematics
 - **Use `$...$`** for inline math (not `\(...\)`)
 - **Add thin spaces** around operators when needed: `$x\,=\,y$`
-- **Standard amsmath notation** for common constructs: `\mathbb{R}`, `\lVert x\rVert` (v3 removed the generic `\real`/`\norm` helpers)
+- **Standard amsmath notation** for common constructs: `\mathbb{R}`, `\lVert x\rVert`.
+  See [MIGRATION.md](MIGRATION.md) when converting older documents.
 
 ##### Display Mathematics
 - **Use `\[...\]`** for unnumbered display equations
@@ -158,11 +163,11 @@ This document codifies the LaTeX source code formatting standards for this proje
 - **Document with comments**:
 
 ```latex
-% Professional title formatting with modular scale sizing
-% Usage: \articletitle{Your Title Here}
-\newcommand{\articletitle}[1]{%
-  {\fontsize{18pt}{22pt}\selectfont\bfseries #1\par}%
-  \vspace{\titlespacemajor}%
+% A document-specific command with a descriptive name
+% Usage: \paperhighlight{Your highlighted text}
+\newcommand{\paperhighlight}[1]{%
+  {\bfseries #1\par}%
+  \vspace{1em}%
 }
 ```
 
@@ -181,9 +186,10 @@ Systematic prefixes for all labels:
 | Appendix | `app:` | `\label{app:technical}` |
 
 #### 8. Citation Style
-- **Non-breaking space** before citations: `results~\cite{author2023}`
-- **Page numbers** with double dash: `\cite[45--48]{author2023}`
-- **Multiple citations** comma-separated: `\cite{smith2023,jones2023}`
+- **Narrative citations** use `\textcite`: `results~\textcite{author2023}`
+- **Parenthetical citations** use `\autocite`: `the result~\autocite{author2023}`
+- **Page numbers** use a double dash: `\autocite[45--48]{author2023}`
+- **Multiple citations** are comma-separated: `\autocite{smith2023,jones2023}`
 
 #### 9. Special Characters
 - **Quotation marks**: Use `\enquote{text}` for smart quotes
@@ -193,52 +199,37 @@ Systematic prefixes for all labels:
 
 #### 10. Package Loading Order
 
-Maintain systematic order in preamble:
+Keep document-owned packages explicit and load links after the packages they
+refer to:
 ```latex
 % 1. Document class options
 \documentclass[11pt]{article}
 
-% 2. Encoding and fonts
-\usepackage[T1]{fontenc}
-\usepackage{tgpagella}
-
-% 3. Layout and geometry  
-\usepackage{geometry}
-
-% 4. Typography packages
-\usepackage{microtype}
-
-% 5. Math packages
-\usepackage{amsmath,amssymb}
-
-% 6. Graphics and tables
-\usepackage{graphicx}
-\usepackage{booktabs}
-
-% 7. Bibliography
+% 2. Document-owned language and bibliography
+\usepackage{csquotes}
 \usepackage{biblatex}
+\usepackage[english]{babel}
 
-% 8. hyperref (must be near end)
+% 3. Typography
+\usepackage{lanepaper}
+
+% 4. Links and cross-references
 \usepackage{hyperref}
-
-% 9. cleveref (must be after hyperref)
 \usepackage{cleveref}
 ```
 
 ### File Organization
 
 #### LaTeX Source Files
-- **Main document**: `main.tex`
-- **Style definitions**: `lanepaper.sty` (formerly the legacy path-prefixed style file)
+- **Curated demo**: `demo/main.tex`
+- **Package entry point**: `lanepaper/lanepaper.sty`
 - **Preamble**: `demo/preamble.tex`
 - **Title page**: `demo/titlepage.tex`
-- **Appendices**: `appendices/*.tex`
 
 #### Package Loading Convention
-As of July 2025, the Lane LaTeX Template uses a new naming convention:
-- Main package: `\usepackage{lanepaper}` (not the legacy path-prefixed package name)
-- Modules: `\RequirePackage{lnpcolors}`, `\RequirePackage{lnpfonts}`, etc.
-- No path prefixes needed with the new naming system
+- Main package: `\usepackage{lanepaper}`
+- Internal modules: `\RequirePackage{lnpcolors}`, `\RequirePackage{lnpfonts}`, etc.
+- Documents must not load the internal modules directly.
 
 #### Naming Conventions
 - **Use lowercase** with hyphens: `main-appendix.tex`
@@ -254,7 +245,7 @@ Before committing LaTeX files:
 - [ ] Systematic labels with correct prefixes
 - [ ] Non-breaking spaces before citations/references
 - [ ] Consistent math spacing
-- [ ] No overfull hboxes (check log)
+- [ ] No unexpected overfull hboxes (check log)
 - [ ] All floats use [tbp] placement
 - [ ] Captions above tables, below figures
 - [ ] Comments explain complex constructs
@@ -264,7 +255,7 @@ Before committing LaTeX files:
 
 1. **Don't use `[h]` float placement** - causes poor page layout
 2. **Don't use vertical lines in tables** - violates booktabs principles
-3. **Don't hardcode spacing** - use systematic commands
+3. **Don't hide document-owned spacing** - use an explicit `\vspace` length
 4. **Don't use `\\` for line breaks** in text - proper paragraph breaks
 5. **Don't mix `\cite` and `\autocite`** - choose one citation style
 
@@ -280,4 +271,4 @@ make test
 
 ---
 
-*This document is part of the Lane LaTeX Template project style guide.*
+*This document is part of the lanepaper project style guide.*

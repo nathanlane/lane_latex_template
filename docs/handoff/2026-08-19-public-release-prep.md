@@ -17,15 +17,16 @@ package" — issues #46–#57, all closed. Then ADR-0006 (2026-08-28) defined **
 deliberate breaking contraction to one public entry point and a narrow interface,
 tracked as epic **#82** with children C1–C8 (#83–#90).
 
-**C1–C6 have landed.** The package is `lanepaper`, now **7 modules** (down from 14),
-`CONVENTIONS.md` is the authority on package code, and `build.lua` drives packaging.
+**C1–C7 are complete in this worktree.** The package is `lanepaper`, now **7 modules**
+(down from 14), `CONVENTIONS.md` is the authority on package code, and `build.lua`
+drives packaging.
 
 **The CTAN build is ON HOLD** — the maintainer said "hold off on CTAN build" on
 2026-08-26. Do not run `l3build ctan` or `l3build upload` until told. This bound an
 agent on 2026-08-30 that ran `l3build ctan` locally to verify an archive fix; pass the
 hold down to every delegate explicitly, because it is not inferable from the repo.
 
-**Open: C7 (#89), C8 (#90), plus #91 and #92 as post-v3.**
+**Open: C8 (#90), plus #91 and #92 as post-v3.**
 
 ## Important Details
 
@@ -79,12 +80,12 @@ The CTAN archive ships both notices. `build.lua`'s `textfiles` includes
 `licenses/LICENSE-MIT.txt` precisely because the archive carries `README.md` and
 `CHANGELOG.md`, which are MIT, under an `lppl1.3c` declaration.
 
-### `INSTALL.md` is now the only dependency record
+### README is the authoritative dependency record
 
-C6 deleted `check-packages.sh`, the machine check. `README.md` routes readers to
-`INSTALL.md` as authoritative, so an error there is now a user-facing defect rather
-than a doc nit. It was wrong when it inherited that role: it required two packages
-nothing loads and omitted three that are loaded.
+C6 deleted `check-packages.sh`, the machine check.
+C7 absorbed the former standalone installation guide into `README.md`, which now
+owns the dependency list and the GitHub installation instructions.
+That list is user-facing and is derived from the surviving package and demo loads.
 
 **Two dependencies are selected by option values, not package names, and a grep for
 `\RequirePackage`/`\usepackage` cannot see them:**
@@ -187,15 +188,18 @@ worth its cost. The mechanics are where the time goes:
 
 ### Robustness (#55) — done, with deliberate exemptions
 
-All 372 public macros are robust via etoolbox `\robustify` in a `ROBUSTNESS (#55)`
-block ending each module — **not** `\DeclareRobustCommand`, which would silently
-clobber on name collisions. Rule and mechanism in `CONVENTIONS.md` §8. Do not
+The current tree contains 44 `\robustify` calls across its three modules, in
+`ROBUSTNESS (#55)` blocks — **not** `\DeclareRobustCommand`, which would silently
+clobber on name collisions. This is a count of the current tree, so re-measure
+it after package changes. Rule and mechanism in `CONVENTIONS.md` §8. Do not
 "complete" these exemptions:
 
 - **`\thefootnote` must stay expandable**: the kernel's `\protected@edef` freezes the
   footnote number into `\@currentlabel`; protection made a `\label` in footnote 1
   resolve to 2. `tests/fixtures/robustness-test.tex` asserts this differentially.
-- **`\gridmult`/`\gridmath`** are expandable `\dimexpr` value helpers.
+- **The former `\gridmult`/`\gridmath` value helpers are gone.** C7's migration
+  guide directs documents to literal dimensions or standard `\vspace`; no public
+  quantum helper remains.
 - Any new runtime redefinition must re-`\robustify` immediately after.
 - A new public macro is not done until its name is in its module's robustness block.
 
@@ -245,13 +249,16 @@ point-of-use API; microtype matches sizes exactly (`\normalsize` is 10.95pt).
 
 ## Work State
 
-`main` at `32b8e59`, clean, in sync. Merged for v3, in order: #93 (architecture
-record), #94 (generic API removal), #95 (sole load path), #96 (document structures),
-#97 (C4 Microtype), #98 (C5 paragraphs), #99 (C6 tooling), #100 (this handoff).
+This worktree is on `docs/v3-demo-and-docs`; PR #102 is the active delivery for
+the v3 demo and documentation work, with review follow-up tracked on this branch.
+The accepted v3 work is present through C7, including
+the one public entry point, the curated demo, the migration guide, and the
+contracted API reference.
 
-Local gates on `main`, all verified under **TeX Live 2025**: `make lint` 0,
-`make build` 0 producing a **36-page** PDF, **pytest 54 passed**, `tests/run-tests.sh`
-**64 passed / 0 failed** across 20 fixtures. `test_infrastructure.py` holds 16 guards.
+Local gates in this worktree, all verified under **TeX Live 2025**: `make lint` 0,
+`make build` 0 producing a **7-page** PDF, **pytest 54 passed**, and
+`tests/run-tests.sh` **60 passed / 0 failed** across 20 fixtures.
+`test_infrastructure.py` holds 16 guards.
 
 **The primary checkout is on a stale branch.** `~/code/lane_latex_template` sits on
 `fix/api-guards-74` at `2a691af`, which predates every v3 PR — the handoff file there
@@ -271,21 +278,17 @@ Deliberately not done, with reasons:
 
 **Nothing is in flight.** The queue:
 
-1. **C7 (#89)** — rewrite the demo, documentation, and a new root `MIGRATION.md`;
-   absorb and delete `INSTALL.md`. Blocked by #88, which is now closed, so it is ready.
-   Note it requires recording the biber PAR-cache signature in `TROUBLESHOOTING.md`,
-   and forbids screenshot automation.
-2. **C8 (#90)** — stamp, rename, and manually publish v3 from the exact green SHA.
+1. **C8 (#90)** — stamp, rename, and manually publish v3 from the exact green SHA.
+   It follows the completed C7 demo and documentation contraction.
    Depends on C7.
-3. **#91, #92** — post-v3: figure/table-note APIs after adopter evidence, and a deeper
+2. **#91, #92** — post-v3: figure/table-note APIs after adopter evidence, and a deeper
    simplification sweep.
-4. **CTAN, only when un-held** — ADR-0001: no date, no pressure.
+3. **CTAN, only when un-held** — ADR-0001: no date, no pressure.
 
 ### Unowned by any ticket
 
 - **Public macro names carry no prefix** — known gap in `CONVENTIONS.md` §4;
   namespacing, not robustness. Worth settling before CTAN.
-- **`\lanepaperinfo` is defined and called nowhere.**
 - **The CTAN archive ships no typeset manual** — 7 `.sty` plus `README.md`,
   `CHANGELOG.md` and both licenses. Acceptable, but a reviewer may ask.
 - `actions/checkout@v4`/`upload-artifact@v4` Node 20 deprecation annotations. Noisy,
@@ -301,8 +304,8 @@ Deliberately not done, with reasons:
   automation, or release workflow.
 - `docs/adr/0005-what-the-spacing-quantum-is.md` — accepted; its sub-decisions list is
   the authority on what stays a literal and why.
-- `INSTALL.md` — the only dependency record; C7 absorbs and deletes it, so move the
-  list somewhere authoritative rather than dropping it.
+- `README.md` — the authoritative dependency record and GitHub installation guide.
+- `MIGRATION.md` — the top-to-bottom v2-to-v3 replacement map.
 - `lanepaper/lanepaper.sty` — the `ROBUSTNESS (#55)` block, the
   `\pdfstringdefDisableCommands` fallbacks, and the `%% FIX` exemption comments.
 - `tests/test_option_contracts.py` — package and document contracts, including the

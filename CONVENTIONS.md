@@ -86,8 +86,8 @@ so the set is visible at once.
 renamed public name kept the old one as a `\let` alias. ADR-0006 reverses that
 for the v3 contraction: there is no released public v3 contract yet, so a name
 this pre-release work removes or renames gets a migration note in
-`API_REFERENCE.md`'s "Removed in v3" table and nothing else. An inert alias
-would preserve exactly the surface the contraction exists to remove.
+[`MIGRATION.md`](MIGRATION.md) and nothing else. An inert alias would preserve
+exactly the surface the contraction exists to remove.
 
 Once v3 is published the contract is real, and a later public rename is a
 breaking change that needs an explicit deprecation decision — recorded where

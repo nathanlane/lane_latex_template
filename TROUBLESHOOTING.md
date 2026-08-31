@@ -1,12 +1,14 @@
-# Troubleshooting Guide
+# lanepaper troubleshooting
 
-This guide helps resolve common issues with the Lane LaTeX Template.
+This guide helps resolve common issues with the `lanepaper` package and its
+curated demo.
 <!-- %% FIX: Keep active troubleshooting tied to verified local package names. -->
 
 ## Table of Contents
 - [Compilation Errors](#compilation-errors)
 - [Font Issues](#font-issues)
 - [Bibliography Problems](#bibliography-problems)
+- [Biber PAR-cache failure on macOS](#biber-par-cache-failure-on-macos)
 - [Spacing and Layout Issues](#spacing-and-layout-issues)
 - [Float Problems](#float-problems)
 - [Typography Issues](#typography-issues)
@@ -48,17 +50,14 @@ artifacts). Always clean when switching between TeX Live years.
 **Symptoms**: A command like `\articletitle` is not recognized
 
 **Solutions**:
-1. Ensure lanepaper is loaded:
+1. Ensure lanepaper is loaded through its sole public entry point:
    ```latex
-   \input{demo/preamble.tex}  % or
    \usepackage{lanepaper}
    ```
 
-2. Check whether v3 removed it. The v2 grid API (`\gridunit`,
-   `\halfgridunit`, `\gridspace`, `\gridincludegraphics`, `gridtable` and
-   friends) and the semantic colour commands are gone; state the length or
-   colour you want directly. See
-   [ADR-0006](docs/adr/0006-one-public-entry-point-and-a-narrow-v3-interface.md).
+2. Check whether v3 removed it.
+   V3 has no compatibility aliases, so edit a v2 document according to the
+   [migration guide](MIGRATION.md) rather than adding a package option.
 
 ### Compilation Warnings
 
@@ -70,7 +69,8 @@ artifacts). Always clean when switching between TeX Live years.
 **"Overfull hbox" warnings**
 - **Solution 1**: Add hyphenation points: `meth\-od\-ology`
 - **Solution 2**: Use `\sloppy` environment for problematic paragraphs
-- **Solution 3**: Adjust with `\tightpar{text}` or `\riverlesspar{text}`
+- **Solution 3**: Adjust the prose or use the retained paragraph command that
+  matches the intended treatment; see [API_REFERENCE.md](API_REFERENCE.md).
 
 ## Font Issues
 
@@ -79,15 +79,15 @@ artifacts). Always clean when switching between TeX Live years.
 **Symptoms**: Font substitution warnings, incorrect appearance
 
 **Solutions**:
-1. Install the font package:
+1. Install the package that provides the font:
    ```bash
-   tlmgr install tex-gyre tex-gyre-math
+   tlmgr install tex-gyre
    ```
 
-2. Manual fallback to Palatino:
-   ```latex
-   \usepackage{palatino}  % Before lanepaper
-   \usepackage{lanepaper}
+2. Rebuild after the installation:
+   ```bash
+   make clean
+   make build
    ```
 
 ### Small Caps Not Working
@@ -124,17 +124,45 @@ artifacts). Always clean when switching between TeX Live years.
    make build
    ```
 
-2. Check biber vs bibtex:
+2. Check that the document selected `biblatex` with the Biber backend:
    ```bash
-   biber main  # Default (recommended)
-   # or
-   bibtex main  # Legacy fallback
+   biber main
    ```
 
 3. Verify .bib file is specified:
    ```latex
    \addbibresource{references.bib}  % biblatex
    ```
+
+The `lanepaper` package does not load a bibliography package and does not
+provide a natbib compatibility path.
+
+### Biber PAR-cache failure on macOS
+
+**Symptoms**: Biber exits with status 2, its error log is empty, and the
+terminal or Biber output contains:
+
+```text
+Unicode::UCD: failed to find unicore/version
+```
+
+**Cause**: Biber is PAR-packed.
+macOS temporary-directory purges can corrupt the unpacked PAR cache under
+`/var/folders`, after which Biber cannot find its Unicode data even though the
+input bibliography is valid.
+
+**Solution**: Delete the matching `par-*` directories under the user's
+temporary directory, represented by `/var/folders/.../T/par-*`, then let Biber
+unpack a fresh copy:
+
+```text
+/var/folders/<two-character-directory>/<temporary-id>/T/par-*
+```
+
+Remove only the `par-*` entries in that directory.
+Then rerun `biber main` or `make build`.
+This failure can recur after a later macOS temporary-directory purge; search
+for the signature above when the error log is unexpectedly empty.
 
 ### DOI/URL Not Appearing
 
@@ -173,8 +201,7 @@ expected to coincide. See
 **Causes & Solutions**:
 1. **Spacing leaks**: Check for missing grouping in emphasis commands
    ```latex
-   {\bsc{text}}  % Correct - grouped
-   \bsc{text}    % Wrong - may leak spacing
+   {\textsc{text}}  % Grouped standard small caps
    ```
 
 2. **Float accumulation**: Flush pending floats before a major section:
@@ -196,7 +223,7 @@ expected to coincide. See
 
 2. Custom spacing:
    ```latex
-   \setlist[itemize]{itemsep=3.3pt}  % Quarter grid unit
+   \setlist[itemize]{itemsep=3.3pt}  % Local list spacing adjustment
    ```
 
 ## Float Problems
@@ -226,8 +253,9 @@ expected to coincide. See
 
 2. Reduce `\tabcolsep` or the table font size locally before scaling content.
 
-The demo defines `landscapetable`, `rotatedtable` and `fittable` for its own
-examples. They are not `lanepaper` package APIs.
+The demo uses standard float structures.
+Any landscape page or rotated float is a document choice, using the standard
+environment supplied by the document-owned package.
 
 ## Typography Issues
 
@@ -235,7 +263,7 @@ examples. They are not `lanepaper` package APIs.
 
 **Symptoms**: Bold headings appear "shouty"
 
-**Solution**: The template already implements:
+**Solution**: The package already implements:
 - Softened colors for bold headings
 - No added letterspacing on bold headings — upstream microtype assigns none
 - This is the intended design
@@ -303,16 +331,18 @@ the warning you would want to read.
 
 ### Babel Language Warnings
 
-**Symptoms**: "The package option 'english' should not be used"
+**Symptoms**: `babel` cannot find `english.ldf`, or the document reports a
+language-definition warning.
 
-**Solution**: Remove explicit language option:
+**Solution**: The language is document-owned.
+Keep the language option when English hyphenation is wanted and install the
+separate language definition if it is missing:
 ```latex
-% Wrong:
 \usepackage[english]{babel}
-
-% Correct:
-\usepackage{babel}  % Language detected automatically
 ```
+
+On TeX Live, the relevant dependency is `babel-english`.
+Do not expect `lanepaper` to select a document language.
 
 ### Cleveref Conflicts
 
@@ -377,7 +407,7 @@ grep -c 'Underfull \\hbox' main.log
 | Bad citations | `make clean && make build` |
 | Float drift | Use `[tbp]`; use `\clearpage` before a major section if needed |
 | Overfull hbox | Add `\sloppy` or hyphenation |
-| Grid misalignment | Use `\vspace{13.2pt}` |
+| Spacing adjustment | Use `\vspace{13.2pt}` when that gap is wanted |
 | Font missing | `tlmgr install tex-gyre` |
 | Page inflation | Check emphasis grouping |
 

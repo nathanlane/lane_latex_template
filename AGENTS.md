@@ -37,7 +37,7 @@ There is no formatting target. Issue #51 deleted the aliases; run the
 formatter directly when you want it:
 
 ```bash
-latexindent -l -w demo/*.tex demo/appendices/*.tex   # indentation only
+latexindent -l -w demo/*.tex   # indentation only
 ```
 
 ## 🔄 Workflow
@@ -67,7 +67,7 @@ latexindent -l -w demo/*.tex demo/appendices/*.tex   # indentation only
 ```text
 /                 – root; this file, README.md, Makefile
 /lanepaper/       – LaTeX package and internal modules
-/demo/            – demo document sources and appendices
+/demo/            – curated demo document sources
 /tests/           – pytest suite, shell harness, and fixtures
 ```
 
@@ -132,7 +132,7 @@ Always prefer **clarity**, **minimalism**, and **reversibility**.
 
 ## 7  Resources
 
-* Full style spec → [`API_REFERENCE.md`](API_REFERENCE.md), section "Typography standards".  
+* Retained package API → [`API_REFERENCE.md`](API_REFERENCE.md).
 * OpenAI API docs → <https://platform.openai.com/docs>.  
 * Chicago Manual of Style (author-date).  
 * Butterick’s *Practical Typography* (for quick reference).

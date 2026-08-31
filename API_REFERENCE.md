@@ -1,6 +1,7 @@
-# Lane LaTeX Template API Reference
+# Lanepaper v3 API Reference
 
-Complete reference for all commands, environments, and options provided by the `lanepaper` package.
+Reference for the retained commands, environments, options, and document-owned
+integration points of the `lanepaper` package.
 
 ## Table of Contents
 
@@ -24,8 +25,7 @@ Complete reference for all commands, environments, and options provided by the `
 18. [The heading system](#the-heading-system)
 19. [The list system](#the-list-system)
 20. [How the package is put together](#how-the-package-is-put-together)
-21. [Typography standards](#typography-standards)
-22. [Removed in v3](#removed-in-v3)
+21. [Migration from v2](#migration-from-v2)
 
 ## Package Options
 
@@ -39,7 +39,7 @@ Complete reference for all commands, environments, and options provided by the `
 
 `\usepackage{lanepaper}` is the sole public load path (ADR-0006), and it takes
 two options. Anything else is rejected with LaTeX's own `Unknown option`
-error; see [Removed in v3](#removed-in-v3).
+error; see the [migration guide](MIGRATION.md) for the v2 option changes.
 
 | Option | Default | Description |
 |--------|---------|-------------|
@@ -74,7 +74,7 @@ behind this option — it is a default every document gets.
 ### Main Title Commands
 
 #### `\articletitle{title}`
-Displays article title with automatic size adjustment (16-18pt based on length).
+Displays an article title in the package's 22pt title style.
 
 ```latex
 \articletitle{The Impact of Typography on Academic Writing}
@@ -121,7 +121,10 @@ Display article date.
 ### Abstract and Keywords
 
 #### `articleabstract` environment
-Creates golden-ratio width abstract block.
+Creates a narrow abstract block using 72% of the text width.
+- **Label:** "ABSTRACT" in enhanced small caps
+- **Font size:** 10pt (small)
+- **Internal spacing:** 0.5 title-space quantum
 
 ```latex
 \begin{articleabstract}
@@ -168,19 +171,22 @@ including oldstyle Arabic marks, main spacing, formatting, and rule. This
 overrides any document-defined `\thefootnote` or other footnote formatting
 that was active before `\titlefootnotesetup`.
 
+Outside the title page, footnote marks are 6pt oldstyle figures with their
+native spacing, and footnote text is 8.5pt on a 10pt nominal baseline. The
+package's 1.20 line spread makes that a 12pt baseline in the document. The
+title-page setup keeps these sizes, changes the marks to symbols, and uses
+tighter spacing.
+
+#### `\multiplefootnotes{marks}`
+Places consecutive marks in one superscript with a small inter-mark kern.
+Use it when a reference needs several footnote marks together.
+
 #### `\elegantauthor{name}`
-Individual author name with enhanced small caps.
+Individual author name with consistent title-page sizing.
 - **Size:** 12pt/14pt
-- **Style:** Small caps
-- **Tracking:** 100 units (10% letter spacing)
+- **Style:** Regular text
 - **Usage:** Within `\articleauthors` if desired
 
-#### `\begin{articleabstract}...\end{articleabstract}`
-Professional abstract environment.
-- **Width:** 0.618 × text width (golden ratio)
-- **Label:** "ABSTRACT" in enhanced small caps
-- **Font size:** 10pt (small)
-- **Spacing:** 0.5 grid units internal
 ## Typography Commands
 
 ### Section Opening Styles
@@ -199,9 +205,8 @@ of the paragraph continues in normal text.
 ### The Spacing Quantum
 
 Nearly all of the package's vertical spacing is a multiple of one **13.2pt
-quantum**. It is an internal implementation value, not an API: v3 removed
-`\gridunit` and its derived lengths and helpers (see
-[Removed in v3](#removed-in-v3)). A document states the space it wants:
+quantum**. It is an internal implementation value, not a public length or grid
+API. A document states the space it wants:
 
 ```latex
 \vspace{13.2pt}   % One quantum
@@ -216,16 +221,35 @@ option). See [ADR-0004](docs/adr/0004-baseline-grid-is-a-spacing-quantum.md).
 ### Special Spacing Commands
 
 #### `\authorspace`
-Space between author names (5% of text width).
+Space between author names (4.5% of text width).
 
-#### `\titlespacemajor`
-Major title spacing (2 grid units).
+#### `\titlespacemajor` length
+Major title spacing, set to 26.4pt (2 quanta).
 
-#### `\titlespaceminor`
-Minor title spacing (1.5 grid units).
+#### `\titlespaceminor` length
+Minor title spacing, set to 19.8pt (1.5 quanta).
 
-#### `\titlespaceinter`
-Inter-element spacing (1 grid unit).
+#### `\titlespaceinter` length
+Inter-element spacing, set to 13.2pt (1 quantum).
+
+#### `\authorspacer` length
+The length used by `\authorspace`; it defaults to 4.5% of the text width.
+
+#### `\titlepagewidth` length
+The width used by the abstract, keyword, and JEL blocks; it defaults to 72%
+of the text width.
+
+#### `\goldenratio`
+The package-defined numeric constant `1.618`.
+
+#### `\goldenratioMinor`
+The package-defined numeric constant `0.618`.
+
+#### `\modularscale`
+The package-defined numeric constant `1.333`.
+
+#### `\modularscaleMinor`
+The package-defined numeric constant `0.75`.
 
 ## Emphasis and Semantic Commands
 
@@ -315,8 +339,7 @@ Second paragraph with maintained formatting.
 Row height is `\arraystretch` times the 16.32pt body baseline plus 2.2pt of
 `\extrarowheight`. The package sets `\arraystretch` to 1.2 globally
 (~21.8pt rows); a table that wants denser or looser rows sets its own inside
-the float. The v2 `gridtable`, `compactgridtable` and `spaciousgridtable`
-environments, which did only that, were removed in v3.
+the float.
 
 ```latex
 \begin{table}[tbp]
@@ -336,9 +359,9 @@ environments, which did only that, were removed in v3.
 
 ### Table Notes
 
-Table notes are document-owned. Load `threeparttable` and use its native
-`threeparttable` and `tablenotes` environments; Lanepaper neither loads that
-package nor defines or redefines its commands.
+Table notes are document-owned. Load `threeparttable` and use its native note
+structure; Lanepaper neither loads that package nor defines table-note
+commands.
 
 ```latex
 \usepackage{threeparttable}
@@ -349,16 +372,14 @@ package nor defines or redefines its commands.
     Item & Value \\
     \bottomrule
   \end{tabular}
-  \begin{tablenotes}
-    \item \emph{Notes:} General methodology notes.
-  \end{tablenotes}
+  % Add notes using threeparttable's native note structure.
 \end{threeparttable}
 ```
 
 ### Standard Figures
 
-Figures are standard. The v3 contraction removed `gridfigure` and
-`\gridincludegraphics`, which rounded image heights to quantum multiples:
+Figures are standard. Lanepaper supplies caption typography while the document
+chooses the image and float placement:
 
 ```latex
 \begin{figure}[tbp]
@@ -442,13 +463,36 @@ Centered paragraph block.
 \centeredpar{This paragraph is centered on the page.}
 ```
 
-#### `\compactpar` *(deprecated)*
-Pulls the following paragraph 3.3pt closer (a quarter quantum). Retained for
-backward compatibility only; use `\vspace` directly in new documents.
+#### `\compactpar` *(legacy)*
+Pulls the following paragraph 3.3pt closer (a quarter quantum). It remains
+defined for papers that already use the helper; new documents can state the
+same spacing with `\vspace`.
 
-#### `\loosepars` *(deprecated)*
-Adds 3.3pt before the following paragraph (a quarter quantum). Retained for
-backward compatibility only; use `\vspace` directly in new documents.
+#### `\loosepars` *(legacy)*
+Adds 3.3pt before the following paragraph (a quarter quantum). It remains
+defined for papers that already use the helper; new documents can state the
+same spacing with `\vspace`.
+
+#### `\tightpar{text}`
+Sets a local, more permissive line-breaking profile for one paragraph.
+
+#### `\loosepar{text}`
+Sets a local, highly permissive line-breaking profile for one paragraph.
+
+#### `\riverlesspar{text}`
+Sets local word-space parameters intended to reduce visible rivers in one
+paragraph.
+
+#### `\balancedpar{text}`
+Sets a local last-line stretch and final-hyphen penalty for a more balanced
+paragraph ending.
+
+#### `\nohyphpar{text}`
+Typesets one paragraph with ordinary and explicit hyphenation penalties set to
+10000.
+
+#### `\techpar{text}`
+Sets local line-breaking penalties suited to technical terms and operators.
 
 ### Dialogue Commands
 
@@ -459,13 +503,35 @@ Standard dialogue with full indent. Wraps text in a new paragraph.
 \dialogue{``I think we should reconsider.''}
 ```
 
-Note: `\rapidexchange` and `\speaker` are not implemented.
+For longer exchanges, use ordinary paragraphs or a document-selected dialogue
+package.
+
+## Footer and page-number commands
+
+Lanepaper's default `plain` page style places a small, centered, gray page
+number in oldstyle figures. These commands provide narrow controls for pages
+that need a different numbering treatment.
+
+#### `\protectfooter`
+Adds one spacing quantum before the footer area.
+
+#### `\fixfooter`
+Uses flexible vertical fill to keep the footer clear of the page content.
+
+#### `\frontmatterpages`
+Selects roman page numbering and the package's plain page style.
+
+#### `\mainmatterpages`
+Selects Arabic page numbering and the package's plain page style.
+
+#### `\unnumberedpage`
+Applies the empty page style to the current page.
 
 ## Color Commands
 
 The semantic palette is implementation-private. It provides visible roles for
 body text, headings, supporting elements and, when the document loads
-`hyperref`, links. v3 removed the palette's public names and helper commands.
+`hyperref`, links.
 
 `[nocolor]` converts the palette through xcolor's gray model. Chroma goes; the
 grayscale hierarchy between heading levels stays, because the grey steps are
@@ -516,11 +582,15 @@ A document that wants its own colours defines and applies them itself:
 
 ---
 
-This API reference covers all major commands and environments provided by the `lanepaper` package. For additional details, see the package documentation and example files.
+This API reference covers the retained package surface. Bibliography and other
+document policy remain the paper's responsibility.
 
 ## Bibliography and citations
 
-This guide explains the bibliography system for the Lane LaTeX Template, which uses **biblatex** with **biber** backend and Chicago Manual of Style (17th edition) author-date format.
+Lanepaper does not load a bibliography package or select a citation style.
+Load `biblatex`, `natbib`, or another document-owned bibliography system and
+choose its backend and style in the paper. The repository demo uses `biblatex`
+with Biber and `style=authoryear`.
 
 ### Quick Start
 
@@ -532,7 +602,7 @@ This guide explains the bibliography system for the Lane LaTeX Template, which u
 
 2. **Compile your document:**
    ```bash
-   make  # latexmk runs biber and re-runs LaTeX as needed
+   make build  # latexmk runs Biber and re-runs LaTeX as needed
    ```
 
 ### Citation Commands
@@ -662,11 +732,10 @@ pdflatex main
 2. Ensure the entry is in `references.bib`
 3. Run full compilation with `make build`
 
-#### Switching from natbib?
-The project supports legacy natbib with `preamble-natbib.tex`. To use biblatex (recommended):
-1. Ensure `main.tex` includes `demo/preamble.tex`
-2. Replace `\citet` → `\textcite`
-3. Replace `\citep` → `\autocite`
+#### Migrating an existing bibliography
+For a v2 document, follow the [v2-to-v3 migration guide](MIGRATION.md).
+For a v3 document, load and configure the bibliography package in the document
+preamble, then use its citation commands consistently.
 
 ### Style Customization
 
@@ -674,14 +743,13 @@ The bibliography style is configured in `demo/preamble.tex`:
 ```latex
 \usepackage[
   backend=biber,
-  style=chicago-authordate,
-  natbib=true,
-  hyperref=true,
+  style=authoryear,
   sorting=nyt
 ]{biblatex}
 ```
 
-All bibliography entries are formatted according to Chicago Manual of Style guidelines with enhanced digital features (clickable DOIs, proper URL formatting).
+The bibliography style, sorting, and link presentation belong to the
+document-owned bibliography and link packages.
 
 ## The font system
 
@@ -703,7 +771,7 @@ The fonts module (`lnpfonts.sty`) configures a professional three-font typograph
 - Consistent weight and proportions
 
 #### Monospace Font: Inconsolata (zi4)
-- Scaled to 95% for harmony with Pagella
+- Scaled to 96% for harmony with Pagella
 - Excellent readability for code
 - Professional appearance
 
@@ -753,6 +821,16 @@ $\mathfrak{g}$ % Fraktur
 \texttt{monospace text}
 ```
 
+#### `\monospacescale`
+Provides the module's default monospace scale value, `0.96`.
+The current package loads `zi4` at that scale; this name is not a general
+font-selection interface.
+
+#### `\mathscale`
+Provides the module's default mathematics scale value, `1.0`.
+The current package uses its fixed `newpxmath` setup; this name is not a
+general font-selection interface.
+
 ### Technical Details
 
 #### Font Encoding
@@ -762,41 +840,33 @@ $\mathfrak{g}$ % Fraktur
 
 #### Scaling
 - Pagella: 100% (base size)
-- Inconsolata: 95% (scaled for harmony)
+- Inconsolata: 96% (scaled for harmony)
 - Math: Automatic sizing
 
-#### OpenType Features
+#### Font Features
 - Ligatures: Enabled
 - Kerning: Optimized
 - Small caps: True small caps
-- Figures: Oldstyle proportional
+- Figures: Lining tabular figures in ordinary text and tables
 
 ### Compatibility
 
 - **pdfTeX**: Full support
-- **XeTeX**: Limited (use fontspec instead)
-- **LuaTeX**: Limited (use fontspec instead)
-- **Overleaf**: Full compatibility
+- **XeTeX/LuaTeX**: Rejected by the package's pdfTeX engine guard
+- **Overleaf**: Use the pdfLaTeX compiler with the supported font stack
 
 ### Known Limitations
 
 1. Font selection is fixed to Pagella
 2. No sans-serif font defined
-3. XeTeX/LuaTeX users should use fontspec
-
-### Future Enhancements
-
-- [ ] Font selection options
-- [ ] Sans-serif font integration
-- [ ] fontspec variant for modern engines
-- [ ] Custom font scaling options
+3. The package does not provide a fontspec path for other engines
 
 ## The colour system
 
 ### Overview
 
 `lnpcolors.sty` owns the semantic palette. Its names and definitions are not
-public API. v3 removed the palette's public names and helper commands.
+public API; documents that need their own colours define them explicitly.
 
 ### Colour Philosophy
 
@@ -815,8 +885,8 @@ The visible roles are restrained and hierarchical:
 hierarchy stays, because the grey steps above are already grey and pass
 through unchanged, and the two navies land on distinct dark greys.
 
-The v2 option instead redefined every name as gray 0, which flattened section,
-subsection, subsubsection and body to the same black.
+The grayscale conversion preserves the differences between section, subsection,
+subsubsection, and body text.
 
 ### Using Colour in a Document
 
@@ -852,24 +922,23 @@ The document owns its own colours:
 
 ### Overview
 
-The dimensions module (`lnpdimensions.sty`) manages page geometry and implements the 13.2pt spacing quantum --- the unit spacing values are stated in (the body baseline measures 16.32pt).
+The dimensions module (`lnpdimensions.sty`) manages page geometry and implements
+the 13.2pt spacing quantum; the body baseline measures 16.32pt.
 
 ### Spacing Quantum System
 
 #### Foundation
 - **Base unit**: 13.2pt spacing quantum (nominal 11pt × 1.20; the actual baseline measures 16.32pt)
-- **Grid philosophy**: All vertical spacing in multiples of base unit
+- **Spacing principle**: Most package vertical spacing uses multiples of the quantum
 - **Purpose**: Spacing values drawn from one quantum scale
-- **Private**: the quantum is internal to the package. v3 removed the public
-  `\gridunit`, its derived lengths and every grid helper (ADR-0006); a
-  document writes the length it wants.
+- **Private**: the quantum is internal to the package; a document writes the
+  length it wants when it needs document-owned spacing.
 
 ### Page Geometry
 
-The class picks the sheet; the package picks the measure. `\geometry` no
-longer names a paper size, so `\documentclass[a4paper]{article}` really does
-produce A4 — in v2 the module forced `letterpaper` and silently overrode it.
-What the package fixes is the six-inch measure and its centring.
+The class picks the sheet; the package fixes the six-inch measure and its
+centring. `\documentclass[a4paper]{article}` therefore produces A4 while the
+text block keeps the package's established measure.
 
 #### Default Layout
 - **Page size**: whatever the class selects (US Letter by default, A4 with `[a4paper]`)
@@ -1002,23 +1071,23 @@ The module provides four spacing presets:
 ##### Spacing Details
 
 **Spacious** (Original generous spacing):
-- Before section: 26.4pt (2 grid units)
+- Before section: 26.4pt (2 quanta)
 - After section: 13.2pt (1 quantum)
-- Best for: Books, reports with ample space
+- Best for: papers with ample space
 
 **Moderate** (Default):
-- Before section: 19.8pt (1.5 grid units)
+- Before section: 19.8pt (1.5 quanta)
 - After section: 13.2pt (1 quantum)
-- Best for: Standard academic papers
+- Best for: standard academic articles
 
 **Compact**:
 - Before section: 13.2pt (1 quantum)
 - After section: 13.2pt (1 quantum)
-- Best for: Dense technical documents
+- Best for: dense technical articles
 
 **Tight**:
 - Before section: 13.2pt (1 quantum)
-- After section: 6.6pt (0.5 grid units)
+- After section: 6.6pt (0.5 quantum)
 - Best for: Space-constrained documents
 
 ### Special Commands
@@ -1100,15 +1169,9 @@ hierarchy described in [The colour system](#the-colour-system).
 #### Article Class
 Default settings work perfectly with standard article class.
 
-#### Book Class
-```latex
-\spacioussections  % Recommended for chapters
-```
-
-#### Report Class
-```latex
-\moderatesections  % Good balance
-```
+#### Supported document class
+The package is designed and tested for the `11pt` standard `article` class.
+Chapter-based `report` and `book` layouts are outside the v3 contract.
 
 ### Best Practices
 
@@ -1221,12 +1284,12 @@ The three principles are:
 
 All list spacing uses the 13.2pt spacing quantum:
 
-| Spacing Type | Value | Grid Units |
+| Spacing Type | Value | Quantum Multiples |
 |--------------|-------|------------|
-| Item separation | 3.3pt | 0.25 units |
-| List top/bottom | 6.6pt | 0.5 units |
-| Nested indent | 13.2pt | 1 unit |
-| Hanging indent | 26.4pt | 2 units |
+| Item separation | 3.3pt | 0.25 |
+| List top/bottom | 6.6pt | 0.5 |
+| Nested indent | 13.2pt | 1 |
+| Hanging indent | 26.4pt | 2 |
 
 ### Typography Details
 
@@ -1358,7 +1421,8 @@ No indent here due to list above.
 
 ### Modular Architecture
 
-**Since v1.5-alpha**: The package is structured as independent modules for better maintainability and customization.
+**In v3**: The package is split into internal modules for maintainability, with
+load order owned by `lanepaper.sty`; documents load only the public entry point.
 
 #### Module Structure
 
@@ -1418,159 +1482,6 @@ Use enumitem's document-owned options for one-off customisation:
 paragraph after a heading is flush left. Set `\parindent` and `\parskip`
 directly for document-owned changes.
 
-### Title Page System
-
-#### How the title page is built
-
-Systematic commands for professional title pages following economics paper conventions:
-
-```latex
-% Complete title page example
-\thispagestyle{empty}
-\titlefootnotesetup              % Switch to symbolic footnotes
-\begin{center}
-  \vspace*{13.2pt}
-  \articletitle{Your Title Here}
-  % Or with acknowledgments:
-  % \articletitlefootnote{Your Title Here}{We thank colleagues for helpful comments.}
-  \articleauthors{Author One\footnote{University} \quad Author Two\footnote{University}}
-  \articledate{\today}
-  \begin{articleabstract}
-    Abstract text...
-  \end{articleabstract}
-  \articlekeywords{keyword1, keyword2}
-  \articlejel{A10, B20}
-\end{center}
-\clearpage
-\titlefootnotereset              % Reset to numeric footnotes
-```
-
-#### Title Commands
-
-**Standard Title (18pt):**
-```latex
-\articletitle{The Economic Impact of Policy:\\[4pt]
-Evidence from East Asia}
-```
-
-**Compact Title (16pt for many authors):**
-```latex
-\articletitlecompact{A Long Title That Requires Less Vertical Space}
-```
-
-**Title with Acknowledgments Footnote:**
-```latex
-% Standard title with footnote for acknowledgments
-\articletitlefootnote{The Economic Impact of Policy:\\[0.3\baselineskip]
-Evidence from East Asia}{We thank seminar participants for helpful comments.}
-
-% Compact title with footnote
-\articletitlecompactfootnote{A Long Title That Requires Less Vertical Space}{Financial support from NSF grant \#12345 is gratefully acknowledged.}
-```
-
-These commands allow authors to add acknowledgments, funding information, or other notes as a footnote to the title. The footnote appears at the bottom of the title page and uses symbolic notation (*, †, ‡) when `\titlefootnotesetup` is active.
-
-#### Author Formatting
-
-**Multiple Authors:**
-```latex
-\articleauthors{%
-  Jane Smith\footnote{Harvard University, Email: jsmith@harvard.edu}
-  \quad\quad
-  John Doe\footnote{MIT, Email: jdoe@mit.edu}
-}
-```
-
-**For 5+ Authors (two-line layout):**
-```latex
-\articleauthors{%
-  Author One\footnote{...} \quad Author Two\footnote{...} \quad Author Three\footnote{...}\\[4pt]
-  Author Four\footnote{...} \quad Author Five\footnote{...}
-}
-```
-
-#### Spacing Principles
-
-All vertical spacing follows the 13.2pt quantum system:
-- **After title**: 1.5 grid units (19.8pt)
-- **After authors**: 1.5 grid units (19.8pt)
-- **Before abstract**: 2 grid units (26.4pt)
-- **Abstract internal**: 0.5 grid units (6.6pt)
-
-#### Footnote System
-
-Systematic sizing with baseline-aligned spacing:
-
-**Sizing Hierarchy:**
-- **Superscript marker**: 6pt with oldstyle numerals and +50 tracking
-- **Footnote text**: 8.5pt with 12pt actual leading (10pt × \linespread)
-- **Hanging indent**: 11.5pt (fits three-digit old-style markers)
-
-**Spacing System:**
-- **Above footnotes**: 26.4pt (2 quanta) to the rule
-- **Between footnotes**: the 12pt footnote baseline (`\footnotesep` is an
-  inert floor, not inter-note space)
-- **Footnote rule**: 33% text width, 0.4pt height for subtle elegance
-
-#### Enhanced Optical Margin Alignment
-
-Professional character protrusion following Gutenberg's principles:
-
-```latex
-% Protrusion Settings by Context
-- Punctuation: Quotes at 1400 units (40% more aggressive)
-- Periods/commas: 1200 units for full hanging punctuation
-- Hyphens: 1000 units for cleaner right margins
-- Capitals: T, V, W, Y use negative protrusion (-50 to -80)
-- Small text: Conservative 1000 units for readability
-- Bold text: Reduced to 1200 units (weight compensation)
-- Display sizes: Extra protrusion up to 1600 units
-```
-
-#### Semantic Emphasis Hierarchy
-
-Sophisticated emphasis system optimized for TeX Gyre Pagella:
-
-```latex
-% Hierarchy Levels (by frequency of use)
-\emph{text}            % Primary emphasis (italic↔roman)
-\textbf{text}      % Bold for critical terms (<5% of text)
-\emph{baseline grid}   % Technical terms (italic)
-\textsc{Hermann Zapf}  % Names (small caps, 2.5% tracking)
-\textsc{PDF}            % Acronyms (small caps, 4% tracking)
-\emph{Book Title}     % Published works (italic)
-\textbf{\textsc{WARNING}}    % Maximum emphasis (bold small caps)
-
-% Smart nesting
-\emph{outer \emph{inner} outer}  % → italic roman italic
-
-% Context-aware nesting handlers
-\emph{text}               % Italic in roman context, roman in italic context
-\textbf{text}                 % Bold in regular context, bold-italic in bold context
-```
-
-#### Professional Footnote System
-
-Foundry-optimized specifications for TeX Gyre Pagella:
-
-```latex
-% Size Hierarchy
-Footnote text: 8.5pt (77% of 11pt body)
-Superscript: 6pt (70% of footnote size)
-Leading: 12pt actual (10pt × \linespread{1.20})
-Hanging indent: 11.5pt (fits three-digit old-style markers)
-
-% Grid-Compliant Spacing
-Rule position: 26.4pt below text (2 quanta)
-Rule to footnote: 13.2pt (1 quantum)
-Between footnotes: 12pt footnote baseline (\footnotesep is an inert floor)
-Rule specs: 33% width, 0.4pt thickness, text color
-
-% Title Page Adjustments
-\titlefootnotesetup    % Switches to symbols (*, †, ‡)
-\titlefootnotereset    % Returns to numbers
-```
-
 ### Standard Appendices, Figures, and Tables
 
 Lanepaper leaves appendix orchestration to the document. Use standard LaTeX:
@@ -1601,10 +1512,10 @@ typography but does not wrap placement or insert float barriers.
 
 #### Table Design System
 
-**Standard Professional Table:**
+**Standard Table:**
 ```latex
 \begin{table}[tbp]
-  \caption{Caption Above Table (Chicago Style)}
+  \caption{Caption Above Table}
   \label{tab:example}
   \centering
   \begin{tabular}{@{}lrrr@{}}
@@ -1622,6 +1533,9 @@ typography but does not wrap placement or insert float barriers.
 
 Tables use `booktabs` without vertical rules. If a table needs notes, load
 `threeparttable` in the document and use its native environments.
+
+If the document loads `longtable`, Lanepaper applies the same table-caption
+typography through its package hook while leaving the environment document-owned.
 
 #### Tables with Standard Row Heights
 
@@ -1641,15 +1555,11 @@ Tables use `booktabs` without vertical rules. If a table needs notes, load
 
 ### Compatibility
 
-**Document Classes:**
-- ✅ `article` (recommended)
-- ✅ `report` (chapter-based appendices)
-- ✅ `book` (chapter-based appendices)
-- ❌ `memoir` (requires modifications)
+**Document class:** The v3 contract is the standard `11pt` `article` class.
+The package does not promise chapter-based `report` or `book` layouts.
 
-**Core dependencies** (auto-loaded):
-`tgpagella`, `zi4`, `newpxmath`, `mathalfa`, `microtype`,
-`enumitem`, `caption`, `geometry`
+See the [dependency record in README](README.md#dependencies) for the
+packages loaded by the public entry point.
 
 Cross-references, appendix packages, and `threeparttable` are document-owned:
 load and configure them yourself if needed.
@@ -1697,733 +1607,8 @@ Quarter quantum: 3.3pt
 
 ---
 
-For version history, see [`CHANGELOG.md`](CHANGELOG.md) and the `Version History` section of [`README.md`](README.md).
-
-## Typography standards
-
-### Typography Principles
-
-#### Core Philosophy
-
-The style package implements three complementary typographic philosophies:
-
-1. **Butterick's Practical Typography**: Reader-focused optimization
-2. **Brown's Modular Scale**: Mathematical harmony through proportional relationships  
-3. **Hochuli's Detail in Typography**: Micro-refinements for archival quality
-
-#### Golden Rules
-
-**DO:**
-- Trust the spacing quantum system - all spacing derives from 13.2pt quantum multiples
-- Use semantic commands (`\emph{}`, `\textbf{\textsc{}}`, `\texttt{}`) over presentational formatting
-- Maintain consistent labeling conventions (`app:`, `fig:`, `tab:`, `eq:`)
-- Let the modular scale handle sizing relationships automatically
-
-**DON'T:**
-- Manually adjust spacing with `\vspace{}` or `\hspace{}`
-- Use `\textbf{}` and `\textit{}` for emphasis - use `\emph{}` semantically
-- Override color schemes - use provided semantic color commands
-- Introduce off-scale spacing with custom line spacing
-
-### Text Typography Standards
-
-#### Title Capitalization Guidelines
-
-**Headline-Style Capitalization Rules:**
-
-**Capitalize:**
-- First and last word of titles and subtitles
-- First word after a colon
-- All major words (nouns, pronouns, verbs, adjectives, adverbs)
-
-**Lowercase:**
-- Articles (the, a, an)
-- Prepositions (regardless of length: in, on, through, between, etc.)
-- Conjunctions (and, but, for, or, nor)
-- Words "to" and "as"
-
-**Special Cases:**
-- Hyphenated words: Capitalize the word immediately preceding the hyphen
-  - ✅ Correct: "Learning-Based Approach"  
-  - ❌ Exception: "X-ray" (not "X-Ray")
-
-**Title Verification:**
-Use a title case checker to verify proper capitalization for:
-- Paper titles and subtitles
-- All section and subsection headings
-- Figure and table captions
-
-#### Emphasis and Formatting
-
-```latex
-% CORRECT: Semantic emphasis
-This is \emph{important} text that needs emphasis.
-Mathematical \emph{variables} should be emphasized in context.
-
-% INCORRECT: Presentational formatting
-This is \textit{important} text that needs emphasis.
-```
-
-**Rationale**: `\emph{}` provides contextual emphasis that adapts to surrounding formatting, while `\textit{}` provides only presentational italics.
-
-**Advanced Emphasis Behavior:**
-```latex
-% Context-sensitive emphasis
-Normal text with \emph{emphasized text}.
-\emph{Already emphasized with \emph{de-emphasized} text inside.}
-```
-
-#### Title Page Components
-
-The style provides systematic commands for professional title pages following economics paper conventions:
-
-**Title Commands:**
-```latex
-% Standard title (18pt, perfect for most papers)
-\articletitle{A Research Article Title:\\[0.3\baselineskip]
-Subtitle for the Article}
-
-% Compact title (16pt, for papers with many authors)
-\articletitlecompact{Long Title That Needs Less Space}
-```
-
-**Author Formatting:**
-```latex
-% Multiple authors with footnotes
-\articleauthors{%
-  First Author\footnote{University of X, Email: author1@x.edu}
-  \quad\quad
-  Second Author\footnote{University of Y, Email: author2@y.edu}
-}
-
-% For 5+ authors, consider two-line layout:
-\articleauthors{%
-  Author One\footnote{...} \quad Author Two\footnote{...} \quad Author Three\footnote{...}\\[0.3\baselineskip]
-  Author Four\footnote{...} \quad Author Five\footnote{...}
-}
-```
-
-**Complete Title Page Example:**
-```latex
-\thispagestyle{empty}
-\titlefootnotesetup  % Switch to symbolic footnotes
-\begin{center}
-  \vspace*{1\baselineskip}
-  \articletitle{Your Title Here}
-  \articleauthors{...}
-  \articledate{\today}
-  \begin{articleabstract}
-    Abstract text following 85% width for optimal readability...
-  \end{articleabstract}
-  \articlekeywords{keyword1, keyword2, keyword3}
-  \articlejel{A10, B20, C30}
-\end{center}
-\clearpage
-\titlefootnotereset  % Reset to numeric footnotes
-\setcounter{page}{1}
-```
-
-**Spacing Principles:**
-- All vertical spacing uses the 13.2pt spacing quantum (body baseline measures 16.32pt)
-- Title sizes follow Brown's modular scale (18pt = 11pt × 1.333²)
-- Author names use subtle size increase (12pt = 11pt × 1.09)
-- Abstract width (85%) follows Butterick's optimal reading guidelines
-
-#### Academic Writing Quality Standards
-
-**Sentence and Paragraph Structure:**
-```latex
-% CORRECT: One sentence per line (version control friendly)
-This is the first sentence of the paragraph.
-It clearly states the main point.
-The following sentence provides supporting evidence.
-
-% INCORRECT: Multiple sentences per line
-This is the first sentence. It clearly states the main point. The following sentence provides evidence.
-```
-
-**Professional Language Standards:**
-```latex
-% CORRECT: Precise, academic language
-The results \emph{demonstrate} a significant correlation.
-The analysis \emph{reveals} important patterns.
-The findings \emph{indicate} a clear relationship.
-
-% INCORRECT: Weak or informal language
-The results \emph{show} a correlation.
-The analysis \emph{finds} patterns.
-The findings \emph{prove} a relationship.
-```
-
-**Quantitative Precision:**
-```latex
-% CORRECT: Specific quantification with units
-The performance improved by 23.7\% over baseline results.
-Measurements were taken at 5-minute intervals ($n = 120$).
-The confidence interval spans [0.15, 0.42] with $p < 0.001$.
-
-% INCORRECT: Vague quantification
-The performance improved significantly.
-Measurements were taken frequently.
-The results are statistically significant.
-```
-
-#### Small Caps Usage
-
-```latex
-% General purpose bold small caps
-Organizations like \textbf{\textsc{UNESCO}} require careful formatting.
-
-% Heading-style small caps with enhanced tracking
-\textbf{\textsc{Chapter Opening}}
-
-% Inline small caps for abbreviations
-The \textbf{\textsc{PhD}} program requires comprehensive study.
-
-% Color-balanced small caps for headings
-Section headings use \balancedbsc{Enhanced Formatting}.
-```
-
-#### Professional Quotations
-
-```latex
-% CORRECT: LaTeX quotation marks
-``Professional typography'' requires attention to detail.
-Typography---like architecture---requires systematic thinking.
-
-% INCORRECT: Straight quotes
-"Professional typography" requires attention to detail.
-Typography--like architecture--requires systematic thinking.
-```
-
-### Mathematical Typography Standards
-
-#### Semantic Mathematical Commands
-
-```latex
-% Number sets (use semantic commands)
-\mathbb{R}^n, \mathbb{C}, \mathbb{Z}, \mathbb{Q}, \mathbb{N}, \mathbb{F}, \mathbb{P}
-
-% Mathematical operators
-\lVert x\rVert, \lvert z\rvert, \langle u, v\rangle, \{A\}
-
-% Mathematical spaces (calligraphic)
-\mathcal{H}, \mathcal{B}, \mathcal{A}, \mathcal{T}, \mathcal{M}
-
-% Declared operators  
-\operatorname{tr}(A), \operatorname{rank}(M), \operatorname{span}\{V\}, \operatorname{supp}(f)
-```
-
-#### Display Mathematics
-
-```latex
-% CORRECT: Systematic equation formatting
-\begin{equation}
-f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
-\end{equation}
-
-% Enhanced inline mathematics
-The function $f \colon \mathbb{R} \to \mathbb{C}$ satisfies $\lVert f\rVert_2 < \infty$.
-```
-
-#### Complex Mathematical Expressions
-
-```latex
-% Advanced mathematical typography
-\begin{align}
-\mathcal{L}[f](s) &= \int_0^{\infty} f(t) e^{-st} \, dt \\
-\text{where } f &\in L^1(\mathbb{R}_+) \cap C(\mathbb{R}_+)
-\end{align}
-```
-
-#### Mathematical Writing Best Practices
-
-**Equation Integration:**
-```latex
-% CORRECT: Equations as part of sentence structure
-The fundamental relationship is given by
-\begin{equation}
-E = mc^2,
-\label{eq:mass-energy}
-\end{equation}
-where $E$ represents energy, $m$ denotes mass, and $c$ is the speed of light.
-
-% INCORRECT: Equations as isolated elements
-The fundamental relationship:
-$$E = mc^2$$
-$E$ = energy, $m$ = mass, $c$ = speed of light.
-```
-
-**Variable Definition Standards:**
-```latex
-% CORRECT: Clear variable introduction
-Let $\mathbf{X} = (x_1, x_2, \ldots, x_n)^T \in \mathbb{R}^n$ denote the feature vector.
-The objective function $f: \mathbb{R}^n \to \mathbb{R}$ is defined as $f(\mathbf{x}) = \|\mathbf{Ax} - \mathbf{b}\|_2^2$.
-
-% INCORRECT: Unclear variable usage
-Let $X$ be the features and $f$ be the function.
-```
-
-**Mathematical Punctuation:**
-```latex
-% CORRECT: Proper equation punctuation
-\begin{align}
-\alpha &= \beta + \gamma, \\
-\delta &= \epsilon \cdot \zeta.
-\end{align}
-
-% INCORRECT: Missing or improper punctuation
-\begin{align}
-\alpha &= \beta + \gamma \\
-\delta &= \epsilon \cdot \zeta
-\end{align}
-```
-
-### Code Typography Standards
-
-#### Inline Code Context
-
-```latex
-% Basic inline code
-The \texttt{numpy.array} function handles multidimensional data.
-
-% Micro-spaced code (prevents text flow disruption)
-Python's \texttt{DataFrame.groupby()} method provides aggregation.
-
-% File paths with proper hyphenation
-Data is stored in \texttt{/data/processed/analysis_results.csv}.
-
-% Mathematical variables in code context
-The variable \texttt{learning_rate} controls optimization speed.
-
-% Mixed documentation style
-Function signature: \texttt{\textbackslash{}newcommand\{\textbackslash{}norm\}[1]}
-```
-
-#### Code Block Standards
-
-```latex
-% For longer code blocks, use standard LaTeX environments
-\begin{verbatim}
-def calculate_statistics(data):
-    """Compute descriptive statistics."""
-    return {
-        'mean': np.mean(data),
-        'std': np.std(data),
-        'count': len(data)
-    }
-\end{verbatim}
-```
-
-### Footnote Standards
-
-#### Professional Footnote Usage
-
-```latex
-% Standard footnotes with hanging indent
-This important concept\footnote{The concept was first introduced by 
-Smith (1995) and later refined by Johnson (2003), providing the 
-foundation for modern understanding.} requires careful consideration.
-
-% Multiple footnotes
-Key findings\footnote{See Appendix A for detailed methodology.} 
-support the hypothesis\footnote{Statistical significance: p < 0.001}.
-```
-
-**Automatic Features:**
-- **Sizing**: 8pt superscript, 9pt text with 11pt leading
-- **Spacing**: 26.4pt (2 quanta) above the footnote rule; 12pt footnote baseline between notes
-- **Typography**: Oldstyle numerals, hanging indent, optimized word spacing
-
-### Document Structure Standards
-
-#### Professional Labeling Convention
-
-**Systematic Label Prefixes:**
-All labels must use consistent prefixes for optimal organization and cross-referencing:
-
-| Element Type | Prefix | Example | Usage |
-|--------------|---------|---------|-------|
-| Table | `tbl:` | `\label{tbl:performance-results}` | Main tables |
-| Subtable | `subtbl:` | `\label{subtbl:subset-analysis}` | Sub-tables within table environments |
-| Figure | `fig:` | `\label{fig:system-architecture}` | Main figures |
-| Subfigure | `subfig:` | `\label{subfig:component-detail}` | Sub-figures within figure environments |
-| Section | `sec:` | `\label{sec:methodology}` | Main sections |
-| Subsection | `subsec:` | `\label{subsec:data-collection}` | Subsections |
-| Subsubsection | `subsubsec:` | `\label{subsubsec:validation-protocol}` | Subsubsections |
-| Algorithm | `alg:` | `\label{alg:optimization-procedure}` | Algorithm environments |
-| Code Line | `line:` | `\label{line:critical-calculation}` | Specific lines in algorithms/code |
-| Equation | `eq:` | `\label{eq:fundamental-relationship}` | Mathematical equations |
-| Appendix Section | `app:` | `\label{app:technical-details}` | Appendix sections (existing) |
-
-**Labeling Best Practices:**
-```latex
-% CORRECT: Descriptive, systematic labels
-\begin{table}[htbp]
-  \caption{Performance Comparison Across Three Datasets}
-  \label{tbl:performance-comparison}
-  % table content
-\end{table}
-
-\begin{figure}[htbp]
-  % figure content
-  \caption{System Architecture Overview}
-  \label{fig:system-architecture}
-\end{figure}
-
-% INCORRECT: Non-descriptive or inconsistent labels
-\label{table1}
-\label{fig-arch}
-\label{performanceData}
-```
-
-#### Caption Placement and Formatting
-
-**Placement Rules:**
-```latex
-% CORRECT: Captions above tables
-\begin{table}[htbp]
-  \caption{The Effectiveness of ADF in Three Datasets}
-  \label{tbl:adf-effectiveness}
-  \begin{tabular}{...}
-    % table content
-  \end{tabular}
-\end{table}
-
-% CORRECT: Captions below figures  
-\begin{figure}[htbp]
-  \includegraphics[width=0.8\textwidth]{analysis-results}
-  \caption{Learning-Based Approach Performance Analysis}
-  \label{fig:learning-performance}
-\end{figure}
-```
-
-**Caption Capitalization:**
-Follow the same headline-style capitalization rules as titles:
-```latex
-% CORRECT: Headline-style capitalization
-\caption{The Effectiveness of Machine Learning in Data Analysis}
-\caption{Performance Comparison Between Traditional and Novel Approaches}
-\caption{X-ray Analysis Results for Medical Imaging}
-
-% INCORRECT: Sentence case or improper capitalization
-\caption{The effectiveness of machine learning in data analysis}
-\caption{Performance comparison between Traditional and Novel approaches}  
-\caption{X-Ray Analysis Results for Medical Imaging}
-```
-
-#### Data Presentation Standards
-
-**Table Design Standards:**
-```latex
-% CORRECT: Professional table with clear structure
-\begin{table}[htbp]
-  \caption{Performance Metrics Across Different Models}
-  \label{tbl:model-performance}
-  \centering
-  \begin{tabular}{@{}lrrr@{}}
-    \toprule
-    Model & Accuracy (\%) & F1-Score & Training Time (min) \\
-    \midrule
-    Baseline      & 82.3 & 0.791 &  15.2 \\
-    Enhanced SVM  & 87.6 & 0.834 &  23.7 \\
-    Deep Network  & 91.2 & 0.897 & 142.5 \\
-    \bottomrule
-  \end{tabular}
-  \footnotesize
-  \textit{Note:} All metrics computed on held-out test set ($n = 1{,}250$).
-\end{table}
-
-% INCORRECT: Poor table design
-\begin{table}
-\begin{tabular}{|l|l|l|l|}
-\hline
-Model & Accuracy & F1 & Time \\
-\hline
-Baseline & 82.3 & 0.791 & 15.2 \\
-SVM & 87.6 & 0.834 & 23.7 \\
-Network & 91.2 & 0.897 & 142.5 \\
-\hline
-\end{tabular}
-\end{table}
-```
-
-**Figure Quality Standards:**
-```latex
-% CORRECT: High-quality figure integration
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.9\textwidth]{plots/convergence-analysis}
-  \caption{Training Loss Convergence Across Different Learning Rates}
-  \label{fig:convergence-analysis}
-\end{figure}
-
-% Guidelines for figure creation:
-% - Minimum 300 DPI for publication quality
-% - Clear, readable fonts (minimum 10pt in final size)
-% - Consistent color scheme across all figures
-% - Descriptive axis labels with units
-% - Legend when multiple data series present
-```
-
-**Statistical Reporting Standards:**
-```latex
-% CORRECT: Complete statistical reporting
-The proposed method achieved significantly higher accuracy 
-(M = 87.6\%, SD = 2.3\%) compared to the baseline 
-(M = 82.3\%, SD = 3.1\%), t(48) = 6.42, p < 0.001, 
-Cohen's d = 1.85, 95\% CI [3.8\%, 6.7\%].
-
-% INCORRECT: Incomplete statistical reporting
-The proposed method was significantly better (p < 0.05).
-```
-
-#### Section Hierarchy
-
-```latex
-% CORRECT: Systematic hierarchy following modular scale
-\section{Major Section}           % 18pt, Perfect Fourth ratio
-\subsection{Important Subsection} % 14pt, scaled systematically  
-\subsubsection{Detailed Topic}    % 12pt, proportional scaling
-\paragraph{Key Point}             % 11.5pt, enhanced small caps
-```
-
-#### Front Matter Standards
-
-```latex
-% Professional title formatting
-\papertitle{Short, Impactful Title}          % Tracked uppercase
-\mixedtitle{Longer Descriptive Title Text}   % Mixed case for readability
-
-% Author and affiliation
-\textsc{Author Name}                     % Tracked small caps
-\emph{Institution and Department}     % Italic formatting
-
-% Keywords with tracking
-\textbf{Keywords:} \emph{keyword one, keyword two, keyword three}
-```
-
-#### Bibliography Integration
-
-```latex
-% CORRECT: Chicago author-date style citations
-This finding \cite{smith2023analysis} supports the hypothesis.
-Recent studies \cite{jones2022methods, brown2023results} confirm...
-
-% Multiple citations
-\cite{author2020, author2021, author2022}
-```
-
-#### Reproducibility and Open Science Standards
-
-**Code and Data Documentation:**
-```latex
-% CORRECT: Complete reproducibility information
-All experiments were conducted using Python 3.9.7 with 
-scikit-learn v1.0.2 and NumPy v1.21.3.
-The complete source code and datasets are available at 
-\url{https://github.com/author/paper-reproduction}.
-Random seeds were fixed (seed = 42) for all experiments.
-
-% INCORRECT: Vague implementation details
-Experiments used standard machine learning libraries.
-Code is available upon request.
-```
-
-**Version Control and Collaboration:**
-```latex
-% Best practices for academic collaboration:
-% - Use meaningful commit messages
-% - One sentence per line for .tex files (easier merging)
-% - Systematic file organization with clear naming
-% - Regular compilation checks before commits
-% - Shared bibliography management
-```
-
-**Experimental Design Documentation:**
-```latex
-% CORRECT: Comprehensive experimental setup
-The dataset was randomly split into training (60\%), 
-validation (20\%), and test sets (20\%) using stratified 
-sampling to maintain class distribution. 
-Hyperparameters were tuned using 5-fold cross-validation 
-on the training set, with performance evaluated on the 
-held-out test set for final reporting.
-
-% INCORRECT: Unclear experimental setup
-Data was split and models were tuned appropriately.
-```
-
-#### Citation Quality and Academic Integrity
-
-**Comprehensive Citation Standards:**
-```latex
-% CORRECT: Appropriate citation density and variety
-Recent advances in deep learning~\cite{lecun2015deep} have 
-revolutionized computer vision tasks. Convolutional neural 
-networks~\cite{krizhevsky2012imagenet} demonstrate superior 
-performance on image classification, while attention 
-mechanisms~\cite{vaswani2017attention} have transformed 
-natural language processing.
-
-% INCORRECT: Sparse or inappropriate citations
-Deep learning is important. CNNs work well for images.
-```
-
-**Citation Context and Integration:**
-```latex
-% CORRECT: Citations integrated with analysis
-While Smith et al.~\cite{smith2023analysis} report accuracy 
-improvements of 15\%, their approach requires 3× more 
-computational resources than our proposed method. 
-In contrast, the lightweight framework of 
-Jones~\cite{jones2023efficient} achieves comparable results 
-with reduced complexity.
-
-% INCORRECT: Citations without context
-Many papers have studied this~\cite{paper1,paper2,paper3}.
-```
-
-**Primary vs. Secondary Sources:**
-```latex
-% CORRECT: Preference for primary sources
-The original ResNet architecture~\cite{he2016deep} introduced 
-skip connections to address the vanishing gradient problem.
-
-% INCORRECT: Citing secondary sources for primary claims
-ResNet uses skip connections~\cite{tutorial2023deep}.
-```
-
-### Common Anti-Patterns
-
-#### Typography Mistakes to Avoid
-
-```latex
-% WRONG: Manual spacing
-\section{Title}\vspace{10pt}
-This departs from the quantum scale.
-
-% WRONG: Presentational formatting  
-This is \textbf{important} text.
-Use \emph{semantic} formatting instead.
-
-% WRONG: Manual colors
-\textcolor{red}{Warning message}
-Use \textbf{Warning message} instead.
-
-% WRONG: Inconsistent labels
-\label{fig1}, \label{table-data}, \label{AppendixA}
-Use \label{fig:analysis}, \label{tab:data}, \label{app:main}
-```
-
-#### Mathematical Typography Errors
-
-```latex
-% WRONG: Inconsistent notation
-R^n, C, Z (mixing fonts and notation)
-Use \mathbb{R}^n, \mathbb{C}, \mathbb{Z} consistently.
-
-% WRONG: Poor spacing in math mode
-$f(x)=\int_0^1g(t)dt$ (cramped spacing)
-Use $f(x) = \int_0^1 g(t) \, dt$ (proper spacing).
-```
-
-## Removed in v3
-
-v3 is a deliberate breaking contraction (issue #84, [ADR-0006](docs/adr/0006-one-public-entry-point-and-a-narrow-v3-interface.md)). `lanepaper` is a typography package, not a library of generic writing shortcuts, so the generic writing, emphasis, code, punctuation, symbol, currency, fraction, spacing, math, and reference helpers were removed rather than kept as compatibility aliases. Standard LaTeX, amsmath, and third-party packages (siunitx's `\unit`, `doc`'s `\meta`, ...) again own those names. No aliases are provided; update documents to the standard replacements below.
-
-| Removed | Use instead |
-|---------|-------------|
-| `\strongemph`, `\importantnote` | `\textbf` |
-| `\meta`, `\person`, `\acro`, `\regsc`, `\elegantsc`, `\refinedsc` | `\textsc` |
-| `\critical`, `\bsc`, `\headsc`, `\inlinebsc`, `\elegantscbold` | `\textbf{\textsc{...}}` |
-| `\term`, `\work`, `\subtleemph`, `\externalref`, `\smartitalic` | `\emph` |
-| `\codecomment` | `\textit` |
-| `\code`, `\inlinecode`, `\balancedcode`, `\filepath`, `\var` | `\texttt` |
-| `\doccode{a}{b}` | `a: \texttt{b}` |
-| `\authorname`, `\affiliation`, `\keywords` | title-page commands (`\articleauthors`, ...) or `\textsc`/`\emph` |
-| `\emdash`, `\emdashclassic`, `\dashparen` | `---` |
-| `\endash`, `\dashrange{a}{b}` | `--`, `a--b` |
-| `\tdots`, `\fdots`, `\edots` | `\dots` |
-| `\ldots`, `\cdots`, `\S`, `\P`, `\copyright`, `\dag`, `\ddag` | standard LaTeX (restored) |
-| `\thinspace`, `\medspace`, `\thickspace` | standard amsmath (restored) |
-| `\euro`, `\pound`, `\cent`, `\currency` | `\texteuro`, `\textsterling`, `\textcent`, `\textcurrency` |
-| `\trademark`, `\registered`, `\servicemark` | `\texttrademark`, `\textregistered`, `\textsuperscript{SM}` |
-| `\degrees`, `\half`, `\quarter`, `\threequarters` | `\textdegree`, `\textonehalf`, `\textonequarter`, `\textthreequarters` |
-| `\super`, `\sub` | `\textsuperscript`, `\textsubscript` |
-| `\sq`, `\dq`, `\nq` | csquotes' `\enquote` (or `` `...' `` / `` ``...'' ``) |
-| `\wordspace`, `\emspace`, `\twoemspace`, `\abbrspace` | `\quad`, `\qquad`, `\,` |
-| `\fig`, `\tab`, `\unit` | `Figure~\ref{...}`, `Table~\ref{...}`, siunitx's `\qty`/`\unit` |
-| `\real`, `\complex`, `\integer`, `\rational`, `\natural`, `\field`, `\prob` | `\mathbb{R}`, `\mathbb{C}`, `\mathbb{Z}`, ... |
-| `\hilbert`, `\banach`, `\algebra`, `\topology`, `\measure` | `\mathcal{H}`, `\mathcal{B}`, ... |
-| `\norm`, `\abs`, `\inner`, `\set`, `\given` | `\lVert\,\rVert`, `\lvert\,\rvert`, `\langle\,\rangle`, `\{\,\}`, `\mid` |
-| `\tr`, `\rank`, `\Span`, `\supp`, `\argmax`, `\argmin` | amsmath's `\DeclareMathOperator` |
-| `\mathbinx`, `\mathrelx`, `\dint`, `\ssup`, `\ssub`, `\lim` | standard amsmath (`\lim` restored) |
-| `\refpage`, `\pref`, `\seeref`, `\seealso` (and capitalized forms) | configure and use cleveref's `\cref`/`\Cref`/`\cpageref` |
-| `\pdfcode`, `\pdfsc`, `\pdfemph`, `\pdfbf`, `\pdfit`, `\pdffilepath`, `\pdfvar` | hyperref's `\texorpdfstring` |
-
-### Entry points, options, the grid API and the colour API (issue #85)
-
-`\usepackage{lanepaper}` is the sole public load path. The other two entry
-points were deleted, direct loading of an `lnp*.sty` module is unsupported,
-the option surface is down to `[optical]` and `[nocolor]`, and the 13.2pt
-spacing quantum is private.
-
-| Removed | Use instead |
-|---------|-------------|
-| `lnpminimal.sty` (entry point) | `\usepackage{lanepaper}` |
-| `lnpgridoverlay.sty` (entry point), `\showgrid`, `\hidegrid` | nothing; it was a development overlay |
-| `lnpcompilationfixes.sty` (module), `\fitwide`, `\showoverfulls`, `\hideoverfulls` | `\resizebox`, `\overfullrule` |
-| `[grid]`, `[nogrid]`, `[minimal]`, `[draft]` | nothing; the modes are gone |
-| `[natbib]`, `[nobiblatex]` | load `natbib` or `biblatex` in the document |
-| `[subsectionbarriers]`, `[nosubsectionbarriers]` | nothing; use standard float placement or load `placeins` in the document |
-| `\gridunit`, `\halfgridunit`, `\quartergridunit`, `\threequartergridunit`, `\onehalfgridunit`, `\doublegridunit`, `\triplegridunit` | the length itself: `13.2pt`, `6.6pt`, `3.3pt`, `9.9pt`, `19.8pt`, `26.4pt`, `39.6pt` |
-| `\gridmult`, `\gridmath`, `\gridspace`, `\halfbaselinespace`, `\fullbaselinespace` | `\vspace{...}` with the length |
-| `\roundtogrid`, `\gridincludegraphics`, `\imagegridspace`, `gridfigure` | `\includegraphics` in a standard `figure` |
-| `gridtable`, `compactgridtable`, `spaciousgridtable` | `\renewcommand{\arraystretch}{...}` in a standard `table` |
-| `\standardgrid`, `\compactgrid`, `\spaciousgrid`, `\customgrid` | `\renewcommand{\arraystretch}{...}` |
-| `\quartergridparagraphs`, `\thirdgridparagraphs` | set `\parindent` and `\parskip` yourself |
-| `\classicalparagraphs`, `\modernparagraphs`, `\hybridparagraphs` | set `\parindent` and `\parskip` yourself |
-| `grideqnarray`, `gridgather` | amsmath's `align` and `gather` |
-| colour names `textblack`, `sectioncolor`, `subsectioncolor`, `subsubcolor`, `paragraphcolor`, `subtlegray`, `quotegray`, `linknavy` | `\definecolor` your own; the palette is private |
-| `\maincolor`, `\secondarycolor`, `\accentcolor`, `\codeaccent` | `\color`/`\textcolor` with your own colour |
-| `lnpfontfeatures.sty`, `lnpfontfallbacks.sty` | nothing; use standard font commands and install the required fonts |
-| `lnphochuli.sty`, `lnpparagraphs.sty` | nothing; their loadable behavior now lives in `lanepaper.sty` and `lnpdimensions.sty` |
-| `\oldfigs`, `\textfigs`, `\liningfigs`, `\tablefigs`, `\tabularfigs` | default lining tabular figures or explicit `\oldstylenums{...}` in document-owned typography |
-| `\textsup`, `\supfigs`, `\inffigs`, `\chemform` | standard `\textsuperscript`, `\textsubscript`, or math markup |
-| `\nolig`, `\breaklig`, `\shelfful`, `\cufflink`, `\textuppercase`, `\textlowercase` | standard text or document-owned font configuration |
-
-`[optical]` is new: it carries the sourced refinements that are not safe as
-defaults, currently last-line runt control. `[nocolor]` changed meaning — it
-now converts the palette through xcolor's gray model instead of flattening
-every colour to black, so the grayscale hierarchy survives.
-
-The package also stopped forcing `letterpaper`: `\documentclass[a4paper]`
-now really produces A4, with the six-inch measure kept and centred.
-
-Cleveref is no longer configured by the package: a document that wants abbreviated names or parenthetical styles loads and configures cleveref itself. The title-page small caps this package still uses internally is private (`\lnp@titlesc`) and unchanged.
-
-### Document structures (issue #86)
-
-v3 keeps standard LaTeX structures and removes package wrappers, orchestration,
-diagnostics, and ornamental alternatives. No aliases are provided.
-
-| Removed | Use instead |
-|---------|-------------|
-| `epigraph`, `emphasisquote`, `\quoteattribution` | standard `quote` or `quotation`; write attribution text directly |
-| `openingparagraph`, `\firstlinesc`, `\abstractopening` | ordinary paragraphs; `\sectionopening{...}` is the retained inline opening |
-| `\academicdropcap` and drop-cap support | ordinary paragraph text or a document-selected package |
-| `\sectionsep`, `\spacebreak`, `\majorsectionspace`, `\thinrulebreak`, `\paragraphsep` | explicit document-owned spacing where needed |
-| `\sidenote` | `\marginpar` or a document-selected sidenote package |
-| `academicitem`, `compactitem`, `displayitem`, `readableitem` | standard `itemize`, `enumerate`, or `description` |
-| public marker, bullet-switching, list-spacing, and list-length helpers | enumitem options owned by the document |
-| float barriers, here-float wrappers, balance helpers, and float diagnostics | standard `figure`/`table`; load `placeins` if wanted |
-| `regressiontable`, caption helpers, panel helpers, and table-note commands | standard `table`; load `threeparttable` for table notes |
-| `tablenotes` defined by Lanepaper | threeparttable's native `tablenotes` environment |
-| `fignotes`, `\fignote`, `\figurenote`, `\figsource` | `lanepaperfigurenotes` with ordinary text inside |
-| `\startappendices`, `\finishappendices`, `documentAppendices` | standard `\appendix` or a package loaded by the document |
-| `\lanepaperdiagnostics`, `\lanepaperinfo` | ordinary LaTeX logs and package inspection tools |
-
-`booktabs` remains required and tables use horizontal rules without vertical
-rules. If the document loads `longtable`, Lanepaper still sets its caption
-width and applies the table-caption typography through a package hook.
+## Migration from v2
+
+v3 is a deliberate breaking contraction with no compatibility aliases and no
+flag that restores the v2 surface. A v2 document needs source edits; the
+complete top-to-bottom replacement map is in [MIGRATION.md](MIGRATION.md).

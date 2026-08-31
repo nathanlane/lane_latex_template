@@ -77,7 +77,7 @@ is enough to register it:
 \usepackage{lanepaper}
 \begin{document}
 \section{Testing one thing}
-\bsc{Bold small caps}
+\textsc{Small caps}
 \end{document}
 ```
 

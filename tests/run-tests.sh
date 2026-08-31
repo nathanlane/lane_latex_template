@@ -16,11 +16,9 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 FIXTURES_DIR="$SCRIPT_DIR/fixtures"
 LOGS_DIR="$SCRIPT_DIR/compilation/logs"
 OUTPUT_DIR="$SCRIPT_DIR/visual/output"
-COMPAT_PROBES_DIR="$(mktemp -d)"
 
 # Create necessary directories
 mkdir -p "$LOGS_DIR" "$OUTPUT_DIR"
-trap 'rm -rf "$COMPAT_PROBES_DIR"' EXIT
 
 # Test results
 PASSED=0
@@ -84,8 +82,6 @@ test_latex_file() {
         log_pass "  Compilation successful"
         
         # Move PDF to output directory.
-        # FIX: Probe sources can live outside the repo; pdflatex writes their
-        # PDF into the current directory when invoked from PROJECT_ROOT.
         local root_pdf="$PROJECT_ROOT/${basename}.pdf"
         if [ -f "$source_pdf" ]; then
             mv "$source_pdf" "$pdf_output"
@@ -131,58 +127,12 @@ test_latex_file() {
     fi
     
     # Clean up auxiliary files
-    # FIX: Compatibility probes can live in tmp dirs while pdflatex writes aux
-    # files into PROJECT_ROOT, so clean both source-path and root fallbacks.
     rm -f "$source_aux" "$source_log" "$source_out" "$source_toc" \
           "$source_bcf" "$source_run_xml" "$source_hd" \
           "$root_aux" "$root_log" "$root_out" "$root_toc" \
           "$root_bcf" "$root_run_xml" "$root_hd"
     
     return 0
-}
-
-# Run a compatibility probe from a one-off inline source document.
-run_compatibility_probe() {
-    local name="$1"
-    local tex_file="$COMPAT_PROBES_DIR/${name}.tex"
-
-    cat > "$tex_file"
-    test_latex_file "$tex_file"
-}
-
-# v3 (issue #85) deleted the standalone-module and preload probes that used to
-# live here: they asserted a contract the package no longer makes. They were
-# not replaced -- the option and layout contracts are asserted once, in
-# tests/test_option_contracts.py, and duplicating them here would mean two
-# places to keep in step.
-run_compatibility_probes() {
-    log_info "Running compatibility probes"
-    local probe_failures=0
-
-    if ! run_compatibility_probe "prelude-natbib-preamble" <<'EOF'
-\documentclass[11pt]{article}
-\input{preamble-natbib.tex}
-
-\begin{document}
-\section{Natbib Preamble Contract}
-\textcite{smith2020} described the framework in a foundational way.
-\autocite{smith2020}
-
-\begin{thebibliography}{1}
-\bibitem[Smith(2020)]{smith2020} Smith, A. 2020. Legacy citation style.
-\end{thebibliography}
-\end{document}
-EOF
-    then
-        probe_failures=$((probe_failures + 1))
-    fi
-
-    if ((probe_failures > 0)); then
-        log_fail "$probe_failures compatibility probe failures"
-        return 1
-    else
-        log_pass "All compatibility probes passed"
-    fi
 }
 
 # Main test runner
@@ -226,8 +176,6 @@ main() {
         test_latex_file "$fixture" || true
         echo
     done
-
-    run_compatibility_probes || true
 
     # Summary
     echo "Test Summary"
