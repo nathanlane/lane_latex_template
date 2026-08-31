@@ -290,8 +290,9 @@ probes for support before passing it.
 ## 11. Versioning
 
 Git tags are semantic (`v2.1.0`). `\ProvidesPackage` strings are LaTeX
-date+version and are *not* the same number: currently 5 modules at `v1.1`,
-`lnpmicrotype.sty` at `v1.3`, and `lanepaper.sty` at `v2.0`.
+date+version and are *not* the same number, though the v3.0.0 stamp brought
+them into line: all seven package files currently read `2026/08/31 v3.0.0`.
+Re-measure rather than trusting this sentence after any release.
 
 Keep the LaTeX date+version form. Every `\ProvidesPackage` date is synced on
 release by running `l3build tag <version>` directly. `make ctan` does not stamp

@@ -93,7 +93,7 @@ uploadconfig = {
     If present, lanepaper only applies narrow link styling to hyperref and
     sets longtable's caption width.
   ]],
-  home       = "https://github.com/nathanlane/lane_latex_template",
-  repository = "https://github.com/nathanlane/lane_latex_template",
-  bugtracker = "https://github.com/nathanlane/lane_latex_template/issues",
+  home       = "https://github.com/nathanlane/lanepaper",
+  repository = "https://github.com/nathanlane/lanepaper",
+  bugtracker = "https://github.com/nathanlane/lanepaper/issues",
 }

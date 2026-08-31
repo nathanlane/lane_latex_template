@@ -116,15 +116,15 @@ Biber, English hyphenation, Hyperref, and cleveref.
 The package is distributed from GitHub while the v3 CTAN release is pending:
 
 ```bash
-git clone https://github.com/nathanlane/lane_latex_template.git
-cd lane_latex_template
+git clone https://github.com/nathanlane/lanepaper.git
+cd lanepaper
 ```
 
 For a paper that uses a local checkout, add its package directory to the TeX
 search path before compiling:
 
 ```bash
-export TEXINPUTS="/path/to/lane_latex_template/lanepaper:"
+export TEXINPUTS="/path/to/lanepaper/lanepaper:"
 pdflatex paper.tex
 ```
 
