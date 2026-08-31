@@ -29,6 +29,9 @@ package options are `[optical]` and `[nocolor]`:
 | `lnpminimal.sty` | Replace with `\usepackage{lanepaper}`. |
 | `lnpgridoverlay.sty` | Delete the development overlay; there is no v3 replacement. |
 | `lnpcompilationfixes.sty` | Delete the module. Use standard document tools such as `\resizebox` or `\overfullrule` when needed. |
+| `\fitwide` | `\resizebox{\textwidth}{!}{...}`. |
+| `\showoverfulls`, `\hideoverfulls` | `\overfullrule=5pt` and `\overfullrule=0pt`. |
+| `\showgrid`, `\hidegrid` | Nothing; these belonged to the deleted development overlay. |
 | `[grid]`, `[nogrid]`, `[minimal]`, `[draft]` | Delete the option. The modes are gone. |
 | `[natbib]`, `[nobiblatex]` | Load and configure `natbib` or `biblatex` in the document. |
 | `[subsectionbarriers]`, `[nosubsectionbarriers]` | Delete the option. Use standard float placement or load `placeins` in the document if a barrier is required. |

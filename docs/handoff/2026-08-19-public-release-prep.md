@@ -8,7 +8,7 @@ topic: public-release-prep
 
 ## Objective
 
-Get `lanepaper` (repository renamed from `lane_latex_template`) to publicly releasable. `v2.1.0` is tagged and published as
+Get `lanepaper` to publicly releasable. The repository is still named `lane_latex_template`; renaming it is an unperformed manual step of issue #90. `v2.1.0` is tagged and published as
 latest.
 
 The plan changed twice. A design review on 2026-08-22 reframed the project from "work
@@ -207,8 +207,9 @@ it after package changes. Rule and mechanism in `CONVENTIONS.md` §8. Do not
 
 - **Stamping is now `l3build tag <version>` run directly.** `make release` was its only
   wrapper and C6 deleted it. **`make ctan` does not stamp before archiving**, so run
-  `l3build tag` first when an archive needs synchronized versions. Current tree: five
-  modules at `v1.1`, `lnpmicrotype.sty` at `v1.3`, `lanepaper.sty` at `v2.0`.
+  `l3build tag` first when an archive needs synchronized versions. The v3.0.0
+  stamp synchronized all seven package files to `2026/08/31 v3.0.0`; re-measure
+  after any later release rather than trusting this line.
 - **`install` reads `installfiles` from `unpackdir`, not `sourcefiledir`.** Do not
   "simplify" `unpackfiles = {}` away.
 - **`cleanfiles` defaults would delete the demo's `main.pdf`.** Set to `{}`

@@ -12,7 +12,7 @@ recorded in [ADR-0006](docs/adr/0006-one-public-entry-point-and-a-narrow-v3-inte
 and tracked by issue #82.
 
 **No compatibility aliases are provided.** A v2 document needs edits, not a
-flag. [`MIGRATION.md`](MIGRATION.md) maps every removed surface to standard
+flag. [`MIGRATION.md`](MIGRATION.md) maps the removed surfaces to standard
 LaTeX, a third-party package, or retained v3 behavior, in the order a real
 paper needs them.
 
@@ -34,12 +34,16 @@ What changed, in one place:
 - **Documents own their content packages.** Bibliography, hyperref, cleveref,
   csquotes and appendix choices belong to the document. Lanepaper configures an
   already-loaded package only where it owns the resulting typography.
-- **Seven modules, down from seventeen.** `lnphochuli`, `lnpparagraphs`,
-  `lnpfontfeatures`, `lnpfontfallbacks`, `lnpcompilationfixes` and the two
-  grid-locked modules are deleted.
-- **Two deliberate rendering changes.** The first paragraph after a heading is
+- **Seven package files, down from sixteen at v2.1.0.** `lnphochuli`,
+  `lnpparagraphs`, `lnpfontfeatures`, `lnpfontfallbacks` and
+  `lnpcompilationfixes` are deleted here, along with the `lnpminimal` and
+  `lnpgridoverlay` entry points. The two grid-locked modules went earlier, with
+  ADR-0005.
+- **A migrated paper repaginates.** The first paragraph after a heading is
   flush left rather than indented, and footnotes may split across pages again.
-  A migrated paper repaginates.
+  Adopting upstream Microtype also shifts line breaking, `[nocolor]` behaves
+  differently, and A4 selection is now honored from the class. Expect reflow and
+  re-read the result rather than assuming the text is unchanged.
 - **Upstream Microtype defaults.** The custom protrusion and expansion tables
   are replaced by Pagella's upstream defaults plus one +50 small-caps tracking
   rule.
