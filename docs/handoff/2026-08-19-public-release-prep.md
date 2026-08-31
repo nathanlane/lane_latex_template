@@ -1,7 +1,7 @@
 ---
 title: Public Release Prep
 date: 2026-08-19
-updated: 2026-08-30
+updated: 2026-08-31
 type: handoff
 topic: public-release-prep
 ---
@@ -120,6 +120,34 @@ separate file. Re-derive with that in mind if the list is ever rebuilt.
 - **A finding of "0 differing lines" is only as good as the two builds behind it.**
   Verify a delegate's proof by re-running it yourself under a known toolchain.
 
+### Delegating with foreman and Herdr — what actually bites
+
+Two C6 review findings were defects no gate would have caught, so the review round is
+worth its cost. The mechanics are where the time goes:
+
+- **`herdr agent list` reports a stale `agent_status`.** A Codex pane sat at `working`
+  long after it had finished and printed its report. Detect completion from the pane
+  text — the `Worked for …` banner present *and* `esc to interrupt` absent — not from
+  the status field. `watch-workers.sh` trusts that field, so it never fired.
+- **`herdr pane read` returns only a short tail.** A long reviewer report scrolls out
+  of reach and cannot be recovered. Ask for findings in severity batches, and widen the
+  pane first with `herdr pane resize --pane <id> --direction up --amount 0.45`.
+  `herdr pane zoom` does *not* grow the readable buffer.
+- **A Herdr reviewer is launched read-only** and cannot write findings to a file, even
+  outside the checkout. Plan to read them off the pane.
+- **`close-worker.sh` needs `--session`**, and launch receipts are written with
+  `agent_session` empty. The real session id appears in `herdr agent list` once the
+  agent is running — capture it from there, not from the receipt.
+- **`gh pr merge --delete-branch` fails when another worktree holds `main`**
+  (`fatal: 'main' is already used by worktree at …`). The merge still succeeds; only
+  the cleanup fails, leaving the remote branch alive. Delete it with
+  `gh api -X DELETE repos/<owner>/<repo>/git/refs/heads/<branch>`.
+- **`pr-readiness.py` requires `outcome: "clean"`**, not `"findings"`, once
+  `unresolved_findings` is 0. `"findings"` blocks the gate regardless of the count.
+- **Pass the CTAN hold to every delegate explicitly.** Nothing in the repository
+  implies it, and a worker asked to verify an archive fix will reach for
+  `l3build ctan`.
+
 ### Traps that cost real debugging — these will bite again
 
 - **A `.sty` has `@` as a letter by construction**, so `\makeatother` inside one revokes
@@ -217,13 +245,19 @@ point-of-use API; microtype matches sizes exactly (`\normalsize` is 10.95pt).
 
 ## Work State
 
-`main` at `4b91a0d`, clean, in sync. Merged for v3, in order: #93 (architecture
+`main` at `32b8e59`, clean, in sync. Merged for v3, in order: #93 (architecture
 record), #94 (generic API removal), #95 (sole load path), #96 (document structures),
-#97 (C4 Microtype), #98 (C5 paragraphs), #99 (C6 tooling).
+#97 (C4 Microtype), #98 (C5 paragraphs), #99 (C6 tooling), #100 (this handoff).
 
 Local gates on `main`, all verified under **TeX Live 2025**: `make lint` 0,
 `make build` 0 producing a **36-page** PDF, **pytest 54 passed**, `tests/run-tests.sh`
 **64 passed / 0 failed** across 20 fixtures. `test_infrastructure.py` holds 16 guards.
+
+**The primary checkout is on a stale branch.** `~/code/lane_latex_template` sits on
+`fix/api-guards-74` at `2a691af`, which predates every v3 PR — the handoff file there
+is the pre-#100 version. Work from a worktree on `main`, or check out `main` first.
+Running `reorient` in the primary reads that stale copy and reports a state two weeks
+out of date.
 
 Deliberately not done, with reasons:
 
@@ -279,12 +313,16 @@ Deliberately not done, with reasons:
 
 ## Suggested Skills
 
-- `foreman` — decomposition, delegate routing, review, and the GitHub lifecycle. Used
-  for C5 and C6. Launch profiles live in `~/.config/lane-agents/foreman.json`; two
-  Qwen reviewer profiles are parked in `foreman.qwen-parked.json` by maintainer choice.
+- `foreman` — decomposition, delegate routing, review, and the GitHub lifecycle. Ran
+  C5 and C6. Launch profiles live in `~/.config/lane-agents/foreman.json`; two Qwen
+  reviewer profiles are parked in `foreman.qwen-parked.json` by maintainer choice.
+  What worked for C6: one `codex-luna-max` Herdr worker holding the whole branch, with
+  a `claude-opus` reviewer at xhigh. Ask for the merge mode up front — it is per-run
+  and does not carry over.
 - `gh-axi` — issue and PR work, via `npx -y gh-axi`.
 - `pr-body` — repo template is `## Summary` / `## Test plan`; no checker script exists,
   so the skill's validation step is a no-op here.
 - `code-review` — this repo's precedent is external review **before** merge, by a
   reviewer from a different model family than the author.
-- `reorient` — this file is the anchor; update it in place.
+- `reorient` / `make-handoff` — this file is the anchor; update it in place, and run
+  either one from a worktree on `main` (see Work State).
