@@ -10,8 +10,8 @@ issues, and code use one word per concept.
 
 **Package**:
 The `lanepaper` style files — the typography itself, installed once and reused
-across documents. Public GitHub release and later CTAN publication are separate
-events.
+across documents. The v3 package is not yet on CTAN; public GitHub release and
+later CTAN publication are separate events.
 _Avoid_: style, stylesheet, lltpaperstyle, the paper package
 
 **Template**:

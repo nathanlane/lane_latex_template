@@ -1,8 +1,24 @@
 # Changelog
 
-All notable changes to the Lane LaTeX Template are documented here.
+All notable changes to the `lanepaper` package and repository are documented here.
 
 ## Unreleased
+
+Curated the v3 showcase and documentation for issue #89.
+
+- Replaced the accumulated demo catalogue with one coherent paper-shaped visual
+  showcase using standard LaTeX structures and the retained package surface.
+- Removed the demo's landscape helpers, alternate natbib preamble, and API
+  appendix; the test harness no longer probes the deleted natbib path.
+- Added the retained v3 API reference and the top-to-bottom v2 migration guide,
+  with no compatibility aliases for removed surfaces.
+- Absorbed the standalone installation guide into `README.md`, including the
+  complete package and demo dependency lists, `boondox`, `babel-english`, GitHub
+  installation instructions, and the explicit pre-CTAN status.
+- Synchronized contributor, convention, context, testing, troubleshooting, and
+  handoff documentation with the surviving package and build workflows.
+- Documented the recurring macOS Biber PAR-cache failure and its
+  `Unicode::UCD: failed to find unicore/version` signature.
 
 Deleted the two unloaded v2 modules and their dead documentation (issue #87).
 
