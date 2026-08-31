@@ -1,6 +1,7 @@
-# Lane LaTeX Template API Reference
+# Lanepaper v3 API Reference
 
-Complete reference for all commands, environments, and options provided by the `lanepaper` package.
+Reference for the retained commands, environments, options, and document-owned
+integration points of the `lanepaper` package.
 
 ## Table of Contents
 
@@ -25,7 +26,7 @@ Complete reference for all commands, environments, and options provided by the `
 19. [The list system](#the-list-system)
 20. [How the package is put together](#how-the-package-is-put-together)
 21. [Typography standards](#typography-standards)
-22. [Removed in v3](#removed-in-v3)
+22. [Migration from v2](#migration-from-v2)
 
 ## Package Options
 
@@ -39,7 +40,7 @@ Complete reference for all commands, environments, and options provided by the `
 
 `\usepackage{lanepaper}` is the sole public load path (ADR-0006), and it takes
 two options. Anything else is rejected with LaTeX's own `Unknown option`
-error; see [Removed in v3](#removed-in-v3).
+error; see the [migration guide](MIGRATION.md) for the v2 option changes.
 
 | Option | Default | Description |
 |--------|---------|-------------|
@@ -74,7 +75,7 @@ behind this option — it is a default every document gets.
 ### Main Title Commands
 
 #### `\articletitle{title}`
-Displays article title with automatic size adjustment (16-18pt based on length).
+Displays an article title in the package's 22pt title style.
 
 ```latex
 \articletitle{The Impact of Typography on Academic Writing}
@@ -121,7 +122,10 @@ Display article date.
 ### Abstract and Keywords
 
 #### `articleabstract` environment
-Creates golden-ratio width abstract block.
+Creates a narrow abstract block using 72% of the text width.
+- **Label:** "ABSTRACT" in enhanced small caps
+- **Font size:** 10pt (small)
+- **Internal spacing:** 0.5 title-space quantum
 
 ```latex
 \begin{articleabstract}
@@ -169,18 +173,11 @@ overrides any document-defined `\thefootnote` or other footnote formatting
 that was active before `\titlefootnotesetup`.
 
 #### `\elegantauthor{name}`
-Individual author name with enhanced small caps.
+Individual author name with consistent title-page sizing.
 - **Size:** 12pt/14pt
-- **Style:** Small caps
-- **Tracking:** 100 units (10% letter spacing)
+- **Style:** Regular text
 - **Usage:** Within `\articleauthors` if desired
 
-#### `\begin{articleabstract}...\end{articleabstract}`
-Professional abstract environment.
-- **Width:** 0.618 × text width (golden ratio)
-- **Label:** "ABSTRACT" in enhanced small caps
-- **Font size:** 10pt (small)
-- **Spacing:** 0.5 grid units internal
 ## Typography Commands
 
 ### Section Opening Styles
@@ -199,9 +196,8 @@ of the paragraph continues in normal text.
 ### The Spacing Quantum
 
 Nearly all of the package's vertical spacing is a multiple of one **13.2pt
-quantum**. It is an internal implementation value, not an API: v3 removed
-`\gridunit` and its derived lengths and helpers (see
-[Removed in v3](#removed-in-v3)). A document states the space it wants:
+quantum**. It is an internal implementation value, not a public length or grid
+API. A document states the space it wants:
 
 ```latex
 \vspace{13.2pt}   % One quantum
@@ -216,16 +212,16 @@ option). See [ADR-0004](docs/adr/0004-baseline-grid-is-a-spacing-quantum.md).
 ### Special Spacing Commands
 
 #### `\authorspace`
-Space between author names (5% of text width).
+Space between author names (4.5% of text width).
 
 #### `\titlespacemajor`
-Major title spacing (2 grid units).
+Major title spacing (2 quanta).
 
 #### `\titlespaceminor`
-Minor title spacing (1.5 grid units).
+Minor title spacing (1.5 quanta).
 
 #### `\titlespaceinter`
-Inter-element spacing (1 grid unit).
+Inter-element spacing (1 quantum).
 
 ## Emphasis and Semantic Commands
 
@@ -315,8 +311,7 @@ Second paragraph with maintained formatting.
 Row height is `\arraystretch` times the 16.32pt body baseline plus 2.2pt of
 `\extrarowheight`. The package sets `\arraystretch` to 1.2 globally
 (~21.8pt rows); a table that wants denser or looser rows sets its own inside
-the float. The v2 `gridtable`, `compactgridtable` and `spaciousgridtable`
-environments, which did only that, were removed in v3.
+the float.
 
 ```latex
 \begin{table}[tbp]
@@ -336,9 +331,9 @@ environments, which did only that, were removed in v3.
 
 ### Table Notes
 
-Table notes are document-owned. Load `threeparttable` and use its native
-`threeparttable` and `tablenotes` environments; Lanepaper neither loads that
-package nor defines or redefines its commands.
+Table notes are document-owned. Load `threeparttable` and use its native note
+structure; Lanepaper neither loads that package nor defines table-note
+commands.
 
 ```latex
 \usepackage{threeparttable}
@@ -349,16 +344,14 @@ package nor defines or redefines its commands.
     Item & Value \\
     \bottomrule
   \end{tabular}
-  \begin{tablenotes}
-    \item \emph{Notes:} General methodology notes.
-  \end{tablenotes}
+  % Add notes using threeparttable's native note structure.
 \end{threeparttable}
 ```
 
 ### Standard Figures
 
-Figures are standard. The v3 contraction removed `gridfigure` and
-`\gridincludegraphics`, which rounded image heights to quantum multiples:
+Figures are standard. Lanepaper supplies caption typography while the document
+chooses the image and float placement:
 
 ```latex
 \begin{figure}[tbp]
@@ -459,13 +452,14 @@ Standard dialogue with full indent. Wraps text in a new paragraph.
 \dialogue{``I think we should reconsider.''}
 ```
 
-Note: `\rapidexchange` and `\speaker` are not implemented.
+For longer exchanges, use ordinary paragraphs or a document-selected dialogue
+package.
 
 ## Color Commands
 
 The semantic palette is implementation-private. It provides visible roles for
 body text, headings, supporting elements and, when the document loads
-`hyperref`, links. v3 removed the palette's public names and helper commands.
+`hyperref`, links.
 
 `[nocolor]` converts the palette through xcolor's gray model. Chroma goes; the
 grayscale hierarchy between heading levels stays, because the grey steps are
@@ -662,11 +656,10 @@ pdflatex main
 2. Ensure the entry is in `references.bib`
 3. Run full compilation with `make build`
 
-#### Switching from natbib?
-The project supports legacy natbib with `preamble-natbib.tex`. To use biblatex (recommended):
-1. Ensure `main.tex` includes `demo/preamble.tex`
-2. Replace `\citet` → `\textcite`
-3. Replace `\citep` → `\autocite`
+#### Migrating an existing bibliography
+For a v2 document, follow the [v2-to-v3 migration guide](MIGRATION.md).
+For a v3 document, load and configure the bibliography package in the document
+preamble, then use its citation commands consistently.
 
 ### Style Customization
 
@@ -674,9 +667,7 @@ The bibliography style is configured in `demo/preamble.tex`:
 ```latex
 \usepackage[
   backend=biber,
-  style=chicago-authordate,
-  natbib=true,
-  hyperref=true,
+  style=authoryear,
   sorting=nyt
 ]{biblatex}
 ```
@@ -703,7 +694,7 @@ The fonts module (`lnpfonts.sty`) configures a professional three-font typograph
 - Consistent weight and proportions
 
 #### Monospace Font: Inconsolata (zi4)
-- Scaled to 95% for harmony with Pagella
+- Scaled to 96% for harmony with Pagella
 - Excellent readability for code
 - Professional appearance
 
@@ -762,41 +753,33 @@ $\mathfrak{g}$ % Fraktur
 
 #### Scaling
 - Pagella: 100% (base size)
-- Inconsolata: 95% (scaled for harmony)
+- Inconsolata: 96% (scaled for harmony)
 - Math: Automatic sizing
 
-#### OpenType Features
+#### Font Features
 - Ligatures: Enabled
 - Kerning: Optimized
 - Small caps: True small caps
-- Figures: Oldstyle proportional
+- Figures: Lining tabular figures in ordinary text and tables
 
 ### Compatibility
 
 - **pdfTeX**: Full support
-- **XeTeX**: Limited (use fontspec instead)
-- **LuaTeX**: Limited (use fontspec instead)
-- **Overleaf**: Full compatibility
+- **XeTeX/LuaTeX**: Rejected by the package's pdfTeX engine guard
+- **Overleaf**: Use the pdfLaTeX compiler with the supported font stack
 
 ### Known Limitations
 
 1. Font selection is fixed to Pagella
 2. No sans-serif font defined
-3. XeTeX/LuaTeX users should use fontspec
-
-### Future Enhancements
-
-- [ ] Font selection options
-- [ ] Sans-serif font integration
-- [ ] fontspec variant for modern engines
-- [ ] Custom font scaling options
+3. The package does not provide a fontspec path for other engines
 
 ## The colour system
 
 ### Overview
 
 `lnpcolors.sty` owns the semantic palette. Its names and definitions are not
-public API. v3 removed the palette's public names and helper commands.
+public API; documents that need their own colours define them explicitly.
 
 ### Colour Philosophy
 
@@ -815,8 +798,8 @@ The visible roles are restrained and hierarchical:
 hierarchy stays, because the grey steps above are already grey and pass
 through unchanged, and the two navies land on distinct dark greys.
 
-The v2 option instead redefined every name as gray 0, which flattened section,
-subsection, subsubsection and body to the same black.
+The grayscale conversion preserves the differences between section, subsection,
+subsubsection, and body text.
 
 ### Using Colour in a Document
 
@@ -852,24 +835,23 @@ The document owns its own colours:
 
 ### Overview
 
-The dimensions module (`lnpdimensions.sty`) manages page geometry and implements the 13.2pt spacing quantum --- the unit spacing values are stated in (the body baseline measures 16.32pt).
+The dimensions module (`lnpdimensions.sty`) manages page geometry and implements
+the 13.2pt spacing quantum; the body baseline measures 16.32pt.
 
 ### Spacing Quantum System
 
 #### Foundation
 - **Base unit**: 13.2pt spacing quantum (nominal 11pt × 1.20; the actual baseline measures 16.32pt)
-- **Grid philosophy**: All vertical spacing in multiples of base unit
+- **Spacing principle**: Most package vertical spacing uses multiples of the quantum
 - **Purpose**: Spacing values drawn from one quantum scale
-- **Private**: the quantum is internal to the package. v3 removed the public
-  `\gridunit`, its derived lengths and every grid helper (ADR-0006); a
-  document writes the length it wants.
+- **Private**: the quantum is internal to the package; a document writes the
+  length it wants when it needs document-owned spacing.
 
 ### Page Geometry
 
-The class picks the sheet; the package picks the measure. `\geometry` no
-longer names a paper size, so `\documentclass[a4paper]{article}` really does
-produce A4 — in v2 the module forced `letterpaper` and silently overrode it.
-What the package fixes is the six-inch measure and its centring.
+The class picks the sheet; the package fixes the six-inch measure and its
+centring. `\documentclass[a4paper]{article}` therefore produces A4 while the
+text block keeps the package's established measure.
 
 #### Default Layout
 - **Page size**: whatever the class selects (US Letter by default, A4 with `[a4paper]`)
@@ -1002,12 +984,12 @@ The module provides four spacing presets:
 ##### Spacing Details
 
 **Spacious** (Original generous spacing):
-- Before section: 26.4pt (2 grid units)
+- Before section: 26.4pt (2 quanta)
 - After section: 13.2pt (1 quantum)
 - Best for: Books, reports with ample space
 
 **Moderate** (Default):
-- Before section: 19.8pt (1.5 grid units)
+- Before section: 19.8pt (1.5 quanta)
 - After section: 13.2pt (1 quantum)
 - Best for: Standard academic papers
 
@@ -1018,7 +1000,7 @@ The module provides four spacing presets:
 
 **Tight**:
 - Before section: 13.2pt (1 quantum)
-- After section: 6.6pt (0.5 grid units)
+- After section: 6.6pt (0.5 quantum)
 - Best for: Space-constrained documents
 
 ### Special Commands
@@ -1221,12 +1203,12 @@ The three principles are:
 
 All list spacing uses the 13.2pt spacing quantum:
 
-| Spacing Type | Value | Grid Units |
+| Spacing Type | Value | Quantum Multiples |
 |--------------|-------|------------|
-| Item separation | 3.3pt | 0.25 units |
-| List top/bottom | 6.6pt | 0.5 units |
-| Nested indent | 13.2pt | 1 unit |
-| Hanging indent | 26.4pt | 2 units |
+| Item separation | 3.3pt | 0.25 |
+| List top/bottom | 6.6pt | 0.5 |
+| Nested indent | 13.2pt | 1 |
+| Hanging indent | 26.4pt | 2 |
 
 ### Typography Details
 
@@ -1358,7 +1340,8 @@ No indent here due to list above.
 
 ### Modular Architecture
 
-**Since v1.5-alpha**: The package is structured as independent modules for better maintainability and customization.
+**In v3**: The package is structured as independent internal modules for
+maintainability; documents load only the public `lanepaper` entry point.
 
 #### Module Structure
 
@@ -1447,7 +1430,7 @@ Systematic commands for professional title pages following economics paper conve
 
 #### Title Commands
 
-**Standard Title (18pt):**
+**Standard Title (22pt):**
 ```latex
 \articletitle{The Economic Impact of Policy:\\[4pt]
 Evidence from East Asia}
@@ -1492,10 +1475,10 @@ These commands allow authors to add acknowledgments, funding information, or oth
 #### Spacing Principles
 
 All vertical spacing follows the 13.2pt quantum system:
-- **After title**: 1.5 grid units (19.8pt)
-- **After authors**: 1.5 grid units (19.8pt)
-- **Before abstract**: 2 grid units (26.4pt)
-- **Abstract internal**: 0.5 grid units (6.6pt)
+- **After title**: 1.5 quanta (19.8pt)
+- **After authors**: 1.5 quanta (19.8pt)
+- **Before abstract**: 2 quanta (26.4pt)
+- **Abstract internal**: 0.5 quantum (6.6pt)
 
 #### Footnote System
 
@@ -1514,18 +1497,9 @@ Systematic sizing with baseline-aligned spacing:
 
 #### Enhanced Optical Margin Alignment
 
-Professional character protrusion following Gutenberg's principles:
-
-```latex
-% Protrusion Settings by Context
-- Punctuation: Quotes at 1400 units (40% more aggressive)
-- Periods/commas: 1200 units for full hanging punctuation
-- Hyphens: 1000 units for cleaner right margins
-- Capitals: T, V, W, Y use negative protrusion (-50 to -80)
-- Small text: Conservative 1000 units for readability
-- Bold text: Reduced to 1200 units (weight compensation)
-- Display sizes: Extra protrusion up to 1600 units
-```
+Microtype supplies its standard Pagella protrusion and expansion tables. The
+package adds a restrained small-caps tracking rule; it does not expose
+context-specific protrusion settings.
 
 #### Semantic Emphasis Hierarchy
 
@@ -1622,6 +1596,9 @@ typography but does not wrap placement or insert float barriers.
 
 Tables use `booktabs` without vertical rules. If a table needs notes, load
 `threeparttable` in the document and use its native environments.
+
+If the document loads `longtable`, Lanepaper applies the same table-caption
+typography through its package hook while leaving the environment document-owned.
 
 #### Tables with Standard Row Heights
 
@@ -1722,7 +1699,7 @@ The style package implements three complementary typographic philosophies:
 **DON'T:**
 - Manually adjust spacing with `\vspace{}` or `\hspace{}`
 - Use `\textbf{}` and `\textit{}` for emphasis - use `\emph{}` semantically
-- Override color schemes - use provided semantic color commands
+- Override the package's hierarchy - define document-owned colours only when needed
 - Introduce off-scale spacing with custom line spacing
 
 ### Text Typography Standards
@@ -1779,7 +1756,7 @@ The style provides systematic commands for professional title pages following ec
 
 **Title Commands:**
 ```latex
-% Standard title (18pt, perfect for most papers)
+% Standard title (22pt, perfect for most papers)
 \articletitle{A Research Article Title:\\[0.3\baselineskip]
 Subtitle for the Article}
 
@@ -1813,7 +1790,7 @@ Subtitle for the Article}
   \articleauthors{...}
   \articledate{\today}
   \begin{articleabstract}
-    Abstract text following 85% width for optimal readability...
+    Abstract text in the narrow title-page measure for optimal readability...
   \end{articleabstract}
   \articlekeywords{keyword1, keyword2, keyword3}
   \articlejel{A10, B20, C30}
@@ -1825,9 +1802,9 @@ Subtitle for the Article}
 
 **Spacing Principles:**
 - All vertical spacing uses the 13.2pt spacing quantum (body baseline measures 16.32pt)
-- Title sizes follow Brown's modular scale (18pt = 11pt × 1.333²)
+- Title sizes use a 22pt primary style and a 16pt compact style
 - Author names use subtle size increase (12pt = 11pt × 1.09)
-- Abstract width (85%) follows Butterick's optimal reading guidelines
+- Abstract width (72%) follows the package's narrow title-page measure
 
 #### Academic Writing Quality Standards
 
@@ -1880,8 +1857,8 @@ Organizations like \textbf{\textsc{UNESCO}} require careful formatting.
 % Inline small caps for abbreviations
 The \textbf{\textsc{PhD}} program requires comprehensive study.
 
-% Color-balanced small caps for headings
-Section headings use \balancedbsc{Enhanced Formatting}.
+% Bold small caps for headings
+Section headings use \textbf{\textsc{Enhanced Formatting}}.
 ```
 
 #### Professional Quotations
@@ -1957,7 +1934,7 @@ $E$ = energy, $m$ = mass, $c$ = speed of light.
 **Variable Definition Standards:**
 ```latex
 % CORRECT: Clear variable introduction
-Let $\mathbf{X} = (x_1, x_2, \ldots, x_n)^T \in \mathbb{R}^n$ denote the feature vector.
+Let $\mathbf{X} = (x_1, x_2, \dots, x_n)^T \in \mathbb{R}^n$ denote the feature vector.
 The objective function $f: \mathbb{R}^n \to \mathbb{R}$ is defined as $f(\mathbf{x}) = \|\mathbf{Ax} - \mathbf{b}\|_2^2$.
 
 % INCORRECT: Unclear variable usage
@@ -1997,7 +1974,7 @@ Data is stored in \texttt{/data/processed/analysis_results.csv}.
 The variable \texttt{learning_rate} controls optimization speed.
 
 % Mixed documentation style
-Function signature: \texttt{\textbackslash{}newcommand\{\textbackslash{}norm\}[1]}
+Function signature: \texttt{\textbackslash{}newcommand\{\textbackslash{}custom\}[1]}
 ```
 
 #### Code Block Standards
@@ -2185,15 +2162,15 @@ The proposed method was significantly better (p < 0.05).
 \section{Major Section}           % 18pt, Perfect Fourth ratio
 \subsection{Important Subsection} % 14pt, scaled systematically  
 \subsubsection{Detailed Topic}    % 12pt, proportional scaling
-\paragraph{Key Point}             % 11.5pt, enhanced small caps
+\paragraph{Key Point}             % 11pt, bold italic run-in heading
 ```
 
 #### Front Matter Standards
 
 ```latex
 % Professional title formatting
-\papertitle{Short, Impactful Title}          % Tracked uppercase
-\mixedtitle{Longer Descriptive Title Text}   % Mixed case for readability
+\articletitle{Short, Impactful Title}
+\articletitlecompact{Longer Descriptive Title Text}
 
 % Author and affiliation
 \textsc{Author Name}                     % Tracked small caps
@@ -2328,102 +2305,8 @@ $f(x)=\int_0^1g(t)dt$ (cramped spacing)
 Use $f(x) = \int_0^1 g(t) \, dt$ (proper spacing).
 ```
 
-## Removed in v3
+## Migration from v2
 
-v3 is a deliberate breaking contraction (issue #84, [ADR-0006](docs/adr/0006-one-public-entry-point-and-a-narrow-v3-interface.md)). `lanepaper` is a typography package, not a library of generic writing shortcuts, so the generic writing, emphasis, code, punctuation, symbol, currency, fraction, spacing, math, and reference helpers were removed rather than kept as compatibility aliases. Standard LaTeX, amsmath, and third-party packages (siunitx's `\unit`, `doc`'s `\meta`, ...) again own those names. No aliases are provided; update documents to the standard replacements below.
-
-| Removed | Use instead |
-|---------|-------------|
-| `\strongemph`, `\importantnote` | `\textbf` |
-| `\meta`, `\person`, `\acro`, `\regsc`, `\elegantsc`, `\refinedsc` | `\textsc` |
-| `\critical`, `\bsc`, `\headsc`, `\inlinebsc`, `\elegantscbold` | `\textbf{\textsc{...}}` |
-| `\term`, `\work`, `\subtleemph`, `\externalref`, `\smartitalic` | `\emph` |
-| `\codecomment` | `\textit` |
-| `\code`, `\inlinecode`, `\balancedcode`, `\filepath`, `\var` | `\texttt` |
-| `\doccode{a}{b}` | `a: \texttt{b}` |
-| `\authorname`, `\affiliation`, `\keywords` | title-page commands (`\articleauthors`, ...) or `\textsc`/`\emph` |
-| `\emdash`, `\emdashclassic`, `\dashparen` | `---` |
-| `\endash`, `\dashrange{a}{b}` | `--`, `a--b` |
-| `\tdots`, `\fdots`, `\edots` | `\dots` |
-| `\ldots`, `\cdots`, `\S`, `\P`, `\copyright`, `\dag`, `\ddag` | standard LaTeX (restored) |
-| `\thinspace`, `\medspace`, `\thickspace` | standard amsmath (restored) |
-| `\euro`, `\pound`, `\cent`, `\currency` | `\texteuro`, `\textsterling`, `\textcent`, `\textcurrency` |
-| `\trademark`, `\registered`, `\servicemark` | `\texttrademark`, `\textregistered`, `\textsuperscript{SM}` |
-| `\degrees`, `\half`, `\quarter`, `\threequarters` | `\textdegree`, `\textonehalf`, `\textonequarter`, `\textthreequarters` |
-| `\super`, `\sub` | `\textsuperscript`, `\textsubscript` |
-| `\sq`, `\dq`, `\nq` | csquotes' `\enquote` (or `` `...' `` / `` ``...'' ``) |
-| `\wordspace`, `\emspace`, `\twoemspace`, `\abbrspace` | `\quad`, `\qquad`, `\,` |
-| `\fig`, `\tab`, `\unit` | `Figure~\ref{...}`, `Table~\ref{...}`, siunitx's `\qty`/`\unit` |
-| `\real`, `\complex`, `\integer`, `\rational`, `\natural`, `\field`, `\prob` | `\mathbb{R}`, `\mathbb{C}`, `\mathbb{Z}`, ... |
-| `\hilbert`, `\banach`, `\algebra`, `\topology`, `\measure` | `\mathcal{H}`, `\mathcal{B}`, ... |
-| `\norm`, `\abs`, `\inner`, `\set`, `\given` | `\lVert\,\rVert`, `\lvert\,\rvert`, `\langle\,\rangle`, `\{\,\}`, `\mid` |
-| `\tr`, `\rank`, `\Span`, `\supp`, `\argmax`, `\argmin` | amsmath's `\DeclareMathOperator` |
-| `\mathbinx`, `\mathrelx`, `\dint`, `\ssup`, `\ssub`, `\lim` | standard amsmath (`\lim` restored) |
-| `\refpage`, `\pref`, `\seeref`, `\seealso` (and capitalized forms) | configure and use cleveref's `\cref`/`\Cref`/`\cpageref` |
-| `\pdfcode`, `\pdfsc`, `\pdfemph`, `\pdfbf`, `\pdfit`, `\pdffilepath`, `\pdfvar` | hyperref's `\texorpdfstring` |
-
-### Entry points, options, the grid API and the colour API (issue #85)
-
-`\usepackage{lanepaper}` is the sole public load path. The other two entry
-points were deleted, direct loading of an `lnp*.sty` module is unsupported,
-the option surface is down to `[optical]` and `[nocolor]`, and the 13.2pt
-spacing quantum is private.
-
-| Removed | Use instead |
-|---------|-------------|
-| `lnpminimal.sty` (entry point) | `\usepackage{lanepaper}` |
-| `lnpgridoverlay.sty` (entry point), `\showgrid`, `\hidegrid` | nothing; it was a development overlay |
-| `lnpcompilationfixes.sty` (module), `\fitwide`, `\showoverfulls`, `\hideoverfulls` | `\resizebox`, `\overfullrule` |
-| `[grid]`, `[nogrid]`, `[minimal]`, `[draft]` | nothing; the modes are gone |
-| `[natbib]`, `[nobiblatex]` | load `natbib` or `biblatex` in the document |
-| `[subsectionbarriers]`, `[nosubsectionbarriers]` | nothing; use standard float placement or load `placeins` in the document |
-| `\gridunit`, `\halfgridunit`, `\quartergridunit`, `\threequartergridunit`, `\onehalfgridunit`, `\doublegridunit`, `\triplegridunit` | the length itself: `13.2pt`, `6.6pt`, `3.3pt`, `9.9pt`, `19.8pt`, `26.4pt`, `39.6pt` |
-| `\gridmult`, `\gridmath`, `\gridspace`, `\halfbaselinespace`, `\fullbaselinespace` | `\vspace{...}` with the length |
-| `\roundtogrid`, `\gridincludegraphics`, `\imagegridspace`, `gridfigure` | `\includegraphics` in a standard `figure` |
-| `gridtable`, `compactgridtable`, `spaciousgridtable` | `\renewcommand{\arraystretch}{...}` in a standard `table` |
-| `\standardgrid`, `\compactgrid`, `\spaciousgrid`, `\customgrid` | `\renewcommand{\arraystretch}{...}` |
-| `\quartergridparagraphs`, `\thirdgridparagraphs` | set `\parindent` and `\parskip` yourself |
-| `\classicalparagraphs`, `\modernparagraphs`, `\hybridparagraphs` | set `\parindent` and `\parskip` yourself |
-| `grideqnarray`, `gridgather` | amsmath's `align` and `gather` |
-| colour names `textblack`, `sectioncolor`, `subsectioncolor`, `subsubcolor`, `paragraphcolor`, `subtlegray`, `quotegray`, `linknavy` | `\definecolor` your own; the palette is private |
-| `\maincolor`, `\secondarycolor`, `\accentcolor`, `\codeaccent` | `\color`/`\textcolor` with your own colour |
-| `lnpfontfeatures.sty`, `lnpfontfallbacks.sty` | nothing; use standard font commands and install the required fonts |
-| `lnphochuli.sty`, `lnpparagraphs.sty` | nothing; their loadable behavior now lives in `lanepaper.sty` and `lnpdimensions.sty` |
-| `\oldfigs`, `\textfigs`, `\liningfigs`, `\tablefigs`, `\tabularfigs` | default lining tabular figures or explicit `\oldstylenums{...}` in document-owned typography |
-| `\textsup`, `\supfigs`, `\inffigs`, `\chemform` | standard `\textsuperscript`, `\textsubscript`, or math markup |
-| `\nolig`, `\breaklig`, `\shelfful`, `\cufflink`, `\textuppercase`, `\textlowercase` | standard text or document-owned font configuration |
-
-`[optical]` is new: it carries the sourced refinements that are not safe as
-defaults, currently last-line runt control. `[nocolor]` changed meaning — it
-now converts the palette through xcolor's gray model instead of flattening
-every colour to black, so the grayscale hierarchy survives.
-
-The package also stopped forcing `letterpaper`: `\documentclass[a4paper]`
-now really produces A4, with the six-inch measure kept and centred.
-
-Cleveref is no longer configured by the package: a document that wants abbreviated names or parenthetical styles loads and configures cleveref itself. The title-page small caps this package still uses internally is private (`\lnp@titlesc`) and unchanged.
-
-### Document structures (issue #86)
-
-v3 keeps standard LaTeX structures and removes package wrappers, orchestration,
-diagnostics, and ornamental alternatives. No aliases are provided.
-
-| Removed | Use instead |
-|---------|-------------|
-| `epigraph`, `emphasisquote`, `\quoteattribution` | standard `quote` or `quotation`; write attribution text directly |
-| `openingparagraph`, `\firstlinesc`, `\abstractopening` | ordinary paragraphs; `\sectionopening{...}` is the retained inline opening |
-| `\academicdropcap` and drop-cap support | ordinary paragraph text or a document-selected package |
-| `\sectionsep`, `\spacebreak`, `\majorsectionspace`, `\thinrulebreak`, `\paragraphsep` | explicit document-owned spacing where needed |
-| `\sidenote` | `\marginpar` or a document-selected sidenote package |
-| `academicitem`, `compactitem`, `displayitem`, `readableitem` | standard `itemize`, `enumerate`, or `description` |
-| public marker, bullet-switching, list-spacing, and list-length helpers | enumitem options owned by the document |
-| float barriers, here-float wrappers, balance helpers, and float diagnostics | standard `figure`/`table`; load `placeins` if wanted |
-| `regressiontable`, caption helpers, panel helpers, and table-note commands | standard `table`; load `threeparttable` for table notes |
-| `tablenotes` defined by Lanepaper | threeparttable's native `tablenotes` environment |
-| `fignotes`, `\fignote`, `\figurenote`, `\figsource` | `lanepaperfigurenotes` with ordinary text inside |
-| `\startappendices`, `\finishappendices`, `documentAppendices` | standard `\appendix` or a package loaded by the document |
-| `\lanepaperdiagnostics`, `\lanepaperinfo` | ordinary LaTeX logs and package inspection tools |
-
-`booktabs` remains required and tables use horizontal rules without vertical
-rules. If the document loads `longtable`, Lanepaper still sets its caption
-width and applies the table-caption typography through a package hook.
+v3 is a deliberate breaking contraction with no compatibility aliases and no
+flag that restores the v2 surface. A v2 document needs source edits; the
+complete top-to-bottom replacement map is in [MIGRATION.md](MIGRATION.md).
