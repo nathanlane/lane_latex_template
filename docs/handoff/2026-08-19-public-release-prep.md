@@ -188,9 +188,10 @@ worth its cost. The mechanics are where the time goes:
 
 ### Robustness (#55) — done, with deliberate exemptions
 
-All 372 public macros are robust via etoolbox `\robustify` in a `ROBUSTNESS (#55)`
-block ending each module — **not** `\DeclareRobustCommand`, which would silently
-clobber on name collisions. Rule and mechanism in `CONVENTIONS.md` §8. Do not
+The current tree contains 44 `\robustify` calls across its three modules, in
+`ROBUSTNESS (#55)` blocks — **not** `\DeclareRobustCommand`, which would silently
+clobber on name collisions. This is a count of the current tree, so re-measure
+it after package changes. Rule and mechanism in `CONVENTIONS.md` §8. Do not
 "complete" these exemptions:
 
 - **`\thefootnote` must stay expandable**: the kernel's `\protected@edef` freezes the
@@ -248,8 +249,9 @@ point-of-use API; microtype matches sizes exactly (`\normalsize` is 10.95pt).
 
 ## Work State
 
-This worktree is on `docs/v3-demo-and-docs` at `1bd2af4`; the current #102 review
-follow-up is uncommitted. The accepted v3 work is present through C7, including
+This worktree is on `docs/v3-demo-and-docs`; PR #102 is the active delivery for
+the v3 demo and documentation work, with review follow-up tracked on this branch.
+The accepted v3 work is present through C7, including
 the one public entry point, the curated demo, the migration guide, and the
 contracted API reference.
 
@@ -287,7 +289,6 @@ Deliberately not done, with reasons:
 
 - **Public macro names carry no prefix** — known gap in `CONVENTIONS.md` §4;
   namespacing, not robustness. Worth settling before CTAN.
-- **`\lanepaperinfo` is defined and called nowhere.**
 - **The CTAN archive ships no typeset manual** — 7 `.sty` plus `README.md`,
   `CHANGELOG.md` and both licenses. Acceptable, but a reviewer may ask.
 - `actions/checkout@v4`/`upload-artifact@v4` Node 20 deprecation annotations. Noisy,
