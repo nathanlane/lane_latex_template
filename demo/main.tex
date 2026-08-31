@@ -1,874 +1,296 @@
 \documentclass[11pt]{article}
 
-% Preamble with packages and settings
+%% FIX (#89): Keep the demo as one narrative showcase rather than a macro catalogue.
 \input{preamble.tex}
 
 \begin{document}
 
-% Document metadata (for PDF properties)
 \hypersetup{
-  pdftitle={Lane LaTeX Template},
+  pdftitle={The Quiet Work of a Well-Set Page},
   pdfauthor={Nathan Lane},
-  pdfsubject={LaTeX},
-  pdfkeywords={LaTeX, typography, academic template}
+  pdfsubject={Typography and academic reading},
+  pdfkeywords={LaTeX, typography, document design}
 }
 
-% Professional title page
+%% FIX (#89): Keep title-page commands in the same paper-shaped showcase.
 \input{titlepage.tex}
 
 \section{Introduction}
 \label{sec:introduction}
 
-This template implements typography principles from Matthew Butterick's "Practical Typography," Tim Brown's "Flexible Typographic Systems" for academic articles, and the typographer, Hochuli's "Detail in Typography."
+\sectionopening{A scholarly page is an argument made visible,} and its hierarchy
+tells the reader where to begin, how long to stay, and when a claim has earned
+support.
+Good typography does not compete with that argument.
+It gives the argument a stable surface on which to appear.
 
-\paragraph{Quick Reference}
-For a complete guide to all commands and environments:
-\begin{itemize}
-  \item \textbf{API Reference:} See \texttt{API\_REFERENCE.md} in the root directory
-  \item \textbf{Live Examples:} Appendix~\ref{app:api-examples} demonstrates all major commands
-  \item \textbf{Reference:} See \texttt{API\_REFERENCE.md} for commands and typography standards
-  \item \textbf{Package Options:} \texttt{[optical]} and \texttt{[nocolor]}
-\end{itemize}
+\textcite{butterick2019practical} describes this reader-first discipline as a
+practical part of writing rather than a decorative afterthought.
+The same idea appears in the more exacting account of spacing and proportion by
+\textcite{hochuli1987detail}.
+Lanepaper v3 brings those concerns together in a deliberately small package:
+the document keeps ordinary LaTeX structures, while the package gives those
+structures a consistent typographic voice.
 
-\section{Quick Start Guide}
-\label{sec:quickstart}
+\safeparagraph{A small claim}
+This paper argues that a useful typography package should be most visible in
+the way a page holds together, not in the number of commands a document must
+learn.
+The examples that follow therefore form one short discussion rather than a
+catalogue.
+They show a hierarchy, a list, a quotation, a figure, a table, a footnote, a
+mathematical display, and citations as parts of the same argument.
 
-This section provides a concise guide to using the template. For detailed examples, see the comprehensive demonstrations throughout this document.
+The page specimen in \cref{fig:page-rhythm} and the compact comparison in
+\cref{tab:signals} make the central choices visible.
+The conclusion returns to the boundary between package-owned typography and
+document-owned content.
 
-\subsection{How to Use This Template}
+\section{Hierarchy Before Decoration}
+\label{sec:hierarchy}
 
-\begin{enumerate}
-\item \textbf{Clone this repository} to start your paper
-\item \textbf{Edit main.tex} with your content (replacing this demonstration)
-\item \textbf{Add citations} to references.bib
-\item \textbf{Compile} using \texttt{make} or the commands below
-\end{enumerate}
+\sectionopening{Hierarchy is a promise about attention,} and a good promise is
+quiet enough to keep.
+The largest heading should establish a new subject, a subsection should narrow
+it, and a paragraph should carry the thought without forcing the reader to
+relearn the page.
 
-\subsection{Compilation}
+\subsection{Headings as promises}
+\label{subsec:headings}
 
-The template includes an enhanced build system for development workflow:
+\paragraph{A readable order.}
+The article class already supplies the familiar sectioning structure.
+Lanepaper refines its scale, weight, colour, and spacing without asking the
+author to replace \verb|\section| or \verb|\subsection| with a private
+vocabulary.
+That distinction matters because the structure remains legible to editors,
+converters, screen readers, and future authors.
 
-\begin{verbatim}
-# Enhanced build system (recommended)
-make                     # Compile this document
-make help               # List every target
-
-# Manual compilation  
-pdflatex main.tex && biber main && pdflatex main.tex && pdflatex main.tex
-\end{verbatim}
-
-\subsection{Essential Commands}
-
-\safeparagraph{Text Emphasis}
-\begin{itemize}
-\item Regular emphasis: \texttt{\textbackslash emph\{...\}} produces \emph{italicized text}
-\item Strong emphasis: \texttt{\textbackslash textbf\{...\}} produces \textbf{bold text}
-\item Small caps: \texttt{\textbackslash textsc\{...\}} produces \textsc{small capitals}
-\item Academic style: \texttt{\textbackslash textsc\{...\}} produces \textsc{standard small caps}
-\end{itemize}
-
-\safeparagraph{Common Typography}
-\begin{itemize}
-\item Smart quotes: \texttt{\textbackslash{}enquote\{...\}} produces \enquote{context-aware quotes}
-\item Inline code: \texttt{\textbackslash{}texttt\{...\}} produces \texttt{monospace text}
-\item File paths: \texttt{\textbackslash{}texttt\{...\}} produces \texttt{/path/to/file.tex}
-\item Variables: \texttt{\textbackslash{}texttt\{...\}} produces \texttt{variableName}
-\end{itemize}
-
-\safeparagraph{Citations}
-\begin{itemize}
-\item Textual: \texttt{\textbackslash{}textcite\{key\}} --- \enquote{Author (Year) states...}
-\item Parenthetical: \texttt{\textbackslash{}autocite\{key\}} --- \enquote{...statement (Author Year)}
-\item Author only: \texttt{\textbackslash{}citeauthor\{key\}} --- \enquote{Author}
-\item Year only: \texttt{\textbackslash{}citeyear\{key\}} --- \enquote{(Year)}
-\end{itemize}
-
-\subsection{Typography Specimens}
-
-\safeparagraph{Font Hierarchy} This template uses TeX Gyre Pagella for text, newpxmath for mathematics, and Inconsolata for code:
+\subsubsection{Scale without spectacle}
+The most effective hierarchy is relational.
+Readers understand a heading because it differs from the text around it, not
+because it becomes an ornament.
+Three cues do most of the work on a normal page:
 
 \begin{itemize}
-\item \textbf{Bold:} For strong emphasis and headings
-\item \textit{Italic:} For gentle emphasis and citations
-\item \textbf{\textit{Bold Italic:}} For paragraph headings
-\item \textsc{Small Caps:} For acronyms and special terms
-\item \texttt{Monospace:} For code and technical terms
-\item Mathematics: $f(x) = \alpha x^2 + \beta x + \gamma$
+  \item position separates a new subject from the paragraph that precedes it;
+  \item size and weight signal the level of the subject;
+  \item restrained colour keeps the levels distinct without making colour carry
+    the meaning.
 \end{itemize}
 
-\safeparagraph{Color Palette} Professional colors optimized for readability:
-\begin{itemize}
-\item Body text: Near-black (5\% gray)
-\item Headings: Softened navy and midnight tones
-\item Links: Professional navy blue (RGB 0,102,180)
-\item Code: Dark gray (RGB 26,26,26)
-\end{itemize}
-
-\subsection{Document Structure}
-
-\safeparagraph{Basic Article Structure}
-\begin{verbatim}
-\section{Introduction}
-\subsection{Background}
-\subsubsection{Historical Context}
-\safeparagraph{Key Point} Text follows...
-\end{verbatim}
-
-\safeparagraph{Customization} The template uses modular architecture. Override before loading:
-\begin{verbatim}
-\usepackage{lanepaper}   % The sole public load path
-\geometry{margin=2in}    % Override the layout afterwards
-\end{verbatim}
-
-\safeparagraph{Figures and Tables}
-\begin{verbatim}
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figure.pdf}
-  \caption{Caption below figure}
-  \label{fig:example}
-\end{figure}
-
-\begin{table}[tbp]
-  \caption{Caption above table}
-  \label{tab:example}
-  \centering
-  \begin{tabular}{lrr}
-    \toprule
-    Item & Value & Count \\
-    \midrule
-    A & 1.23 & 45 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-\end{verbatim}
-
-\section{Typography Framework Overview}
-
-This document demonstrates a comprehensive academic typography system synthesizing three foundational works: Matthew Butterick's \textit{Practical Typography}~\parencite{butterick2019practical}, Tim Brown's \textit{Flexible Typographic Systems}~\parencite{brown2018flexible}, and Jost Hochuli's \textit{Detail in Typography}~\parencite{hochuli1987detail}.
-
-\subsection{Baseline Grid System}
-
-Vertical space in this document is stated in a 13.2pt spacing quantum: spaces are whole or fractional quanta rather than ad-hoc point values. The quantum is a unit of measure, not a grid --- the body baseline is 16.32pt, and text does not land on quantum multiples (see \texttt{docs/adr/0005-what-the-spacing-quantum-is.md}).
-
-\safeparagraph{Spacing-Quantum Definition}
-\begin{itemize}
-\item \emph{Project:} Lane LaTeX Template
-\item \emph{Spacing Quantum:} 13.2pt
-\item \emph{Foundation:} 10.95pt/16.32pt TeX Gyre Pagella (the 11pt class option with \texttt{\textbackslash linespread\{1.20\}})
-\end{itemize}
-
-\safeparagraph{Quantum-Spaced Components}
-This document demonstrates several features whose spacing is stated in quanta:
-\begin{itemize}
-\item \emph{Sections:} 39.6pt before (3 units), 19.8pt after (1.5 units) with -0.8pt optical adjustment
-\item \emph{Subsections:} 26.4pt before (2 units), 13.2pt after (1 unit) with -0.5pt optical adjustment  
-\item \emph{Tables:} Standard row heights via \texttt{\textbackslash{}arraystretch}
-\item \emph{Floats:} 19.8pt separation (1.5 units) between consecutive floats
-\end{itemize}
-
-\safeparagraph{Framework Components}
-\begin{itemize}
-\item \emph{Text Font:} 11pt TeX Gyre Pagella with superior small caps design  
-\item \emph{Mathematical Font:} newpxmath harmonized with Pagella
-\item \emph{Monospace Font:} Inconsolata scaled to 96\% for optimal weight balance
-\item \emph{Spacing Quantum:} 13.2pt unit for stated spaces
-\item \emph{Typography:} Professional footnotes, advanced hyphenation, flexible spacing
-\end{itemize}
-
-\subsection{Modular Scale Implementation}
-
-The typographic hierarchy uses bold with sophisticated techniques to avoid the "shouty" appearance that bold Palatino/Pagella can have:
-
-\begin{itemize}
-\item \emph{Section headings:} 18pt bold with +8\% tracking, softened navy (RGB 25,50,80)
-\item \emph{Subsection headings:} 14pt bold with +6\% tracking, muted midnight (RGB 40,40,55)
-\item \emph{Subsubsection headings:} 12pt bold, medium charcoal (25\% gray)
-\item \emph{Paragraph headings:} 11.5pt bold italic, dark gray (15\% gray)
-\item \emph{Body text:} 11pt baseline, near-black (5\% gray)
-\item \emph{Footnotes:} 9.5pt with 8.5pt superscript
-\end{itemize}
-
-This approach addresses bold Palatino's challenges through optimized tracking (6-8\%), bold italic paragraphs for contrast, and microtype integration with sophisticated hyphenation. The system includes comprehensive widow/orphan control and flexible spacing that prevents isolated headings.
-
-\section{Hierarchical Structure}
-
-This section demonstrates the complete heading hierarchy in action, showing how the systematic relationships create clear visual organization.
-
-\subsection{Research Methodology}
-
-Our methodology follows established protocols for academic research, incorporating both quantitative and qualitative approaches.
-
-\subsubsection{Data Collection Framework}
-
-The data collection process involved multiple stages of systematic analysis and verification.
-
-\safeparagraph{Primary Data Sources} We collected data from three main sources: surveys, interviews, and archival materials. The survey instrument was distributed to 500 participants across five demographic categories.\footnote{The survey achieved a 78\% response rate, exceeding our target of 70\% for statistical significance.}
-
-\safeparagraph{Secondary Analysis Methods} Historical documents were analyzed using content analysis techniques, with particular attention to chronological patterns and thematic consistency.
-
-\safeparagraph{Quality Assurance Protocols} All data underwent rigorous validation procedures, including cross-referencing and expert review processes.
-
-The systematic approach ensured consistent results across all phases of the research. Data integrity remained paramount throughout the collection process.
-
-\subsection{Typography in Research Context}
-
-Academic documents require special attention to typographic details that enhance rather than distract from scholarly content.
-
-Hochuli's principles emphasize that "typography must be invisible" to the reader, allowing content to communicate effectively~\parencite{hochuli1987detail}.
-
-\subsubsection{Citation Integration}
-
-Proper citation formatting maintains reading flow while providing necessary attribution. For example, recent studies by the \textsc{nih} demonstrate significant correlations.\footnote{National Institutes of Health. \textit{Research Methodology Guidelines}. 3rd ed. Government Printing Office, 2023.}
-
-\section{Mathematical Typography}
-
-Mathematical expressions use \texttt{newpxmath} with the \texttt{upright} option, providing serif mathematics that perfectly harmonizes with TeX Gyre Pagella. This configuration ensures upright Greek letters in text mode while maintaining italic in math mode. Enhanced symbol sets from \texttt{mathalfa} (Boondoxo calligraphic, Boondox blackboard bold and fraktur) ensure professional mathematical presentation.
-
-The spacing follows Hochuli's systematic principles in quantum multiples:
-
-\begin{equation}
-f(x) = \int_{-\infty}^{\infty} g(t) e^{-2\pi i x t} \, dt
-\end{equation}
-
-For inline mathematics, we maintain consistency: $\lVert x\rVert_2 = \sqrt{\sum_{i=1}^n x_i^2}$ and $\lvert z\rvert = \sqrt{a^2 + b^2}$ for complex numbers $z = a + bi \in \mathbb{C}$.
-
-\safeparagraph{Mathematical Integration} The system provides seamless text-math transitions through newpxmath with enhanced symbols and quantum-derived spacing.
-
-\section{Code Typography}
-
-The template integrates \texttt{Inconsolata} (zi4 package) as the monospace font, carefully optimized for harmony with Pagella through Hochuli's systematic approach to typographic integration.
-
-\safeparagraph{Code Commands} Use the standard \texttt{\textbackslash{}texttt\{...\}} command for inline code elements, file paths, and variable names.
-
-Inconsolata is scaled to 96\% for optimal harmony with Pagella, with enhanced character options and professional spacing.
-
-\section{The TeX Gyre Series: Production Typography}
-
-The TeX Gyre project represents a comprehensive enhancement of the standard PostScript fonts, providing refined OpenType alternatives with extensive language support, superior metrics, and professional typographic features. This template uses TeX Gyre Pagella, the enhanced version of Hermann Zapf's Palatino.
-
-\subsection{Why TeX Gyre Pagella}
-
-TeX Gyre Pagella offers several advantages over the original Palatino or URW Palladio:
-
-\begin{itemize}
-\item \emph{Extended Character Set:} Complete Latin, Greek, and Cyrillic support with over 1200 glyphs
-\item \emph{Superior Metrics:} Professionally adjusted kerning pairs and optical corrections
-\item \emph{OpenType Features:} True small caps, oldstyle figures, ligatures, and alternative forms
-\item \emph{Production Stability:} Actively maintained by the GUST e-foundry with consistent updates
-\item \emph{Mathematical Harmony:} Perfect integration with newpxmath for seamless text-math transitions
-\item \emph{Cross-Platform Consistency:} Identical rendering across operating systems and TeX distributions
-\end{itemize}
-
-\subsection{Professional Typographic Features}
-
-The TeX Gyre fonts meet professional publishing standards:
-
-\safeparagraph{Quality Assurance} Each glyph undergoes rigorous testing for outline quality, metrics accuracy, and rendering consistency. The GUST e-foundry applies systematic quality control matching commercial type foundries.
-
-\safeparagraph{Language Coverage} Comprehensive support for European languages, including proper diacritics, localized forms, and language-specific kerning. This ensures professional typography for international academic publications.
-
-\safeparagraph{Version Stability} TeX Gyre fonts maintain backward compatibility while adding features, ensuring documents remain consistent across years of compilation. Version 2.501 (current) maintains full compatibility with documents created using version 1.0.
-
-\subsection{Technical Implementation}
-
-The template loads TeX Gyre Pagella with optimal settings:
-
-\begin{verbatim}
-\usepackage{tgpagella}  % Load TeX Gyre Pagella as roman family
-\usepackage[T1]{fontenc}  % Full European character support
-\end{verbatim}
-
-This provides immediate access to professional features:
-\begin{itemize}
-\item \emph{Oldstyle Figures:} 1234567890 for text integration
-\item \emph{Small Caps:} \textsc{Professional Typography} with proper weight
-\item \emph{Ligatures:} fi, fl, ff, ffi, ffl automatically applied
-\item \emph{Superior Design:} Larger x-height and refined proportions versus original Palatino
-\end{itemize}
-
-The TeX Gyre series represents the gold standard for academic typography, providing the reliability and quality required for professional publication.
-
-\section{Integrated Font System}
-
-This section demonstrates how all three typography systems work together harmoniously in realistic academic contexts.
-
-\safeparagraph{Mathematical Programming Example} Consider the optimization problem: minimize $f(x) = \lVert Ax - b\rVert_2^2$ subject to $x \in \mathbb{R}^n$.
-The implementation uses \texttt{scipy.optimize.minimize} with the \texttt{L-BFGS-B} algorithm.
-The \texttt{gradient} function computes $\nabla f(x) = 2A^T(Ax - b)$ for efficient convergence in the Hilbert space $\mathcal{H} = L^2(\mathbb{R}^n)$.
-
-\safeparagraph{Statistical Analysis Integration} When analyzing data with \texttt{pandas}, we often compute sample statistics like $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ and $s^2 = \frac{1}{n - 1}\sum_{i=1}^n (x_i - \bar{x})^2$.
-The \texttt{DataFrame.describe()} method provides these automatically, while custom functions like \texttt{compute\_confidence\_interval} handle more complex calculations in the probability space $(\Omega, \mathcal{F}, \mathbb{P})$.
-
-\safeparagraph{Algorithmic Complexity} The algorithm runs in $O(n \log n)$ time complexity, implemented using the \texttt{heapq} module.
-For large datasets stored in \texttt{/data/processed/}, the \texttt{numpy.ndarray} structure provides efficient memory access patterns that respect the underlying mathematical structure of $\mathbb{R}^{n \times m}$ matrices.
-
-
-This demonstrates how Hochuli's integration principles create unified typography where text, mathematics, and code work together seamlessly without visual disruption.
-
-\section{List Typography}
-
-Butterick emphasizes systematic list formatting that maintains visual hierarchy without overwhelming the reader.
-
-\subsection{Primary Research Questions}
-
-The study addresses three fundamental questions:
-
-\begin{enumerate}
-\item How do typographic choices affect reader comprehension in academic contexts?
-\item What systematic relationships create the most effective hierarchical structures?
-\item Can modular scaling principles improve document accessibility across media types?
-\end{enumerate}
-
-\subsection{Secondary Considerations}
-
-Additional factors influence typographic decision-making:
-
-\begin{itemize}
-\item Reader attention spans and cognitive load
-\item Cross-platform compatibility and rendering
-\item Print versus digital presentation requirements
-\item Accessibility standards and inclusive design
-\end{itemize}
-
-\section{Perfectionist Typography Features}
-
-This template implements advanced typographic controls that ensure professional document composition at the highest level. Version 2.0 introduces enhanced optical margin alignment with aggressive character protrusion for cleaner text edges.
-
-\subsection{Enhanced Optical Margin Alignment}
-
-The framework implements professional-grade character protrusion following Gutenberg's principle of perfect text edge alignment. Punctuation marks hang fully into margins with quotes at 1400 units (40\% more aggressive than standard), periods and commas at 1200 units, and hyphens at 1000 units for optimal right-margin cleanliness. Capital letters T, V, W, and Y use negative protrusion (-50 to -80 units) to compensate for their natural overhang, while display sizes receive extra protrusion up to 1600 units for maximum visual impact.
-
-\subsection{Widow and Orphan Prevention}
-
-The system uses aggressive penalties to prevent typographic rivers, widows, and orphans. Page breaking after hyphenated lines incurs a penalty of 5000, while isolated lines at page boundaries receive the maximum penalty of 10000. Mathematical displays are protected with specialized penalties ensuring at least two lines of text appear before and after equations.
-
-\subsection{Sophisticated Hyphenation}
-
-Academic English hyphenation patterns optimize text flow with specialized handling for terms like \enquote{meth-od-ology} and \enquote{theo-ret-ical}. The system uses a hyphenation penalty of 800---{}optimized for Pagella's wider characters---{}with emergency stretch capabilities for challenging justification scenarios.
-
-\safeparagraph{Language-Specific Optimization} Babel integration with microtype enables context-aware character protrusion and expansion. This prevents rivers in justified text while maintaining consistent color across pages.
-
-\safeparagraph{Special Characters and Symbols} The framework provides comprehensive Unicode support with properly sized symbols. Academic notation includes the degree symbol (180\textdegree), mathematical approximations ($\approx$), and proper dashes with contextual spacing. Currency symbols (\texteuro, \textsterling, \textyen) maintain consistent sizing with body text.
-
-\section{Enhanced Color System}
-
-Following Hochuli's principle that \enquote{color should enhance, never compete with, typography,} the enhanced color system provides professional sophistication while maintaining readability:
-
-\emph{Elegant Bold Color System:}
-\begin{itemize}
-\item \emph{Section headings:} \textcolor[RGB]{25,50,80}{Softened navy} reduces bold impact
-\item \emph{Subsection headings:} \textcolor[RGB]{40,40,55}{Muted midnight} for refined hierarchy
-\item \emph{Subsubsection headings:} \textcolor[gray]{0.25}{Medium charcoal} softens bold weight
-\item \emph{Paragraph headings:} \textcolor[gray]{0.15}{Dark gray} prevents harsh small bold
-\item \emph{Body text:} \textcolor[gray]{0.05}{Near-black} for optimal reading comfort
-\item \emph{All links:} \textcolor[RGB]{0,68,136}{Deep navy} for consistent visual treatment
-\end{itemize}
-
-The palette is private to the package (issue~\#85): a document that wants its
-own accent defines and applies one.
-\begin{itemize}
-\item \emph{Subtle emphasis:} \emph{Conservative blue} for rare special emphasis
-\item \emph{Important notes:} \textbf{Restrained red} for critical information
-\item \emph{Code comments:} \textit{Italic gray} for programming documentation
-\end{itemize}
-
-\emph{List Typography Colors:}
-\begin{itemize}
-\item \emph{Bullet symbols:} A supporting gray that remains subordinate to text
-\item \emph{Description labels:} Small caps in the paragraph-heading role
-\item \emph{Footnote rules:} The supporting-text gray for gentle separation
-\end{itemize}
-
-The restrained palette maintains Butterick's emphasis on content primacy over decorative elements. Color reinforces hierarchy; it does not carry meaning by itself.
-
-\section{Paragraph Indentation}
-
-Following Bringhurst and Hochuli's classical principles, this framework employs traditional paragraph indentation for optimal readability and typographic elegance. Butterick's fundamental rule that paragraphs should use \emph{either} indentation \emph{or} spacing (never both, never neither) guides our approach.
-
-\safeparagraph{Optimal Indentation for Pagella} The framework uses 14pt indentation (approximately 1.2em for 11pt Pagella), following Bringhurst's recommendation of 1em to 1.5em. This accounts for Pagella's wider characters while maintaining Hochuli's principle of ``visible but not excessive'' indentation.
-
-\safeparagraph{Flush Left First Paragraphs} Following classical typography conventions, first paragraphs after section headings, lists, blockquotes, and other visual breaks remain flush left (no indentation). This creates proper visual hierarchy and prevents redundant indentation after natural breaks.
-
-\safeparagraph{Special Environment Handling} Lists, blockquotes, verbatim blocks, and floats automatically suppress indentation within their contexts, while ensuring the first paragraph following these environments returns to flush left positioning for optimal visual flow.
-
-\safeparagraph{Alternative Paragraph Styles} The framework provides flexibility with paragraph formatting. While the default uses bold italic for contrast, users can activate bold small caps with the \texttt{\textbackslash paragraphsc} command for maximum distinction with generous tracking (+12\%) to prevent blockiness.
-
-\section{Professional Figures and Tables}
-
-This section demonstrates best-practice implementation of figures, tables, and floats within our typographic framework, following academic publishing standards and Chicago Manual of Style guidelines.
-
-\subsection{Figure Integration}
-
-Figures should be placed using the \texttt{figure} environment with appropriate placement options. The recommended placement specification is \texttt{[tbp]} (top, bottom, page) for professional academic documents.
+The result is a page that can be scanned at a distance and read closely without
+changing character.
+\Cref{fig:page-rhythm} is intentionally schematic, but its order is the order
+that a reader encounters in a real article.
 
 \begin{figure}[tbp]
   \centering
-  % Example of proper figure inclusion with framework-compliant sizing
-  \fbox{\parbox{0.6\textwidth}{\centering\vspace{2cm}
-    \Large Sample Figure Content\\[0.5cm]
-    \normalsize (Replace with \textbackslash{}includegraphics)
-    \vspace{2cm}}}
-  \caption{Professional Figure Example with Proper Caption Placement}
-  \label{fig:professional-example}
+  \setlength{\fboxsep}{10pt}
+  \fbox{%
+    \begin{minipage}{0.72\textwidth}
+      \centering
+      {\large\bfseries A page with a clear centre\par}
+      \vspace{0.5em}
+      \rule{0.70\linewidth}{0.4pt}\par
+      \vspace{0.75em}
+      \raggedright
+      \noindent A short opening gives the reader a place to enter the argument.\par
+      \vspace{0.5em}
+      \rule{\linewidth}{0.2pt}\par
+      \vspace{0.35em}
+      \rule{0.92\linewidth}{0.2pt}\par
+      \rule{0.96\linewidth}{0.2pt}\par
+      \rule{0.88\linewidth}{0.2pt}\par
+      \vspace{0.5em}
+      \rule{0.60\linewidth}{0.2pt}\par
+      \rule{0.94\linewidth}{0.2pt}\par
+    \end{minipage}%
+  }
+  \caption{A schematic page hierarchy with a visible entry point and a steady
+    reading measure.}
+  \label{fig:page-rhythm}
   \begin{lanepaperfigurenotes}
-    \emph{Notes:} This figure demonstrates the enhanced caption styling with 11pt font size for better prominence. The data shown represents a hypothetical analysis of typography effectiveness across different document types.
-
-    \emph{Source:} Author's calculations based on typography framework analysis.
+    \emph{Notes:} The drawing is schematic rather than a screenshot.
+    Its purpose is to show how hierarchy can guide attention without becoming
+    the subject of the page.
   \end{lanepaperfigurenotes}
 \end{figure}
 
-\safeparagraph{Figure Best Practices}~ Notice how Figure~\ref{fig:professional-example} demonstrates proper caption placement \emph{below} the figure content. The caption uses the body size, a bold label, and ragged-right text across the float width.
+\section{Rhythm in Practice}
+\label{sec:rhythm}
 
-\subsection{Graphics Inclusion}
+\sectionopening{Hierarchy opens the door,} but rhythm determines whether the
+reader can remain inside.
+Paragraph indentation, display spacing, captions, and footnotes are small
+decisions when considered separately.
+Together they decide whether a page feels composed or merely assembled.
 
-Professional figure inclusion follows this pattern:
+\subsection{A quotation can make room}
+\label{subsec:quotation}
 
-\begin{verbatim}
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figures/example.pdf}
-  \caption{Descriptive Caption Using Title Case}
-  \label{fig:descriptive-name}
-\end{figure}
-\end{verbatim}
+Longer words need room around them, and longer thoughts sometimes need a change
+of measure.
+The standard \texttt{quote} environment supplies that change without inventing
+a special quotation wrapper.
 
-\safeparagraph{Image Specifications} For optimal quality, figures should be:
-\begin{itemize}
-\item \emph{Resolution:} Minimum 300 DPI for print quality
-\item \emph{Format:} PDF or EPS for vector graphics, PNG for photographs
-\item \emph{Fonts:} Consistent with document typography (11pt minimum)
-\item \emph{Colors:} Restrained and legible, with meaning preserved without color
-\end{itemize}
+\begin{quote}
+  A page should make room for the argument before it makes room for itself.
+  \hfill--- An editor's maxim
+\end{quote}
 
-\subsection{Professional Table Design}
+The quotation is set apart, but it remains part of the article's flow.
+That is the useful kind of emphasis: a change in measure that clarifies the
+relationship between voices without interrupting the reader's sense of place.
 
-Tables demonstrate the power of \texttt{booktabs} with no vertical rules, creating clean, readable presentations of data. Lanepaper styles captions and row spacing on the standard table environment.
+\subsection{A table should clarify}
+\label{subsec:table}
 
-\begin{table}[tbp]
-  \caption{Sample Data Table Using Booktabs Design Principles}
-  \label{tab:sample-data}
-  \centering
-  \begin{threeparttable}
-    \begin{tabular}{@{}lrrr@{}}
-      \toprule
-      Method & Accuracy & Precision & Recall \\
-      \midrule
-      Baseline & 0.72*** & 0.68** & 0.71*** \\
-                  & (0.03) & (0.04) & (0.03) \\
-      Enhanced Model & 0.85*** & 0.82*** & 0.87*** \\
-                     & (0.02) & (0.03) & (0.02) \\
-      Our Approach & 0.91*** & 0.89*** & 0.93*** \\
-                   & (0.01) & (0.02) & (0.01) \\
-      \bottomrule
-    \end{tabular}
-    \begin{tablenotes}
-      \item \emph{Notes:} Standard errors in parentheses. All models use the same dataset with 10-fold cross-validation. *** $p < 0.01$, ** $p < 0.05$, * $p < 0.1$.
-    \end{tablenotes}
-  \end{threeparttable}
-\end{table}
-
-\safeparagraph{Table Conventions}~ Table~\ref{tab:sample-data} shows proper caption placement \emph{above} the table content, following Chicago Manual of Style guidelines. The booktabs design uses only horizontal rules (\texttt{\textbackslash{}toprule}, \texttt{\textbackslash{}midrule}, \texttt{\textbackslash{}bottomrule}) for professional appearance.
-
-\subsection{Full-Width Tables with TabularX}
-
-For tables requiring full text width, use \texttt{tabularx} with \texttt{X} column specifications:
+Tables are most helpful when they reduce a repeated explanation to a form that
+can be compared at a glance.
+\Cref{tab:signals} is intentionally small.
+Its entries are an editorial description of the page, not measurements from a
+separate experiment.
 
 \begin{table}[tbp]
-  \caption{Extended Analysis Results Using Full Text Width}
-  \label{tab:extended-results}
+  \caption{Three typographic signals in the showcase}
+  \label{tab:signals}
   \centering
-  \begin{tabularx}{\textwidth}{@{}lXrrr@{}}
+  \begin{tabular}{@{}p{0.20\textwidth}p{0.24\textwidth}p{0.40\textwidth}@{}}
     \toprule
-    Algorithm & Description & Runtime (ms) & Memory (MB) & Accuracy \\
+    Signal & Reader's question & Page's answer \\
     \midrule
-    Method A & Basic implementation with standard parameters and default settings & 124 & 45 & 0.82 \\
-    Method B & Enhanced approach incorporating advanced optimization techniques & 98 & 52 & 0.87 \\
-    Method C & Novel algorithm with adaptive parameter tuning and memory efficiency & 89 & 38 & 0.91 \\
-    \bottomrule
-  \end{tabularx}
-  {\footnotesize
-  \emph{Notes:} Runtime measured on Intel Core i7-9700K @ 3.6GHz with 32GB RAM. Memory usage represents peak allocation during execution.\par
-  \emph{Source:} Performance benchmarks from internal testing suite, Q2 2025.\par}
-\end{table}
-
-\safeparagraph{TabularX Benefits}~ The \texttt{X} column type automatically adjusts width to fill available space while maintaining proper text justification, as demonstrated in the Description column of Table~\ref{tab:extended-results}.
-
-\subsection{Tables with Standard Row Heights}
-
-Standard tables receive the package's row spacing and can override it locally:
-
-\begin{table}[tbp]
-  \renewcommand{\arraystretch}{1.2}
-  \caption{Table with Standard Row Height (~21.8pt measured)}
-  \label{tab:grid-example}
-  \centering
-  \begin{tabular}{@{}lrrr@{}}
-    \toprule
-    Method & Precision & Recall & F1-Score \\
-    \midrule
-    Baseline & 0.82 & 0.79 & 0.80 \\
-    Enhanced & 0.89 & 0.86 & 0.87 \\
-    Our Method & 0.94 & 0.92 & 0.93 \\
+    Hierarchy & Where am I? & Headings make the structure visible. \\
+    Rhythm & What comes next? & Spacing makes transitions predictable. \\
+    Evidence & Why trust this? & Citations and notes stay close to the claim. \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\safeparagraph{Row Heights}~ Row height is \texttt{\textbackslash arraystretch} times the 16.32pt body baseline plus 2.2pt of \texttt{\textbackslash extrarowheight}. The package sets 1.2 globally (~21.8pt); a table that wants denser or looser rows sets its own inside the float:
-\begin{itemize}
-\item \texttt{\textbackslash renewcommand\{\textbackslash arraystretch\}\{1.2\}} --- standard rows (~21.8pt) for normal data
-\item \texttt{\textbackslash renewcommand\{\textbackslash arraystretch\}\{1.15\}} --- ~21.0pt rows for statistical results
-\item \texttt{\textbackslash renewcommand\{\textbackslash arraystretch\}\{0.9\}} --- ~16.9pt rows for dense information
-\end{itemize}
+The table follows two ordinary conventions.
+Its caption appears above the content, and the booktabs rules are horizontal
+only.
+Those conventions are modest, but they remove visual noise precisely where
+readers are trying to compare things.
 
-Setting \texttt{\textbackslash arraystretch} inside the float keeps the change local while preserving the professional appearance of booktabs.
+\subsection{A footnote can stay in the margin of attention}
+\label{subsec:footnote}
 
-\subsection{Multi-Page Tables with LongTable}
+Footnotes are useful when they preserve the sentence's momentum while offering
+context to readers who want it.
+This note demonstrates that secondary voice without turning the page into a
+second column.\footnote{The note is deliberately brief: a demonstration should
+show the relationship between the body and the footnote, not bury the argument
+under commentary.}
+The main text can then continue without a parenthetical detour.
 
-For tables spanning multiple pages, use \texttt{longtable} with proper header and footer specifications:
+\subsection{Mathematics needs the same measure}
+\label{subsec:mathematics}
 
-\begin{verbatim}
-\begin{longtable}{@{}lrrr@{}}
-  \caption{Extended Dataset Analysis Results} \label{tab:long-results} \\
-  \toprule
-  Dataset & Size & Accuracy & Processing Time \\
-  \midrule
-  \endfirsthead
-  
-  \multicolumn{4}{l}{\tablename\ \thetable\ -- \textit{continued from prev.\ page}} \\
-  \toprule
-  Dataset & Size & Accuracy & Processing Time \\
-  \midrule
-  \endhead
-  
-  \midrule
-  \multicolumn{4}{@{}r}{\textit{continued on next page}} \\
-  \endfoot
-  
-  \bottomrule
-  \endlastfoot
-  
-  % Table content here...
-\end{longtable}
-\end{verbatim}
+Mathematics is another change of visual register, but it should still belong to
+the prose around it.
+Suppose a reader's attention is represented by a simple ratio of hierarchy
+\(H\), rhythm \(R\), and distraction \(D\).
+The notation is only illustrative, but it makes the relationship explicit:
 
-\subsection{Standard Float Placement}
+\begin{equation}
+  \mathcal{Q} = \frac{H + R}{D},
+  \qquad H, R, D \in \mathbb{R}_{>0}.
+  \label{eq:attention}
+\end{equation}
 
-Use \texttt{\textbackslash{}clearpage} to control float placement by section:
+Equation~\eqref{eq:attention} is not a metric for publishing quality.
+It is a reminder that typography works as a system.
+If hierarchy and rhythm support one another, the reader spends less attention
+decoding the page and more attention following the claim.
 
-\begin{verbatim}
-% End of current section - ensure all floats appear before next section
-\clearpage
+\section{Structure in Use}
+\label{sec:structure}
 
-\section{Next Section}
-% This section starts with all previous floats properly placed
-\end{verbatim}
+\sectionopening{A coherent article moves between forms,} and its forms should
+serve the argument rather than announce their own implementation.
+The document therefore owns its bibliography and cross-reference choices,
+while lanepaper concentrates on the page-level treatment.
 
-\safeparagraph{When to Use clearpage} Insert \texttt{\textbackslash{}clearpage} before major section breaks to prevent figures and tables from drifting beyond their contextual sections. This is particularly important in academic papers where figures should appear near their discussion.
+\subsection{Lists that carry an argument}
+\label{subsec:lists}
 
-\safeparagraph{Professional Float Placement} Standard LaTeX float placement remains in control:
-\begin{itemize}
-\item \emph{Preferred placement:} \texttt{[tbp]} allows top, bottom, or dedicated float pages
-\item \emph{Avoid:} \texttt{[h]} (here) placement, which can create poor layout
-\item \emph{Forced flush:} \texttt{\textbackslash{}clearpage} prints pending floats before continuing
-\end{itemize}
-
-\subsection{Quotation Integration}
-
-The \texttt{csquotes} package provides context-sensitive quotation handling:
-
-\begin{itemize}
-\item \emph{Inline quotes:} Use \texttt{\textbackslash{}enquote\{text\}} for \enquote{proper quotation marks}
-\item \emph{Block quotes:} Use \texttt{displayquote} environment for longer quotations
-\item \emph{Citations:} Integrates with bibliography for \texttt{\textbackslash{}textcite\{key\}} formatting
-\end{itemize}
-
-\safeparagraph{Smart Quotation Example} The framework automatically handles nested quotations: \enquote{He said, \enquote{The results are very promising according to our analysis.}}
-
-% Flush pending standard floats before the next major example.
-\clearpage
-
-\section{List Typography}
-
-This framework styles the standard list environments and provides one inline list for brief enumerations.
-
-\subsection{Standard Lists with Professional Bullets}
-
-Our default itemize environment uses subtle gray bullets with hanging indents:
-
-\begin{itemize}
-\item \emph{Professional bullets:} The supporting-color role keeps markers subordinate to the text
-\item \emph{Precise hanging indent:} The list measure keeps wrapped lines aligned cleanly
-\item \emph{Quantum integration:} Vertical space values derive from the 13.2pt quantum
-\item \emph{Nested list progression:} Secondary levels use en-dashes and tertiary levels use smaller bullets
-  \begin{itemize}
-  \item En-dash at second level follows Butterick's recommendation for professional documents
-  \item Progressive indentation of 1.2em per level maintains readability
-  \item Professional gray coloring continues throughout hierarchy
-    \begin{itemize}
-    \item Smaller bullets at third level provide clear visual distinction
-    \item Maintains consistent spacing through all nesting levels
-    \item Maximum three levels recommended for optimal comprehension
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
-
-\subsection{Enumerated Lists with Oldstyle Figures}
-
-Numbered lists use oldstyle figures for classical typography:
+An author does not need a special list environment to make a sequence readable.
+The standard environments are enough when the sequence has a clear role.
+For this paper, the work proceeds in three simple moves:
 
 \begin{enumerate}
-\item \emph{Oldstyle numerals:} Notice how the numbers (1, 2, 3) use oldstyle figures with varying heights, creating a more refined appearance than uniform lining figures
-\item \emph{Proper punctuation:} Period follows each number with optimal spacing (0.7em) before text begins
-\item \emph{Nested enumeration:} Secondary levels progress through lowercase letters and roman numerals
-  \begin{enumerate}
-  \item Lowercase letters with closing parenthesis create clear subordination
-  \item Maintains hanging indent alignment for professional appearance
-    \begin{enumerate}
-    \item Roman numerals at third level follow classical conventions
-    \item Preserves readability through systematic progression
-    \end{enumerate}
-  \end{enumerate}
-\item \emph{Spacing scale:} Spacing stays on the quantum scale throughout
+  \item establish the hierarchy before adding secondary detail;
+  \item give each visual example a reason to be present;
+  \item return to the prose so that the example changes understanding.
 \end{enumerate}
 
-\subsection{Description Lists with Small Caps}
+The same principle applies to a short inline sequence of editorial concerns:
+\begin{inlineitem}
+  \item measure
+  \item contrast
+  \item continuity
+\end{inlineitem}.
+The list is useful because it compresses a sentence, not because it creates a
+new kind of content.
 
-Professional term definitions using hanging format:
+\subsection{Citations in the sentence}
+\label{subsec:citations}
+
+The bibliography is loaded by the document with \texttt{biblatex}, so a
+citation can follow the grammar of the sentence.
+\textcite{mittelbach2004latex} presents LaTeX as a system in which structure
+and appearance can be separated without losing their connection.
+The history of micro-typography makes a related case for small adjustments that
+remain subordinate to reading \autocite{thanh2000microtypography}.
+These references support the discussion; they are not a second demonstration
+layer.
+
+Cross-references work the same way.
+The page drawing is discussed in \cref{fig:page-rhythm}, the comparison table
+in \cref{tab:signals}, and the illustrative relationship in
+\cref{eq:attention}.
+\Cref{sec:hierarchy} and \Cref{sec:rhythm} are ordinary sections, so the
+document can point readers to them without package-owned reference wrappers.
+
+\subsection{The package boundary}
+\label{subsec:boundary}
+
+The surviving lanepaper surface is intentionally narrow.
+The package supplies the typographic treatment of ordinary headings, lists,
+quotations, floats, and footnotes, along with a small set of title-page and
+paragraph tools.
+The document supplies the subject, the bibliography, the cross-reference
+system, and the decision to use a figure or table.
 
 \begin{description}
-\item[Modular Scale] A sequence of numbers that relate to one another in a meaningful way, used to create harmonious size relationships in typography
-\item[Spacing Quantum] A fixed vertical unit (here 13.2pt) in which template spacing values are stated
-\item[Hanging Indent] A formatting style where the first line starts at the margin while subsequent lines are indented, creating clear visual hierarchy
-\item[Tracking] The uniform adjustment of spacing between letters, measured in thousandths of an em, used here for small caps optimization
+  \item[Measure] keeps sustained reading comfortable.
+  \item[Contrast] lets headings and notes differ without shouting.
+  \item[Continuity] lets standard LaTeX structures remain familiar.
 \end{description}
 
-The description environment uses small caps in the paragraph-heading color role, creating distinction without excessive emphasis.
-
-\subsection{Inline Lists for Brief Enumerations}
-
-For brief items within a paragraph, use the inline list format: \begin{inlineitem}\item theoretical framework\item empirical methodology\item data analysis\item policy implications\end{inlineitem}. This style uses parenthetical letters with semicolon separators, maintaining reading flow while providing clear enumeration.
-
-\subsection{Mixed List Styles}
-
-Different list styles can be combined for complex hierarchical information:
-
-\begin{enumerate}
-\item \emph{Primary research phase}
-  \begin{itemize}
-  \item Literature review and theoretical framework development
-  \item Research question refinement and hypothesis formulation
-  \item Methodology selection and validation
-  \end{itemize}
-  
-\item \emph{Data collection phase}
-  \begin{itemize}
-  \item \emph{Quantitative data:} Survey instruments and statistical databases
-  \item \emph{Qualitative data:} Interview protocols and archival research
-  \item \emph{Mixed methods:} Integration strategies and triangulation
-  \end{itemize}
-  
-\item \emph{Analysis and dissemination}
-  \begin{itemize}
-  \item Statistical analysis using R and Python
-  \item Qualitative coding with NVivo
-  \item Manuscript preparation following journal guidelines
-  \item Conference presentations and peer review
-  \end{itemize}
-\end{enumerate}
-
-% Flush pending standard floats before the next major example.
-\clearpage
-
-\section{Professional Citation System}
-
-This section demonstrates the comprehensive biblatex-based citation system using Chicago Manual of Style (17th edition) author-date format, integrated with our typographic framework.
-
-\subsection{Citation Command Examples}
-
-The framework provides multiple citation commands for different academic contexts:
-
-\safeparagraph{Basic Citation Commands}
-\begin{itemize}
-\item \emph{Textual citations:} \textcite{butterick2019practical} argues that typography should serve the reader
-\item \emph{Parenthetical citations:} Typography principles emphasize readability \parencite{brown2018flexible}
-\item \emph{Possessive citations:} \citeauthor{hochuli1987detail}'s approach to detail creates archival quality
-\item \emph{Author-only:} \textcite{bringhurst2012elements} provides historical context
-\item \emph{Year-only:} The principles were established \parencite*{hochuli1987detail}
-\end{itemize}
-
-\safeparagraph{Advanced Citation Patterns}
-\begin{itemize}
-\item \emph{Multiple sources:} The typographic synthesis approach \parencite{butterick2019practical,brown2018flexible,hochuli1987detail} creates professional documents
-\item \emph{Page references:} Specific guidance appears in \textcite{butterick2019practical}
-\item \emph{Pre-notes:} Typography excellence requires systematic attention \parencite{hochuli1987detail}
-\item \emph{Post-notes:} The modular scale methodology \parencite{brown2018flexible} ensures visual harmony
-\item \emph{Complex citations:} For comprehensive coverage \parencite{butterick2019practical} and related work \parencite{bringhurst2012elements}
-\end{itemize}
-
-\subsection{Bibliography Integration}
-
-The bibliography system integrates seamlessly with our color system and typography framework:
-
-\safeparagraph{Enhanced Digital Features}
-\begin{itemize}
-\item \emph{DOI links:} Automatically formatted with dignified deep blue (RGB 0,68,136) optimized for Pagella
-\item \emph{URL formatting:} Consistent with external link styling
-\item \emph{arXiv integration:} Preprint servers properly linked and formatted
-\item \emph{Annotation display:} Academic annotations in readable footnote sizing
-\end{itemize}
-
-\safeparagraph{Professional Bibliography Spacing}
-The bibliography uses our quantum spacing system:
-\begin{itemize}
-\item \emph{Entry spacing:} 6.6pt between entries (0.5 quanta)
-\item \emph{Hanging indent:} 1.5em for optimal readability
-\item \emph{Name grouping:} 3.16pt spacing between author name groups
-\item \emph{Quantum scale:} Spacing values derive from the 13.2pt quantum
-\end{itemize}
-
-\subsection{Natbib Compatibility}
-
-For legacy compatibility, the framework enables natbib commands:
-
-\begin{verbatim}
-% Traditional natbib commands (compatibility mode)
-\citet{author2023}    % Textual citation
-\citep{author2023}    % Parenthetical citation
-\citep[p.~42]{author2023}  % With page numbers
-\end{verbatim}
-
-\safeparagraph{Migration Guide} When converting from natbib to biblatex:
-\begin{itemize}
-\item Replace \texttt{\textbackslash{}citet} with \texttt{\textbackslash{}textcite}
-\item Replace \texttt{\textbackslash{}citep} with \texttt{\textbackslash{}autocite}
-\item Update bibliography database for enhanced field support
-\item Utilize advanced biblatex features for DOIs, URLs, and annotations
-\end{itemize}
-
-\section{Footnote System}
-
-Beautiful footnotes\footnote{This footnote demonstrates the hanging indent principle, where subsequent lines align with the text beginning rather than the footnote number, creating clean visual organization.} require systematic attention to spacing, sizing, and separation. Notice how the footnote text maintains readability at 9pt while clearly distinguishing itself from body text.
-
-Multiple footnotes in sequence \footnote{First footnote example.}\footnote{Second footnote showing proper spacing between sequential notes.} demonstrate the 8pt spacing between footnotes and the subtle gray footnote rule that provides gentle separation without visual interference.
-
-\section{Landscape and Rotation Support}
-
-The framework provides comprehensive support for wide tables and rotated content commonly needed in social science papers.
-
-\subsection{Landscape Tables for Wide Regression Results}
-
-For wide regression tables with many specifications, use the \texttt{landscapetable} environment:
-
-\begin{verbatim}
-\begin{landscapetable}[tbp]
-  \caption{Regression Results with Multiple Specifications}
-  \label{tab:wide-regression}
-  \begin{tabular}{l*{6}{c}}
-    \toprule
-    & (1) & (2) & (3) & (4) & (5) & (6) \\
-    \midrule
-    Treatment & 0.234*** & 0.256*** & 0.245*** & 0.267*** & 0.278*** & 0.289*** \\
-    & (0.045) & (0.043) & (0.044) & (0.042) & (0.041) & (0.040) \\
-    \bottomrule
-  \end{tabular}
-\end{landscapetable}
-\end{verbatim}
-
-\subsection{Rotated Tables for Correlation Matrices}
-
-For single-column tables that benefit from rotation, use \texttt{rotatedtable}:
-
-\begin{verbatim}
-\begin{rotatedtable}[tbp]
-  \caption{Correlation Matrix of Key Variables}
-  \label{tab:correlation}
-  \begin{tabular}{l*{10}{r}}
-    % Correlation matrix content
-  \end{tabular}
-\end{rotatedtable}
-\end{verbatim}
-
-\subsection{Adjustable Tables with Auto-Scaling}
-
-For tables that need automatic width adjustment, use \texttt{fittable}:
-
-\begin{verbatim}
-\begin{fittable}[tbp]{1.2\textwidth}
-  \caption{Wide Table with Automatic Scaling}
-  \label{tab:auto-scale}
-  \begin{tabular}{l*{15}{c}}
-    % Wide table content
-  \end{tabular}
-\end{fittable}
-\end{verbatim}
-
-\subsection{Landscape Figures for Wide Visualizations}
-
-Wide coefficient plots and panel visualizations can use \texttt{landscapefigure}:
-
-\begin{verbatim}
-\begin{landscapefigure}[tbp]
-  \centering
-  \includegraphics[width=0.9\linewidth]{figures/wide_coefficient_plot.pdf}
-  \caption{Coefficient Plot with 95\% Confidence Intervals}
-  \label{fig:wide-coef}
-\end{landscapefigure}
-\end{verbatim}
-
-The landscape and rotation features keep quantum-derived spacing while accommodating the specialized needs of empirical research presentations.
-
-\section{Production Guidelines}
-
-\subsection{Implementation Checklist}
-
-When implementing this typography system:
-
-\begin{enumerate}
-\item Verify all font sizes follow the modular scale relationships
-\item Check that spacing uses plus/minus flexibility for optimal line breaks  
-\item Ensure small caps include proper letterspacing (6-8\%)
-\item Confirm footnote styling maintains systematic proportions
-\item Test color usage adheres to restraint principles
-\end{enumerate}
-
-\subsection{Customization Notes}
-
-The system allows principled customization:
-
-\safeparagraph{Alternative Modular Scales} The perfect fourth (1.333) can be replaced with other harmonious ratios like the major third (1.25) or golden ratio (1.618) while maintaining systematic relationships.
-
-\safeparagraph{Font Selection} The framework works with various typefaces, though serif fonts like Pagella, Minion, or Butterick's Equity provide optimal results for sustained reading.
-
-\safeparagraph{Spacing Adjustments} All spacing values include flexibility ranges that can be adjusted for specific requirements while preserving proportional relationships.
-
 \section{Conclusion}
+\label{sec:conclusion}
 
-This typography framework demonstrates how Butterick's practical approach, Brown's systematic methodology, and Hochuli's detail obsession combine to create academic documents that prioritize both readability and professional appearance~\parencite{butterick2019practical, brown2018flexible, hochuli1987detail}. 
+\sectionopening{The best typographic systems become ordinary as soon as they
+work.}
+They make a long page easier to enter, a dense paragraph easier to follow, and
+a reference easier to trust.
+They do not require every document to become a tour of their implementation.
 
-The systematic relationships ensure consistency while the classical indentation allows optimal adaptation to various content types and production requirements. Following Butterick's principle that paragraphs should use either indentation or spacing (never both, never neither), the framework employs traditional 14pt paragraph indentation (approximately 1.2em for Pagella) with flush left first paragraphs after headings for classical typographic elegance.
+This showcase has kept that test in view.
+It uses standard sectioning, lists, quotation, figure, table, mathematics, and
+cross-reference structures, with the package supplying a consistent treatment
+around them.
+The result is a paper about reading that also lets the reader see the page being
+made.
 
-The framework serves as a foundation that can be adapted to specific institutional requirements while maintaining the core principles of hierarchical clarity, systematic relationships, and typographic excellence.
-
-\subsection{Appendix Integration}
-
-This template uses LaTeX's standard appendix structure to organize supplementary material.
-The appendices showcase how the typography system maintains consistency across main text and supplementary content:
-
-\begin{itemize}
-  \item \textbf{Appendix~\ref{app:main}:} Implementation details and technical specifications
-  \item \textbf{Appendix~\ref{app:tech}:} Advanced technical documentation
-  \item \textbf{Appendix~\ref{app:api-examples}:} Comprehensive API examples demonstrating all commands
-\end{itemize}
-
-\safeparagraph{Key Features} The standard \texttt{\textbackslash appendix} command provides lettered numbering and works with ordinary cross-references.
-All appendix elements follow the same typographic standards as the main document, ensuring visual unity throughout the publication.
-For practical examples of using the template's commands and environments, see Appendix~\ref{app:api-examples}.
-% --- Appendices ---
-\appendix
-  \input{appendices/main_appendix.tex}
-  \input{appendices/tech_appendix.tex}
-  \input{appendices/api_examples.tex}
+\textcite{bringhurst2012elements} argues for proportion as a condition of
+clarity, while \textcite{brown2018flexible} makes a related case for systems
+that do not call attention to their own machinery.
+Lanepaper v3 follows the same discipline in code: a narrow public entry point,
+ordinary document structures, and enough typographic judgement to make the
+whole page cohere.
 
 \printbibliography
 

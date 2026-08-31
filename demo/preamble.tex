@@ -5,9 +5,10 @@
 % This file provides the essential package loading and configuration for
 % academic papers using the lanepaper.sty typography system.
 %
-% Version: 1.2-alpha
+%% FIX (#89): Keep the demo header aligned with the v3 development showcase.
+% Version: 3.0.0-dev
 % Author: Nathan Lane
-% Date: 2025-06-27
+% Date: 2026-08-31
 %
 % USAGE:
 %   \input{demo/preamble.tex}
@@ -15,13 +16,10 @@
 % DEPENDENCIES:
 %   - lanepaper.sty (core typography system)
 %   - references.bib (bibliography database)
-%   - Modern LaTeX distribution with bibtex backend
+%   - Modern LaTeX distribution with biber backend
 %
 % COMPILATION:
-%   pdflatex main.tex
-%   bibtex main
-%   pdflatex main.tex
-%   pdflatex main.tex
+%   make build
 %
 % ==============================================================================
 
@@ -62,8 +60,9 @@
 \usepackage{longtable}   % multi-page tables
 \usepackage{pdflscape}   % landscape pages
 \usepackage{rotating}    % sideways tables and figures
-\usepackage{adjustbox}   % fittable
-\input{landscape.tex}    % landscapetable, rotatedtable, fittable, ...
+%% FIX (#89): Keep the document-owned dependency while removing the retired environment name.
+\usepackage{adjustbox}   % document-owned box sizing
+%% FIX (#89): Remove the deleted document-side landscape environment definitions.
 
 % Load the bibliography database
 \addbibresource{references.bib}
