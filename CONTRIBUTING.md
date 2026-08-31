@@ -18,7 +18,7 @@ The authoritative package, demo, and tool dependency lists are in
 All three must pass before committing, and they are exactly what CI runs:
 
 ```bash
-make lint     # ChkTeX on demo/*.tex and demo/appendices/*.tex
+make lint     # ChkTeX on the demo sources
 make build    # latexmk full compile → main.pdf
 make test     # python3 -m pytest -q, then bash tests/run-tests.sh
 ```
@@ -225,7 +225,6 @@ refer to:
 - **Package entry point**: `lanepaper/lanepaper.sty`
 - **Preamble**: `demo/preamble.tex`
 - **Title page**: `demo/titlepage.tex`
-- **Demo appendices**: `demo/appendices/*.tex`
 
 #### Package Loading Convention
 - Main package: `\usepackage{lanepaper}`
@@ -256,7 +255,7 @@ Before committing LaTeX files:
 
 1. **Don't use `[h]` float placement** - causes poor page layout
 2. **Don't use vertical lines in tables** - violates booktabs principles
-3. **Don't hardcode spacing** - use systematic commands
+3. **Don't hide document-owned spacing** - use an explicit `\vspace` length
 4. **Don't use `\\` for line breaks** in text - proper paragraph breaks
 5. **Don't mix `\cite` and `\autocite`** - choose one citation style
 

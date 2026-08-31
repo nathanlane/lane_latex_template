@@ -22,7 +22,6 @@ CHKTEXFLAGS += $(CHKTEX_N48)
 # Directories
 MAIN           = main
 DEMO_DIR       = demo
-APPENDICES_DIR = demo/appendices
 
 # Find the package and the demo's bibliography without installing them.
 export TEXINPUTS := ./lanepaper:./demo:$(TEXINPUTS)
@@ -36,7 +35,7 @@ build:
 # ChkTeX checks the demo sources.
 .PHONY: lint
 lint:
-	$(CHKTEX) $(CHKTEXFLAGS) $(DEMO_DIR)/*.tex $(APPENDICES_DIR)/*.tex
+	$(CHKTEX) $(CHKTEXFLAGS) $(DEMO_DIR)/*.tex
 
 # The whole suite, in the order CI runs it.
 .PHONY: test
@@ -51,7 +50,7 @@ clean:
 	$(LATEXMK) -C $(DEMO_DIR)/$(MAIN).tex >/dev/null 2>&1 || true
 	rm -f $(MAIN).aux $(MAIN).bbl $(MAIN).bcf $(MAIN).blg $(MAIN).fdb_latexmk \
 		$(MAIN).fls $(MAIN).log $(MAIN).out $(MAIN).run.xml $(MAIN).toc $(MAIN).pdf
-	rm -f $(DEMO_DIR)/*.aux $(APPENDICES_DIR)/*.aux
+	rm -f $(DEMO_DIR)/*.aux
 	rm -f texput.log
 	@echo "==> Clean complete"
 

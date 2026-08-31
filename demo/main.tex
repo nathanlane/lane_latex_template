@@ -72,9 +72,16 @@ Readers understand a heading because it differs from the text around it, not
 because it becomes an ornament.
 Three cues do most of the work on a normal page:
 
+%% FIX (#102): Exercise the package's retained nested list marker hierarchy.
 \begin{itemize}
   \item position separates a new subject from the paragraph that precedes it;
   \item size and weight signal the level of the subject;
+    \begin{itemize}
+      \item scale separates a section from its paragraph;
+        \begin{itemize}
+          \item a quiet difference is enough when the hierarchy is sound.
+        \end{itemize}
+    \end{itemize}
   \item restrained colour keeps the levels distinct without making colour carry
     the meaning.
 \end{itemize}
@@ -268,6 +275,13 @@ system, and the decision to use a figure or table.
   \item[Contrast] lets headings and notes differ without shouting.
   \item[Continuity] lets standard LaTeX structures remain familiar.
 \end{description}
+
+%% FIX (#102): Explain both retained options without changing the showcase build.
+This paper uses the default package settings.
+The only alternatives are the optional `\texttt{[optical]}` mode, which adds
+the package's sourced optical refinements, and `\texttt{[nocolor]}`, which
+keeps the hierarchy while converting the palette to grayscale.
+Neither option is enabled here, so the showcase displays the default treatment.
 
 \section{Conclusion}
 \label{sec:conclusion}

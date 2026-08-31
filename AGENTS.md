@@ -37,7 +37,7 @@ There is no formatting target. Issue #51 deleted the aliases; run the
 formatter directly when you want it:
 
 ```bash
-latexindent -l -w demo/*.tex demo/appendices/*.tex   # indentation only
+latexindent -l -w demo/*.tex   # indentation only
 ```
 
 ## 🔄 Workflow
@@ -67,7 +67,7 @@ latexindent -l -w demo/*.tex demo/appendices/*.tex   # indentation only
 ```text
 /                 – root; this file, README.md, Makefile
 /lanepaper/       – LaTeX package and internal modules
-/demo/            – demo document sources and appendices
+/demo/            – curated demo document sources
 /tests/           – pytest suite, shell harness, and fixtures
 ```
 

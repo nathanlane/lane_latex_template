@@ -67,6 +67,7 @@ packages explicitly:
 ```latex
 \documentclass[11pt]{article}
 
+\usepackage{csquotes}
 \usepackage[backend=biber,style=authoryear]{biblatex}
 \usepackage[english]{babel}
 \usepackage{lanepaper}
@@ -109,10 +110,6 @@ make test
 root.
 The demo's `demo/preamble.tex` shows one document-owned `biblatex` setup with
 Biber, English hyphenation, Hyperref, and cleveref.
-
-> Screenshot placeholder: a screenshot would help a quick human review of the
-> demo's page rhythm, but screenshot generation is intentionally not part of
-> this repository's workflow.
 
 ## Installing from GitHub
 
@@ -188,8 +185,7 @@ name is `mathalfa`.
 The curated demo owns these document-level packages:
 
 ```text
-adjustbox babel babel-english biblatex cleveref csquotes hyperref longtable
-pdflscape rotating tabularx threeparttable
+babel babel-english biblatex cleveref csquotes hyperref
 ```
 
 `babel-english` is also easy to miss in a package-load grep.
@@ -212,8 +208,8 @@ For example, the distribution names corresponding to the package set include
 `latex`, `amsmath`, `amsfonts`, `tools`, `graphics`, `booktabs`, `boondox`,
 `caption`, `enumitem`, `etoolbox`, `fancyhdr`, `footmisc`, `geometry`, `iftex`,
 `mathalpha`, `microtype`, `newpx`, `tex-gyre`, `titlesec`, `xcolor`,
-`inconsolata`, `adjustbox`, `babel`, `babel-english`, `biblatex`, `cleveref`,
-`csquotes`, `hyperref`, `pdflscape`, `threeparttable`, and `biber`.
+`inconsolata`, `babel`, `babel-english`, `biblatex`, `cleveref`, `csquotes`,
+`hyperref`, and `biber`.
 Use the package manager's current name when a distribution bundles or renames
 one of these files.
 

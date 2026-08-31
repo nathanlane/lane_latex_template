@@ -48,7 +48,11 @@ Lanepaper no longer imposes choices about content-level packages. Keep those
 choices in the paper's preamble:
 
 - Load `biblatex` or `natbib` and choose its backend, style, and options.
+- Load `csquotes` before `biblatex` when using `biblatex`; quotation handling is
+  document-owned.
 - Load and configure `cleveref` if smart cross-references are wanted.
+- Load `hyperref` for links. Lanepaper supplies its link colour configuration
+  when `hyperref` is present, but it does not load Hyperref itself.
 - Load `babel`, `appendix`, `threeparttable`, `placeins`, `pdflscape`,
   `rotating`, or other document packages only when the paper uses them.
 - Use standard `figure`, `table`, `quote`, `quotation`, and `\appendix`
@@ -77,7 +81,8 @@ LaTeX command that states the intended meaning:
 | `\endash`, `\dashrange{a}{b}` | `--`, or `a--b` |
 | `\tdots`, `\fdots`, `\edots` | `\dots` |
 | `\ldots`, `\cdots`, `\S`, `\P`, `\copyright`, `\dag`, `\ddag` | Use the standard LaTeX commands; they are no longer Lanepaper-owned. |
-| `\thinspace`, `\medspace`, `\thickspace` | Use the standard `amsmath` commands. |
+| `\thinspace` | Use the LaTeX kernel command. |
+| `\medspace`, `\thickspace` | Use the standard `amsmath` commands. |
 | `\euro`, `\pound`, `\cent`, `\currency` | `\texteuro`, `\textsterling`, `\textcent`, `\textcurrency` |
 | `\trademark`, `\registered`, `\servicemark` | `\texttrademark`, `\textregistered`, `\textsuperscript{SM}` |
 | `\degrees`, `\half`, `\quarter`, `\threequarters` | `\textdegree`, `\textonehalf`, `\textonequarter`, `\textthreequarters` |
@@ -183,14 +188,26 @@ Pagella, Inconsolata, and math stack is loaded by `lanepaper`; another engine
 requires a different document/package choice rather than a v3 compatibility
 flag.
 
+### Expect deliberate rendering changes
+
+A v3 paper may repaginate even when its prose is unchanged. The first paragraph
+after a heading is now flush left, footnotes are allowed to split across pages,
+and the v3 font and microtype settings can change line breaking. Recheck page
+breaks, float placement, references, and any hand-tuned spacing after the
+source migration.
+
 ## 8. Finish the paper migration
 
 Before compiling, check the paper from top to bottom:
 
 - [ ] There is one `\usepackage{lanepaper}` and no direct `lnp*.sty` load.
 - [ ] Only `[optical]` and `[nocolor]` are passed to Lanepaper.
-- [ ] Bibliography, cross-reference, language, appendix, table-note, and float
-      packages are loaded and configured by the document.
+- [ ] `csquotes` is loaded before `biblatex` when used, and the document owns
+      its bibliography backend and citation style.
+- [ ] `hyperref` is loaded for links, with `cleveref` following it when smart
+      cross-references are wanted.
+- [ ] Language, appendix, table-note, and float packages are loaded and
+      configured by the document.
 - [ ] Headings, lists, quotations, figures, tables, mathematics, and footnotes
       use standard LaTeX structures or the retained commands in
       [API_REFERENCE.md](API_REFERENCE.md).
@@ -199,6 +216,8 @@ Before compiling, check the paper from top to bottom:
 - [ ] No removed command, environment, option, module, or colour name remains.
 - [ ] Compile with `make build`, then run `make lint` and `make test`.
 
-There is no compatibility alias to discover after these edits. If a command is
-not in [API_REFERENCE.md](API_REFERENCE.md), it belongs to standard LaTeX or to
-a package the document must load itself.
+There is no compatibility alias to discover after these edits. The complete
+document-facing, prefix-free `lanepaper` API is listed in
+[API_REFERENCE.md](API_REFERENCE.md); names with the private `\lnp@` prefix are
+implementation details. Commands not defined by `lanepaper` belong to standard
+LaTeX or to a package the document must load itself.

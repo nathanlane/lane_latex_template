@@ -1,9 +1,9 @@
 % ==============================================================================
-% PREAMBLE.TEX - Academic Paper Template Configuration
+% PREAMBLE.TEX - Curated Lanepaper Demo Configuration
 % ==============================================================================
 % 
 % This file provides the essential package loading and configuration for
-% academic papers using the lanepaper.sty typography system.
+% the lanepaper typography package.
 %
 %% FIX (#89): Keep the demo header aligned with the v3 development showcase.
 % Version: 3.0.0-dev
@@ -31,13 +31,14 @@
 %% FIX: Load the renamed package by package name to match \ProvidesPackage.
 \usepackage{lanepaper}
 
-%% Issue #48 (ADR-0003): the Template owns these document-level packages.
+%% Issue #48 (ADR-0003): the document owns these document-level packages.
 %% Lanepaper configures only Hyperref link styling and longtable caption width
 %% if present. Order matters between hyperref and cleveref.
 %% The bibliography is the document's since #48. These are the options the
 %% package used to apply on its own; change them freely, that is the point.
 %% FIX (#86): The document loads csquotes before biblatex now that Lanepaper
 %% no longer supplies quotation-package dependencies.
+%% FIX (#102): Keep only document-owned packages used by this curated showcase.
 \usepackage{csquotes}
 \usepackage[
   backend=biber,
@@ -55,14 +56,6 @@
 \usepackage[english]{babel}  % language and hyphenation patterns
 \usepackage{hyperref}    % PDF links and metadata; load late, before cleveref
 \usepackage{cleveref}    % cross-references; must follow hyperref
-\usepackage{threeparttable} % document-owned table notes
-\usepackage{tabularx}    % full-width tables
-\usepackage{longtable}   % multi-page tables
-\usepackage{pdflscape}   % landscape pages
-\usepackage{rotating}    % sideways tables and figures
-%% FIX (#89): Keep the document-owned dependency while removing the retired environment name.
-\usepackage{adjustbox}   % document-owned box sizing
-%% FIX (#89): Remove the deleted document-side landscape environment definitions.
 
 % Load the bibliography database
 \addbibresource{references.bib}
@@ -79,33 +72,25 @@
 % DOCUMENT CONFIGURATION NOTES
 % ------------------------------------------------------------------------------
 %
-% This preamble provides a complete foundation for academic writing with:
+% This preamble gives the showcase the document-owned packages it actually uses:
 %
-% 1. TYPOGRAPHY EXCELLENCE
-%    - Bembo revival (fbb) with Renaissance features
-%    - Harmonized mathematical typography (newtxmath + mathalfa)
-%    - Optimized monospace integration (Inconsolata/zi4)
-%    - Systematic spacing quantum (13.2pt; body baseline measures 16.32pt)
+% 1. PACKAGE TYPOGRAPHY
+%    - TeX Gyre Pagella text, newpxmath mathematics, and Inconsolata monospace
+%    - A 13.2pt spacing quantum and 16.32pt body baseline
 %
-% 2. STANDARD APPENDIX STRUCTURE
-%    - Standard \appendix numbering
+% 2. STANDARD DOCUMENT STRUCTURE
+%    - Ordinary sectioning, lists, quotations, figures, and tables
 %    - Enhanced cross-referencing with cleveref
-%    - Modular file organization
 %
-% 3. ACADEMIC STANDARDS
-%    - Chicago 17th edition citations
-%    - Restrained color hierarchy
-%    - Production-ready PDF output
-%    - Git-friendly workflow
+% 3. DOCUMENT OWNERSHIP
+%    - biblatex with Biber, English hyphenation, Hyperref, and cleveref
+%    - Citation style and other paper policy remain configurable here
 %
-% 4. EXTENSIBILITY
-%    - Semantic typography commands
-%    - Configurable color system
-%    - Modular scale customization
-%    - Package compatibility checks
+% 4. PACKAGE BOUNDARY
+%    - Lanepaper supplies typography while the document supplies structure
 %
 % For detailed usage instructions, see:
-%   - API_REFERENCE.md (commands, systems, and typography standards)
+%   - API_REFERENCE.md (the retained package API)
 %   - CONTRIBUTING.md (development guidelines)
 %
 % ==============================================================================

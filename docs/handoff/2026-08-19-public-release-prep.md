@@ -248,13 +248,15 @@ point-of-use API; microtype matches sizes exactly (`\normalsize` is 10.95pt).
 
 ## Work State
 
-`main` at `32b8e59`, clean, in sync. Merged for v3, in order: #93 (architecture
-record), #94 (generic API removal), #95 (sole load path), #96 (document structures),
-#97 (C4 Microtype), #98 (C5 paragraphs), #99 (C6 tooling), #100 (this handoff).
+This worktree is on `docs/v3-demo-and-docs` at `1bd2af4`; the current #102 review
+follow-up is uncommitted. The accepted v3 work is present through C7, including
+the one public entry point, the curated demo, the migration guide, and the
+contracted API reference.
 
-Local gates on `main`, all verified under **TeX Live 2025**: `make lint` 0,
-`make build` 0 producing a **36-page** PDF, **pytest 54 passed**, `tests/run-tests.sh`
-**64 passed / 0 failed** across 20 fixtures. `test_infrastructure.py` holds 16 guards.
+Local gates in this worktree, all verified under **TeX Live 2025**: `make lint` 0,
+`make build` 0 producing a **7-page** PDF, **pytest 54 passed**, and
+`tests/run-tests.sh` **60 passed / 0 failed** across 20 fixtures.
+`test_infrastructure.py` holds 16 guards.
 
 **The primary checkout is on a stale branch.** `~/code/lane_latex_template` sits on
 `fix/api-guards-74` at `2a691af`, which predates every v3 PR — the handoff file there
