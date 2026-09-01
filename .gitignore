@@ -137,3 +137,6 @@ CLAUDE.md
 .env
 .env.local
 .env.*.local
+
+# Session handoffs (local working material, not published)
+docs/handoff/
