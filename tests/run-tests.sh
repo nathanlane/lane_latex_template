@@ -55,6 +55,11 @@ test_latex_file() {
     local source_run_xml="${tex_file%.tex}.run.xml"
     # FIX: the doc package writes a .hd file for a coexistence probe that loads it.
     local source_hd="${tex_file%.tex}.hd"
+    # FIX: a fixture with \listoffigures writes .lof on pass one and reads it
+    # back on pass two. Left behind, it is read by the *next* run, so a caption
+    # whose macros have changed since fails with an undefined control sequence.
+    local source_lof="${tex_file%.tex}.lof"
+    local source_lot="${tex_file%.tex}.lot"
     local root_aux="$PROJECT_ROOT/${basename}.aux"
     local root_log="$PROJECT_ROOT/${basename}.log"
     local root_out="$PROJECT_ROOT/${basename}.out"
@@ -62,6 +67,8 @@ test_latex_file() {
     local root_bcf="$PROJECT_ROOT/${basename}.bcf"
     local root_run_xml="$PROJECT_ROOT/${basename}.run.xml"
     local root_hd="$PROJECT_ROOT/${basename}.hd"
+    local root_lof="$PROJECT_ROOT/${basename}.lof"
+    local root_lot="$PROJECT_ROOT/${basename}.lot"
     
     log_info "Testing $basename..."
     
@@ -129,8 +136,10 @@ test_latex_file() {
     # Clean up auxiliary files
     rm -f "$source_aux" "$source_log" "$source_out" "$source_toc" \
           "$source_bcf" "$source_run_xml" "$source_hd" \
+          "$source_lof" "$source_lot" \
           "$root_aux" "$root_log" "$root_out" "$root_toc" \
-          "$root_bcf" "$root_run_xml" "$root_hd"
+          "$root_bcf" "$root_run_xml" "$root_hd" \
+          "$root_lof" "$root_lot"
     
     return 0
 }
